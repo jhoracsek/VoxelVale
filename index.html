@@ -1,863 +1,359 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser-arcade-physics.min.js"></script> !-->
-    <script src="./phaser.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 
     <title> VoxelVale </title>
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <style>
+    .container{
+        position:relative;
+        font-size:65px;
+        color:#FF00FF;
+    }
+    #gl-canvas{
+        z-index:0;
+    }
+    #text-canvas{
+        pointer-events: none;
+        position:absolute;
+        left:0px;
+        top:0px;
+        z-index:1;
+    }
+    </style>
 
 </head>
-<body>
-    <center>
-        
-        <div id="game-container", class="cent">
-            <div  class = "splash" id = "splsh">
 
-                <!--------- These are what I'm working on -------->
-                <div class="splashLeft">
-                    <h2>How to play</h2>
-                    <div class="splashLeftContent">
-                        <div style="padding:10px;">
-                            Start by placing pixels to adjacent blank spaces.
-                        </div>
-                        <img src="images/example1.gif" style="width:125px; height:100px;">
-                        <div style="padding:10px;">
-                            Block your opponents from expanding their pixels.
-                        </div>
-                        <img src="images/example2.gif" style="width:125px; height:100px;">
-                        <div style="padding:10px;">
-                            If your timer runs out, you lose!
-                            <br><br>
-                            <img src="images/numbers.gif">
-                        </div>
-                    </div>
-                </div>
-                <div class="splashTopRight">
-                    <h2>Announcements</h2>
-                    <div class="splashRightContent" style="overflow:hidden">  <!--<embed style="position: absolute;left: -8px; top: -8px; margin: 0;height:497px;" src="news.html">-->
+<script id="vertex-shader" type="x-shader/x-vertex">
+precision mediump float;
+attribute vec4 vPosition;
+attribute vec3 vNormal;
+attribute vec4 vColor;
+uniform mat4 projectionMatrix;
+uniform mat4 modelViewMatrix;
+uniform mat4 shadowMatrix;
+varying vec4 fColor;
 
-                        <div style="height: 470px;overflow-y:auto; padding:10px;">
-                            <div style="float:left"> Welcome! </div> <div style="float:right"> Feb 22 2024 </div><br>
-                            <hr>
-                            Hi, and welcome to the PiKCEL Alpha!<br><br> A few things...
-                            <ul style="margin:0px; padding-left:12px;">
-                              <li>The game is still in very early Alpha, so there may be many (potentially game breaking) bugs. Please report them if you feel inclined.</li>
-                              <li>Any features, gameplay or UI changes you think would make a good addition are appreciated!</li>
-                              <li>If you're interested in contributing to the development (programming, testing) please send me an email.</li>
-                              <li>Currently, game search will only be populated by very rudimentary bots. You will likely win 95% of the time. Please create a private room if you want to play with friends.</li>
-                            </ul>
-                            <br>
-                            That's all!<br>
-                            Best, Jay
-                        </div>
-                    </div>
-                </div>
+varying float magnitude;
+
+//Texturing...
+attribute vec2 vTexCoord;
+varying vec2 fTexCoord;
+
+//Lighting...
+uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+uniform vec4 lightPosition;
+uniform float shininess;
 
 
-                <div class="splashBottomRight">
-                    <h2>About</h2>
-                    <div class="splashMidBG" style="padding:10px;">PiKCEL.io is a free online competitive strategy game, currently in Alpha.<br>
+void main()
+{
+    vec4 pos = modelViewMatrix * vPosition;
+    vec3 position = -(pos).xyz;
+    vec3 light = -lightPosition.xyz;
+    vec3 L = normalize(light-position);
 
-                    The game is a project I develop in my free time, and not intented to be monetized. If you find it fun and wish to contribute please consider!<br>
-                    <a href="https://www.buymeacoffee.com/pikcel"  target="_blank"><div class="buttonStyle3" style="position: relative; bottom: 10px; right:-144px; width:90px; "> ☕ Buy me a coffee </div></a>
-                    <br><br><a href="https://docs.google.com/forms/d/e/1FAIpQLSesaNAamk_tGPDRoL154Aa2-EpHf_yO04YeMVvepQO0Khxhlg/viewform?usp=pp_url" target="_blank"> Submit a bug!</a>  &nbsp&nbsp&nbsp&nbsp <a href = "mailto: pixelcellgame@gmail.com">Send me an email!</a>
-                </div>
-                </div>
-                <!------------------------------------------------>
+    //Distance fall off.
+    float dist = length(light-position);
+    float attenuation = 1.0/(0.5 + 0.25*dist + 0.1*dist*dist);
 
+    vec3 E = normalize(-position);
+    vec3 H = normalize(L+E);
 
-                <!----------- CONTENTS OF SPLASH PAGE-------------------->
-                <div class="splashWindow"> 
-                    <h2 style="color:black;">Welcome to PiKCEL.io!</h2>
-                    <div class="splashMidBG">
-                    <div class="splashContent">
-                        
-                        <!--https://stackoverflow.com/questions/18022019/how-to-transfer-data-from-an-html-form-to-a-javascript-function-->
-                        <input autocomplete="off" class="splashInput" style ="padding-top:10px;" type="text" placeholder="What's your name?" name="pn" id="pn">
-                        <div class="buttonContainer" style="width:48.5%; height: 52px; float:left;">
-                            
-                            
-                                <form action="javascript:twoPlayers();" method="get"> <input class="buttonItem" style="background-image: url('images/icons2.png');float: left; width:33.333%; border-right:2px solid #7fcb6e;" type="submit" value="" ></form>
-                                <form  action="javascript:threePlayers();" method="get"><input class="buttonItem" style="background-image: url('images/icons3.png');float:left; width:33.333%; border-right:2px solid #7fcb6e;" type="submit" value=""></form>
-                                <form action="javascript:fourPlayers();" method="get"><input class="buttonItem" style="background-image: url('images/icons4.png');float:left; width:33.333%;" type="submit" value="" ></form>
-                            
-                        </div>
+    vec4 NN = vec4(vNormal,0);
+    vec3 N = normalize((modelViewMatrix*NN).xyz);
 
-                        <form action="javascript:createWaitRoom();" method="get">
-                            <input class="buttonStyle1" style="width:48.5%; float:right;" type="submit" value="Create Private Room">
-                        </form>
-                        <br><br><br>
-                        <hr>
+    vec4 ambient = ambientProduct;
 
-                        <form autocomplete="off" action="javascript:joinWaitRoom();" method="get">
-                            <input class="splashInput" style="" type="text" placeholder="Room ID" name="customRoomID" id="customRoomID">
-                            <input class="buttonStyle2" style="" type="submit" value="Join Existing Room">
-                        </form>
+    float KD = max(dot(L,N),0.0);
+    vec4 diffuse = KD*diffuseProduct*attenuation;
 
-                    </div>
-                    </div>
-                    <div style="position:absolute; bottom:4px; right:4px; font-size:9px;">PiKCEL.io Alpha</div>
-                </div>
-            </div>
+    float KS = pow(max(dot(N,H),0.0),shininess);
+    vec4 specular = KS*specularProduct;
 
-            <!-------------WAITING MENU CONTENT----------------------->
-            <div class="waitingWinNames" id="waitingWinNames">
-                <div id = "namesToDisplay"></div>
-            </div>
-            <div class = "plrCount" id = "plrCount">(1/4)</div>
-            <div class="waitingWin" id="waitingWindow" >
-                <div id ="rmid"> Room ID: 00000 </div>
-                <form action="javascript:goToGame();" method="get">
-                    <input class="buttonStyle1" type="submit" value="Start">
-                </form>
+    if(dot(L,N)<0.0) specular = vec4(0.0,0.0,0.0,1.0);
 
-            </div>
+    fColor = (ambient+diffuse+specular) * vColor;
+    //fColor = vColor;
+    //fColor = (diffuse + ambient)*vColor;
 
-            <!-------------CHAT CONTENT FOR GAME---------------------->
-            <div class="chatInput" id ="cht">
-                <form autocomplete="off" action="javascript:sendMessage();" method="get">
-                    <input class="inputText" type="text" name="msg" id="msg" placeholder="Send message"><br>
-                </form>
-            </div>
+    fTexCoord = vTexCoord;
 
-            <!--------------GAME CONTENT------------------------------->
-            <div class= "gameOver" id="ga">
-                <form action="javascript:goBackToWait();" method="get">
-                    <input class="buttonStyle1" type="submit" value="Play Again">
-                </form>
-            </div>
-            <div class= "chatWindow" id="cw"><div class="chatContent" id = "cww"></div></div>
-        </div>
-        
-    </center>
-    <script type="text/javascript" src="helpees.js"></script>
+    gl_PointSize = 5.0;
 
-    <script type="text/javascript">
+    gl_Position = projectionMatrix*modelViewMatrix*vPosition;
 
 
-    var socket = io();
-    var tempx = 0;
-    var tempy = 0;
-    var playerColor = null;
+    magnitude = length((gl_Position).xy);
+}
+</script>
 
-    var initialized = false;
+<script id="fragment-shader" type="x-shader/x-fragment">
+precision mediump float;
 
-    var playerColours = new Array(4);
-    var playerList = [];
-    var ogNames = [];
-    var ogColours = [];
+varying vec4 fColor;
 
-    var playerNames = [];
+varying float magnitude;
 
-    var playerNum = -1;
-    var myTurn = false;
-    var whoseTurn = -1;
-    var numPlaced = 0;
-    var numAllowedToPlace = -1;
-    var numLeft = -1;
+varying vec2 fTexCoord;
+uniform sampler2D texture;
 
-    var myName = "";
+uniform bool disableTex;
 
-    var shadowOffset = 5;
+uniform vec4 sColor;
 
-    var splash = true;
+//Cursor
+uniform bool cursorBlock;
 
-    let bgMod = 1024;
+//Particle
+uniform bool isParticle;
+uniform vec4 particleColor;
 
-    const msgWin = document.getElementById('cww');
+//Ceilings
+uniform bool isCeiling;
+uniform float opacityFactor;
+uniform bool inDungeon;
 
-    var roomID = '-1-1-1-1-1';
-
-    class PlayerBadges{
-        constructor(posX, posY){
-            this.posX = posX;
-            this.posY = posY;
-
-            this.playerText = null;
-            this.graphics = null;
-            this.scene = null;
-
-            this.playerBoxes = [];
-            this.playerTexts = [];
-
-            this.boxShadows = [];
-        }
-
-        create(scene, graphics){
-            this.graphics = graphics;
-            this.scene = scene;
-        }
-
-        resetBoxes(){
-            while(this.playerBoxes.length > 0){
-                this.removePlayerBox();
-            }
-
-            this.playerBoxes = [];
-            this.playerTexts = [];
-            this.boxShadows = [];
-        }
-
-        addAllPlayerBoxes(){
-            this.resetBoxes();
-            var first = true;
-            var last = false;
-            for(const box in playerNames){
-                if (box == playerNames.length-1){
-                    last = true;
-                }
-                //This is inefficent.
-                this.addPlayerBox(box, first, last);
-                first = false;
-            }
-        }
-
-        addPlayerBox(num, first, last){
-                let n = this.playerBoxes.length;
-
-                let height = 170+n*50;
-
-                let boxHeight = 50;
-                let boxWidth = 250;
-
-                const boxx = this.scene.add.graphics();
-
-                //https://labs.phaser.io/edit.html?src=src/display/masks/graphics%20bitmap%20mask.js&v=3.70.0
-                var top = 0;
-                var bot = 0;
-                if(first==true){
-                    top = 5;
-                }
-                if(last==true){
-                    bot = 5;
-                }
-                const maskGraphics = this.scene.make.graphics();
-                maskGraphics.fillStyle(0xFFFFFF);
-                maskGraphics.fillRoundedRect(31, height,boxWidth,boxHeight, { tl: top, tr: top, bl: bot, br: bot });
-
-                const mask = new Phaser.Display.Masks.GeometryMask(this, maskGraphics);
-
-                var c1=0xEFEFEF;
-                var c2=0xeaeaea;
-
-                boxx.fillGradientStyle(c1, c1, c2, c2, 1);
-                var toBeMasked = boxx.fillRect(31, height,boxWidth,boxHeight);
-                mask.dirty = true;
-                toBeMasked.setMask(mask);
-                this.playerBoxes.push(toBeMasked);
-
-                var pt = this.scene.add.text(Math.round(31+boxWidth/2), Math.round(height+boxHeight/2), playerNames[num]).setFontFamily('daydream').setFontSize(17).setColor(convertColorCode(ogColours[num])).setOrigin(0.5, 0.5).setStroke('#6b4ea2', 3);
-                pt.antialias = true;
-
-                this.playerTexts.push(pt);
-                boxx.fillStyle(0x000000,1);
-
-                const shadowGraphic = this.scene.add.graphics();
-                shadowGraphic.setDepth(-2);
-                shadowGraphic.fillStyle(0x000000,0.17);
-                
-                this.boxShadows.push(shadowGraphic.fillRoundedRect(31+shadowOffset, height+shadowOffset,boxWidth,boxHeight, { tl: top, tr: top, bl: bot, br: bot }));
-
-        }
-
-        removePlayerBox(){
-            var rect = this.playerBoxes.pop();
-            var text = this.playerTexts.pop();
-            var shad = this.boxShadows.pop();
-            rect.destroy();
-            text.destroy();
-            shad.destroy();
-        }
-
-        update(){
-
-        }
+void main()
+{
 
 
+    gl_FragColor = texture2D(texture, fTexCoord )*fColor;
+    //gl_FragColor = fColor;
+
+    if(fTexCoord[0] > 1.0 || fTexCoord[1] > 1.0)
+        gl_FragColor = fColor;
+
+    if(sColor[0] == 0.0){
+        vec2 uv = gl_FragCoord.xy / vec2(1280, 720);
+        vec2 centered = uv - vec2(0.5);
+        float dist = length(centered);
+        float fade = smoothstep(0.5, 0.0, dist);
+        gl_FragColor = vec4(sColor.rgb, sColor.a*fade);
+        return;
     }
 
- 
-    var pbs = new PlayerBadges(0,0);
-
-    var board = new Array(16);
-    for (let i = 0; i < 16; i++){
-        board[i] = new Array(16);
-    }
-    for(let i = 0; i < 16; i++){
-        for(let j = 0; j < 16; j++){
-            board[i][j] = '0x111111';
-        }
+    if(cursorBlock == true){
+        gl_FragColor = texture2D(texture, fTexCoord )*fColor*vec4(1.0, 1.0, 1.0, 0.3);
+        return;
     }
 
-
-    function checkAdj(x,y){
-        //Need to check if it's one of the two default colours first.
-        if(board[x][y] == '0xEFEFEF' || board[x][y] == '0xFFFFFF'){
-            //Now we can draw, if we are adjacent to one of the playerColor tiles
-            if(x > 0 && board[x-1][y] == playerColor)
-                return true;
-            if(x < 15 && board[x+1][y] == playerColor)
-                return true;
-            if(y > 0 && board[x][y-1] == playerColor)
-                return true;
-            if(y < 15 && board[x][y+1] == playerColor)
-                return true;
-        }
-        return false;
+    if(isParticle == true){
+        gl_FragColor = particleColor;
+        return;
     }
 
-    class Pixel {
-        constructor(posX, posY, size, x, y){
-            this.x = x;
-            this.y = y;
-            this.posX = posX;
-            this.posY = posY;
-            this.size = size;
-            this.pix = null;
-            this.virgin = true;
-            this.fx = null;
-        }
-
-        update(posX, posY, size, x, y){
-            this.x = x;
-            this.y = y;
-            this.posX = posX;
-            this.posY = posY;
-            this.size = size;
-        }
-
-        create(graphics, scene){
-            this.graphics = graphics;
-            var pix = scene.add.rectangle(this.posX+this.size/2, this.posY+this.size/2, this.size, this.size, board[this.x][this.y]);
-            this.pix = pix;
-
-            this.updateColor(board[this.x][this.y])
-            
-            pix.setInteractive()
-            pix.on('pointerdown', (pointer)=>
-            {
-                if(!gameOver && myTurn && checkAdj(this.x, this.y)){
-                    pix.setFillStyle(playerColor);
-                    board[this.x][this.y] = playerColor;
-                    socket.emit('board update', playerColor, this.x, this.y, roomID);
-                    numPlaced++;
-                    if (numPlaced >= numAllowedToPlace){
-                        socket.emit('turn update', playerNum, roomID, false);
-                        numPlaced = 0;
-                        myTurn = false;
-                    }
-                }
-            });
-
-
-        }
-
-        updateColor(color){
-
-            if(this.pix != null){
-                this.pix.setFillStyle(color);
-
-                //If it's a default colour, just draw it above the shine, otherwise just draw it below.
-                if(color == '0xEFEFEF' || color == '0xFFFFFF'){
-                    this.pix.setDepth(3);
-                }else{
-                    this.pix.setDepth(1);
-                }
-            }
-        }
+    if(isCeiling == true && inDungeon != true ){
+        vec2 uv = gl_FragCoord.xy / vec2(1280, 720);
+        vec2 centered = uv - vec2(0.5,0.6);
+        float dist = length(centered);
+        float fade = smoothstep(0.4, 0.0, dist);
+        float sub = fade-opacityFactor;
+        gl_FragColor = vec4((texture2D(texture, fTexCoord )*fColor).xyz,(1.0-sub));
+        return;
     }
 
-
-    var pixStore = new Array(16);
-    for (let i = 0; i < 16; i++){
-        pixStore[i] = new Array(16);
+    if(isCeiling == true && inDungeon == true ){
+        vec2 uv = gl_FragCoord.xy / vec2(1280, 720);
+        vec2 centered = uv - vec2(0.5,0.5);
+        float dist = length(centered);
+        float fade = smoothstep(0.75, 0.1, dist);
+        float sub = fade-opacityFactor;
+        gl_FragColor = vec4((texture2D(texture, fTexCoord )*fColor).xyz,(1.0-sub));
+        return;
     }
-    for(let i = 0; i < 16; i++){
-        for(let j = 0; j < 16; j++){
-            const pixel = new Pixel(0,0,0,0,0);
-            pixStore[i][j] = pixel;
-        }
-    }
-
-
-
-    class Grid {
-        constructor(posX, posY, players){
-            this.posX = posX;
-            this.posY = posY;
-            this.players = players;
-            this.size = 96*6;
-
-            /*
-                This was scraped...
-            */
-            // 2 player should be 16x16
-            // 3 player should be 24x24
-            // 4 player should be 32x32
-            this.gridPixelSize = 0;
-            switch(players){
-                case 2:
-                    this.gridPixelSize = 16;
-                    break;
-                case 3:
-                    this.gridPixelSize = 24;
-                    break;
-                default:
-                    this.gridPixelSize = 32;
-            }
-            this.lineSep = this.size/this.gridPixelSize;
-            this.lineWidth = 1.0;
-        }
-
-        create(graphics, scene){
-            var x = 0;
-            var y = 0;
-            const pixelGraphics = scene.add.graphics();
-
-
-            for(let i = 0; i < this.size; i+= this.lineSep){
-                for(let j = 0; j < this.size; j+= this.lineSep){
-                    pixStore[x][y].update(this.posX+i,this.posY+j,this.lineSep, x, y);
-                    pixStore[x][y].create(pixelGraphics, scene);
-                    y+=1;
-                }
-                x+=1;
-                y=0;
-            }
-
-            graphics.setBlendMode(Phaser.BlendModes.NORMAL);
-            // https://www.canva.com/colors/color-wheel/
-            graphics.lineStyle(this.lineWidth,0x6b4ea2,2,1);
-            for(let i = this.lineSep; i < this.size; i+=this.lineSep){
-                graphics.lineBetween(this.posX, this.posY + i, this.posX+this.size, this.posY+i);
-            }
-            for(let i = this.lineSep; i < this.size; i+=this.lineSep){
-                graphics.lineBetween(this.posX+i, this.posY, this.posX+i, this.posY+this.size);
-            }
-
-            graphics.strokeRect(this.posX,this.posY,this.size,this.size);
-        }
-
-        update(){
-
-        }
-
-
-    }
-
-    let container = document.querySelector("body");
-    var bgX = 0;
-    var bgY = 0;
-    var gameScene = null;
-    class Game extends Phaser.Scene
-    {
-        constructor(){
-            super('Game');
-            gameScene = this;
-            this.popUpGraphics = null;
-            this.winScreen = null;
-            this.winText = null;
-        }
-        preload ()
-        {
-            this.load.image('logo', 'images/logo.png');
-            this.load.image('shine', 'images/shine.png');
-
-        }
-
-        
-
-        create ()
-        {
-            gameScene = this;
-
-            this.logo = this.add.image(100, 50, 'logo');
-            this.logo.setDepth(10);
-            this.logo.setScale(4);
-            this.logo.setOrigin(0.5,0.5);
-            this.logo.x = 600;
-            this.logo.y = 120;
-
-
-            var gridPosX = 312;
-            var smallBoxStart = (1200-500-576)/4;
-
-            const grid = new Grid(gridPosX, 170, 2);
-            const graphics = this.add.graphics();
-            const shadows = this.add.graphics();
-
-            grid.create(graphics, this);
-
-            var startL = 3*smallBoxStart + 250 + 576;
-            var startT = 170;
-            var endT = 776;
-
-            pbs.create(this, graphics);
-            graphics.fillStyle('0xf7f7f7',1);
-            graphics.setDepth(1);
-            
-            var divElement = this.add.dom(0, 0, 'div');
-            divElement.innerHTML = '<b>This is an embedded HTML element.</b>';
-
-            shadows.fillStyle(0x000000, 0.17);
-
-            
-            //TOP RIGHT====
-            graphics.fillRoundedRect(startL, startT,250,273,6);
-            shadows.fillRoundedRect(startL+shadowOffset, startT+shadowOffset,250,273,6);
-            //=============
-
-            //BOTTOM RIGHT====
-            graphics.fillRoundedRect(startL, startT+303,250,273,6);
-            shadows.fillRoundedRect(startL+shadowOffset, startT+303+shadowOffset,250,273,6);
-            //================
-
-            //Top
-            graphics.setDepth(4);
-            var topBoxStart = 2*smallBoxStart + 576 + 2*250;
-            
-
-            //GRID SHADOW
-            shadows.setDepth(-5);
-            
-            shadows.fillRect(gridPosX+shadowOffset, 170+shadowOffset,576,576);
-
-
-            shadows.fillStyle(0x6b4ea2, 0.5);
-            shadows.fillRect(gridPosX-3, 170-3,576+6,576+6,6);
-
-
-            // GRID SHINE =============================================
-
-            // gridUnderlay serves as our mask for the shine.
-            var gridUnderlay = this.add.rectangle(gridPosX+288,170+288,576,576,0xFFFFFF,0.2);
-
-            // This should essentially be hidden under everything in our canvas.
-            gridUnderlay.setDepth(-10);
-
-            // This is the actual shine that will appear over our grid.
-            let shine = this.add.image(190, 190-75, 'shine');
-            shine.setDepth(2);
-            shine.rotation = -Math.PI/4;
-            shine.setBlendMode(Phaser.BlendModes.ADD);
-
-
-            // We mask the shine so it only appears within the confines of gridUnderlay.
-            const mask = new Phaser.Display.Masks.BitmapMask(this, gridUnderlay);
-            shine.setMask(mask);
-
-            //This is the animation associated w/ the shine.
-            this.tweens.add({
-                targets: shine,
-                x: 960,
-                y: 960-75,
-                repeat:-1,
-                repeatDelay: 2000,
-                duration:800,
-            });
-            
-            
-            // ========================================================
-
-            this.clock = this.add.text(1140, 198, timerSeconds).setFontFamily('daydream').setFontSize(37).setColor(convertColorCode(playerColours[whoseTurn])).setStroke('#6b4ea2', 7).setOrigin(0.5, 0.5);
-            this.clock.setDepth(101);
-            this.numText = this.add.text(1044, 309, numAllowedToPlace+"/"+numAllowedToPlace).setFontFamily('daydream').setFontSize(52).setColor(convertColorCode(playerColours[whoseTurn])).setStroke('#6b4ea2', 7).setOrigin(0.5, 0.5);
-            this.numText.setDepth(101);
-
-            this.nameTextRight = this.add.text(1044, 400, ogNames[whoseTurn]).setFontFamily('daydream').setFontSize(27).setColor(convertColorCode(playerColours[whoseTurn])).setStroke('#6b4ea2', 7).setOrigin(0.5, 0.5);
-            this.nameTextRight.setDepth(101);
-            
-
-            //Logo animation
-            pbs.addAllPlayerBoxes();
-                this.tweens.add({
-
-                targets: this.logo,
-                duration: 1000,
-                scaleX: 3.75,
-                scaleY: 3.75,
-                ease: 'Phaser.Math.Easing.Linear',
-                repeat: -1,
-                yoyo: true
-            });
-           
-        }
-
-        displayWinScreen(winnerName, clr){
-            if(this.winScreen != null){
-                this.winScreen.destroy();
-            }
-            if(this.winText != null){
-                this.winText.destroy();
-            }
-            this.winScreen = this.add.graphics();
-            this.winScreen.fillStyle(0xFFFFFF,1);
-            this.winScreen.lineStyle(1,0x6b4ea2, 1);
-            this.winScreen.setDepth(200);
-            this.winText = this.add.text(608, 360, winnerName + " has won!").setFontFamily('daydream').setFontSize(37).setColor(convertColorCode(clr)).setOrigin(0.5, 0.5).setStroke('#6b4ea2', 7);
-            this.winText.setDepth(201);
-            let pWidth = 450;
-            let pHeight = 200;
-            this.winScreen.fillStyle(0x000000,0.17);
-            this.winScreen.fillRoundedRect(-pWidth/2+shadowOffset,-pHeight/2+shadowOffset,pWidth,pHeight,6);
-            this.winScreen.fillStyle(0xFFFFFF,1);
-            this.winScreen.fillRoundedRect(-pWidth/2,-pHeight/2,pWidth,pHeight,6);
-            this.winScreen.strokeRoundedRect(-pWidth/2,-pHeight/2,pWidth,pHeight,6);
-            this.winScreen.x = 600;
-            this.winScreen.y = 400;
-
-            const chain = this.tweens.chain({
-                targets: this.winScreen,
-                tweens:[
-                {
-                    duration: 20,
-                    scale: 1.1,
-
-                },
-                {
-                    duration: 20,
-                    scale:1
-                },
-                {
-                    duration: 750,
-                    alpha:1
-                },
-                ]
-
-            })
-        }
-
-        removeWinScreen(){
-            //Should only be called when win screen is active.
-            if(this.winScreen != null){
-                this.winScreen.destroy();
-            }
-            if(this.winText != null){
-                this.winText.destroy();
-            }
-        }
-
-        newTurnGraphic(plrName){
-
-            if(this.popUp != null)
-                this.popUp.destroy();
-            this.popUp = this.add.graphics();
-            this.popUp.setDepth(100);
-            this.popUp.fillStyle(0xFFFFFF);
-            this.popUp.lineStyle(1,0x6b4ea2, 1);
-            let pWidth = 450;
-            let pHeight = 100;
-            this.popUp.fillStyle(0x000000,0.17);
-            this.popUp.fillRoundedRect(-pWidth/2+shadowOffset,-pHeight/2+shadowOffset,pWidth,pHeight,6);
-            this.popUp.fillStyle(0xFFFFFF,1);
-            this.popUp.fillRoundedRect(-pWidth/2,-pHeight/2,pWidth,pHeight,6);
-            this.popUp.strokeRoundedRect(-pWidth/2,-pHeight/2,pWidth,pHeight,6);
-
-            if(this.nameText == null){
-                this.nameText = this.add.text(608, 400, plrName+"\'s turn!").setFontFamily('daydream').setFontSize(27).setColor('#000000').setOrigin(0.5, 0.5)
-                this.nameText.setDepth(101);
-            }else{
-                this.nameText.setText(plrName+"\'s turn!")
-                this.nameText.alpha = 1;
-            }
-            this.popUp.x = 600;
-            this.popUp.y = 400;
-            
-            let nt = this.nameText;
-
-            const chain = this.tweens.chain({
-                targets: this.popUp,
-                tweens:[
-                {
-                    duration: 20,
-                    scale: 1.1,
-
-                },
-                {
-                    duration: 20,
-                    scale:1
-                },
-                {
-                    duration: 750,
-                    alpha:1
-                },
-
-                {
-                    duration: 300,
-                    alpha: 0
-                }
-                ]
-            })
-
-            const chain1 = this.tweens.chain({
-
-                targets: this.nameText,
-                tweens:[
-                {
-                    duration: 790,
-                    alpha:1
-                },
-
-                {
-                    duration: 300,
-                    alpha: 0
-                }
-                ]
-            })
-
-        }
-
-        update(){
-            bgX += 0.5;
-            bgY -= 0.5;
-            bgX %= bgMod;
-            bgY %= bgMod;
-            container.style.backgroundPositionX = bgX + "px";
-            container.style.backgroundPositionY = bgY + "px";
-        }
-        goToWait(){
-            if(this.winScreen != null){
-                this.winScreen.destroy();
-            }
-            numPlaced = 0;
-            this.scene.switch(menuScene);
-            waitRoomDisplay();
-        }
-    }
-
-
-    var menuScene = null;
-    var frame = 0;
-    class Menu extends Phaser.Scene
-    {
-        constructor(){
-            super('Menu');
-            this.waitingText = null;
-        }
-        preload ()
-        {
-            this.load.image('logo', 'images/logo.png');
-        }
-
-        create ()
-        {
-            menuScene = this;
-            this.logo = this.add.image(100, 50, 'logo');
-            this.logo.setDepth(10);
-            this.logo.setScale(4);
-            this.logo.setOrigin(0.5,0.5);
-            this.logo.x = 600;
-            this.logo.y = 120;
-
-            this.tweens.add({
-            targets: this.logo,
-            duration: 1000,
-            scaleX: 3.75,
-            scaleY: 3.75,
-            ease: 'Phaser.Math.Easing.Linear',
-            repeat: -1,
-            yoyo: true
-            });
-           
-        }
-
-        update(){
-            frame += 1;
-            bgX += 0.5;
-            bgY -= 0.5;
-
-            bgX %= bgMod;
-            bgY %= bgMod;
-            container.style.backgroundPositionX = bgX + "px";
-            container.style.backgroundPositionY = bgY + "px";
-
-            if(frame % 60 == 0){
-                frame = 0;
-                this.waitingUpdate();
-            }
-        }
-
-        waitingUpdate(){
-
-            if(this.waitingText != null){
-                if(this.waitingText.text == "Waiting"){
-                    this.waitingText.text = "Waiting.";
-                }else if(this.waitingText.text == "Waiting."){
-                    this.waitingText.text = "Waiting..";
-                }else if(this.waitingText.text == "Waiting.."){
-                    this.waitingText.text = "Waiting...";
-                }else if(this.waitingText.text == "Waiting..."){
-                    this.waitingText.text = "Waiting";
-                }
-            }
-            
-        }
-
-        loadWaiting(){
-
-            const menuGraphics = this.add.graphics();
-            menuGraphics.fillStyle(0xFFFFFF);
-            menuGraphics.fillRoundedRect(-308/2,-466/2,308,466,6); //Draw this at the center of menugraphics for scaling.
-            menuGraphics.fillStyle(0x000000,0.1);
-            menuGraphics.fillRoundedRect(-308/2+16, -466/2+73, 276, 252, 6)
-            this.waitingText = this.add.text(608, 266, "Waiting").setFontFamily('daydream').setFontSize(27).setColor('#000000').setOrigin(0.5, 0.5)
-            const wt = this.waitingText;
-            menuGraphics.x = 600;
-            menuGraphics.y = 460;
-
-            const chain = this.tweens.chain({
-                targets: menuGraphics,wt,
-                tweens:[
-                {
-                    duration: 20,
-                    scale: 1.025,
-
-                },
-                {
-                    duration: 20,
-                    scale:1
-                }
-
-                ]
-            })
-
-
-        }
-
-        goToGame(){
-            this.scene.switch(gameScene);
-        }
-    }
-
-    var config = {
-        //type: Phaser.AUTO,
-        type: Phaser.WEBGL,
-        width: 1200,
-        height: 800,
-        parent: 'game-container',
-        backgroundColor: '#562D6E',
-        transparent: true,
-        resolution: window.devicePixelRatio,
-        scale: Phaser.Scale.Center,
-        pixelArt: true,
-        antialias: false,
-        scene: [Menu, Game]
+}
+</script>
+
+<script type="text/javascript" src="voxelvale/Common/webgl-utils.js"></script>
+<script type="text/javascript" src="voxelvale/Common/initShaders.js"></script>
+<script type="text/javascript" src="voxelvale/Common/MV.js"></script>
+
+<script type="text/javascript" src="voxelvale/code/worldgen.js"></script>
+<script type="text/javascript" src="voxelvale/code/datastructures.js"></script>
+<script type="text/javascript" src="voxelvale/code/controls.js"></script>
+<script type="text/javascript" src="voxelvale/code/modelingtools.js"></script>
+<script type="text/javascript" src="voxelvale/code/main.js"></script>
+<script type="text/javascript" src="voxelvale/code/player.js"></script>
+<script type="text/javascript" src="voxelvale/code/tile.js"></script>
+<script type="text/javascript" src="voxelvale/code/blockwall.js"></script>
+<script type="text/javascript" src="voxelvale/code/xyzblock.js"></script>
+<script type="text/javascript" src="voxelvale/code/dropbox.js"></script>
+<script type="text/javascript" src="voxelvale/code/scenes.js"></script>
+<script type="text/javascript" src="voxelvale/code/dungeons.js"></script>
+<script type="text/javascript" src="voxelvale/code/collision.js"></script>
+<script type="text/javascript" src="voxelvale/code/collisions.js"></script>
+<script type="text/javascript" src="voxelvale/code/enemy.js"></script>
+<script type="text/javascript" src="voxelvale/code/enemyroller.js"></script>
+<script type="text/javascript" src="voxelvale/code/notifications.js"></script>
+<script type="text/javascript" src="voxelvale/code/UI.js"></script>
+<script type="text/javascript" src="voxelvale/code/uifunctions.js"></script>
+<script type="text/javascript" src="voxelvale/code/inventory.js"></script>
+<script type="text/javascript" src="voxelvale/code/craftingmenu.js"></script>
+<script type="text/javascript" src="voxelvale/code/item.js"></script>
+<script type="text/javascript" src="voxelvale/code/recipes.js"></script>
+<script type="text/javascript" src="voxelvale/code/projectiles.js"></script>
+<script type="text/javascript" src="voxelvale/code/structures.js"></script>
+<script type="text/javascript" src="voxelvale/code/buildingfunctions.js"></script>
+<script type="text/javascript" src="voxelvale/code/specialblocks.js"></script>
+<script type="text/javascript" src="voxelvale/code/interactiveblocks.js"></script>
+<script type="text/javascript" src="voxelvale/code/cursorfunctions.js"></script>
+<script type="text/javascript" src="voxelvale/code/particles.js"></script>
+<script type="text/javascript" src="voxelvale/code/music.js"></script>
+<script type="text/javascript" src="voxelvale/code/sounds.js"></script>
+
+<!-- Move to seperate file -->
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
+    import { getFirestore, doc, setDoc, getDoc, collection } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+        apiKey: "AIzaSyA36b4yGnT6k620PHwRupLgoykeGML2_j4",
+        authDomain: "voxelvale-fec75.firebaseapp.com",
+        projectId: "voxelvale-fec75",
+        storageBucket: "voxelvale-fec75.firebasestorage.app",
+        messagingSenderId: "290314560027",
+        appId: "1:290314560027:web:9478b33ec2aa6ffcb00ebe",
+        measurementId: "G-DVMHH5L9SL"
     };
 
-    var game = new Phaser.Game(config);
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+    const database = getFirestore(app);
+
+    let displayName = null;
+
+    window.signUp = async function (){
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('password').value;
+
+        createUserWithEmailAndPassword(auth, email, pass)
+        .then((userCredential) =>{
+            //Do sign up stuff
+        })
+        .catch((error)=>{
+            const errorCode = error.code;
+            alert("Error: " + error.message);
+        });
+    }
 
 
-    </script>
-    <script type="text/javascript" src="net.js"></script>
+    window.logIn = async function() {
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('password').value;
+
+        signInWithEmailAndPassword(auth, email, pass)
+        .then((user) => {
+            //Do sign in stuff.
+        })
+        .catch((err) => {alert(err.message)} );
+    }
+
+    window.logOut = async function () {
+        signOut(auth).then(() => {alert("Logged out")});
+    }
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            displayName = user.email;
+            document.getElementById("username").innerHTML = displayName;
+            // You can now load or save data for this user!
+        } else {
+            document.getElementById("username").innerHTML = "Not signed in.";
+        }
+    });
+
+
+    const myWorld = {
+        name: "My First World",
+        width: 20,
+        height: 20,
+        tiles: [
+        [0, 1, 1, 0],
+        [0, 0, 1, 1]
+        ]
+    };
+
+    window.saveWorld = async function(worldData) {
+        const user = auth.currentUser;
+        if (!user) {
+            alert("You must be logged in to save!");
+            return;
+        }
+
+        const ref = doc(collection(database, "users", user.uid, "worlds"), "main");
+
+        try {
+            await setDoc(ref, {
+                data: [1,2],
+                lastModified: new Date().toISOString()
+            });
+            console.log("World saved!");
+        } catch (err) {
+            console.error("Save error:", err.message);
+        }
+    }
+
+</script>
+
+
+
+
+<body>
+    <center>
+       
+
+        <b> Sign up / Login </b>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="signUp();">Sign Up</button>
+    <button onclick="logIn()">Log In</button>
+    <button onclick="logOut()">Log Out</button>
+
+
+    
+
+    <br><br><br>
+    <div style="padding: 1rem 1rem;   max-width: 1280px;  margin: auto; ">
+    <div style="clear: both;"></div>
+    <div class=container>
+        <canvas id="gl-canvas" width="1280" height="720" stencil="true">
+        <!-- The following message is displayed if the browser doesn’t
+            -- support HTML5 -->
+        Sorry; your web browser does not support HTML5’s canvas element.
+        </canvas>
+        <canvas id="text-canvas" width="1280" height="720"></canvas>
+    </div>
+</div>
+    <button onclick="saveWorld()">Save World</button>
+    <button onclick="logOut()">Load World</button>
+
+       <br><br><br>
+    <span id = "username"></span><br>
+ <b>Attributions:</b> I'm stuff<br><br>
     <center>
     
 </center>
 </body>
 
+<script type="text/javascript">
+    var socket = io();
+    var initialized = false;
+</script>
+
+<script type="text/javascript" src="net.js"></script>
+
+<img id="scream" src="voxelvale/code/textures/textures.png" width="256" height="256" hidden></img>
+<canvas id="myCanvas" width="256" height="256" hidden></canvas>
 
 </html>

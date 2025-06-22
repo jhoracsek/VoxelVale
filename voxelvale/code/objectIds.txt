@@ -1,0 +1,37 @@
+
+
+
+Class				objectNumber
+
+WoodBlock			0
+WeirdBlock			1
+GrassBlock			2
+WoodLog				3
+WoodBranch			4
+StoneBlock			5
+WorkBench			6
+TestBlock			7
+DirtBlock			8
+DropBox				9
+BrickBlock			10
+StoneFloorBlock		11
+DungeonWall			12
+
+Door				14
+
+
+WoodAxe				64
+StonePickaxe		65
+WoodenBow			66
+
+
+
+
+
+
+
+
+ShiftBlock			512
+DungeonCeiling		513
+TeleBlock			514
+CursorBlock			515
