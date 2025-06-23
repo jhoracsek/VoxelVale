@@ -144,6 +144,12 @@ var projectileCooldown = 0;
 var particles =[]
 
 
+/*
+	For adjusting background
+*/
+let bodycontainer;
+
+
 //Thank you: w3schools.com/tags/canvas_getimagedata.asp
 function create_image_old(){
 	var c = document.getElementById("myCanvas");
@@ -364,10 +370,12 @@ function computeShadowMatrix(lightPos, plane){
 var coorSys=[8.5,4];
 
 window.onload = function init(){
+	bodycontainer = document.getElementById('body')
 	identityMatrix = mat4();
 	worldMade=false;
 	UACT = 0.001;
-	lastPos=[255,255];
+	//Assuming 50 X 50lastPos=[255,255]; WORLD_SIZE/2
+	lastPos=[(WORLD_SIZE/2)*10,(WORLD_SIZE/2)*10];
 	
 
 	//This is our projection onto the z = -0.201 plane from the perspective of the light defined by the coordinate lPosition. 
@@ -561,6 +569,7 @@ var arrowStart;
 var arrowHB;
 var dropBoxStart;
 var brickStart;
+
 
 var simpleBlocks = [];
 
@@ -901,8 +910,17 @@ var updateUnimportantMethods = false;
 var cursorCoordinates=[];
 //Make a counter that updates every second for unimportant methods...
 var frameCount = 0;
+
+let bgX = 0;
+
 function render_data(){
-	
+	/*
+		Update body background position
+	*/
+	bgX = (bgX+0.25)%1024;
+	bodycontainer.style.backgroundPositionX = bgX + "px";
+    bodycontainer.style.backgroundPositionY = -bgX + "px";
+
 	frameCount = (frameCount+1)%60;
 	if(scrollCooldown > 0){
 		scrollCooldown--;

@@ -25,6 +25,8 @@
     }
     </style>
 
+    <link rel="stylesheet" type="text/css" href="res/style.css">
+
 </head>
 
 <script id="vertex-shader" type="x-shader/x-vertex">
@@ -204,6 +206,7 @@ void main()
 <script type="text/javascript" src="voxelvale/code/particles.js"></script>
 <script type="text/javascript" src="voxelvale/code/music.js"></script>
 <script type="text/javascript" src="voxelvale/code/sounds.js"></script>
+<script type="text/javascript" src="voxelvale/code/saveload.js"></script>
 
 <!-- Move to seperate file -->
 <script type="module">
@@ -293,14 +296,44 @@ void main()
 
         const ref = doc(collection(database, "users", user.uid, "worlds"), "main");
 
+        let info = getWorldObj();
+
         try {
             await setDoc(ref, {
-                data: [1,2],
-                lastModified: new Date().toISOString()
+                xPos: info[0],
+                yPos: info[1],
+                zPos: info[2],
+                objectNumbers: info[3]
+                //lastModified: new Date().toISOString()
             });
             console.log("World saved!");
         } catch (err) {
             console.error("Save error:", err.message);
+        }
+    }
+
+    window.loadWorld = async function(){
+        const user = auth.currentUser;
+        if(!user){
+            alert("You must be logged in to load your world!");
+            return;
+        }
+        const ref = doc(collection(database, "users", user.uid, "worlds"), "main");
+        let loadedWorld = null;
+        try {
+            const snapshot = await getDoc(ref);
+            if (snapshot.exists()) {
+                loadedWorld = snapshot.data();
+                
+            } else {
+                alert("You haven't saved a world yet!");
+            }
+        } catch (err) {
+            console.error("Load error:", err.message);
+        }
+        if(loadedWorld!=null){
+            loadWorldIntoGame(loadedWorld);
+            console.log('Done!');
         }
     }
 
@@ -309,7 +342,32 @@ void main()
 
 
 
-<body>
+<body style="background-color: #81b2d7;" id="body">
+    <header>
+    
+     
+        <nav style="padding-left:0px;float:left;">
+          <ul style="padding-left:0px;">
+            <li style=""> <a style="color:#000;" href="#top"><img style="float: left;positon:relative;padding-right:17px; padding-left:3px; margin: auto;width:23px;" src="../../topicons/computer.png" width="10%"> <div style="float:left; padding-right:0px;"><b>WebCraft</b></div> </a></li>
+            <li><a style="color:#000;" href="#howto">How to Play</a></li>
+            <li><a style="color:#000;" href="#about">About</a></li>
+            <li><a style="color:#000;" href="../../main.html">Home</a></li>
+          </ul>
+      </nav>
+     
+
+       <nav style="padding-right:0px; padding-left: 0px;float:right;">
+          <ul style="padding-right:0px; padding-left:0px;">
+            <li  style="padding-right:0px; padding-left:0px;margin: 0px;"> <a style="color:#000;" href="#about"><img style="float: left;positon:relative;padding-right:17px; padding-left:3px;width:18px;" src="../../topicons/mail.png"> </a></li>
+            <li  style="padding-right:0px; padding-left:0px;margin: 0px;"> <a style="color:#000;" href="#about"><img style="float: left;positon:relative;padding-right:17px; padding-left:3px; width:18px;" src="../../topicons/git.png"> </a></li>
+            <li  style="padding-right:0px; padding-left:0px;margin: 0px; margin-right: 10px;"> <a style="color:#000;" href="#about"><img style="float: left;positon:relative;padding-right:17px; padding-left:3px; width:18px;" src="../../topicons/linkedin.png" > </a></li>
+          </ul>
+      </nav>
+  
+  </header>
+<br>
+
+    
     <center>
        
 
@@ -324,19 +382,27 @@ void main()
     
 
     <br><br><br>
+
+
+    <!-- GAME CONTAINER -->
     <div style="padding: 1rem 1rem;   max-width: 1280px;  margin: auto; ">
-    <div style="clear: both;"></div>
-    <div class=container>
-        <canvas id="gl-canvas" width="1280" height="720" stencil="true">
-        <!-- The following message is displayed if the browser doesn’t
-            -- support HTML5 -->
-        Sorry; your web browser does not support HTML5’s canvas element.
-        </canvas>
-        <canvas id="text-canvas" width="1280" height="720"></canvas>
+        <div class="gameBorder">   
+                <div class=container>
+                    <canvas id="gl-canvas" width="1280" height="720" stencil="true">
+                    <!-- The following message is displayed if the browser doesn’t -- support HTML5 -->
+                    Sorry; your web browser does not support HTML5’s canvas element.
+                    </canvas>
+                    <canvas id="text-canvas" width="1280" height="720"></canvas>
+                </div>
+        </div>
     </div>
-</div>
-    <button onclick="saveWorld()">Save World</button>
-    <button onclick="logOut()">Load World</button>
+
+    <!--<button onclick="saveWorld()">Save World</button>-->
+    <button onclick="getWorldObj()">Save World</button>
+    
+    <button onclick="saveWorld()">Save World To Firebase</button>
+
+    <button onclick="loadWorld()">Load World From Firebase</button>
 
        <br><br><br>
     <span id = "username"></span><br>

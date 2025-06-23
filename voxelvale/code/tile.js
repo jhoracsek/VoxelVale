@@ -419,7 +419,6 @@ class SpecialBlock{
 		this.numberOfVerts = 36;
 		this.type = 'SPECIAL_BLOCK';
 		this.objectNumber = -1;
-
 	}
 	update(){return;}
 	returnPos(){
@@ -457,6 +456,7 @@ class NullifierBlock{
 		this.posY = Y;
 		this.posZ = Z;
 		this.type = 'NULL_BLOCK';
+
 		//console.log('I am created for some reason?')
 	}
 }
@@ -570,61 +570,6 @@ class TestBlock extends BlockWall{
 
 }
 
-
-
-
-/*
-let NAME = 'Grass'
-let DESC = 'A grass block.'
-let TOB = 'STONE'
-*/
-/*
-class GrassBlock extends BlockWall{
-
-
-	constructor(X=null,Y=null,Z=null,Ground=false){
-		//This is the good texture.
-		super(X,Y,Z,0,Ground);
-		this.index = grassStart;
-		this.name = 'Grass';
-		this.objectNumber=2;
-		this.desc = 'A grass block.'
-		this.tob='STONE';
-		this.particleColor = vec3(0.5, 0.7, 0.2);
-		const rotation = Math.floor((Math.random() * 4))
-		if(rotation  == 0){
-			this.switchOrientation(0,0.001);
-		}
-		if(rotation  == 1){
-			this.switchOrientation(90,0.0001);
-		}
-		if(rotation == 2){
-			this.switchOrientation(180,-0.0001);
-		}
-		if(rotation == 3){
-			this.switchOrientation(270,-0.001);
-		}
-	}
-
-
-	switchOrientation(ROT, depthOffset){
-		this.instanceMat = translate(this.posX,this.posY,this.posZ);
-		this.rot = ROT;
-		this.instanceMat = mult(this.instanceMat,translate(0.5,0.5,0));
-		//this.instanceMat = mult(this.instanceMat,scale4(1,0.999,1));
-		if(this.posY%2 == 0){
-			//this.instanceMat = mult(this.instanceMat,translate(0,0,0.02));
-		}
-		//this.instanceMat = mult(this.instanceMat,translate(0,0,depthOffset));
-		this.instanceMat = mult(this.instanceMat,rotateZ(this.rot));
-		this.instanceMat = mult(this.instanceMat,translate(-0.5,-0.5,0));
-	}
-	sendData(){
-		//build_block(this.texture,0.09,0.09);
-		build_block(this.texture,0.0,0.0);
-	}
-}
-*/
 class DirtBlock extends BlockWall{
 	/*
 		If there's nothing above the dirt block add a collision box.
@@ -710,7 +655,7 @@ class TeleBlock extends SpecialBlock{
 		if(scene == WORLD_SCENE){
 			this.toDungeon = true;
 		}
-		this.objectNumber = 514;
+		this.objectNumber = 13;
 	}
 	sendData(){
 		//push_wireframe_indices(vec3(0,0,0),vec3(1,1,1))

@@ -118,6 +118,7 @@ class DoorTop{
 		this.posZ = Z;
 		this.index = 0;
 		this.numberOfVerts = 0;
+		this.objectNumber = -1;
 		this.tob='WOOD';
 		this.type = 'SPECIAL_BLOCK';
 		this.bottom = bottom;

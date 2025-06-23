@@ -16,7 +16,7 @@ DropBox				9
 BrickBlock			10
 StoneFloorBlock		11
 DungeonWall			12
-
+TeleBlock			13
 Door				14
 
 
@@ -33,5 +33,10 @@ WoodenBow			66
 
 ShiftBlock			512
 DungeonCeiling		513
-TeleBlock			514
+
 CursorBlock			515
+
+
+Where to update whenever a new block is added?
+
+In saveload.js, in BlockWall.js, and in Main.js

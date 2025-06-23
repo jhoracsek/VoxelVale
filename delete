@@ -1,10 +1,28 @@
 
 
 
-Some stuff todo
+Some stuff todo (for today)
 
+
+	Design website 							()
+		Should be very simple				()
+		Top bar (Just with anchors)
+			Link to patreon, very visible.
+		About section.
+		Attributions section.
 
 	Email verification						()
 		And template						()
+		Signin with other services			()
 
-	Signin with other services				()
+
+	World saving
+		Player inventory					()
+		Drop boxes							()
+		Fuck it do dungeons					()
+		(and load/save screen)				()
+		Maybe move buttons in game			()
+
+
+	Want to 'Fix' the block object number thing, so
+	it's all in one array.

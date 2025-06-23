@@ -5,10 +5,11 @@ var PORTION_SIZE = 10;
 var POSX;
 var POSY;
 var world;
+const WORLD_SIZE = 25;
 
 //WORLD PORTION HAS AN X CHANCE TO BE A DUNGEON
 class WorldPortion{
-	constructor(X=null,Y=null){
+	constructor(X=null,Y=null, Empty=false){
 		this.posX=X*PORTION_SIZE;
 		this.posY=Y*PORTION_SIZE;
 		this.outerBoundX=this.posX+PORTION_SIZE;
@@ -29,8 +30,11 @@ class WorldPortion{
 		*/
 
 		this.spaceOccupied = [[],[]];
-		if(X!=null)
+		if(X!=null && Empty==false)
 			this.makePortion();
+
+		if(X!=null && Empty==true)
+			this.makeEmptyPortion();
 		
 	}
 
@@ -58,6 +62,18 @@ class WorldPortion{
 			this.setSpaceOccupied(block.posX,block.posY,block.posZ);
 		}else{
 			this.portionCeiling.push(block);
+		}
+	}
+	makeEmptyPortion(){
+		for(var i = 0; i < PORTION_SIZE; i++){
+			var occ1 = [];
+			var occ2 = [];
+			for(var j = 0; j < PORTION_SIZE; j++){
+				occ1.push(false);
+				occ2.push(false);
+			}
+			this.spaceOccupied[0].push(occ1);
+			this.spaceOccupied[1].push(occ2);
 		}
 	}
 	makePortion(){
@@ -186,6 +202,7 @@ class WorldPortion{
 		return null;
 	}
 	removeBlock(block){
+		if(block == null) return;
 		if(block.posZ >= -4){
 			if(this.portion.length == 0){
 				return;
@@ -274,6 +291,7 @@ class WorldPortion{
 		}
 		return false;
 	}
+
 	getPortionArray(){
 		return [this.portion,this.portionCeiling];
 	}
@@ -288,6 +306,13 @@ class World{
 	makeArray(){
 		for(var i = 0; i <= this.size; i++){
 			this.portions[i] = [];
+		}
+	}
+
+	fillAllEmpty(){
+		for(var i = 0; i <= this.size; i++){
+			for(var j = 0; j <= this.size; j++)
+				this.portions[i][j] = new WorldPortion(i,j,true);
 		}
 	}
 
@@ -484,7 +509,8 @@ function is_within_portion_bound(portion){
 }
 
 function make_world(){
-	world = new World(50);
+	//world = new World(50);
+	world = new World(WORLD_SIZE);
 	world.fillAllDefault();
 }
 
