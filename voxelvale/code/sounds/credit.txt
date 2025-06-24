@@ -4,7 +4,7 @@ https://opengameart.org/content/old-city-theme					Old City Theme | remaxim
 
 https://opengameart.org/content/chill-lofi-inspired				Chill lofi  | omfgdude
 
-https://opengameart.org/content/vampires-piano				
+https://opengameart.org/content/vampires-piano					Vampire's Piano | TAD
 
 https://opengameart.org/content/nature-theme-sketch				Nature Theme | remaxim
 
@@ -77,26 +77,46 @@ https://opengameart.org/content/mega-man-boss								Mega Man Boss | Tarush Sing
 
 
 
-
-
-
-
-
-
-
 Sound effects:
 
-https://opengameart.org/content/foot-walking-step-sounds-on-stone-water-snow-wood-and-dirt
-https://opengameart.org/content/door-open-door-close-set
-https://opengameart.org/content/impact
-https://opengameart.org/content/bubbles-pop
-https://opengameart.org/content/monster-sound-effects-pack
-https://opengameart.org/content/door-open-door-close (Another one, I don't think I like it as much.)
-https://opengameart.org/content/monster-sound-pack-volume-1
-https://opengameart.org/content/footsteps-leather-cloth-armor
-https://opengameart.org/content/swishes-sound-pack
-https://opengameart.org/content/bow-arrow-shot
-https://opengameart.org/content/medieval-sound-effects-weapon-textures
-https://opengameart.org/content/thwack-sounds
-https://opengameart.org/content/stop
-https://opengameart.org/content/vibrating-plastic
+https://opengameart.org/content/foot-walking-step-sounds-on-stone-water-snow-wood-and-dirt		Foot walking step sounds | Jute
+https://opengameart.org/content/door-open-door-close-set										Door Open, Door Close Set | qubodup
+https://opengameart.org/content/impact															Impact | qubodup
+https://opengameart.org/content/bubbles-pop														bubbles 'pop' | farfadet46
+https://opengameart.org/content/monster-sound-effects-pack										Monster Sound Effects Pack | Ogrebane
+https://opengameart.org/content/door-open-door-close 											Door open, door close | Iwan Gabovitch
+https://opengameart.org/content/monster-sound-pack-volume-1										Monster Sound Pack, Volume 1 | Ogrebane
+https://opengameart.org/content/footsteps-leather-cloth-armor									Footsteps Leather, Cloth, Armor | HaelDB
+https://opengameart.org/content/swishes-sound-pack												Swishes Sound Pack | artisticdude
+https://opengameart.org/content/bow-arrow-shot													Bow & Arrow Shot
+https://opengameart.org/content/medieval-sound-effects-weapon-textures							Medieval sound effects | Ben Jaszczak & Brian Nelson
+https://opengameart.org/content/thwack-sounds													Thwack Sounds | AntumDeluge
+https://opengameart.org/content/stop 															Stop | Blender Foundation
+https://opengameart.org/content/vibrating-plastic												Vibrating Plastic | remaxim
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

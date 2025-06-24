@@ -11,7 +11,6 @@
     .container{
         position:relative;
         font-size:65px;
-        color:#FF00FF;
     }
     #gl-canvas{
         z-index:0;
@@ -342,16 +341,16 @@ void main()
 
 
 
-<body style="background-color: #add6dc;" id="body">
-    <header class="colorStyle">
-        <nav  class="vertical-center">
-          <ul style="padding-left:0px;">
-            <li><a href="#top"><div style="float:left; padding-right:0px; margin:0px; padding"><b style='font-size:32px;'>VoxelVale</b></div> </a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="../../main.html">Atributions</a></li>
-            <li><a href="../../main.html">Patreon</a></li>
-          </ul>
+<body style="background-color: rgb(var(--color-bg));" id="body">
+    <header>
+        <a href="#top"><div style="float:left; padding-left:25px; margin:0px;"class="vertical-center"><img style="image-rendering: pixelated;" width="150%" src="res/logo.png"></img></div> </a>
+       
+        <nav  class="vertical-center" style="text-align: center;right:0px; width:100%;">
+            <a class = "navbox" href="#about">About</a>
+            <a class = "navbox" href="#about">Atributions</a>
+            <a class = "navbox" href="#about">Patreon</a>
         </nav>
+
         <nav class="vertical-center" style="padding-right:0px; padding-left: 0px;right: 0px;">
           <ul style="padding-right:0px; padding-left:0px;">
             <li  style="padding-right:10px; padding-right:10px;margin: 0px;"> <input type="email" id="email" placeholder="Email"></input></li>
@@ -362,39 +361,108 @@ void main()
         </nav>
   </header>
     <!-- GAME CONTAINER -->
-    <br><br><br>
-    <div style="padding: 1rem 1rem;   max-width: 1280px;  margin: auto; ">
-        <div class="boxBorder colorStyle" style="height: 720px; padding:0px;">   
-            <div class=container>
-                <canvas id="gl-canvas" width="1280" height="720" stencil="true">
-                <!-- The following message is displayed if the browser doesn’t -- support HTML5 -->
-                Sorry; your web browser does not support HTML5’s canvas element.
-                </canvas>
-                <canvas id="text-canvas" width="1280" height="720"></canvas>
+    <br><br><br><br>
+    <div class="gameBackground">
+        <div style="padding: 1rem 1rem;   max-width: 1280px;  margin: auto; ">
+            <div class="gameBorder colorStyle" style="height: 720px; padding:0px;">   
+                <div class=container>
+                    <canvas id="gl-canvas" width="1280" height="720" stencil="true">
+                    <!-- The following message is displayed if the browser doesn’t -- support HTML5 -->
+                    Sorry; your web browser does not support HTML5’s canvas element.
+                    </canvas>
+                    <canvas id="text-canvas" width="1280" height="720"></canvas>
+                </div>
             </div>
         </div>
     </div>
-
-    <div style="padding: 1rem 1rem;   max-width: 1280px;  margin: auto; ">
+    <div style="margin: auto; ">
         <div class="boxBorder colorStyle">   
             <h1>About</h1>
+            <hr class="section-underline">
             <div class = "textBox">
-                This is a test.
+                VoxelVale is a cozy, browser-based game inspired by the blocky freedom of Minecraft and the unpredictable exploration of The Binding of Isaac. Built from the ground up using JavaScript and WebGL, this project is a personal experiment in creativity, coding, and nostalgic design.<br><br>
+
+                In this world, you’ll explore pixelated landscapes, uncover secrets, and build your own path—literally. Whether you're here to relax, dig, fight, or just vibe out to lo-fi textures and soft palettes, this little game is yours to wander.<br><br>
+
+                This is a solo dev project. Everything you see—from the engine to the lighting to the interface—was handcrafted in raw WebGL and JavaScript.<br><br>
+
+                Enjoy, and thanks for stopping by!
+
+                To get updates on the development follow me on Patreon!
             </div>
         </div>
     </div>
 
-    <div style="padding: 1rem 1rem;   max-width: 1280px;  margin: auto; ">
+    <div style="margin: auto; ">
         <div class="boxBorder colorStyle">   
             <h1>Attributions</h1>
+            <hr class="section-underline">
             <div class = "textBox">
-                This is a test.
+                I'd like to thank all these guys for providing stuff.
+
+                <h2> Music (Overworld)</h2>
+                <ul>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/snowfall"> Snowfall | Kistol </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/old-city-theme"> Old City Theme | remaxim </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/chill-lofi-inspired  "> Chill lofi  | omfgdude </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/vampires-piano"> Vampire's Piano | TAD </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/nature-theme-sketch"> Nature Theme | remaxim </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/town-theme"> Town Theme | remaxim </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/snow-city-theme"> Snow City | Tarush Singhal </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/emotional-mood-piece"> Emotional Mood Piece | remaxim </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/safe-room-theme"> Safe Room Theme | remaxim </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/hungry-tribes"> Hungry Tribes | remaxim </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/dreamlike-state"> Dreamlike State | Tarush Singhal </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/8-bit-prairie"> 8 Bit Prairie | Tarush Singhal </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/8-bit-summer-memory"> 8 bit summer memory | Tarush Singhal </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/small-town"> Small Town | Tarush Singhal </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/forest-7"> Forest | Tarush Singhal </a></li>
+                </ul>
+                <h2> Music (Caves/Dungeons)</h2>
+                <ul>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/franz-liszt-19-hungarian-rhapsodies"> Franz Liszt - 19 Hungarian Rhapsodies | remaxim </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/infiltrator"> Infiltrator | remaxim </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/feeding-frenzy"> Feeding Frenzy | remaxim </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/dungeon-theme"> Dungeon Theme | remaxim </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/palm-of-my-hand-at-the-altar"> Palm of my hand - At the altar | Harold Azmed </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/palm-of-my-hand-intro"> Palm of my hand - Intro | Harold Azmed </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/deep-space-flight"> Deep Space Flight | remaxim </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/dungeon-king"> Dungeon King | professorlamp </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/dungeon-dwellers-dungeon-track-for-rpg"> Dungeon Dwellers | BitsAndPiecesMusic </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/cold-sanctuary-rpg-orchestral-essentials-dungeon-music"> Cold Sanctuary </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/rpg-ambience-dungeon"> RPG Ambience - Dungeon | Hitctrl </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/wander-in-a-dungeon"> Wander in a dungeon | Kosmo The Cat </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/dungeon-chip"> Dungeon chip | divjedrevo </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/zelda-like-dungeon-theme"> Zelda-like Dungeon theme | genderfreak </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/small-dungeon"> SMALL dungeon | genderfreak </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/dungeon-deep-0"> Dungeon Deep | Eldritch Grim </a></li>
+                </ul>
+                <h2> Sound Effects </h2>
+                <ul>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/foot-walking-step-sounds-on-stone-water-snow-wood-and-dirt"> Foot walking step sounds | Jute </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/door-open-door-close-set"> Door Open, Door Close Set | qubodup </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/impact"> Impact | qubodup </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/bubbles-pop"> bubbles 'pop' | farfadet46 </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/monster-sound-effects-pack"> Monster Sound Effects Pack | Ogrebane </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/door-open-door-close"> Door open, door close | Iwan Gabovitch </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/monster-sound-pack-volume-1"> Monster Sound Pack, Volume 1 | Ogrebane </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/footsteps-leather-cloth-armor"> Footsteps Leather, Cloth, Armor | HaelDB </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/swishes-sound-pack"> Swishes Sound Pack | artisticdude </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/bow-arrow-shot"> Bow & Arrow Shot </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/medieval-sound-effects-weapon-textures"> Medieval sound effects | Ben Jaszczak & Brian Nelson </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/thwack-sounds"> Thwack Sounds | AntumDeluge </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/stop"> Stop | Blender Foundation </a></li>
+                    <li><a class="linkstyle" href="https://opengameart.org/content/vibrating-plastic"> Vibrating Plastic | remaxim </a></li>
+                </ul>
             </div>
         </div>
     </div>
 
+    <!--
+    <br><br><br><br><br><br>
 
-    <!--<button onclick="saveWorld()">Save World</button>-->
+    <button onclick="saveWorld()">Save World</button>-->
+    <!--
     <button onclick="getWorldObj()">Save World</button>
     
     <button onclick="saveWorld()">Save World To Firebase</button>
@@ -417,9 +485,7 @@ void main()
        <br><br><br>
     <span id = "username"></span><br>
  <b>Attributions:</b> I'm stuff<br><br>
-
-    
-</center>
+-->
 </body>
 
 <script type="text/javascript">
