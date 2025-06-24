@@ -22,7 +22,18 @@ Some stuff todo (for today)
 		Fuck it do dungeons					()
 		(and load/save screen)				()
 		Maybe move buttons in game			()
+		Should save door orientation		()
+
+	Should seperate render and logic loops.
 
 
 	Want to 'Fix' the block object number thing, so
 	it's all in one array.
+
+
+Which fonts:
+
+	8-bit Arcase Out for logo maybe?
+	BelanidiSerif-Regular.otf (Not terrible)
+	CutePixel.ttf (okay)
+	DigitalDisco-Thin.ttf (okay+)

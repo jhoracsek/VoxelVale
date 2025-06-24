@@ -342,38 +342,69 @@ void main()
 
 
 
-<body style="background-color: #81b2d7;" id="body">
-    <header>
-    
-     
-        <nav style="padding-left:0px;float:left;">
+<body style="background-color: #add6dc;" id="body">
+    <header class="colorStyle">
+        <nav  class="vertical-center">
           <ul style="padding-left:0px;">
-            <li style=""> <a style="color:#000;" href="#top"><img style="float: left;positon:relative;padding-right:17px; padding-left:3px; margin: auto;width:23px;" src="../../topicons/computer.png" width="10%"> <div style="float:left; padding-right:0px;"><b>WebCraft</b></div> </a></li>
-            <li><a style="color:#000;" href="#howto">How to Play</a></li>
-            <li><a style="color:#000;" href="#about">About</a></li>
-            <li><a style="color:#000;" href="../../main.html">Home</a></li>
+            <li><a href="#top"><div style="float:left; padding-right:0px; margin:0px; padding"><b style='font-size:32px;'>VoxelVale</b></div> </a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="../../main.html">Atributions</a></li>
+            <li><a href="../../main.html">Patreon</a></li>
           </ul>
-      </nav>
-     
-
-       <nav style="padding-right:0px; padding-left: 0px;float:right;">
+        </nav>
+        <nav class="vertical-center" style="padding-right:0px; padding-left: 0px;right: 0px;">
           <ul style="padding-right:0px; padding-left:0px;">
-            <li  style="padding-right:0px; padding-left:0px;margin: 0px;"> <a style="color:#000;" href="#about"><img style="float: left;positon:relative;padding-right:17px; padding-left:3px;width:18px;" src="../../topicons/mail.png"> </a></li>
-            <li  style="padding-right:0px; padding-left:0px;margin: 0px;"> <a style="color:#000;" href="#about"><img style="float: left;positon:relative;padding-right:17px; padding-left:3px; width:18px;" src="../../topicons/git.png"> </a></li>
-            <li  style="padding-right:0px; padding-left:0px;margin: 0px; margin-right: 10px;"> <a style="color:#000;" href="#about"><img style="float: left;positon:relative;padding-right:17px; padding-left:3px; width:18px;" src="../../topicons/linkedin.png" > </a></li>
+            <li  style="padding-right:10px; padding-right:10px;margin: 0px;"> <input type="email" id="email" placeholder="Email"></input></li>
+            <li  style="padding-right:10px; padding-right:10px;margin: 0px; margin-right: 10px;"> <input type="password" id="password" placeholder="Password"></input></li>
+            <li  style="padding:5px;padding-right:10px;margin: 0px;"> Login</li>
+            <li  style="padding:5px;padding-right:10px;margin: 0px;"> Sign up</li>
           </ul>
-      </nav>
-  
+        </nav>
   </header>
-<br>
+    <!-- GAME CONTAINER -->
+    <br><br><br>
+    <div style="padding: 1rem 1rem;   max-width: 1280px;  margin: auto; ">
+        <div class="boxBorder colorStyle" style="height: 720px; padding:0px;">   
+            <div class=container>
+                <canvas id="gl-canvas" width="1280" height="720" stencil="true">
+                <!-- The following message is displayed if the browser doesn’t -- support HTML5 -->
+                Sorry; your web browser does not support HTML5’s canvas element.
+                </canvas>
+                <canvas id="text-canvas" width="1280" height="720"></canvas>
+            </div>
+        </div>
+    </div>
 
+    <div style="padding: 1rem 1rem;   max-width: 1280px;  margin: auto; ">
+        <div class="boxBorder colorStyle">   
+            <h1>About</h1>
+            <div class = "textBox">
+                This is a test.
+            </div>
+        </div>
+    </div>
+
+    <div style="padding: 1rem 1rem;   max-width: 1280px;  margin: auto; ">
+        <div class="boxBorder colorStyle">   
+            <h1>Attributions</h1>
+            <div class = "textBox">
+                This is a test.
+            </div>
+        </div>
+    </div>
+
+
+    <!--<button onclick="saveWorld()">Save World</button>-->
+    <button onclick="getWorldObj()">Save World</button>
     
-    <center>
-       
+    <button onclick="saveWorld()">Save World To Firebase</button>
+
+    <button onclick="loadWorld()">Load World From Firebase</button>
+
 
         <b> Sign up / Login </b>
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Password">
+   
+    
     <button onclick="signUp();">Sign Up</button>
     <button onclick="logIn()">Log In</button>
     <button onclick="logOut()">Log Out</button>
@@ -383,31 +414,10 @@ void main()
 
     <br><br><br>
 
-
-    <!-- GAME CONTAINER -->
-    <div style="padding: 1rem 1rem;   max-width: 1280px;  margin: auto; ">
-        <div class="gameBorder">   
-                <div class=container>
-                    <canvas id="gl-canvas" width="1280" height="720" stencil="true">
-                    <!-- The following message is displayed if the browser doesn’t -- support HTML5 -->
-                    Sorry; your web browser does not support HTML5’s canvas element.
-                    </canvas>
-                    <canvas id="text-canvas" width="1280" height="720"></canvas>
-                </div>
-        </div>
-    </div>
-
-    <!--<button onclick="saveWorld()">Save World</button>-->
-    <button onclick="getWorldObj()">Save World</button>
-    
-    <button onclick="saveWorld()">Save World To Firebase</button>
-
-    <button onclick="loadWorld()">Load World From Firebase</button>
-
        <br><br><br>
     <span id = "username"></span><br>
  <b>Attributions:</b> I'm stuff<br><br>
-    <center>
+
     
 </center>
 </body>
