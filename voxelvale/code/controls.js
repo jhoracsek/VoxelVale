@@ -2,8 +2,11 @@ window.addEventListener("keydown", getKeyDown, false);
 window.addEventListener("keyup", getKeyUp, false);
 
 var hasInteractedWithWindow = false;
+var isFocused = false;
 
 function getKeyDown(key){
+	if(!isFocused)
+		return;
 	//LEFT
 	if(key.keyCode == 65){
 		//updateCursorColour();
@@ -27,6 +30,11 @@ function getKeyDown(key){
 		//updateCursorColour();
 		//if(!isStopDown)
 			player.isMovingDown = true;
+	}
+
+	if(key.keyCode == 27){
+		console.log('Poop');
+		isFocused = false;
 	}
 	//Turn off hitbox render (and some other stuff...)
 	// Keycode 81 is 'Q'
@@ -186,7 +194,15 @@ function checkHovering(){
 
 }
 
+document.addEventListener('pointerlockchange', () => {
+  if (document.pointerLockElement === canvas) {
+  	isFocused = true;
 
+  } else {
+  	isFocused = false;
+    canvas.blur();
+  }
+});
 
 
 
@@ -196,6 +212,18 @@ var transMatrix;
 var yCoor2;
 var hold=false;
 function canvasEvents(){
+
+canvas.addEventListener('focus', () => {
+  isFocused = true;
+});
+
+canvas.addEventListener('blur', () => {
+  isFocused = false;
+});
+
+
+
+
 canvas.addEventListener("mouseup",function(event){
 	hold=false;
 
@@ -206,7 +234,10 @@ canvas.addEventListener("contextmenu",function(event){
 });
 
 canvas.addEventListener("mousedown", function(event){
+	//Should only do this if you are unfocused.
+	
 	if(!hasInteractedWithWindow){
+
 		playMusic();
 		initAudio();
 		hasInteractedWithWindow = true;
@@ -289,6 +320,11 @@ canvas.addEventListener("mousemove", function(event){
 */
 canvas.addEventListener("click",function(event){
 	//click=true;
+	if (document.pointerLockElement !== canvas) {
+    	canvas.requestPointerLock().catch((err) => {
+      	console.warn("Pointer lock request failed:", err);
+    });
+  }
 });
 canvas.addEventListener("mouseup",function(event){
 	click=false;

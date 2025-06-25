@@ -1,17 +1,15 @@
 
 
 
-Some stuff todo (for today)
+Some stuff todo
 
 
-	Design website 							()
-		Should be very simple				()
-		Top bar (Just with anchors)
-			Link to patreon, very visible.
-		About section.
-		Attributions section.
+	Page changes depending on if logged in 	(X)
+		Fix alerts							(X)
 
-	Email verification						()
+	Can't tab (disable all game commands!)	()
+
+	Email verification						(X)
 		And template						()
 		Signin with other services			()
 

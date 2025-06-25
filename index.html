@@ -11,6 +11,10 @@
     .container{
         position:relative;
         font-size:65px;
+        outline: none;
+    }
+    .container:focus{
+        outline: none;
     }
     #gl-canvas{
         z-index:0;
@@ -209,9 +213,8 @@ void main()
 
 <!-- Move to seperate file -->
 <script type="module">
-    // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
     import { getFirestore, doc, setDoc, getDoc, collection } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
@@ -242,10 +245,33 @@ void main()
         createUserWithEmailAndPassword(auth, email, pass)
         .then((userCredential) =>{
             //Do sign up stuff
+            const user = userCredential.user;
+
+            sendEmailVerification(user)
+                .then(() =>{
+                    alert("Verification email sent! Please check your inbox.")
+                })
+                .catch((error) =>{
+                    console.error("Error sending vertication email:", error.message);
+                })
+
         })
         .catch((error)=>{
-            const errorCode = error.code;
-            alert("Error: " + error.message);
+            const code = error.code;
+
+            switch (code) {
+                case "auth/email-already-in-use":
+                    alert("An account already exists with this email.");
+                    break;
+                case "auth/weak-password":
+                    alert("Password should be at least 6 characters.");
+                    break;
+                case "auth/invalid-email":
+                    alert("Please enter a valid email address.");
+                    break;
+                default:
+                    alert("Signup error: " + error.message);
+            }
         });
     }
 
@@ -258,20 +284,31 @@ void main()
         .then((user) => {
             //Do sign in stuff.
         })
-        .catch((err) => {alert(err.message)} );
+        .catch((error) => {
+            const code = error.code;
+            alert("Invalid credentials.")
+
+        } );
     }
 
     window.logOut = async function () {
-        signOut(auth).then(() => {alert("Logged out")});
+        signOut(auth).then(() => {});
     }
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
             displayName = user.email;
-            document.getElementById("username").innerHTML = displayName;
+            //document.getElementById("username").innerHTML = displayName;
+            document.getElementById("loggedout").style.visibility = "hidden";
+            document.getElementById("loggedin").style.visibility = "visible";
+            document.getElementById("useremail").innerHTML = displayName;
             // You can now load or save data for this user!
         } else {
-            document.getElementById("username").innerHTML = "Not signed in.";
+            
+            document.getElementById("loggedout").style.visibility = "visible";
+            document.getElementById("loggedin").style.visibility = "hidden";
+            //document.getElementById("username").innerHTML = "Not signed in.";
+           // document.getElementById("authchange").innerHTML = '<ul style="padding-right:0px; padding-left:0px;"> <li  style="padding-right:10px; padding-right:10px;margin: 0px;"> <input type="email" id="email" placeholder="Email"></input></li> <li  style="padding-right:10px; padding-right:10px;margin: 0px; margin-right: 10px;"> <input type="password" id="password" placeholder="Password"></input></li><li  style="padding:5px;padding-right:10px;margin: 0px;"> Login</li><li  style="padding:5px;padding-right:10px;margin: 0px;"> Sign up</li></ul>'
         }
     });
 
@@ -343,26 +380,30 @@ void main()
 
 <body style="background-color: rgb(var(--color-bg));" id="body">
     <header>
-        <a href="#top"><div style="float:left; padding-left:25px; margin:0px;"class="vertical-center"><img style="image-rendering: pixelated;" width="150%" src="res/logo.png"></img></div> </a>
+       <div style="float:left; padding-left:25px; margin:0px;"class="vertical-center"> <img border="0" style="image-rendering: pixelated;" width="151%" src="res/logo.png"></div>
        
         <nav  class="vertical-center" style="text-align: center;right:0px; width:100%;">
             <a class = "navbox" href="#about">About</a>
-            <a class = "navbox" href="#about">Atributions</a>
-            <a class = "navbox" href="#about">Patreon</a>
+            <a class = "navbox" href="#attributions">Atributions</a>
+            <a class = "navbox" target="_blank" rel="noopener noreferrer" href="https://patreon.com/VoxelVale">Patreon</a>
         </nav>
-
-        <nav class="vertical-center" style="padding-right:0px; padding-left: 0px;right: 0px;">
+        <nav class="vertical-center" style="padding-right:0px; padding-left: 0px;right: 0px; visibility: hidden" id = "loggedout">
           <ul style="padding-right:0px; padding-left:0px;">
-            <li  style="padding-right:10px; padding-right:10px;margin: 0px;"> <input type="email" id="email" placeholder="Email"></input></li>
-            <li  style="padding-right:10px; padding-right:10px;margin: 0px; margin-right: 10px;"> <input type="password" id="password" placeholder="Password"></input></li>
-            <li  style="padding:5px;padding-right:10px;margin: 0px;"> Login</li>
-            <li  style="padding:5px;padding-right:10px;margin: 0px;"> Sign up</li>
+            <li  style="padding-right:10px; padding-right:10px;margin: 0px; margin-top:4px;"> <input type="email" id="email" placeholder="Email"></input></li>
+            <li  style="padding-right:10px; padding-right:10px;margin: 0px; margin-right: 10px; margin-top:4px;"> <input type="password" id="password" placeholder="Password"></input></li>
+            <li  style="padding:5px;padding-right:10px;margin: 0px;"> <button onclick="logIn()">Log In</button></li>
+            <li  style="padding:5px;padding-right:10px;margin: 0px;"> <button onclick="signUp();">Sign Up</button></li>
+          </ul>
+        </nav>
+        <nav class="vertical-center" style="padding-right:0px; padding-left: 0px;right: 0px; visibility:hidden;" id = "loggedin">
+          <ul style="padding-right:0px; padding-left:0px;">
+            <li  style="padding:5px;padding-right:10px;margin: 0px; margin-right: 10px;margin-top:1px;" id="useremail"> </li>
+            <li  style="padding:5px;padding-right:10px;margin: 0px;margin-right:10px;"><button onclick="logOut()">Log Out</button></li>
           </ul>
         </nav>
   </header>
     <!-- GAME CONTAINER -->
-    <br><br><br><br>
-    <div class="gameBackground">
+    <div class="gameBackground" style="padding-top:97px;">
         <div style="padding: 1rem 1rem;   max-width: 1280px;  margin: auto; ">
             <div class="gameBorder colorStyle" style="height: 720px; padding:0px;">   
                 <div class=container>
@@ -374,8 +415,9 @@ void main()
                 </div>
             </div>
         </div>
+        <div style="text-align: center; font-size: 11px; color:#000">Version: Alpha 0.0.1 | Report Bugs</div>
     </div>
-    <div style="margin: auto; ">
+    <div style="margin: auto;scroll-margin-top: 80px;" id="about">
         <div class="boxBorder colorStyle">   
             <h1>About</h1>
             <hr class="section-underline">
@@ -388,12 +430,12 @@ void main()
 
                 Enjoy, and thanks for stopping by!
 
-                To get updates on the development follow me on Patreon!
+                To get updates on the development follow me on Patreon! Cloud saves. Play for free.
             </div>
         </div>
     </div>
 
-    <div style="margin: auto; ">
+    <div style="margin: auto; scroll-margin-top: 80px;" id="attributions">
         <div class="boxBorder colorStyle">   
             <h1>Attributions</h1>
             <hr class="section-underline">

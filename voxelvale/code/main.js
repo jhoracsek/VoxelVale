@@ -399,8 +399,8 @@ window.onload = function init(){
 	//In controls.js, adds mouse functionality.
 	canvasEvents();
 	
-	canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock;
-	canvas.requestPointerLock();
+	//canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock;
+	//canvas.requestPointerLock();
 	document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
 	canvas.onclick = function() {
   		canvas.requestPointerLock();
@@ -920,6 +920,8 @@ function render_data(){
 	bgX = (bgX+0.25)%1024;
 	bodycontainer.style.backgroundPositionX = bgX + "px";
     bodycontainer.style.backgroundPositionY = -bgX + "px";
+
+    //console.log(isFocused);
 
 	frameCount = (frameCount+1)%60;
 	if(scrollCooldown > 0){

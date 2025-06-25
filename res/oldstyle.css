@@ -59,7 +59,6 @@
 a{
     color: rgb(var(--color-text));
     text-decoration: none;
-    transition: color 0.1s ease, transform 0.1s ease;
 }
 
 a:hover{
@@ -74,11 +73,11 @@ header {
     height:80px;
     font-size: 15px;
 
-    box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.4);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 5px 0px 0px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
     color: rgb(var(--color-text));
-    background-color: rgba(var(--color-primary), 0.95);
+    background-color: rgba(var(--color-primary), 0.8);
 }
 
 nav ul {
@@ -109,22 +108,6 @@ body {
     color: rgb(var(--color-text));
 }
 
-button {
-  font-family: inherit;
-  font-size: inherit;
-  border: none;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: color 0.2s ease, transform 0.1s ease;
-  color: rgb(var(--color-text));
-  text-decoration: none;
-  background-color: rgba(0, 0, 0, 0);
-}
-
-button:hover{
-    color: #d96735;
-}
-
 .navbox{
     margin: 50px;
 }
@@ -136,7 +119,6 @@ button:hover{
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
-
 
 input, select {
   width: 100%;
@@ -161,15 +143,15 @@ input, select {
     padding: 20px;
     box-shadow: inset 0px -5px 5px 0px rgba(0, 0, 0, 0.1);
  
-    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .gameBorder{
     overflow: hidden;
-    border: 1px solid rgba(0, 0, 0, 0.00);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     /*border-radius: 10px;*/
     border-radius: 5px;
-    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+    /*box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);*/
     /*box-shadow: 5px 5px 0px 0px rgba(0, 0, 0, 0.2);*/
     padding: 5px;
     text-align: center;
@@ -179,20 +161,21 @@ input, select {
     overflow: hidden;
     border-top: 0px solid rgba(0, 0, 0, 0.2);
     border-radius: 0px;
-    /*box-shadow: 5px 5px 0px 0px rgba(0, 0, 0, 0.2);*/
+    box-shadow: 5px 5px 0px 0px rgba(0, 0, 0, 0.2);
     padding: 25px;
     text-align: center;
 }
 
 .colorStyle {
-    background-color: rgba(var(--color-bg), 1);
+    background-color: rgba(var(--color-bg), 0.95);
     backdrop-filter: blur(5px);
 }
 
 .textBox{
     /*background-color: rgba(0, 0, 0, 0.01);*/
-    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.05);
-     border-radius: 20px;
+    background-color: rgba(var(--color-bg), 0.005);
+    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.03);
+    border-radius: 20px;
     padding: 20px;
     text-align: left;
     max-width: 1280px;
