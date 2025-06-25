@@ -7,12 +7,26 @@ Some stuff todo
 	Page changes depending on if logged in 	(X)
 		Fix alerts							(X)
 
-	Can't tab (disable all game commands!)	()
+	Can't tab (disable all game commands!)	(X)
 
 	Email verification						(X)
 		And template						()
 		Signin with other services			()
 
+	
+	Popup windows							(X)
+		Maybe do same as notifications!		
+		Should fix the animation!			()
+	Disable all inventory functions			()
+		when in popup
+
+	Want to do the hover block thing		()
+
+
+	Unfocused overlay						()
+
+	Fix player movement						()
+	Do the bad ceiling blocks				()
 
 	World saving
 		Player inventory					()

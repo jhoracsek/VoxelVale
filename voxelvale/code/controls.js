@@ -3,9 +3,10 @@ window.addEventListener("keyup", getKeyUp, false);
 
 var hasInteractedWithWindow = false;
 var isFocused = false;
+var keyboardDisabled = false;
 
 function getKeyDown(key){
-	if(!isFocused)
+	if(!isFocused || keyboardDisabled)
 		return;
 	//LEFT
 	if(key.keyCode == 65){
@@ -33,7 +34,6 @@ function getKeyDown(key){
 	}
 
 	if(key.keyCode == 27){
-		console.log('Poop');
 		isFocused = false;
 	}
 	//Turn off hitbox render (and some other stuff...)

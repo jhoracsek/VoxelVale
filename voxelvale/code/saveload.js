@@ -91,8 +91,13 @@ function loadWorldIntoGame(loadedWorld){
 		if(objNums[i]!=null){
 			world.addBlock( new BLOCK_OBJNUMS[objNums[i]](posXs[i],posYs[i],posZs[i]) );
 		}
-		//console.log('poop')
 	}
+
+	// Reset player coordinates.
+	// Reset Queues.
+	// Set inventory false.
+
+
 }
 
 

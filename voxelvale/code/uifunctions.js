@@ -128,6 +128,47 @@ class InterfaceButton extends InterfaceElement{
 	}
 }
 
+/*
+	Buttons that are just drawn on the text canvas and don't use any webgl.
+*/
+class InterfaceCanvasButton {
+	constructor(X1,Y1,X2,Y2,func1=function(){},text="null",textSize='18', conditionToDraw=function(){return true;}, c1 = '#CCC', c2 = '#555'){
+		
+		this.clickFunction = func1;
+		this.text = text;
+		this.drawConditionFunction = conditionToDraw;
+		this.size=textSize;
+		this.imDrawn = false;
+
+		this.x1 = X1;
+		this.x2 = X2;
+		this.y1 = Y1;
+		this.y2 = Y2;
+
+		this.colorBorder = c1;
+		this.colorBackground = c2;
+	}
+
+	draw(){
+		this.imDrawn = false;
+		if(!this.drawConditionFunction())
+			return;
+
+		//Click and hover.
+		let hovering = false;
+		click_in_bounds(this.x1,this.y1,this.x2,this.y2, this.clickFunction, function(){hovering=true} );
+
+		if(!hovering ){
+			draw_filled_box(this.x1,this.y1,this.x2,this.y2,this.colorBorder,this.colorBackground);
+		}else{
+			draw_filled_box(this.x1,this.y1,this.x2,this.y2,this.colorBorder,'#777');
+		}
+
+		draw_centered_text((this.x1+this.x2)/2,(this.y1+this.y2)/2,this.text,this.size);
+		this.imDrawn = true;
+	}
+}
+
 var heldButtonCount = 0;
 var heldIndex = -1;
 var clickedThisButton = false;
@@ -176,6 +217,10 @@ class InterfaceHeldButton extends InterfaceButton{
 
 /*
 	For consistency adding text.
+
+	Either x1, y1, "text", textSize, isLeft
+	Or,
+	x1, y1, x2, y2, "text", textSize, isLeft
 */
 class InterfaceText{
 	constructor(X1,Y1,arg2,arg3,arg4="null",arg5='18',arg6=false,arg7=null){
@@ -446,6 +491,13 @@ function measure_text(text1,size='18'){
     return length;
 }
 
+
+/*
+	Just in case I eventually make the canvas size larger.
+*/
+function get_draw_center(){
+	return [16/2,9/2];
+}
 
 
 

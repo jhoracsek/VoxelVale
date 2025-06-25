@@ -10,7 +10,12 @@ var inventorySlots=[];
 
 
 //cursorCoor
+var disableInventoryCursor = false;
 function click_in_bounds(x1,y1,x2,y2,func,func2=function(){}){
+	if(disableInventoryCursor){
+
+		return;
+	}
 	if((cursorCoor[0] <= x1 && cursorCoor[0] >= x2) || (cursorCoor[0] >= x1 && cursorCoor[0] <= x2)){
 		if((cursorCoor[1] <= y1 && cursorCoor[1] >= y2) || (cursorCoor[1] >= y1 && cursorCoor[1] <= y2)){
 			if(click==true){
@@ -652,8 +657,7 @@ function draw_inventory(){
 			draw_crafting_menu();
 			break;
 		}
-	reset_mv();
-	reset_pv();
+	
 }
 
 

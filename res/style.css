@@ -66,6 +66,14 @@ a:hover{
     color: #d96735;
 }
 
+.bug{
+    color: #000;
+}
+.bug: hover{
+    color: #d96735;
+}
+
+
 header {
     z-index: 1000;
     position: fixed;

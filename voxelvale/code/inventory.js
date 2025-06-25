@@ -45,17 +45,57 @@ var bottomBarElements = [];
 
 	TRACE OVER CURSOR WITH BLACK LINES!!!
 */
+const centerCoordinates = get_draw_center();
+
+function saveWorldButton(){
+	let savePopup = new Popup(6,2.25);
+
+	let push = 0.26;
+	let pushUp = 0.35;
+	savePopup.addElement(new InterfaceCanvasButton(5.5+push,3.25+pushUp, 7.5+push,3.75+pushUp,function(){savePopup.kill()},"Close"));
+	savePopup.addElement(new InterfaceCanvasButton(5.5+2.5+push,3.25+pushUp, 7.5+2.5+push,3.75+pushUp,saveWorld,"Save"));
+
+	savePopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.5, "Save world to the cloud?", '18', false));
+	savePopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.1, "Note, this will overwrite your existing save!", '18', false));
+
+
+
+	pQueue.enqueue(savePopup);
+}
+
+function loadWorldButton(){
+	let loadPopup = new Popup(6,2.25);
+
+	let push = 0.26;
+	let pushUp = 0.35;
+	loadPopup.addElement(new InterfaceCanvasButton(5.5+push,3.25+pushUp, 7.5+push,3.75+pushUp,function(){loadPopup.kill()},"Close"));
+	loadPopup.addElement(new InterfaceCanvasButton(5.5+2.5+push,3.25+pushUp, 7.5+2.5+push,3.75+pushUp,loadWorld,"Load"));
+
+	loadPopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.5, "Load world from the cloud?", '18', false));
+	loadPopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.1, "Note, this will overwrite the current world!!", '18', false));
+
+
+	pQueue.enqueue(loadPopup);
+}
 
 /*
 	This is the bottom bar that stays for all inventories.
 */
 function add_interface_bottom_bar(){
 	let squish = 0.125
-	var inventoryButton = new InterfaceHeldButton(2.25, 1.25+squish, 5.25, 2-squish,DARK_GREY,function(){currentMenu='INVENTORY';},"Inventory",true);
+	let buttonWidth = 2.5;
+	let buttonSpace = 3;
+	var inventoryButton = new InterfaceHeldButton(2.25, 1.25+squish, 2.25+buttonWidth, 2-squish,DARK_GREY,function(){currentMenu='INVENTORY';},"Inventory",true);
 	bottomBarElements.push(inventoryButton);
 
-	var craftingButton = new InterfaceHeldButton(2.25+3.5, 1.25+squish, 5.25+3.5, 2-squish,DARK_GREY,function(){currentMenu='CRAFTING';},"Crafting");
+	var craftingButton = new InterfaceHeldButton(2.25+buttonSpace, 1.25+squish, (2.25+buttonWidth)+buttonSpace, 2-squish,DARK_GREY,function(){currentMenu='CRAFTING';},"Crafting");
 	bottomBarElements.push(craftingButton);
+
+	var saveButton = new InterfaceButton(2.25+buttonSpace*2, 1.25+squish, (2.25+buttonWidth)+buttonSpace*2, 2-squish,DARK_GREY,saveWorldButton,"Save World");
+	bottomBarElements.push(saveButton);
+
+	var loadButton = new InterfaceButton(2.25+buttonSpace*3, 1.25+squish, (2.25+buttonWidth)+buttonSpace*3, 2-squish,DARK_GREY,loadWorldButton,"Load World");
+	bottomBarElements.push(loadButton);
 
 	/*
 

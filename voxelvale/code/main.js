@@ -100,6 +100,7 @@ var blockCursor=true;
 
 var nQueue;
 var fQueue;
+var pQueue;
 var inFunction=false;
 var projectileArray;
 var enemyArray;
@@ -466,6 +467,7 @@ window.onload = function init(){
 
 	nQueue = new NotificationQueue();
 	fQueue = new Queue();
+	pQueue = new Queue();
 	projectileArray = new ProperArray();
 	enemyArray = new ProperArray();
 
@@ -981,6 +983,22 @@ function render_data(){
 
 	if(inventory)
 		draw_inventory();
+
+	/*
+		Draw popups
+	*/
+	set_light_full();
+	if(pQueue.isEmpty()==false){
+		let popup = pQueue.peek();
+		if(popup.isDead){
+			pQueue.dequeue();
+		}else{
+			pQueue.peek().draw();
+		}
+	}
+
+	reset_mv();
+	reset_pv();
 
 	
 	set_light();
