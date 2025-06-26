@@ -128,7 +128,7 @@ function add_interface_elements(){
 	var holdObjButton = new InterfaceButton(10.25,2.1, 11.5,2.4,DARK_GREY,on_click_hold,"Hold",'14',draw_hold_condition);
 	interfaceBackgrounds.push(holdObjButton);
 
-	var dropObjButton = new InterfaceButton(12,2.1, 13.25,2.4,DARK_GREY,on_click_drop,"Drop",'14',draw_hold_condition);
+	var dropObjButton = new InterfaceButton(12,2.1, 13.25,2.4,DARK_GREY,on_click_drop,"Drop",'14',draw_drop_condition);
 	interfaceBackgrounds.push(dropObjButton);
 
 	//left,right,top,bottom

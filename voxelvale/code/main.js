@@ -343,11 +343,15 @@ function configure_texture(image){
 }
 
 //Thank you MDN webdocs
-function lockChangeAlert(){
+async function lockChangeAlert(){
 	if(document.pointerLockElement===canvas || document.mozPointerLockElement===canvas){
+		isFocused = true;
 		document.addEventListener("mousemove",mouseMoveUpdate,false);
 	}else{
 		document.removeEventListener("mousemove",mouseMoveUpdate,false);
+		isFocused = false;
+	    canvas.blur();
+	    canvas.classList.remove("pointer-lock-active");
 	}
 }
 
@@ -398,13 +402,18 @@ window.onload = function init(){
 	}
 
 	//In controls.js, adds mouse functionality.
+
+
+	/*
+		It's all here.
+	*/
 	canvasEvents();
 	
 	//canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock;
 	//canvas.requestPointerLock();
 	document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
-	canvas.onclick = function() {
-  		canvas.requestPointerLock();
+	canvas.onclick = async function() {
+  		await canvas.requestPointerLock();
 	};
 	document.addEventListener('pointerlockchange', lockChangeAlert, false);
 	document.addEventListener('mozpointerlockchange', lockChangeAlert, false);
@@ -495,8 +504,8 @@ window.onload = function init(){
 	player.addToInventory(new BrickBlock());
 
 
-	//var dropBox = new DropBox(null,null,null,[new WorkBench(), new StonePickaxe(), new DirtBlock(), new GrassBlock(), new WeirdBlock(), new GrassBlock(), new WoodBlock(), new WoodBlock(), new GrassBlock()]);
-	var dropBox = new DropBox(null,null,null,[new DirtBlock(), new GrassBlock(), new WeirdBlock(), new WoodBlock()]);
+	var dropBox = new DropBox(null,null,null,[new WorkBench(), new StonePickaxe(), new DirtBlock(), new GrassBlock(), new WeirdBlock(), new GrassBlock(), new WoodBlock(), new WoodBlock(), new GrassBlock()]);
+	//var dropBox = new DropBox(null,null,null,[new DirtBlock(), new GrassBlock(), new WeirdBlock(), new WoodBlock()]);
 	
 	player.addToInventory(dropBox);
 	toolBarList.push(dropBox);
@@ -543,6 +552,11 @@ window.onload = function init(){
 	//viewMatrixFixed = mult(viewMatrixFixed,translate(-8,-4.5,0));
 	//viewMatrixFixed = mult(viewMatrixFixed,translate(-8,-4.75,0));	
 	set_toolbar_matrices();
+
+
+
+
+
 
 	
 
@@ -919,9 +933,6 @@ function render_data(){
 	/*
 		Update body background position
 	*/
-	bgX = (bgX+0.25)%1024;
-	bodycontainer.style.backgroundPositionX = bgX + "px";
-    bodycontainer.style.backgroundPositionY = -bgX + "px";
 
     //console.log(isFocused);
 
@@ -1397,6 +1408,18 @@ function render_data(){
 		draw_inventory_cursor_overlay();
     }
     checkHovering();
+
+
+    //UNFOCUSED OVERLAY
+	if(!isFocused){
+		draw_filled_box(0,0,16,9,'rgba(0,0,0,0)','rgba(0,0,0,0.4)');
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+1.5, "Press on the window to begin playing!");
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+1, "Use 'WASD' to move.")
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+0.5, "Press ~ to open inventory.");
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1], "Left click to use items and place blocks.");
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-0.5, "Right click to interact with blocks.");
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-1, "Scroll or use 'Q' and 'E' to adjust cursor.");
+	}
 }
 
 function draw_cursor_full(){
@@ -1412,12 +1435,16 @@ function draw_cursor_full(){
 					set_light_full();
 					draw_cursor((coorSys[0]+player.posX)-9,(coorSys[1]+player.posY)-4.5,upOne);
 				}else{
+					//AND HERE
+					//upOne = -3;
+					//upOneStore = upOne;
 					draw_bow_vector((coorSys[0]+player.posX)-9,(coorSys[1]+player.posY)-4.5,upOne);
 				}
 			}
 		
 		}else{
 			set_light_full();
+			//AND HERE
 			draw_cursor_point((coorSys[0]+player.posX)-9,(coorSys[1]+player.posY)-4.5,upOne);
 			
 		}
@@ -1482,7 +1509,7 @@ function render(now){
 	}
 	*/
 
-
+	/*
 	now *= 0.001;                          // convert to seconds
 	const deltaTime = now - then;          // compute time since last frame
 	then = now;                            // remember time for next frame
@@ -1502,6 +1529,7 @@ function render(now){
 	frameCursor %= maxFrames;
 
 	const averageFPS = totalFPS / numFrames;
+	*/
 
 	//document.querySelector("#fpsavg").textContent = averageFPS.toFixed(1);  // update avg display
 

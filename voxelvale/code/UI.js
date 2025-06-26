@@ -317,6 +317,11 @@ function draw_hold_condition(){
 	return active+scrollOffset >= 0 && tabList[active+scrollOffset] != null && activeTab < 2; // And never on the recipes tab!
 }
 
+
+function draw_drop_condition(){
+	return active+scrollOffset >= 0 && tabList[active+scrollOffset] != null && activeTab < 1; // And never on the recipes tab!
+}
+
 function on_click_hold(){
 	if(tabList[selectedItemIndex] != null)
 		player.setHeldObject(tabList[selectedItemIndex]); add_to_toolbar(tabList[selectedItemIndex])

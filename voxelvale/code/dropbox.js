@@ -35,6 +35,10 @@ class DropBox extends X_Y_Z_TextureBlock{
 		this.instanceMat = mult(translate(X,Y,Z),scaleMat);
 	}
 
+	getObjectQuantityPair(){
+		return this.objectQuantityPair;
+	}
+
 	refreshQuantities(){
 		let temp = [];
 		this.displayWidth = this.minDisplayWidth;
@@ -87,6 +91,7 @@ class DropBox extends X_Y_Z_TextureBlock{
 	}
 
 	drawContents(){
+		if(inventory) return;
 		//let c = vec4(0.5,0.5,0,1);
 		let c = vec4(0.5,1,0,1);
 

@@ -7,30 +7,58 @@ Some stuff todo
 
 
 	Want to do the hover block thing		()
-
-	Unfocused overlay						()
+		This means fix the upOne thing		()
 
 	Fix player movement						()
 	
 	Do the bad ceiling blocks				()
 
 	World saving
-		Player inventory					(X)
 		Drop boxes							()
 		Fuck it do dungeons					()
-		(and load/save screen)				()
-		Maybe move buttons in game			()
 		Should save door orientation		()
 
-	Should seperate render and logic loops.
+	fix safari issues.
+		Some sounds don't work.
+		Just fix the point and click thing too.		()
 
-	No dropping tools						()
+	Remove testing functions.
 
-	Drop box still shows thing in inventroy	()
+	optimize a little. Works poorly on
+	old laptop, but old one works fine??
 
 
-	Want to 'Fix' the block object number thing, so
-	it's all in one array.
+	Priority List:
+
+		1. Attempt to fix canvas lock / cursor				(X)
+			1.a) Should work on Safari as well				(X)
+		2. Saving: dropboxes and doors.						()
+			2.a) DropBoxes									(X)
+			2.b) Doors										()
+		3. Safari sound (and music) issues.					()
+		4. Remove/Disable testing functions.				()
+		5. Change cursor controls to Q and E 				()
+		6. Set number keys to correspond to toolbar			()
+		7. Deal with upone.									()
+		8. Deal with hovering.								()
+		9. Fix the save thing when hit escape.				()
+		10. Fix text on linux.								()
+			10.a) Can maybe change font overall.			()
+		11. Can look at the firebase thing.					()
+		12. Try loading world from laptop.					()
+
+
+
+	Notes:
+		Tools should upgrade!!!
+		Iron Pick, Iron Axe.
+		Arrows should be limited. Flint maybe?
+		Enemies can spawn dropboxes on death.
+		Need to add health.
+		Dungeons will definitely not be saved for the first update.
+		Just spawn zombies randomly.
+		Day/Night?
+		The light on the character?
 
 
 Which fonts:

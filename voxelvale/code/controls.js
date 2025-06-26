@@ -5,6 +5,8 @@ var hasInteractedWithWindow = false;
 var isFocused = false;
 var keyboardDisabled = false;
 
+var upOneStore = -1;
+
 function getKeyDown(key){
 	if(!isFocused || keyboardDisabled)
 		return;
@@ -194,16 +196,21 @@ function checkHovering(){
 
 }
 
+/*
+let awaitingPointerLock = false;
+
 document.addEventListener('pointerlockchange', () => {
   if (document.pointerLockElement === canvas) {
   	isFocused = true;
-
+  	console.log('Requested')
   } else {
+  	console.log('Exited')
   	isFocused = false;
     canvas.blur();
+    canvas.classList.remove("pointer-lock-active");
   }
 });
-
+*/
 
 
 var cursorCoor=vec2(0,0);
@@ -312,25 +319,20 @@ canvas.addEventListener("mousedown", function(event){
 
 	}
 });
-
 /*
-canvas.addEventListener("mousemove", function(event){
-	checkHovering();
-});
-*/
 canvas.addEventListener("click",function(event){
-	//click=true;
 	if (document.pointerLockElement !== canvas) {
-    	canvas.requestPointerLock().catch((err) => {
-      	console.warn("Pointer lock request failed:", err);
-    });
+    	//await canvas.requestPointerLock();
   }
 });
+*/
 canvas.addEventListener("mouseup",function(event){
 	click=false;
 });
 //https://developer.mozilla.org/en-US/docs/Web/API/Element/wheel_event
 canvas.addEventListener("wheel",function(event){
+	if(!isFocused)
+		return;
 	event.preventDefault();
 	
 	if(inventory){

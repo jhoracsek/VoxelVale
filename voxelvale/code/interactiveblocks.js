@@ -285,7 +285,8 @@ class Door extends BlockWall{
 				bottomBlock.swapAngle();
 			}
 		}
-
+		this.minDisplayWidth = 0.9;
+		this.displayWidth = this.minDisplayWidth;
 		
 	}
 
@@ -549,6 +550,36 @@ class Door extends BlockWall{
 		
 		
 	}
+
+	drawContents(){
+		if(inventory) return;
+		//let c = vec4(0.5,0.5,0,1);
+		let c = vec4(0.5,1,0,1);
+
+		c = mult(this.instanceMat, c);
+		c = mult(modelViewMatrix, c);
+		c = mult(projectionMatrix, c);
+
+		c = [(c[0]/c[3]+1)*8,(c[1]/c[3]+1)*4.5] //Exact center.
+
+
+
+		//Draw box on top (one block)
+		//Top should be dependent on how many unique blocks there are!
+		draw_filled_box(c[0]-this.displayWidth/2,c[1],c[0]+this.displayWidth/2,c[1]+(1.25)*0.17);
+
+
+		draw_centered_text(c[0],c[1]+0.1,"Open Door",'12');
+
+
+		//Get object quantity pair from this.objectsReturned.
+
+		//Exact center draw_centered_text((c[0]/c[3]+1)*8,(c[1]/c[3]+1)*4.5,"HI!")
+	}
+
+	onHover(){
+		this.drawContents();
+	}
 }
 
 function testFunction(){
@@ -573,6 +604,9 @@ class WorkBench extends InteractiveBlock{
 		this.objectNumber=6;
 		this.tob='STONE';
 		this.desc = 'A work bench for crafting items.'
+
+		this.minDisplayWidth = 1.3;
+		this.displayWidth = this.minDisplayWidth;
 	}
 	draw(){
 		set_mv(this.instanceMat);
@@ -651,6 +685,37 @@ class WorkBench extends InteractiveBlock{
 
 	drawCursor(currentMat){
 		this.drawTransparent(currentMat);
+	}
+
+
+	drawContents(){
+		if(inventory) return;
+		//let c = vec4(0.5,0.5,0,1);
+		let c = vec4(0.5,1,0,1);
+
+		c = mult(this.instanceMat, c);
+		c = mult(modelViewMatrix, c);
+		c = mult(projectionMatrix, c);
+
+		c = [(c[0]/c[3]+1)*8,(c[1]/c[3]+1)*4.5] //Exact center.
+
+
+
+		//Draw box on top (one block)
+		//Top should be dependent on how many unique blocks there are!
+		draw_filled_box(c[0]-this.displayWidth/2,c[1],c[0]+this.displayWidth/2,c[1]+(1.25)*0.17);
+
+
+		draw_centered_text(c[0],c[1]+0.1,"Use Work Bench",'12');
+
+
+		//Get object quantity pair from this.objectsReturned.
+
+		//Exact center draw_centered_text((c[0]/c[3]+1)*8,(c[1]/c[3]+1)*4.5,"HI!")
+	}
+
+	onHover(){
+		this.drawContents();
 	}
 
 	/*
