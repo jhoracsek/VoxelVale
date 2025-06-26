@@ -487,7 +487,7 @@ window.onload = function init(){
 	player.addToInventory(workbench);
 	toolBarList.push(workbench);
 
-	var workbenchRecipe = new Recipe(workbench);
+	var workbenchRecipe = new WorkBenchRecipe();
 	player.addToInventory(workbenchRecipe);
 
 	player.addToInventory(new DirtBlock());

@@ -25,7 +25,7 @@ StonePickaxe		65
 WoodenBow			66
 
 
-
+Recipe				128
 
 
 
@@ -33,10 +33,10 @@ WoodenBow			66
 
 ShiftBlock			512
 DungeonCeiling		513
-
 CursorBlock			515
 
 
-Where to update whenever a new block is added?
+Where to update whenever a new block/item is added?
 
 In saveload.js, in BlockWall.js, and in Main.js
+

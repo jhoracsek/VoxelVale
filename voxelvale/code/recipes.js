@@ -14,6 +14,7 @@ class Recipe{
 		this.id;
 		this.recipe=null;
 		this.craftingStation = 'NONE';
+		this.objectNumber = -1;
 	}
 
 	drawSmall(){
@@ -25,4 +26,11 @@ class Recipe{
 
 
 
+}
+
+class WorkBenchRecipe extends Recipe{
+	constructor(){
+		super(WorkBench);
+		this.objectNumber = 128;
+	}
 }

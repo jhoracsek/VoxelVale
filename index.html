@@ -340,11 +340,17 @@ void main()
                 xPos: info[0],
                 yPos: info[1],
                 zPos: info[2],
-                objectNumbers: info[3]
+                objectNumbers: info[3],
+                invObjNums: info[4],
+                position: info[5]
                 //lastModified: new Date().toISOString()
             });
             console.log("World saved!");
+            pQueue.empty();
+            keyboardDisabled=false;
+            disableInventoryCursor = false;
         } catch (err) {
+            alert("There was an error saving your world!");
             console.error("Save error:", err.message);
         }
     }

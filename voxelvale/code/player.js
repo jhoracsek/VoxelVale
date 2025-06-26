@@ -8,6 +8,11 @@ class InventoryObject{
 	decrease(){this.quant--};
 }
 
+
+
+/*
+	Maybe just redo this?
+*/
 class Inventory{
 	constructor(){
 		this.blockNums=[];
@@ -17,6 +22,26 @@ class Inventory{
 		//this.objects=[];
 		this.recipes=[];
 	}
+
+	getInventoryContents(){
+		return [this.getBlocks(), this.getItems(), this.getNonToolItems(), this.getRecipes()];
+	}
+
+	/*
+		Given same thing returned by the above.
+	*/
+	setInventoryContents(){
+		this.blockNums=[];
+		this.blocks=[];
+		this.itemNums=[];
+		this.items=[];
+		this.recipes=[];
+		//this.constructor();
+
+
+	}
+
+
 	addItem(Item){
 		if(this.items[Item.objectNumber]==null){
 			this.items[Item.objectNumber]=new InventoryObject(Item);
@@ -112,6 +137,8 @@ class Inventory{
 			case 'BLOCK':
 				return this.getQuantityBlock(Object);
 				break;
+			case 'REC':
+				return 1;
 		}
 		return 0;
 	}
@@ -123,6 +150,12 @@ class Inventory{
 		}
 		return retArray;
 	}
+	/*
+		Not used!!
+	*/
+	getTools(){
+		return this.getItems();
+	}
 	getItems(){
 		var retArray=[];
 		for(var i=0;i<this.itemNums.length;i++){
@@ -130,6 +163,9 @@ class Inventory{
 				retArray.push(this.items[this.itemNums[i]].object);
 		}
 		return retArray;
+	}
+	getNonToolItems(){
+		return [];
 	}
 	getRecipes(){
 		return this.recipes;
@@ -202,6 +238,14 @@ class Player extends Humanoid{
 		this.isShooting=false;
 		this.isPlacing=false;
 		this.completedAction=true;
+		this.inventory = new Inventory();
+	}
+
+	getInventoryContents(){
+		return this.inventory.getInventoryContents();
+	}
+	resetInventory(){
+		this.inventory = null;
 		this.inventory = new Inventory();
 	}
 

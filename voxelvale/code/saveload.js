@@ -25,11 +25,13 @@
 */
 function getWorldObj(){
 
+	/*
+		World
+	*/
 	let posXs = [];
 	let posYs = [];
 	let posZs = [];
 	let objNums = [];
-
 
 	for(let i = 0; i <= world.size; i++){
 		for(let j = 0; j <= world.size; j++){
@@ -62,14 +64,49 @@ function getWorldObj(){
 	const xPositions = JSON.stringify(posXs);
 	const yPositions = JSON.stringify(posYs);
 	const zPositions = JSON.stringify(posZs);
-	console.log(posXs.length, posYs.length, posZs.length)
 	const objectNumbers = JSON.stringify(objNums);
 
-	return [xPositions, yPositions, zPositions,objectNumbers];
+	/*
+		Inventory
+	*/
+	let inventoryContents = player.getInventoryContents();
+	let inventoryObjNums = [];
+	//Blocks
+	for(let i = 0; i < inventoryContents[0].length; i++){
+		let q = player.getObjectQuantity(inventoryContents[0][i]);
+		for(let k = 0; k < q; k++)
+			inventoryObjNums.push(inventoryContents[0][i].objectNumber);
+	}
+	//Tools
+	for(let i = 0; i < inventoryContents[1].length; i++){
+		let q = player.getObjectQuantity(inventoryContents[1][i]);
+		for(let k = 0; k < q; k++)
+			inventoryObjNums.push(inventoryContents[1][i].objectNumber);
+	}
+	//Non tool items
+	for(let i = 0; i < inventoryContents[2].length; i++){
+		let q = player.getObjectQuantity(inventoryContents[2][i]);
+		for(let k = 0; k < q; k++)
+			inventoryObjNums.push(inventoryContents[2][i].objectNumber);
+	}
+	//Recipes
+	for(let i = 0; i < inventoryContents[3].length; i++){
+		let q = player.getObjectQuantity(inventoryContents[3][i]);
+		for(let k = 0; k < q; k++)
+			inventoryObjNums.push(inventoryContents[3][i].objectNumber);
+	}
+
+	const invObjectNumbers = JSON.stringify(inventoryObjNums);
+
+	
+
+	return [xPositions, yPositions, zPositions,objectNumbers, invObjectNumbers, [player.posX, player.posY]];
 }
 
 function loadWorldIntoGame(loadedWorld){
-	//const obj = JSON.parse(json);
+	/*
+		World
+	*/
 	if(loadedWorld == null){ 
 		console.log("Failed to load world.")
 		return;
@@ -81,9 +118,6 @@ function loadWorldIntoGame(loadedWorld){
 	let posXs = JSON.parse(loadedWorld.xPos);
 	let posYs = JSON.parse(loadedWorld.yPos);
 	let posZs = JSON.parse(loadedWorld.zPos);
-	//82862 82862 82862
-	//console.log('Here',posXs.length, posYs.length, posZs.length)
-
 	let objNums = JSON.parse(loadedWorld.objectNumbers);
 
 	for(let i = 0; i < objNums.length; i++){
@@ -93,15 +127,56 @@ function loadWorldIntoGame(loadedWorld){
 		}
 	}
 
+	/*
+		Inventory
+	*/
+	let inventoryContents = JSON.parse(loadedWorld.invObjNums);
+
+	inventory = false;
+	fQueue.empty();
+	pQueue.empty();
+	keyboardDisabled=false;
+	disableInventoryCursor = false;
+	player.resetInventory();
+	toolBarList = [];
+	for(let i = 0; i < inventoryContents.length; i++){
+		if(inventoryContents[i] < 64){
+			//Block
+			player.addToInventory(new BLOCK_OBJNUMS[inventoryContents[i]](null,null,null));
+		}
+		else if(inventoryContents[i] < 128){
+			//Item
+			let item = new ITEM_OBJNUMS[inventoryContents[i]-64]();
+			player.addToInventory(item);
+			/*
+				Add tools to toolbar.
+			*/
+			if(inventoryContents[i] == 64)
+				toolBarList.push(item);
+			if(inventoryContents[i] == 65)
+				toolBarList.push(item);
+			if(inventoryContents[i] == 66)
+				toolBarList.push(item);
+		}
+		else if(inventoryContents[i] < 256){
+			//Recipe
+			player.addToInventory(new RECIPE_OBJNUMS[inventoryContents[i]-128]());
+		}
+	}
+	//Clear tool bar
+
 	// Reset player coordinates.
-	// Reset Queues.
-	// Set inventory false.
-
+	let playerPosition = loadedWorld.position;
+	player.posX = playerPosition[0];
+	player.posY = playerPosition[1];
+	
 
 }
 
+/*
+	Need to clean this up.
+*/
+const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door];
+const ITEM_OBJNUMS = [WoodAxe, StonePickaxe, WoodenBow];
+const RECIPE_OBJNUMS = [WorkBenchRecipe];
 
-const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door]
-function getBlockByObjectNumber(objNumber){
-	return BLOCK_OBJNUMS[objNumber];
-}

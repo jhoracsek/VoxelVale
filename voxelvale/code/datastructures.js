@@ -3,6 +3,10 @@ class Queue{
 		this.queueArray=[]
 		this.newEntryIndex=0;
 	}
+	empty(){
+		this.queueArray=[];
+		this.newEntryIndex=0;
+	}
 	enqueue(object){
 		this.queueArray[this.newEntryIndex]=object;
 		this.newEntryIndex++;
