@@ -546,14 +546,14 @@ function scroll_arrows(){
 
 
 function draw_c_text(x1,y1,text1){
-	context.font = "18px Verdana";
+	context.font = "18px "+FONT;
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
     context.fillText(text1,xCoor1,yCoor1);
 }
 
 function draw_c_text_small_stroke(x1,y1,text1){
-	context.font = "10px Verdana";
+	context.font = "10px "+FONT;
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
     context.strokeStyle = '#333';
@@ -562,21 +562,21 @@ function draw_c_text_small_stroke(x1,y1,text1){
 }
 
 function draw_c_text_small(x1,y1,text1){
-	context.font = "10px Verdana";
+	context.font = "10px "+FONT;
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
     context.fillText(text1,xCoor1,yCoor1);
 }
 
 function draw_c_text_med(x1,y1,text1){
-	context.font = "13px Verdana";
+	context.font = "13px "+FONT;
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
     context.fillText(text1,xCoor1,yCoor1);
 }
 
 function draw_c_text_med_stroke(x1,y1,text1){
-	context.font = "13px Verdana";
+	context.font = "13px "+FONT;
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
     context.strokeStyle = '#333';

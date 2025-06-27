@@ -7,46 +7,93 @@ var keyboardDisabled = false;
 
 var upOneStore = -1;
 
+var devFunctions = true;
+
+/*
+	Keycodes
+
+		1: 	49
+		2: 	50
+		3: 	51
+		4: 	52
+		5: 	53
+		6: 	54
+		7: 	55
+		8: 	56
+		9: 	57
+		0: 	48
+
+		W: 	87
+		A: 	65
+		S: 	83
+		D: 	68
+
+		P: 	80
+
+		~: 192
+
+		TAB: 	9
+
+		Q: 	81
+		E: 	69
+		R: 	82
+
+		SPACE: 	32
+
+		ARROW_UP: 		38
+		ARROW_LEFT: 	37
+		ARROW_DOWN: 	40
+		ARROW_RIGHT:  39
+
+		ESCAPE: 			27
+
+
+*/
+
 function getKeyDown(key){
 	if(!isFocused || keyboardDisabled)
 		return;
-	//LEFT
+
+
+	//'A' LEFT
 	if(key.keyCode == 65){
 		//updateCursorColour();
 		//if(!isStopLeft)
 			player.isMovingLeft = true;
 	}
-	//RIGHT
+	//'D' RIGHT
 	if(key.keyCode == 68){
 		//updateCursorColour();
 		//if(!isStopRight)
 			player.isMovingRight = true;
 	}
-	//UP
+	//'W' UP
 	if(key.keyCode == 87){
 		//updateCursorColour();
 		//if(!isStopUp)
 			player.isMovingUp = true;
 	}
-	//DOWN
+	//'S' DOWN
 	if(key.keyCode == 83){
 		//updateCursorColour();
 		//if(!isStopDown)
 			player.isMovingDown = true;
 	}
 
+	//'ESCAPE'
 	if(key.keyCode == 27){
 		isFocused = false;
 	}
-	//Turn off hitbox render (and some other stuff...)
-	// Keycode 81 is 'Q'
-	if(key.keyCode == 81){
-		hitBox = !hitBox;
-		print = !print;
-		modelTestMode = !modelTestMode;
-	}
 
-	if(key.keyCode == 69){
+
+	//'Q'
+	if(key.keyCode == 81){
+		if(devFunctions){
+			hitBox = !hitBox;
+			print = !print;
+			modelTestMode = !modelTestMode;
+		}
+
 		if(fastMode){
 			upOne--;
 		}else{
@@ -55,7 +102,9 @@ function getKeyDown(key){
 		//scroll = -upOne;
 		scroll = 0;
 	}
-	if(key.keyCode == 82){
+
+	//'E'
+	if(key.keyCode == 69){
 		if(fastMode){
 			upOne++;
 		}else{
@@ -63,9 +112,15 @@ function getKeyDown(key){
 		}
 		//scroll = -upOne;
 		scroll = 0;
+		
 	}
 
-	//Hit tab
+	//'R'
+	if(key.keyCode == 82){
+		
+	}
+
+	//'TAB'
 	if(key.keyCode == 9){
 		//Stop tab from zipping around the page.
 		key.preventDefault();
@@ -81,6 +136,7 @@ function getKeyDown(key){
 		//}
 	}
 
+	//'~'
 	if(key.keyCode == 192){
 		tab_lists();
 		if(fQueue.isEmpty()==false){
@@ -102,55 +158,116 @@ function getKeyDown(key){
 			coorSys = vec3(selectXCoor,selectYCoor,0);
 		}
 	}
+
+	//'1'
 	if(key.keyCode == 49){
-		//console.log(world.getPortionNum(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5)));
-		//var name = world.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),Math.round(upOne));
-		//if(name!=null)
-		//	console.log(name.name);
-
-		/*
-		var enemy=new Undead(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),-6);
-		enemy.initialize_enemy();
-		enemyArray.push(enemy)
-		*/
-
-		/*
-		var enemy=new Roller(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),-3);
-		enemy.initialize_enemy();
-		enemyArray.push(enemy)
-		*/
-
-		var enemy=new Finder(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),-3);
-		enemy.initialize_enemy();
-		enemyArray.push(enemy)
+		if(devFunctions){
+			var enemy=new Finder(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),-3);
+			enemy.initialize_enemy();
+			enemyArray.push(enemy);
+		}
 
 	}
+
+	//'2'
 	if(key.keyCode == 50){
-		fastMode=!fastMode;
-		tab_lists();
-		player.checkSpeed();
+		if(devFunctions){
+			fastMode=!fastMode;
+			tab_lists();
+			player.checkSpeed();
+		}
 	}
 
+	/*
+	key.preventDefault();
+		activeToolBarItem = ((activeToolBarItem)%(NUM_TOOLBAR_ITEMS+1))+1
+
+		if(activeToolBarItem == NUM_TOOLBAR_ITEMS+1){
+			player.setHeldObject(null);
+			return;	
+		}
+		player.setHeldObject(toolBarList[activeToolBarItem-1]);
+
+	*/
+
+	//'1'
+	if(key.keyCode == 49){
+		activeToolBarItem = 1;
+		player.setHeldObject(toolBarList[activeToolBarItem-1]);
+	}
+	//'2'
+	if(key.keyCode == 50){
+		activeToolBarItem = 2;
+		player.setHeldObject(toolBarList[activeToolBarItem-1]);
+	}
+	//'3'
+	if(key.keyCode == 51){
+		activeToolBarItem = 3;
+		player.setHeldObject(toolBarList[activeToolBarItem-1]);
+	}
+	//'4'
+	if(key.keyCode == 52){
+		activeToolBarItem = 4;
+		player.setHeldObject(toolBarList[activeToolBarItem-1]);
+	}
+	//'5'
+	if(key.keyCode == 53){
+		activeToolBarItem = 5;
+		player.setHeldObject(toolBarList[activeToolBarItem-1]);
+	}
+	//'6'
+	if(key.keyCode == 54){
+		activeToolBarItem = 6;
+		player.setHeldObject(toolBarList[activeToolBarItem-1]);
+	}
+	//'7'
+	if(key.keyCode == 55){
+		activeToolBarItem = 7;
+		player.setHeldObject(toolBarList[activeToolBarItem-1]);
+	}
+	//'8'
+	if(key.keyCode == 56){
+		activeToolBarItem = 0;
+		player.setHeldObject(null);
+	}
+	//'9'
+	if(key.keyCode == 57){
+		activeToolBarItem = 0;
+		player.setHeldObject(null);
+	}
+	//'0'
+	if(key.keyCode == 48){
+		activeToolBarItem = 0;
+		player.setHeldObject(null);
+	}
+
+	//'P'
 	if(key.keyCode == 80){
-		testView = !testView;
+		if(devFunctions){
+			testView = !testView;
+		}
 	}
 
 	//For testing models
-	//Down
+	//'ARROW_DOWN' Down
 	if(key.keyCode == 40){
-		controlledYSpin-=3;
+		if(devFunctions)
+			controlledYSpin-=3;
 	}
-	//Up
+	//'ARROW_UP' Up
 	if(key.keyCode == 38){
-		controlledYSpin+=3;
+		if(devFunctions)
+			controlledYSpin+=3;
 	}
-	//Right
+	//'ARROW_RIGHT' Right
 	if(key.keyCode == 39){
-		controlledXSpin+=3;
+		if(devFunctions)
+			controlledXSpin+=3;
 	}
-	//Left
+	//'ARROW_LEFT' Left
 	if(key.keyCode == 37){
-		controlledXSpin-=3;
+		if(devFunctions)
+			controlledXSpin-=3;
 	}
 
 }
@@ -176,18 +293,28 @@ function getKeyUp(key){
 
 /*
 	Also sets  blockOnTopOf;
+
+	I think 'blockOnTopOf' is just used for the door. I have no idea why it's fixed at -2 and not upOne + 1? I know
+	doors can only be placed at -3, so it makes sense for that one specific use case.
 */
 function checkHovering(){
 	if(inDungeon){
 		//console.log(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
-		selectedBlock = currentDungeon.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
+		if(currentlyHeldObject == NO_ITEM_HELD || currentlyHeldObject == BOW_HELD)
+			selectedBlock = currentDungeon.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),-3);
+		else
+			selectedBlock = currentDungeon.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
+		
 		if(selectedBlock!=null){
 			selectedBlock.onHover();
 		}
 		blockOnTopOf = currentDungeon.getBlockAt(Math.round(player.posX),Math.round(player.posY),-2);
 
 	}else{
-		selectedBlock = world.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
+		if(currentlyHeldObject == NO_ITEM_HELD || currentlyHeldObject == BOW_HELD)
+			selectedBlock = world.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),-3);
+		else
+			selectedBlock = world.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
 		if(selectedBlock!=null){
 			selectedBlock.onHover();
 		}
@@ -244,10 +371,13 @@ canvas.addEventListener("mousedown", function(event){
 	//Should only do this if you are unfocused.
 	
 	if(!hasInteractedWithWindow){
-
 		playMusic();
 		initAudio();
 		hasInteractedWithWindow = true;
+	}
+
+	if(!isFocused){
+		return;
 	}
 	switch(event.button){
 		//Left Click
@@ -304,13 +434,13 @@ canvas.addEventListener("mousedown", function(event){
 		case 2:
 			if(inDungeon){
 				//console.log(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
-				var selectedBlock = currentDungeon.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
+				//var selectedBlock = currentDungeon.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
 				if(selectedBlock!=null){
 					selectedBlock.onClick();
 				}
 
 			}else{
-				var selectedBlock = world.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
+				//var selectedBlock = world.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
 				if(selectedBlock!=null){
 					selectedBlock.onClick();
 				}
@@ -397,6 +527,7 @@ function mouseMoveUpdate(e){
     	coorSys = vec3(selectXCoor,selectYCoor,0);
     else{
     	//8.5mid
+    	//This is where the cursor is limited
     	if(selectXCoor>=10.5)selectXCoor=10.5;
     	if(selectXCoor<=6.5)selectXCoor=6.5;
     	//4mid

@@ -86,7 +86,9 @@ class WoodenBow extends Weapon{
 	}
 	onLClick(){
 		if(projectileCooldown <= 0){
-			projectileArray.push(new Arrow(cursorDirection,cursorPower,player.posX,player.posY,upOne));
+			//projectileArray.push(new Arrow(cursorDirection,cursorPower,player.posX,player.posY,upOne));
+			projectileArray.push(new Arrow(cursorDirection,cursorPower,player.posX,player.posY,-3));
+
 			sound_ArrowShoot();
 			projectileCooldown = this.cooldown;
 			return true;
@@ -170,14 +172,24 @@ function ui_push_example(v1 ,v2, v3, c1=vec4(1,0,0,1), c2=c1, c3=c1){
 	}
 	return 3;
 }
-
-
+function polarToCartesian(magnitude,angle){
+    return [-magnitude*Math.sin(angle),magnitude*Math.cos(angle)]
+}
+function toRad(angle){
+	return angle*(Math.PI/180);
+}
 //bowVectorStart
 var cursorDirection;
 var cursorPower;
 var bowVectorRotate = 0;
 /*
 	MAKE IT ROTATE!!!
+
+
+	June 27th.
+
+	So I want to make it a fixed 'circle' around the player.
+	(Should vary a tiny bit though.)
 */
 function draw_bow_vector(X=0,Y=0,Z=0){
 
@@ -186,32 +198,67 @@ function draw_bow_vector(X=0,Y=0,Z=0){
 	var adj = cursorCoordinates[0]-(player.posX-0.5);
 
 	var theta = Math.atan(opp/adj);
-	theta = (theta*180)/Math.PI;
+	
 	var rotMV;
 	if(adj<0)
-		cursorDirection = 90+theta;
+		cursorDirection = 90+(theta*180)/Math.PI;
 	else
-		cursorDirection = 270+theta;
-		//cursorDirection = 270+theta;
+		cursorDirection = 270+(theta*180)/Math.PI;
+	
 
 	rotMV=rotateZ(cursorDirection);
+
+	
 	var magnitude;
-	magnitude = Math.sqrt(opp*opp+adj*adj);
-	magnitude = magnitude/2.83;
-	cursorPower = magnitude;
-	var scaleMV = mult(scale4(0.125+magnitude/1.25,magnitude,1), rotateY(bowVectorRotate));
-	//set_light_full();
-	var firstMV= mult(translate(X+0.5,Y+0.5,Z),rotMV);
+	magnitude = 1.3*Math.sqrt(opp*opp+adj*adj);
+	//magnitude = magnitude/2.83; //2*sqrt(2)
+	
+	magnitude = Math.min(magnitude,2.5);
+
+	cursorPower = magnitude/2.83;
+	cursorPower = Math.max(0.4, cursorPower);
+	//magnitude = Math.max(0.5, magnitude);
+	
+
+	
+	/*
+		Need to kind of limit X,Y.
+	
+		We convert our polar coordinates, e.g., cursorDirection and magnitude
+		to cartesian coordinates.
+				 
+				 0 (2pi)
+				 /\
+				 |
+				 |
+   90 (pi/2)<----------> 270 (3pi/2)
+				 |
+				 |
+				 \/
+				180 (pi)
+	*/
+	
+	var drawPosition = polarToCartesian(magnitude,toRad(cursorDirection));
+	//if(frameCount == 0){
+		//Get these ones to 0,0 center
+		//console.log(magnitude)
+		//console.log('Normal', X+0.5-player.posX, Y+0.5-player.posY)
+		//console.log('Limited', drawPosition[0], drawPosition[1]);
+	//}
+
+	var scaleMV = mult(scale4(0.125+cursorPower/1.25,cursorPower,1), rotateY(bowVectorRotate));
+	
+	//var firstMV= mult(translate(X+0.5,Y+0.5,Z),rotMV);
+
+	var firstMV= mult(translate(drawPosition[0]+player.posX, drawPosition[1]+player.posY,Z),rotMV);
+	
+
 	set_mv(mult(firstMV,scaleMV));
-	//set_mv(translate(player.posX,player.posY,Z));
-	//if(cursorGreen==false)
+	
 	set_light();
 	set_light_arrow_vector(mult(mult(modelViewMatrix, firstMV),vec4(0,0,-2,1)));
 	gl.drawArrays(gl.TRIANGLES,bowVectorStart,bowVectorVertices);
-	//set_light();
-	//else
-	//	gl.drawArrays(gl.LINES,startPositionOfGreenWireframe,totalVerticesOfGreenWireframe);
-	//set_mv(translate(-X,-Y,-Z));
+	
 	bowVectorRotate = (bowVectorRotate+0.5)%360;
 }
 

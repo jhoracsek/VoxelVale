@@ -3,6 +3,7 @@ class InteractiveBlock extends BlockWall{
 		super(X,Y,Z,T,false,'STONE');
 		//Might need to fart around with this for a bit to get it working correctly :/
 		this.menuFunction = MENUFUNCTION;
+		this.isInteractable = true;
 	}
 	onClick(){
 		xCoor=8;
@@ -190,6 +191,7 @@ class Door extends BlockWall{
 		this.desc = 'A wood door.'
 		this.tob='WOOD';
 		this.rotateOpen = 0;
+		this.isInteractable = true;
 
 		// Based on the position relative to player.
 		this.relativeAngle = 0;
@@ -285,7 +287,7 @@ class Door extends BlockWall{
 				bottomBlock.swapAngle();
 			}
 		}
-		this.minDisplayWidth = 0.9;
+		this.minDisplayWidth = 1.1;
 		this.displayWidth = this.minDisplayWidth;
 		
 	}
@@ -552,11 +554,49 @@ class Door extends BlockWall{
 	}
 
 	drawContents(){
-		if(inventory) return;
+		if(inventory || inFunction) return;
 		//let c = vec4(0.5,0.5,0,1);
+
+		/*
+
+			CLOSE ENOUGH!!! 
 		let c = vec4(0.5,1,0,1);
 
 		c = mult(this.instanceMat, c);
+		c = mult(modelViewMatrix, c);
+		c = mult(projectionMatrix, c);
+
+		console.log('Here',c[3])
+
+		//c = [(c[0]/c[3]+1)*8,(c[1]/c[3]+1)*4.5] //Exact center.
+
+		//cursorCoordinates[0]-(player.posX-0.5);
+		//cursorCoordinates[1]-(player.posY-0.5);
+
+		if(frameCount == -1){
+			console.log('c vector', c[0], c[1]);
+			console.log('cursor', cursorCoordinates[0]-(player.posX-0.5), cursorCoordinates[1]-(player.posY-0.5));
+		}
+		c = [(cursorCoordinates[0]-(player.posX-0.5) + 9)/1.16019, (cursorCoordinates[1]-(player.posY-0.5) + 6)/1.16019];
+
+		draw_filled_box(c[0]-this.displayWidth/2,c[1]-0.15,c[0]+this.displayWidth/2,c[1]+0.15);
+
+		draw_centered_text(c[0],c[1],"Open door.",'12');
+
+
+		//Get object quantity pair from this.objectsReturned.
+
+		//Exact center draw_centered_text((c[0]/c[3]+1)*8,(c[1]/c[3]+1)*4.5,"HI!")
+		*/
+
+		let c = vec4(0.5,1,0,1);
+
+		//Find the coordinates a block is placed at!
+		//Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne
+
+		let matrix = translate((coorSys[0]+player.posX)-9, (coorSys[1]+player.posY)-4.5, -3);
+
+		c = mult(matrix, c);
 		c = mult(modelViewMatrix, c);
 		c = mult(projectionMatrix, c);
 
@@ -566,15 +606,12 @@ class Door extends BlockWall{
 
 		//Draw box on top (one block)
 		//Top should be dependent on how many unique blocks there are!
-		draw_filled_box(c[0]-this.displayWidth/2,c[1],c[0]+this.displayWidth/2,c[1]+(1.25)*0.17);
+		draw_filled_box(c[0]-this.displayWidth/2,c[1],c[0]+this.displayWidth/2,c[1]+(1.35)*0.17);
 
-
-		draw_centered_text(c[0],c[1]+0.1,"Open Door",'12');
-
-
-		//Get object quantity pair from this.objectsReturned.
-
-		//Exact center draw_centered_text((c[0]/c[3]+1)*8,(c[1]/c[3]+1)*4.5,"HI!")
+		if(this.isOpen)
+			draw_centered_text(c[0]+0.03,c[1]+0.1,"Close door.",'12');
+		else
+			draw_centered_text(c[0],c[1]+0.1,"Open door.",'12');
 	}
 
 	onHover(){
@@ -600,10 +637,10 @@ class WorkBench extends InteractiveBlock{
 		super(X,Y,Z,5,testFunction);
 		this.index = stoneBlockStart+36;
 		this.numberOfVerts = 36;
-		this.name = 'Work Bench';
+		this.name = 'Workbench';
 		this.objectNumber=6;
 		this.tob='STONE';
-		this.desc = 'A work bench for crafting items.'
+		this.desc = 'A workbench for crafting items.'
 
 		this.minDisplayWidth = 1.3;
 		this.displayWidth = this.minDisplayWidth;
@@ -689,7 +726,7 @@ class WorkBench extends InteractiveBlock{
 
 
 	drawContents(){
-		if(inventory) return;
+		if(inventory|| inFunction) return;
 		//let c = vec4(0.5,0.5,0,1);
 		let c = vec4(0.5,1,0,1);
 
@@ -706,7 +743,7 @@ class WorkBench extends InteractiveBlock{
 		draw_filled_box(c[0]-this.displayWidth/2,c[1],c[0]+this.displayWidth/2,c[1]+(1.25)*0.17);
 
 
-		draw_centered_text(c[0],c[1]+0.1,"Use Work Bench",'12');
+		draw_centered_text(c[0],c[1]+0.1,"Use workbench.",'12');
 
 
 		//Get object quantity pair from this.objectsReturned.

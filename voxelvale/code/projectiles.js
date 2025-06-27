@@ -14,7 +14,14 @@ class Projectile{
 		this.bounds=[vec4(-1,-1,-1,1),vec4(1,1,1,1)];
 		this.markedToDestroy=false;
 
+		//this.acceleration=0.0125;
 		this.acceleration=0.0125;
+		
+		//Max power: 0.88 -> 0.0120  Min power: 0.50 -> 0.0225
+
+		//this.acceleration = (2-this.power/0.88)*0.0120;
+		this.acceleration = (2-this.power/0.6)*0.0120 + 0.006;
+
 		//These are the initial velocities
 		this.horizontalVelocity=Math.sin(Math.PI*this.direction/180)/5;
 		this.verticalVelocity=Math.cos(Math.PI*this.direction/180)/5;
@@ -119,12 +126,9 @@ class Projectile{
 		this.renderFunction();
 	}
 	checkCollisions(){
-
-		console.log('ge')
 		if(enemyArray.isEmpty())
 			return;
 		for(var i=0;i<enemyArray.getLength();i++){
-			console.log('ENENMY')
 			if(isColliding(this,enemyArray.accessElement(i)))
 				console.log('IM HIT')
 		}
@@ -140,12 +144,6 @@ class Projectile{
 		gl.drawArrays(gl.TRIANGLES,this.index,this.numberOfVertices);
 		if(hitBox)
 			gl.drawArrays(gl.LINES,this.hbIndex,this.hbEnd);
-		
-		//setMV = translate(this.pX,this.pY,this.pZ);
-		//set_mv(setMV);
-		
-		//	gl.drawArrays(gl.LINES,this.hbIndex,this.hbEnd);
-
 	}
 	returnBounds(){
 		var dip=180*Math.atan(this.downwardVelocity)/Math.PI;
@@ -155,8 +153,6 @@ class Projectile{
 
 		
 		return [mult(setMV, this.bounds[0]), mult(setMV, this.bounds[1])];
-		//var offset = 0;
-		//return [vec3(mult(translate(this.pX+offset,this.pY+offset,this.pZ),this.bounds[0])),vec3(mult(translate(this.pX+offset,this.pY+offset,this.pZ),this.bounds[1]))];
 	}
 	sendHitBoxData(){
 		//Make a square with returnBounds  

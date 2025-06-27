@@ -48,7 +48,7 @@ var bottomBarElements = [];
 const centerCoordinates = get_draw_center();
 
 function saveWorldButton(){
-	let savePopup = new Popup(6,2.25);
+	let savePopup = new Popup(6.5,2.25);
 
 	let push = 0.26;
 	let pushUp = 0.35;
@@ -64,7 +64,7 @@ function saveWorldButton(){
 }
 
 function loadWorldButton(){
-	let loadPopup = new Popup(6,2.25);
+	let loadPopup = new Popup(6.5,2.25);
 
 	let push = 0.26;
 	let pushUp = 0.35;
@@ -72,7 +72,7 @@ function loadWorldButton(){
 	loadPopup.addElement(new InterfaceCanvasButton(5.5+2.5+push,3.25+pushUp, 7.5+2.5+push,3.75+pushUp,loadWorld,"Load"));
 
 	loadPopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.5, "Load world from the cloud?", '18', false));
-	loadPopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.1, "Note, this will overwrite the current world!!", '18', false));
+	loadPopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.1, "Note, this will overwrite the current world!", '18', false));
 
 
 	pQueue.enqueue(loadPopup);

@@ -26,6 +26,31 @@
     font-weight: bold;
     font-style: italic;
 }
+/*ROBOTO MONO*/
+@font-face {
+    font-family: 'ROBOTO'; /*a name to be used later*/
+    src: url('fonts/Roboto/RobotoMono-Regular.ttf'); /*URL to font*/
+}
+
+@font-face {
+    font-family: 'ROBOTO'; /*a name to be used later*/
+    src: url('fonts/Roboto/RobotoMono-Bold.ttf'); /*URL to font*/
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'ROBOTO'; /*a name to be used later*/
+    src: url('fonts/Roboto/RobotoMono-Italic.ttf'); /*URL to font*/
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'ROBOTO'; /*a name to be used later*/
+    src: url('fonts/Roboto/RobotoMono-BoldItalic.ttf'); /*URL to font*/
+    font-weight: bold;
+    font-style: italic;
+}
+/*-----------*/
 
 @font-face {
     font-family: 'MAC'; /*a name to be used later*/
@@ -107,7 +132,7 @@ nav ul li a {
 
 body {
     /*font: normal 13px daydream, Verdana, Arial, sans-serif;*/
-    font-family: 'MDIO';
+    font-family: 'ROBOTO';
     background-image: url("bg.png");
     background-repeat: repeat-xy;
     background-position: 0 0;

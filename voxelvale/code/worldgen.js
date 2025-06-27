@@ -57,9 +57,15 @@ class WorldPortion{
 	}
 
 	push(block){
+		//Check within cluster
+		let px = block.posX;
+		let py = block.posY;
+		let pz = block.posZ;
+		if(this.isSpaceOccupied(px, py, pz))//||px >= this.outerBoundX || px < this.posX || py >= this.outerBoundY || py < this.posY)
+			return;
 		if(block.posZ >= -4){
 			this.portion.push(block);
-			this.setSpaceOccupied(block.posX,block.posY,block.posZ);
+			this.setSpaceOccupied(px,py,pz);
 		}else{
 			this.portionCeiling.push(block);
 		}
@@ -104,30 +110,49 @@ class WorldPortion{
 			
 		}
 
+			/*
+			Generate border
+			We do this first to avoid anyoverlap
+		*/
+		for(var i = this.posX; i < this.outerBoundX; i++){
+			for(var j = this.posY; j < this.outerBoundY; j++){
+				if(i==0 || j==0){
+					this.push(new BorderWall(i,j,-3));
+				}
+
+				if(i > PORTION_SIZE*WORLD_SIZE && i == this.outerBoundX-1)
+					this.push(new BorderWall(i,j,-3));
+
+				if(j > PORTION_SIZE*WORLD_SIZE && j == this.outerBoundY-1)
+					this.push(new BorderWall(i,j,-3));
+
+			}
+		}
+
 		
-		//if(generate_by_probability(0.5)){
+		
 		if(generate_by_probability(0.15)){
 			for(var i = this.posX; i < this.outerBoundX; i++){
 				for(var j = this.posY; j < this.outerBoundY; j++){
 					//Do wood if underneath dungeon.
-					if( (j-this.posY) <= 4 && (i - this.posX) >0 && (i-this.posX) <8  ){
+					if( (j-this.posY) <= 6 && (j-this.posY) > 1 && (i - this.posX) >0 && (i-this.posX) <8  ){
 						this.push(new WoodBlock(i,j,-2));
 					}else{
 						this.push(new GrassBlock(i,j,-2));
 					}
 				}
 			}
-			var retArray = gen_dungeon_BL(this.posX,this.posY);
+			var retArray = gen_dungeon_BL(this.posX,this.posY+2);
 			for(var z=0;z<retArray.length;z++)
 				this.push(retArray[z]);
 			return;
 		}
+	
 		
 		for(var i = this.posX; i < this.outerBoundX; i++){
 			for(var j = this.posY; j < this.outerBoundY; j++){
-				//This is where you should add the border for the right side as well.
-				if(i==0 || j==0)
-					this.push(new GrassBlock(i,j,-3));
+				
+
 
 				/*
 					Generate stonecluster.

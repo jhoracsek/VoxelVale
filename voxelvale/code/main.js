@@ -151,6 +151,10 @@ var particles =[]
 let bodycontainer;
 
 
+// Font
+const FONT = "ROBOTO";
+
+
 //Thank you: w3schools.com/tags/canvas_getimagedata.asp
 function create_image_old(){
 	var c = document.getElementById("myCanvas");
@@ -346,6 +350,7 @@ function configure_texture(image){
 async function lockChangeAlert(){
 	if(document.pointerLockElement===canvas || document.mozPointerLockElement===canvas){
 		isFocused = true;
+
 		document.addEventListener("mousemove",mouseMoveUpdate,false);
 	}else{
 		document.removeEventListener("mousemove",mouseMoveUpdate,false);
@@ -394,7 +399,7 @@ window.onload = function init(){
 	context = textCanvas.getContext("2d");
 	context.fillStyle = "#FFFFFF";
 	context.clearRect(0,0,context.canvas.width,context.canvas.height);
-	context.font = "18px Verdana";
+	context.font = "18px "+FONT;
 
 	gl = WebGLUtils.setupWebGL(canvas, {stencil:true, alpha: false, premultipliedAlpha: false});
 	if(!gl){
@@ -1412,7 +1417,7 @@ function render_data(){
 
     //UNFOCUSED OVERLAY
 	if(!isFocused){
-		draw_filled_box(0,0,16,9,'rgba(0,0,0,0)','rgba(0,0,0,0.4)');
+		draw_filled_box(0,0,16,9,'rgba(0,0,0,0)','rgba(0,0,0,0.5)');
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+1.5, "Press on the window to begin playing!");
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+1, "Use 'WASD' to move.")
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+0.5, "Press ~ to open inventory.");
@@ -1422,6 +1427,13 @@ function render_data(){
 	}
 }
 
+const NO_ITEM_HELD = 0;
+const BLOCK_HELD = 1; 
+const TOOL_HELD = 2;
+const BOW_HELD = 3;
+
+var currentlyHeldObject = 0;
+
 function draw_cursor_full(){
 	if(!inventory && !inFunction){
 		
@@ -1429,23 +1441,27 @@ function draw_cursor_full(){
 			if(player.heldObject.typeOfObj === 'BLOCK'){
 				set_light_full();
 				draw_cursor_block( (coorSys[0]+player.posX)-9,(coorSys[1]+player.posY)-4.5,upOne,player.heldObject);
+				currentlyHeldObject = BLOCK_HELD;
 			}
 			else{
 				if(blockCursor){
 					set_light_full();
 					draw_cursor((coorSys[0]+player.posX)-9,(coorSys[1]+player.posY)-4.5,upOne);
+					currentlyHeldObject = TOOL_HELD;
 				}else{
 					//AND HERE
 					//upOne = -3;
 					//upOneStore = upOne;
-					draw_bow_vector((coorSys[0]+player.posX)-9,(coorSys[1]+player.posY)-4.5,upOne);
+					draw_bow_vector((coorSys[0]+player.posX)-9,(coorSys[1]+player.posY)-4.5,-3);
+					currentlyHeldObject = BOW_HELD;
 				}
 			}
 		
 		}else{
 			set_light_full();
 			//AND HERE
-			draw_cursor_point((coorSys[0]+player.posX)-9,(coorSys[1]+player.posY)-4.5,upOne);
+			draw_cursor_point((coorSys[0]+player.posX)-9,(coorSys[1]+player.posY)-4.5,-3);
+			currentlyHeldObject = NO_ITEM_HELD;
 			
 		}
 		cursorCoordinates[0]=(coorSys[0]+player.posX)-9;

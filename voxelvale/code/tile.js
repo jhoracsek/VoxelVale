@@ -141,6 +141,7 @@ class BlockWall extends zObject{
 		this.objectNumber=null;
 		this.particleColor = vec3(0.5, 0.5, 0.5);
 		this.isTall = false;
+		this.isInteractable = false;
 		this.isTop = false;
 		this.isCeiling = false;
 		/*

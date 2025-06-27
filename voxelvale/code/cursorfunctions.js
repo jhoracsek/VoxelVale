@@ -155,7 +155,13 @@ function updateCursorColour(){
 					cursorGreen = true;
 				}
 
-			}else{
+			}
+			else if(heldItem.isInteractable){
+				if(upOne == -3){
+					cursorGreen = true;
+				}
+			}
+			else{
 				cursorGreen = true;
 			}
 		}else if(heldItem.typeOfObj == 'ITEM'){

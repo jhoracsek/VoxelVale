@@ -79,6 +79,7 @@ class BlockWallNew extends zObjectNew{
 	static isTop = false; get isTop() {return this.constructor.isTop;}
 	static texture = -1; get texture() {return this.constructor.texture;}
 	static sound = 'STONE'; get sound() {return this.constructor.sound;}
+	static isInteractable = false; get isInteractable() {return this.constructor.isInteractable;}
 
 	static sendData(){
 		build_block(this.texture,0.0,0.0);
@@ -441,7 +442,7 @@ class GrassBlock extends BlockWallNew{
 */
 
 function initialize_simpleBlocks(){
-	simpleBlocks = [GrassBlock, WeirdBlock, BrickBlock, StoneFloorBlock, DungeonWall];
+	simpleBlocks = [GrassBlock, WeirdBlock, BrickBlock, StoneFloorBlock, DungeonWall, BorderWall];
 }
 
 class WeirdBlock extends BlockWallNew{
@@ -480,6 +481,16 @@ class DungeonWall extends BlockWallNew{
 	static objectNumber=12;
 	static desc = 'A dungeon wall floor.'
 	static texture = 60;
+	constructor(X=null,Y=null,Z=null,ground=false){
+		super(X,Y,Z,ground);
+	}
+}
+
+class BorderWall extends BlockWallNew{
+	static name = 'Border Wall';
+	static objectNumber=15;
+	static desc = 'How did you get this in your inventory?!'
+	static texture = 51;
 	constructor(X=null,Y=null,Z=null,ground=false){
 		super(X,Y,Z,ground);
 	}

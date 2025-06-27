@@ -7,9 +7,18 @@
 const backgroundMusicTracks = [
 	'voxelvale/code/sounds/music/nature sketch.wav',
 	'voxelvale/code/sounds/music/ChillLofiR.mp3',
-	'voxelvale/code/sounds/music/old city theme.ogg',
+	'voxelvale/code/sounds/music/oldcitytheme.mp3',
 	'voxelvale/code/sounds/music/snow_city.mp3',
-	'voxelvale/code/sounds/music/town theme_0.flac',
+	'voxelvale/code/sounds/music/towntheme.mp3',
+
+
+	//New tracks
+	//'voxelvale/code/sounds/music/save.mp3' ()
+	'voxelvale/code/sounds/music/d.mp3',
+	'voxelvale/code/sounds/music/8_bit_memory_indie_proj_2_ma.mp3',
+	'voxelvale/code/sounds/music/indieproj.mp3',
+	'voxelvale/code/sounds/music/drm.mp3',
+	//'voxelvale/code/sounds/music/hungrytribes.mp3',
 
 ];
 
@@ -18,7 +27,16 @@ const backgroundMusicTracksNames = [
 	'Chill lofi',
 	'Old City Theme',
 	'Snow City',
-	'Town Theme'
+	'Town Theme',
+
+	//New tracks
+	//'Forest', (Might be good for dungeon)
+	'Small Town',	//Not a starter
+	'8-Bit Summer Memory', //Not a starter
+	'8 Bit Prairie',
+	'Dreamlike State',
+	//'Hungry Tribes', (Might be good for dungeon)
+
 ];
 
 const backgroundMusicTracksArtists = [
@@ -26,7 +44,16 @@ const backgroundMusicTracksArtists = [
 	'omfgdude',
 	'remaxim',
 	'Tarush Singhal',
-	'remaxim'
+	'remaxim',
+
+	//New tracks
+	//'Tarush Singhal',
+	'Tarush Singhal',
+	'Tarush Singhal',
+	'Tarush Singhal',
+	'Tarush Singhal',
+	//'remaxim',
+
 ];
 
 const dungeonMusicTracks=[];

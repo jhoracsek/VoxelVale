@@ -114,9 +114,25 @@ function getWorldObj(){
 
 			/*
 				Door
+
+				Need to store:
+					originalInstanceMat		(will be flattened)
+					instanceMat 			(will be flattened)	
+					isOpen
+					rotateOpen
+					relativeAngle			(not really necessary, but just in case)
+					orientationAngle
+					isLeft
 			*/
 			case 14:
-				//Implement.
+				let door = instanceBlocks[i];
+				store.push(flatten(door.originalInstanceMat));
+				store.push(flatten(door.instanceMat));
+				store.push(door.isOpen);
+				store.push(door.rotateOpen);
+				store.push(door.relativeAngle);
+				store.push(door.orientationAngle);
+				store.push(door.isLeft);
 				break;
 		}
 		blockInstanceInformation.push(store);
@@ -228,9 +244,27 @@ function loadWorldIntoGame(loadedWorld){
 
 				}
 				break;
-			//Door
-			case 14:
+			/*
+				Need to load:
+					4: originalInstanceMat		(needs to be unflattened)
+					5: instanceMat 			(needs to be unflattened)	
+					6: isOpen
+					7: rotateOpen
+					8: relativeAngle			(not really necessary, but just in case)
+					9: orientationAngle
+					10: isLeft
 
+				store is formatted as:
+				store = [..., same order as above].
+			*/
+			case 14:
+				blockToChange.originalInstanceMat = unflatten(store[4]);
+				blockToChange.instanceMat  = unflatten(store[5]);
+				blockToChange.isOpen  = store[6];
+				blockToChange.rotateOpen = store[7];
+				blockToChange.relativeAngle = store[8];
+				blockToChange.orientationAngle = store[9];
+				blockToChange.isLeft = store[10];
 				break;
 				
 		}
@@ -291,7 +325,7 @@ function loadWorldIntoGame(loadedWorld){
 /*
 	Need to clean this up.
 */
-const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door];
+const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door,BorderWall];
 const ITEM_OBJNUMS = [WoodAxe, StonePickaxe, WoodenBow];
 const RECIPE_OBJNUMS = [WorkBenchRecipe];
 
@@ -313,5 +347,17 @@ function getObjectBasedOnObjectNumber(objectNumber){
 		object = new RECIPE_OBJNUMS[objectNumber-128]();
 	}
 	return object;
+}
+
+
+/*
+	Converts a 1X16 vector to a 4X4 matrix.
+*/
+function unflatten(vector){
+	let mat = mat4();
+	for(let i = 0; i < 16; i++){
+		mat[i%4][Math.floor(i/4)] = vector[i];
+	}
+	return mat;
 }
 

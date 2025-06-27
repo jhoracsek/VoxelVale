@@ -25,7 +25,7 @@ class DropBox extends X_Y_Z_TextureBlock{
 
 		this.minDisplayWidth = 0.9;
 		this.displayWidth = this.minDisplayWidth;
-		
+		this.isInteractable = true;
 		this.refreshQuantities();
 
 		let scaleMat = mult(translate(0.5,0.5,1),mult(scale4(0.8,0.8,0.8), mult(rotateZ(0),translate(-0.5,-0.5,-1))));

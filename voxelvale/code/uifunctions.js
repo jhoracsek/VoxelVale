@@ -436,7 +436,7 @@ function draw_filled_box(x1,y1,x2,y2,c1='#CCC', c2='#111'){
 }
 
 function draw_left_text(x1,y1,text1,size='18'){
-	context.font = size+"px Verdana";
+	context.font = size+"px "+FONT;
 	context.textAlign = "left";
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
@@ -450,7 +450,7 @@ function draw_left_text(x1,y1,text1,size='18'){
 }
 
 function draw_right_text(x1,y1,text1,size='18'){
-	context.font = size+"px Verdana";
+	context.font = size+"px "+FONT;
 	context.textAlign = "right";
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
@@ -464,7 +464,7 @@ function draw_right_text(x1,y1,text1,size='18'){
 }
 
 function draw_centered_text(x1,y1,text1,size='18'){
-	context.font = size+"px Verdana";
+	context.font = size+"px "+FONT;
 	context.textAlign = "center";
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
@@ -480,7 +480,7 @@ function draw_centered_text(x1,y1,text1,size='18'){
 
 function measure_text(text1,size='18'){
 	let length = 0;
-	context.font = size+"px Verdana";
+	context.font = size+"px "+FONT;
 	context.textAlign = "center";
     context.textBaseline = "middle";
 
@@ -507,13 +507,13 @@ function get_draw_center(){
 
 /*
 function draw_c_text(x1,y1,text1){
-	context.font = "18px Verdana";
+	context.font = "18px "+FONT;
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
     context.fillText(text1,xCoor1,yCoor1);
 }
 function draw_c_text_small_stroke(x1,y1,text1){
-	context.font = "10px Verdana";
+	context.font = "10px "+FONT;
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
     context.strokeStyle = '#333';

@@ -51,13 +51,13 @@ async function initAudio(){
 		loadSound('swish8', 'voxelvale/code/sounds/effects/swishes/swish-8.wav'),
 
 		// Bow shoot
-		loadSound('shoot', 'voxelvale/code/sounds/effects/bowandarrow/shoot.ogg'),
+		loadSound('shoot', 'voxelvale/code/sounds/effects/bowandarrow/shoot.wav'),
 
 		// Impacts.
-		loadSound('metal', 'voxelvale/code/sounds/effects/impact/metal.ogg'),
-		loadSound('stone', 'voxelvale/code/sounds/effects/impact/stone.ogg'),
-		loadSound('wood', 'voxelvale/code/sounds/effects/impact/wood.ogg'),
-		loadSound('dirt', 'voxelvale/code/sounds/effects/impact/dirt.flac'),	//https://opengameart.org/content/stop
+		loadSound('metal', 'voxelvale/code/sounds/effects/impact/metal.wav'),
+		loadSound('stone', 'voxelvale/code/sounds/effects/impact/stone.wav'),
+		loadSound('wood', 'voxelvale/code/sounds/effects/impact/wood.wav'),
+		loadSound('dirt', 'voxelvale/code/sounds/effects/impact/dirt.wav'),	//https://opengameart.org/content/stop
 
 		//Placing blocks.
 		loadSound('placed1', 'voxelvale/code/sounds/effects/placed/placed1.wav'),
