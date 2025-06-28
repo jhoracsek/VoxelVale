@@ -1,31 +1,4 @@
-@font-face {
-    font-family: 'daydream';
-    src:  url("new/depixel/DePixelSchmal.ttf");
-}
 
-@font-face {
-    font-family: 'MDIO'; /*a name to be used later*/
-    src: url('fonts/MDIOTrial-Medium.otf'); /*URL to font*/
-}
-
-@font-face {
-    font-family: 'MDIO'; /*a name to be used later*/
-    src: url('fonts/MDIOTrial-Bold.otf'); /*URL to font*/
-    font-weight: bold;
-}
-
-@font-face {
-    font-family: 'MDIO'; /*a name to be used later*/
-    src: url('fonts/MDIOTrial-MediumItalic.otf'); /*URL to font*/
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'MDIO'; /*a name to be used later*/
-    src: url('fonts/MDIOTrial-BoldItalic.otf'); /*URL to font*/
-    font-weight: bold;
-    font-style: italic;
-}
 /*ROBOTO MONO*/
 @font-face {
     font-family: 'ROBOTO'; /*a name to be used later*/
@@ -50,18 +23,7 @@
     font-weight: bold;
     font-style: italic;
 }
-/*-----------*/
 
-@font-face {
-    font-family: 'MAC'; /*a name to be used later*/
-    src: url('fonts/AnonymousPro-Regular.ttf'); /*URL to font*/
-}
-
-@font-face {
-    font-family: 'MAC'; /*a name to be used later*/
-    src: url('fonts/AnonymousPro-Bold.ttf'); /*URL to font*/
-    font-weight: bold;
-}
 
 /* top | right | bottom | left */
 

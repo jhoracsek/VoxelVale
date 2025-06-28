@@ -350,11 +350,13 @@ function configure_texture(image){
 async function lockChangeAlert(){
 	if(document.pointerLockElement===canvas || document.mozPointerLockElement===canvas){
 		isFocused = true;
-
+		
+		resumeMusic();
 		document.addEventListener("mousemove",mouseMoveUpdate,false);
 	}else{
 		document.removeEventListener("mousemove",mouseMoveUpdate,false);
 		isFocused = false;
+		pauseMusic();
 	    canvas.blur();
 	    canvas.classList.remove("pointer-lock-active");
 	}
@@ -1424,6 +1426,7 @@ function render_data(){
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1], "Left click to use items and place blocks.");
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-0.5, "Right click to interact with blocks.");
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-1, "Scroll or use 'Q' and 'E' to adjust cursor.");
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-4, "VoxelVale "+GAME_VERSION, '11');
 	}
 }
 

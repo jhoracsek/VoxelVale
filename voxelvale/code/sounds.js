@@ -17,52 +17,52 @@ async function loadSound(name, url){
 async function initAudio(){
 	await Promise.all([
 		// Dirt steps.
-		loadSound('stepdirt1', 'voxelvale/code/sounds/effects/dirtsteps/stepdirt_1.wav'),
-		loadSound('stepdirt2', 'voxelvale/code/sounds/effects/dirtsteps/stepdirt_2.wav'),
-		loadSound('stepdirt3', 'voxelvale/code/sounds/effects/dirtsteps/stepdirt_3.wav'),
-		loadSound('stepdirt4', 'voxelvale/code/sounds/effects/dirtsteps/stepdirt_4.wav'),
-		loadSound('stepdirt5', 'voxelvale/code/sounds/effects/dirtsteps/stepdirt_5.wav'),
-		loadSound('stepdirt6', 'voxelvale/code/sounds/effects/dirtsteps/stepdirt_6.wav'),
-		loadSound('stepdirt7', 'voxelvale/code/sounds/effects/dirtsteps/stepdirt_7.wav'),
-		loadSound('stepdirt8', 'voxelvale/code/sounds/effects/dirtsteps/stepdirt_8.wav'),
+		loadSound('stepdirt1', 'voxelvale/sounds/effects/dirtsteps/stepdirt_1.wav'),
+		loadSound('stepdirt2', 'voxelvale/sounds/effects/dirtsteps/stepdirt_2.wav'),
+		loadSound('stepdirt3', 'voxelvale/sounds/effects/dirtsteps/stepdirt_3.wav'),
+		loadSound('stepdirt4', 'voxelvale/sounds/effects/dirtsteps/stepdirt_4.wav'),
+		loadSound('stepdirt5', 'voxelvale/sounds/effects/dirtsteps/stepdirt_5.wav'),
+		loadSound('stepdirt6', 'voxelvale/sounds/effects/dirtsteps/stepdirt_6.wav'),
+		loadSound('stepdirt7', 'voxelvale/sounds/effects/dirtsteps/stepdirt_7.wav'),
+		loadSound('stepdirt8', 'voxelvale/sounds/effects/dirtsteps/stepdirt_8.wav'),
 
 		// Stone steps.
-		loadSound('stepstone1', 'voxelvale/code/sounds/effects/stonesteps/stepstone_1.wav'),
-		loadSound('stepstone2', 'voxelvale/code/sounds/effects/stonesteps/stepstone_2.wav'),
-		loadSound('stepstone3', 'voxelvale/code/sounds/effects/stonesteps/stepstone_3.wav'),
-		loadSound('stepstone4', 'voxelvale/code/sounds/effects/stonesteps/stepstone_4.wav'),
-		loadSound('stepstone5', 'voxelvale/code/sounds/effects/stonesteps/stepstone_5.wav'),
-		loadSound('stepstone6', 'voxelvale/code/sounds/effects/stonesteps/stepstone_6.wav'),
-		loadSound('stepstone7', 'voxelvale/code/sounds/effects/stonesteps/stepstone_7.wav'),
-		loadSound('stepstone8', 'voxelvale/code/sounds/effects/stonesteps/stepstone_8.wav'),
+		loadSound('stepstone1', 'voxelvale/sounds/effects/stonesteps/stepstone_1.wav'),
+		loadSound('stepstone2', 'voxelvale/sounds/effects/stonesteps/stepstone_2.wav'),
+		loadSound('stepstone3', 'voxelvale/sounds/effects/stonesteps/stepstone_3.wav'),
+		loadSound('stepstone4', 'voxelvale/sounds/effects/stonesteps/stepstone_4.wav'),
+		loadSound('stepstone5', 'voxelvale/sounds/effects/stonesteps/stepstone_5.wav'),
+		loadSound('stepstone6', 'voxelvale/sounds/effects/stonesteps/stepstone_6.wav'),
+		loadSound('stepstone7', 'voxelvale/sounds/effects/stonesteps/stepstone_7.wav'),
+		loadSound('stepstone8', 'voxelvale/sounds/effects/stonesteps/stepstone_8.wav'),
 
 		// Wood steps.
-		loadSound('stepwood1', 'voxelvale/code/sounds/effects/woodsteps/stepwood_1.wav'),
-		loadSound('stepwood2', 'voxelvale/code/sounds/effects/woodsteps/stepwood_2.wav'),
+		loadSound('stepwood1', 'voxelvale/sounds/effects/woodsteps/stepwood_1.wav'),
+		loadSound('stepwood2', 'voxelvale/sounds/effects/woodsteps/stepwood_2.wav'),
 		
 		// Swishes.
-		loadSound('swish1', 'voxelvale/code/sounds/effects/swishes/swish-1.wav'),
-		loadSound('swish2', 'voxelvale/code/sounds/effects/swishes/swish-2.wav'),
-		loadSound('swish3', 'voxelvale/code/sounds/effects/swishes/swish-3.wav'),
-		loadSound('swish4', 'voxelvale/code/sounds/effects/swishes/swish-4.wav'),
-		loadSound('swish5', 'voxelvale/code/sounds/effects/swishes/swish-5.wav'),
-		loadSound('swish6', 'voxelvale/code/sounds/effects/swishes/swish-6.wav'),
-		loadSound('swish7', 'voxelvale/code/sounds/effects/swishes/swish-7.wav'),
-		loadSound('swish8', 'voxelvale/code/sounds/effects/swishes/swish-8.wav'),
+		loadSound('swish1', 'voxelvale/sounds/effects/swishes/swish-1.wav'),
+		loadSound('swish2', 'voxelvale/sounds/effects/swishes/swish-2.wav'),
+		loadSound('swish3', 'voxelvale/sounds/effects/swishes/swish-3.wav'),
+		loadSound('swish4', 'voxelvale/sounds/effects/swishes/swish-4.wav'),
+		loadSound('swish5', 'voxelvale/sounds/effects/swishes/swish-5.wav'),
+		loadSound('swish6', 'voxelvale/sounds/effects/swishes/swish-6.wav'),
+		loadSound('swish7', 'voxelvale/sounds/effects/swishes/swish-7.wav'),
+		loadSound('swish8', 'voxelvale/sounds/effects/swishes/swish-8.wav'),
 
 		// Bow shoot
-		loadSound('shoot', 'voxelvale/code/sounds/effects/bowandarrow/shoot.wav'),
+		loadSound('shoot', 'voxelvale/sounds/effects/bowandarrow/shoot.wav'),
 
 		// Impacts.
-		loadSound('metal', 'voxelvale/code/sounds/effects/impact/metal.wav'),
-		loadSound('stone', 'voxelvale/code/sounds/effects/impact/stone.wav'),
-		loadSound('wood', 'voxelvale/code/sounds/effects/impact/wood.wav'),
-		loadSound('dirt', 'voxelvale/code/sounds/effects/impact/dirt.wav'),	//https://opengameart.org/content/stop
+		loadSound('metal', 'voxelvale/sounds/effects/impact/metal.wav'),
+		loadSound('stone', 'voxelvale/sounds/effects/impact/stone.wav'),
+		loadSound('wood', 'voxelvale/sounds/effects/impact/wood.wav'),
+		loadSound('dirt', 'voxelvale/sounds/effects/impact/dirt.wav'),	//https://opengameart.org/content/stop
 
 		//Placing blocks.
-		loadSound('placed1', 'voxelvale/code/sounds/effects/placed/placed1.wav'),
-		loadSound('placed2', 'voxelvale/code/sounds/effects/placed/placed2.wav'),
-		loadSound('placed3', 'voxelvale/code/sounds/effects/placed/placed3.wav')
+		loadSound('placed1', 'voxelvale/sounds/effects/placed/placed1.wav'),
+		loadSound('placed2', 'voxelvale/sounds/effects/placed/placed2.wav'),
+		loadSound('placed3', 'voxelvale/sounds/effects/placed/placed3.wav')
 	]);
 }
 

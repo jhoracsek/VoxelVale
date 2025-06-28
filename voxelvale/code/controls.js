@@ -7,7 +7,6 @@ var keyboardDisabled = false;
 
 var upOneStore = -1;
 
-var devFunctions = true;
 
 /*
 	Keycodes
@@ -88,7 +87,7 @@ function getKeyDown(key){
 
 	//'Q'
 	if(key.keyCode == 81){
-		if(devFunctions){
+		if(DEV_TOOLS){
 			hitBox = !hitBox;
 			print = !print;
 			modelTestMode = !modelTestMode;
@@ -161,7 +160,7 @@ function getKeyDown(key){
 
 	//'1'
 	if(key.keyCode == 49){
-		if(devFunctions){
+		if(DEV_TOOLS){
 			var enemy=new Finder(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),-3);
 			enemy.initialize_enemy();
 			enemyArray.push(enemy);
@@ -171,7 +170,7 @@ function getKeyDown(key){
 
 	//'2'
 	if(key.keyCode == 50){
-		if(devFunctions){
+		if(DEV_TOOLS){
 			fastMode=!fastMode;
 			tab_lists();
 			player.checkSpeed();
@@ -243,7 +242,7 @@ function getKeyDown(key){
 
 	//'P'
 	if(key.keyCode == 80){
-		if(devFunctions){
+		if(DEV_TOOLS){
 			testView = !testView;
 		}
 	}
@@ -251,22 +250,22 @@ function getKeyDown(key){
 	//For testing models
 	//'ARROW_DOWN' Down
 	if(key.keyCode == 40){
-		if(devFunctions)
+		if(DEV_TOOLS)
 			controlledYSpin-=3;
 	}
 	//'ARROW_UP' Up
 	if(key.keyCode == 38){
-		if(devFunctions)
+		if(DEV_TOOLS)
 			controlledYSpin+=3;
 	}
 	//'ARROW_RIGHT' Right
 	if(key.keyCode == 39){
-		if(devFunctions)
+		if(DEV_TOOLS)
 			controlledXSpin+=3;
 	}
 	//'ARROW_LEFT' Left
 	if(key.keyCode == 37){
-		if(devFunctions)
+		if(DEV_TOOLS)
 			controlledXSpin-=3;
 	}
 

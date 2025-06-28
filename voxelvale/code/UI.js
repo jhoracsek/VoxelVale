@@ -413,7 +413,7 @@ function draw_scroll_list(){
 		set_mv_ui(mv);
 		draw_c_text(textX,start+difference*(3-i)+0.65,tabList[i+scrollOffset].name);
 		draw_c_text_small(textX+0.05,start+difference*(3-i)+0.45,tabList[i+scrollOffset].desc);
-		draw_c_text_med(textX+4.65,start+0.12+difference*(3-i),('QUANTITY:'));
+		draw_c_text_med(textX+4.65,start+0.12+difference*(3-i),('Quantity:'));
 		draw_c_text_med(textX+5.56,start+0.12+difference*(3-i),(player.inventory.getQuantity(tabList[i+scrollOffset])));
 		if(active== i){
 			gl.drawArrays(gl.TRIANGLES,startDraw[3],endDraw[3]);

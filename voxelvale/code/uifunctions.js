@@ -40,7 +40,7 @@ const CANVAS_SIZE_X = 16;
 const CANVAS_SIZE_Y = 9;
 
 /*
-	All interface elements should extend this class.
+	All interface (or at least most) elements should extend this class.
 */
 class InterfaceElement{
 	constructor(X1,Y1,X2,Y2,Z,colorNum,left,right,top,bottom){
@@ -68,6 +68,96 @@ class InterfaceElement{
 		if(this.colorNum == CLEAR) return;
 		gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(this.instanceMat) );
 		gl.drawArrays(gl.TRIANGLES,elementVertices[this.colorNum][0],elementVertices[this.colorNum][1]);
+	}
+}
+
+/*
+	Movable interface element.
+	Can move when mouse is held.
+	Drawn as a text-canvas element.
+
+	Needs X and Y bounds
+*/
+class InterfaceVolumeSlider{
+	constructor(X1,Y1,X2,Y2,music,c1 = '#CCC', c2 = '#555'){
+		this.x1 = X1;
+		this.x2 = X2;
+		this.y1 = Y1;
+		this.y2 = Y2;
+
+		this.boundX = [this.x1-1, this.x1+1];
+		this.boundY = [this.y1,this.y1];
+
+		this.width = Math.abs(X2-X1);
+		this.height = Math.abs(Y2-Y1);
+
+		this.instanceMat = mult( translate(X1,Y1,1+(-0.998)), scale4(X2-X1,Y2-Y1,1));
+		this.instanceMat = mult(interface_matrix, this.instanceMat);
+
+		this.colorBorder = c1;
+		this.colorBackground = c2;
+
+		this.inMotion = false;
+		this.forMusic = music;
+	}
+
+	update(hovering){
+		//cursorCoor[0], cursorCoor[1]
+		if(!hold){
+			this.inMotion = false;
+			return;
+		}else{
+			this.inMotion = true;
+		}
+
+		this.x1 = Math.min(this.boundX[1],Math.max(this.boundX[0],cursorCoor[0]-this.width/2));
+		this.y1 = Math.min(this.boundY[1],Math.max(this.boundY[0],cursorCoor[1]-this.height/2));
+
+		this.x2 = this.x1 + this.width;
+		this.y2 = this.y1 + this.height;
+
+		if(this.forMusic)
+			backgroundMusic.volume = this.getVolume()*0.4;
+		else
+			masterGain.gain.value = this.getVolume()*0.25;
+	}
+
+	/*
+		For volume buttons
+	*/
+	getVolume(){
+		/*
+			The middle of this.boundX should be associated with 0.5
+			this.boundX[0] should be 0.
+			this.boundX[1] should be 1.
+		*/
+		return (this.x1-this.boundX[0])/(this.boundX[1]- this.boundX[0])
+	}
+
+	draw(){
+
+		let hovering = false;
+		let grabbed = false;
+	
+		click_in_bounds(this.x1,this.y1,this.x2,this.y2, function(){grabbed=true}, function(){hovering=true} );
+
+		if((grabbed||this.inMotion) && (hovering || this.inMotion))
+			this.update();
+
+		
+		//Draw border
+		draw_box_border(this.x1,this.y1,this.x2,this.y2,this.left, this.right, this.top, this.bottom);
+
+		if(!hovering && !this.inMotion){
+			draw_filled_box(this.x1,this.y1,this.x2,this.y2,this.colorBorder,this.colorBackground);
+		}else{
+			draw_filled_box(this.x1,this.y1,this.x2,this.y2,this.colorBorder,'#777');
+		}
+
+		//Draw background
+		//if(this.colorNum == CLEAR) return;
+		//gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(this.instanceMat) );
+		//gl.drawArrays(gl.TRIANGLES,elementVertices[this.colorNum][0],elementVertices[this.colorNum][1]);
 	}
 }
 

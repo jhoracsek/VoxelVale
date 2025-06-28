@@ -146,8 +146,8 @@ class DoorTop{
 
 	onClick(){
 		//Rotate
-		this.bottom.isOpen = !this.bottom.isOpen;
-		this.bottom.rotateOpen = 90*this.bottom.isOpen;
+		//this.bottom.isOpen = !this.bottom.isOpen;
+		//this.bottom.rotateOpen = 90*this.bottom.isOpen;
 		return;
 	}
 	onHover(){return;}
@@ -642,7 +642,7 @@ class WorkBench extends InteractiveBlock{
 		this.tob='STONE';
 		this.desc = 'A workbench for crafting items.'
 
-		this.minDisplayWidth = 1.3;
+		this.minDisplayWidth = 1.4;
 		this.displayWidth = this.minDisplayWidth;
 	}
 	draw(){
@@ -740,7 +740,7 @@ class WorkBench extends InteractiveBlock{
 
 		//Draw box on top (one block)
 		//Top should be dependent on how many unique blocks there are!
-		draw_filled_box(c[0]-this.displayWidth/2,c[1],c[0]+this.displayWidth/2,c[1]+(1.25)*0.17);
+		draw_filled_box(c[0]-this.displayWidth/2,c[1],c[0]+this.displayWidth/2,c[1]+(1.3)*0.17);
 
 
 		draw_centered_text(c[0],c[1]+0.1,"Use workbench.",'12');

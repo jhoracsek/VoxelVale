@@ -131,7 +131,7 @@ class WorldPortion{
 
 		
 		
-		if(generate_by_probability(0.15)){
+		if(GEN_DUNGEONS && generate_by_probability(0.15)){
 			for(var i = this.posX; i < this.outerBoundX; i++){
 				for(var j = this.posY; j < this.outerBoundY; j++){
 					//Do wood if underneath dungeon.

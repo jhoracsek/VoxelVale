@@ -112,10 +112,34 @@ function add_interface_bottom_bar(){
 	var pauseButton = new InterfaceButton(10.8, 0.60, 11.8, 0.90,DARK_GREY,pauseMusic,"Pause",'12',function(){return (musicPlaying&&!playButton.imDrawn)});
 	bottomBarElements.push(pauseButton);
 
-
-
 	var skipButton = new InterfaceButton(11.9, 0.60, 12.9, 0.90,DARK_GREY,skipMusic,"Skip",'12');
 	bottomBarElements.push(skipButton);
+
+	/*
+		Volume sliders
+	*/
+	let sliderSize = 0.25;
+	let sliderPosition = 11;
+	let sliderY = 0.115;
+	var sliderButton = new InterfaceVolumeSlider(sliderPosition, sliderY, sliderPosition+sliderSize, sliderY+sliderSize,true);
+	var sliderBackground = new InterfaceBackground(sliderPosition-1,sliderY+0.05,sliderPosition+1.25,sliderY+sliderSize-0.05,BLACK);
+	var sliderText = new InterfaceText(sliderPosition-1.7,sliderY+sliderSize/2-0.01,sliderPosition-1.7,sliderY+sliderSize/2-0.01,'Music Volume:','12');
+	
+	
+	bottomBarElements.push(sliderBackground);
+	bottomBarElements.push(sliderButton);
+	bottomBarElements.push(sliderText);
+
+	sliderPosition = 6;
+	sliderButton = new InterfaceVolumeSlider(sliderPosition, sliderY, sliderPosition+sliderSize, sliderY+sliderSize,false);
+	sliderBackground = new InterfaceBackground(sliderPosition-1,sliderY+0.05,sliderPosition+1.25,sliderY+sliderSize-0.05,BLACK);
+	sliderText = new InterfaceText(sliderPosition-1.7,sliderY+sliderSize/2-0.01,sliderPosition-1.7,sliderY+sliderSize/2-0.01,'Sound Volume:','12');
+
+	bottomBarElements.push(sliderBackground);
+	bottomBarElements.push(sliderButton);
+	bottomBarElements.push(sliderText);
+
+	
 
 }
 

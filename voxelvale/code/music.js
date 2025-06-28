@@ -5,20 +5,20 @@
 */
 
 const backgroundMusicTracks = [
-	'voxelvale/code/sounds/music/nature sketch.wav',
-	'voxelvale/code/sounds/music/ChillLofiR.mp3',
-	'voxelvale/code/sounds/music/oldcitytheme.mp3',
-	'voxelvale/code/sounds/music/snow_city.mp3',
-	'voxelvale/code/sounds/music/towntheme.mp3',
+	'voxelvale/sounds/music/nature sketch.wav',
+	'voxelvale/sounds/music/ChillLofiR.mp3',
+	'voxelvale/sounds/music/oldcitytheme.mp3',
+	'voxelvale/sounds/music/snow_city.mp3',
+	'voxelvale/sounds/music/towntheme.mp3',
 
 
 	//New tracks
-	//'voxelvale/code/sounds/music/save.mp3' ()
-	'voxelvale/code/sounds/music/d.mp3',
-	'voxelvale/code/sounds/music/8_bit_memory_indie_proj_2_ma.mp3',
-	'voxelvale/code/sounds/music/indieproj.mp3',
-	'voxelvale/code/sounds/music/drm.mp3',
-	//'voxelvale/code/sounds/music/hungrytribes.mp3',
+	//'voxelvale/sounds/music/save.mp3' ()
+	'voxelvale/sounds/music/d.mp3',
+	'voxelvale/sounds/music/8_bit_memory_indie_proj_2_ma.mp3',
+	'voxelvale/sounds/music/indieproj.mp3',
+	'voxelvale/sounds/music/drm.mp3',
+	//'voxelvale/sounds/music/hungrytribes.mp3',
 
 ];
 
