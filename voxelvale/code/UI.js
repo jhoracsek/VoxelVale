@@ -319,7 +319,7 @@ function draw_hold_condition(){
 
 
 function draw_drop_condition(){
-	return active+scrollOffset >= 0 && tabList[active+scrollOffset] != null && activeTab < 1; // And never on the recipes tab!
+	return active+scrollOffset >= 0 && tabList[active+scrollOffset] != null && (activeTab == 0 || activeTab == 3); // And never on the recipes tab!
 }
 
 function on_click_hold(){
@@ -332,7 +332,6 @@ function on_click_drop(){
 	let worldObj;
 	if(inDungeon) worldObj = currentDungeon;
 	else worldObj = world;
-
 	let drop = get_where_to_drop(worldObj);
 
 	//Need the selected item!
@@ -355,13 +354,15 @@ function get_where_to_drop(worldObj){
 
 	if(!dropSpace[0]){
 		//Create a new DropBox.
-		player.removeFromInventory(tabList[selectedItemIndex]);
+		
 		worldObj.addBlock(new DropBox(PX,PY,PZ,[tabList[selectedItemIndex]]));
+		player.removeFromInventory(tabList[selectedItemIndex]);
 	}else{
 		//Add to an existing DropBox.
-		player.removeFromInventory(tabList[selectedItemIndex]);
+		
 		dB = dropSpace[1];
 		dB.addTo(tabList[selectedItemIndex]);
+		player.removeFromInventory(tabList[selectedItemIndex]);
 	}
 }
 

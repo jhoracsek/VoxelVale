@@ -21,6 +21,7 @@ class Inventory{
 		this.items=[];
 		//this.objects=[];
 		this.recipes=[];
+		this.recipeQuants=[];
 	}
 
 	getInventoryContents(){
@@ -36,6 +37,7 @@ class Inventory{
 		this.itemNums=[];
 		this.items=[];
 		this.recipes=[];
+		this.recipeQuants=[];
 		//this.constructor();
 
 
@@ -64,12 +66,16 @@ class Inventory{
 		//Make sure it's not a duplicate.
 		let duplicate = false;
 		for(let i = 0; i < this.recipes.length; i++){
-			if(this.recipes[i].id == Recipe.id){
+			if(this.recipes[i].objectNumber == Recipe.objectNumber){
 				duplicate = true;
+				this.recipeQuants[i]++;
+				break;
 			}
 		}
-		if(!duplicate)
+		if(!duplicate){
+			this.recipeQuants.push(1);
 			this.recipes.push(Recipe);
+		}
 
 	}
 	removeItem(Item){
@@ -78,6 +84,34 @@ class Inventory{
 		else
 			this.items[Item.objectNumber].decrease();
 		return;
+	}
+	removeRecipe(Recipe){
+		if(Recipe==null){return null;}
+		for(let i = 0; i < this.recipes.length; i++){
+			if(this.recipes[i].objectNumber == Recipe.objectNumber){
+				this.recipeQuants[i]--;
+				if(this.recipeQuants[i] <= 0){
+					//remove the recipe.
+					let maxIndex = this.recipes.length;
+					if(maxIndex == 1 || i == maxIndex-1){
+						this.recipeQuants.pop();
+						this.recipes.pop();
+						break;
+					}else{
+						//remove at index i.
+						for(let j = i; j < maxIndex-1; j++){
+							this.recipes[j] = this.recipes[j+1];
+							this.recipeQuants[j] = this.recipeQuants[j+1];
+						}
+						this.recipes.pop();
+						this.recipeQuants.pop();
+					}
+
+
+				}
+				
+			}
+		}
 	}
 	removeBlock(Block){
 		if(this.blocks[Block.objectNumber]==null || this.blocks[Block.objectNumber]==0)
@@ -129,6 +163,14 @@ class Inventory{
 		else
 			return obj.quant;
 	}
+	getQuantityRec(Recipe){
+		if(Recipe==null){return null;}
+		for(let i = 0; i < this.recipes.length; i++){
+			if(this.recipes[i].objectNumber == Recipe.objectNumber)
+				return this.recipeQuants[i];
+		}
+		return 0;
+	}
 	getQuantity(Object){
 		switch(Object.typeOfObj){
 			case 'ITEM':
@@ -138,7 +180,7 @@ class Inventory{
 				return this.getQuantityBlock(Object);
 				break;
 			case 'REC':
-				return 1;
+				return this.getQuantityRec(Object);
 		}
 		return 0;
 	}
@@ -292,6 +334,9 @@ class Player extends Humanoid{
 				break;
 			case 'BLOCK':
 				this.inventory.removeBlock(object);
+				break;
+			case 'REC':
+				this.inventory.removeRecipe(object);
 				break;
 		}
 		tab_lists();

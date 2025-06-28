@@ -65,7 +65,9 @@ class DropBox extends X_Y_Z_TextureBlock{
 
 	addTo(block){
 		//Make sure to run this.refreshQuantities().
+
 		this.objectsReturned.push(block);
+
 		this.refreshQuantities();
 	}
 

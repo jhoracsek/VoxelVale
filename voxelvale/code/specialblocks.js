@@ -210,7 +210,7 @@ class StoneBlock extends BlockWall{
 		super(X,Y,Z,25,false);
 		this.index = stoneBlockStart;
 		this.numberOfVerts = 36;
-		this.name = 'Stone Block';
+		this.name = 'Stone';
 		this.secondIndex;
 		this.orient='NONE';
 		this.objectNumber=5;

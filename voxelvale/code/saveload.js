@@ -327,7 +327,7 @@ function loadWorldIntoGame(loadedWorld){
 */
 const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door,BorderWall];
 const ITEM_OBJNUMS = [WoodAxe, StonePickaxe, WoodenBow];
-const RECIPE_OBJNUMS = [WorkBenchRecipe];
+
 
 function getObjectBasedOnObjectNumber(objectNumber){
 	let object = null;

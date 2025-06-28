@@ -61,7 +61,7 @@ function draw_craftable_list(){
 		set_mv_ui(mv);
 		draw_c_text(textX,start+difference*(3-i)+0.65,craftableList[i+craftListOffset].name);
 		draw_c_text_small(textX+0.05,start+difference*(3-i)+0.45,craftableList[i+craftListOffset].desc);
-		draw_c_text_med(textX+4.65,start+0.12+difference*(3-i),('QUANTITY:',player.inventory.getQuantity(craftableList[i+craftListOffset])));
+		draw_c_text_med(textX+4.65,start+0.12+difference*(3-i),('Quantity:',player.inventory.getQuantity(craftableList[i+craftListOffset])));
 		if(itemToCraft== i){
 			gl.drawArrays(gl.TRIANGLES,startDraw[3],endDraw[3]);
 			draw_recipe_list(craftableList[i+craftListOffset]);
@@ -74,7 +74,7 @@ function draw_craftable_list(){
 		else{
 			gl.drawArrays(gl.TRIANGLES,startDraw[4],endDraw[4]);
 		}
-		draw_craftable_item(craftableList[i+craftListOffset],mv);
+		draw_craftable_item(craftableList[i+craftListOffset].object,mv);
 	}
 	reset_mv();
 }
@@ -132,29 +132,27 @@ function build_craft_list(){
 		vec4(0.1,0.1,0.1,1),
 		vec4(0.05,0.05,0.05,1)
 	];
-	craftableList=[
-	new WoodBlock(),
-	new StoneBlock()
-	];
+	craftableList=getAllRecipes();
 	for(var i = 0; i < menuColours.length; i++){
 		build_2D_square(menuColours[i],i);
 	}
 }
 
 var startPos=0;
-function draw_recipe_list(object){
+function draw_recipe_list(recipe){
+	let object = recipe.object;
 	var bigList=false;
-	if(object.isCraftable()){
-		draw_c_text_med(9.75,2.3,'CRAFT');
+	if(recipe.isCraftable()){
+		draw_c_text_med(9.75,2.3,'Craft');
 		draw_2D_square(mult(translate(9.65,2.15,-9.1),scale4(0.75,0.4,1)),DARKEST_GREY);
-		click_in_bounds(9.65,2.15,9.65+0.75,2.15+0.4,function(){object.craftObject()});
+		click_in_bounds(9.65,2.15,9.65+0.75,2.15+0.4,function(){recipe.craftObject()});
 	}else{
-		draw_c_text_med(9.75,2.3,'CANNOT CRAFT');
+		draw_c_text_med(9.75,2.3,'Cannot craft');
 	}
-	draw_c_text_small(12.75,2.3,'QUANTITY:');
+	draw_c_text_small(12.75,2.3,'Quantity:');
 	draw_c_text_small(12.75+(11.4-10.65),2.3,player.getObjectQuantity(object));
 	//draw_2D_square(mult(translate(9.65,2.2,-9.1),scale4(0.75,0.3,1)),DARKEST_GREY);
-	var requiredItems=object.getRecipe();
+	var requiredItems=recipe.getRecipe();
 	if (requiredItems==null)
 		return;
 	if(requiredItems.length>4)

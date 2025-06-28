@@ -503,8 +503,14 @@ window.onload = function init(){
 	player.addToInventory(workbench);
 	toolBarList.push(workbench);
 
+	player.addToInventory(new WoodBlockRecipe())
+	player.addToInventory(new WoodBlockRecipe())
+	player.addToInventory(new WoodBlockRecipe())
+	player.addToInventory(new DoorRecipe())
 	var workbenchRecipe = new WorkBenchRecipe();
 	player.addToInventory(workbenchRecipe);
+
+
 
 	player.addToInventory(new DirtBlock());
 

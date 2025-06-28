@@ -93,8 +93,8 @@ Some stuff todo
 			30. b) Find easy way to push/pull to lightsail	(X)
 		31. New todo list 									(X)
 			31. a) Organize notes below						(X)
-		32. Commit all changes								()
-		32. Download squid game	:)							()
+		32. Commit all changes								(X)
+		32. Download squid game	:)							(X)
 
 
 
@@ -102,7 +102,7 @@ Some stuff todo
 		1. Stone brick.										()
 			1.a) Recipe.									()
 			1.b) Texture.									()
-		2. Flesh out recipes (if not done in 1)				()
+		2. Flesh out recipes (if not done in 1)				(X)
 		3. Fix crafting table.								()
 			3.a) Switching to inventory.					()
 			3.b) Layout.									()
@@ -134,6 +134,9 @@ Some stuff todo
 			10.a) Toolbar.									()
 			10.b) Inventory.								()
 			10.c) Devtools.									()
+		11. Automatically update version on index.html		()
+		12. Hold multiple recipes and be able to drop.		()
+			12.a) Save to firebase.							()
 
 			
 

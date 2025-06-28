@@ -26,7 +26,9 @@ StonePickaxe		65
 WoodenBow			66
 
 
-Recipe				128
+WorkBenchRecipe		128
+WoodBlockRecipe		129
+DoorRecipe			130
 
 
 
@@ -41,7 +43,7 @@ Where to update whenever a new block/item is added?
 
 In saveload.js, in BlockWall.js (in Main.js if its an old item)
 
-Steps for adding block
+Steps for adding block:
 
 1) If it's simple enough add to "blockwall.js".
 2) Set objectNumber to the next available number.
@@ -49,3 +51,7 @@ Steps for adding block
 4) Add to simpleBlocks array in "blockwall.js".
 5) Add to 'BLOCK_OBJNUMS' in "saveload.js".
 
+
+Steps for adding recipes:
+
+1)
