@@ -198,18 +198,63 @@ class BrickBlockRecipe extends Recipe{
 	}
 }
 
-class TestRecipe extends Recipe{
+class CopperBarRecipe extends Recipe{
 	static objectNumber = 132;
 	static craftingStation = REQUIRES_WORKBENCH;
 	constructor(){
 		super(new CopperBar(), [[new Copper(),2]],1);
-		this.desc='Recipe for a test block.';
+		this.desc='Recipe for a copper bar.';
+	}
+	drawSmall(currentMat){
+		// Draw small transparent block.
+		// Kind of looks better but colours are muted set_light();
+		this.drawSmallObject(currentMat);
+
+		// Draw blue box
+		currentMat = mult(currentMat,mult(scale4(0.5, 1.25 ,0.65),translate(0.5,-0.1,0.29)));
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(currentMat));
+		gl.drawArrays(gl.TRIANGLES,cursorBytes[5][0],cursorBytes[5][1]);
+	}
+}
+
+class ArrowRecipe extends Recipe{
+	static objectNumber = 133;
+	static craftingStation = REQUIRES_WORKBENCH;
+	constructor(){
+		super(new ArrowItem(), [[new StoneBlock(),1],[new WoodBlock(), 1]],1);
+		this.desc='Recipe for an arrow.';
+	}
+
+	drawSmallObject(currentMat,scale=0.99){
+		gl.uniform1i(cursorBlockLoc, true);
+		let mat = mult(translate(0.5,0.5,0.5),mult(scale4(scale,scale,scale,1), translate(-0.5,-0.5,-0.5)));
+		this.object.drawSmall(mult(currentMat,mat));
+		gl.uniform1i(cursorBlockLoc, false);
+	}
+
+
+
+	drawSmall(currentMat){
+		// Draw small transparent block.
+		// Kind of looks better but colours are muted set_light();
+		this.drawSmallObject(currentMat);
+
+		// Draw blue box
+		currentMat = mult(currentMat, ArrowMat);
+		currentMat = mult(translate(0,0.04,0,1),currentMat)
+
+		//currentMat = mult(translate(0,0.04,0,1),currentMat)
+
+		currentMat = mult(currentMat,mult(scale4(0.13, 1.4 ,0.13),translate(-0.5,-0.3,-0.5)));
+
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(currentMat));
+		gl.drawArrays(gl.TRIANGLES,cursorBytes[5][0],cursorBytes[5][1]);
 	}
 }
 
 
 
-const RECIPE_OBJNUMS = [WorkBenchRecipe,WoodBlockRecipe,DoorRecipe,BrickBlockRecipe,TestRecipe];
+const RECIPE_OBJNUMS = [WorkBenchRecipe,WoodBlockRecipe,DoorRecipe,BrickBlockRecipe,CopperBarRecipe, ArrowRecipe];
 
 
 

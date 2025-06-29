@@ -27,13 +27,15 @@ StonePickaxe		65
 WoodenBow			66
 Copper 				67
 CopperBar			68
+ArrorItem			69
 
 
 WorkBenchRecipe		128
 WoodBlockRecipe		129
 DoorRecipe			130
 BrickBlockRecipe	131
-TestRecipe			132
+CopperBarRecipe		132
+ArrowRecipe			133
 
 
 

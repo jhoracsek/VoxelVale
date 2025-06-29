@@ -87,10 +87,12 @@ class WoodenBow extends Weapon{
 	onLClick(){
 		if(projectileCooldown <= 0){
 			//projectileArray.push(new Arrow(cursorDirection,cursorPower,player.posX,player.posY,upOne));
-			projectileArray.push(new Arrow(cursorDirection,cursorPower,player.posX,player.posY,-3));
-
-			sound_ArrowShoot();
-			projectileCooldown = this.cooldown;
+			if(player.getArrowCount() > 0) {
+				projectileArray.push(new Arrow(cursorDirection,cursorPower,player.posX,player.posY,-3));
+				player.removeArrowFromShoot();
+				sound_ArrowShoot();
+				projectileCooldown = this.cooldown;
+			}
 			return true;
 		}
 		return false;

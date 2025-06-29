@@ -509,8 +509,9 @@ window.onload = function init(){
 	player.addToInventory(new DoorRecipe())
 	var workbenchRecipe = new WorkBenchRecipe();
 	player.addToInventory(workbenchRecipe);
-	player.addToInventory(new TestRecipe());
+	player.addToInventory(new CopperBarRecipe());
 	player.addToInventory(new BrickBlockRecipe());
+	player.addToInventory(new ArrowRecipe());
 
 
 
@@ -522,6 +523,12 @@ window.onload = function init(){
 
 	player.addToInventory(new Copper());
 	player.addToInventory(new Copper());
+	player.addToInventory(new ArrowItem());
+	player.addToInventory(new ArrowItem());
+	player.addToInventory(new ArrowItem());
+	player.addToInventory(new ArrowItem());
+	player.addToInventory(new ArrowItem());
+	player.addToInventory(new ArrowItem());
 
 
 	var dropBox = new DropBox(null,null,null,[new WorkBench(), new StonePickaxe(), new DirtBlock(), new GrassBlock(), new WeirdBlock(), new GrassBlock(), new WoodBlock(), new WoodBlock(), new GrassBlock()]);
@@ -772,7 +779,7 @@ function send_data_to_GPU(){
 
 		// Holding block. (Blue)
 		cursorBytes.push([vertices.length,0]);
-		build_thick_wireframe(1, vec4(1,1,1,1), vec4(0.3,0.3,1,0.6));
+		build_thick_wireframe(1, vec4(1,1,1,1), vec4(0.3,0.3,1,0.4));
 		cursorBytes[5][1] = vertices.length-cursorBytes[5][0];
 	
 	/*

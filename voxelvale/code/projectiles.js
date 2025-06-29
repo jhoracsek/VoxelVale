@@ -268,17 +268,23 @@ function build_arrow(){
 	v1=vec3(-0.05,-0.25,0.05);
 	v2=vec3(0,0,0); //0.5
 	v3=vec3(0.05,-0.25,0.05);
+	arrowV+=ui_push(v1,v2,v3,vec4(1,1,1,1)); //From u
+
+	//Adding
+	v1=vec3(-0.05,-0.25,0.05);
+	v2=vec3(0,0,0); //0.5
+	v3=vec3(-0.05,-0.25,-0.05);
 	arrowV+=ui_push(v1,v2,v3,vec4(1,1,1,1));
 
 	v1=vec3(-0.05,-0.25,-0.05);
 	v2=vec3(0,0,0); 
 	v3=vec3(0.05,-0.25,-0.05);
-	arrowV+=ui_push(v1,v2,v3,vec4(1,1,1,1));
+	arrowV+=ui_push(v1,v2,v3,vec4(1,1,1,1));// From you
 
 	v1=vec3(0.05,-0.25,-0.05);
 	v2=vec3(0,0,0); 
 	v3=vec3(0.05,-0.25,0.05);
 	arrowV+=ui_push(v1,v2,v3,vec4(1,1,1,1));
-	arrowVerts=arrowV;
+	arrowVerts=arrowV; 
 
 }

@@ -71,26 +71,57 @@ function build_colored_cuboid(color){
 
 }
 
-function build_colored_bar(color){
+
+let pinch = 0.1;  //For the top.
+let squish = 0.25; //For height
+let squeeze = 0.2; //Squeeze side in
+let elongate = 0.12;
+var vPBars = [
+	vec3( 0+squish, 0-elongate, 1-squeeze),  			//0
+    vec3( 0+squish, 1+elongate, 1-squeeze),  			//1
+    vec3( 1-squish, 1-pinch+elongate, 1-pinch-squeeze),  //2 
+    vec3( 1-squish, 0+pinch-elongate, 1-pinch-squeeze),  //3 
+
+    vec3( 0+squish, 0-elongate, 0+squeeze),  			//4
+    vec3( 0+squish, 1+elongate, 0+squeeze),  			//5
+    vec3( 1-squish, 1-pinch+elongate, 0+pinch+squeeze),  //6 
+    vec3( 1-squish, 0+pinch-elongate, 0+pinch+squeeze)   //7 
+];
+
+function bar_face(a,b,c,d,flipNorm=false,colors=[]){
+	if(!flipNorm){
+		default_push(vPBars[a], vPBars[d], vPBars[c],colors[a],colors[d],colors[c]);
+		default_push(vPBars[a], vPBars[c], vPBars[b],colors[a],colors[c],colors[b]);
+	}else{
+		default_push(vPBars[a], vPBars[b], vPBars[c],colors[a],colors[b],colors[c]);
+		default_push(vPBars[a], vPBars[c], vPBars[d],colors[a],colors[c],colors[d]);
+	}
+}
+
+
+//Do TWO COLORS :) Gradient from top copper green bottom.
+function build_colored_bar(color2, color=color2){
 	for(let i = 0; i < 36; i++)
 		texCoords.push(vec2(2.0,2.0));
-	//Bottom
-	block_face( 1, 0, 3, 2, false, color);
-	
-	//Right
-	block_face( 2, 3, 7, 6 ,true, color);
-	
-	//Front
-	block_face( 3, 0, 4, 7,true, color);
 
-	//Back
-	block_face( 6, 5, 1, 2,true, color);
+	let vPBarColors = [color, color, color2, color2, color, color, color2, color2]
+	//Bottom 
+	bar_face( 1, 0, 3, 2, false, vPBarColors);
 	
-	//Top
-	block_face( 4, 5, 6, 7,true, color);
+	//Right (Pinch this face in.)
+	bar_face( 2, 3, 7, 6 ,true, vPBarColors);
+	
+	//Front 
+	bar_face( 3, 0, 4, 7,true, vPBarColors);
 
-	//Left
-	block_face( 5, 4, 0, 1,true, color);
+	//Back 
+	bar_face( 6, 5, 1, 2,true, vPBarColors);
+	
+	//Top 
+	bar_face( 4, 5, 6, 7,true, vPBarColors);
+
+	//Left (Only makes sense that you're the bottom.)
+	bar_face( 5, 4, 0, 1,true, vPBarColors);
 
 }
 

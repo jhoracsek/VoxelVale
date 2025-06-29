@@ -128,7 +128,8 @@ function draw_2D_square(mv,index){
 	Draws items in the 'Required materials' panel.
 */
 function draw_craftable_item(object,mv){
-	if(object.typeOfObj=='ITEM' || object.typeOfObj=='NON_ACTIONABLE_ITEM'){
+	//if(object.typeOfObj=='ITEM' || object.typeOfObj=='NON_ACTIONABLE_ITEM'){
+	if(object.typeOfObj=='ITEM'){
 		mv = mult(mv,translate(2.25,0.15,zLay-0.3));
 		mv = mult(mv,scale4(0.35,0.35,0.001))
 		mv = mult(mv,rotateZ(-35));
@@ -150,7 +151,8 @@ function draw_craftable_item(object,mv){
 	Draws objects on the left panel.
 */
 function draw_left_panel_object(recipe, mv){
-	if(recipe.object.typeOfObj=='ITEM' || recipe.object.typeOfObj=='NON_ACTIONABLE_ITEM'){
+	//if(recipe.object.typeOfObj=='ITEM' || recipe.object.typeOfObj=='NON_ACTIONABLE_ITEM'){
+	if(recipe.object.typeOfObj=='ITEM'){
 		mv = mult(mv,translate(2.25,0.15,zLay-0.3));
 		mv = mult(mv,scale4(0.35,0.35,0.001))
 		mv = mult(mv,rotateZ(-35));

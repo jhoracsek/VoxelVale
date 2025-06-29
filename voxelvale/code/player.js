@@ -23,6 +23,8 @@ class Inventory{
 		this.naItems=[];
 		this.recipes=[];
 		this.recipeQuants=[];
+
+		this.arrowCount = 0;
 	}
 
 	getInventoryContents(){
@@ -41,6 +43,8 @@ class Inventory{
 		this.naItems=[];
 		this.recipes=[];
 		this.recipeQuants=[];
+
+		this.arrowCount = 0;
 	}
 
 
@@ -57,9 +61,12 @@ class Inventory{
 		if(this.naItems[Item.objectNumber]==null){
 			this.naItems[Item.objectNumber]=new InventoryObject(Item);
 			this.naItemNums.push(Item.objectNumber);
+
 		}else{
 			this.naItems[Item.objectNumber].increase();
 		}
+		if(Item != null && Item.objectNumber == 69)
+			this.arrowCount++;
 		return;
 	}
 	addBlock(Block){
@@ -100,6 +107,17 @@ class Inventory{
 			return;
 		else
 			this.naItems[Item.objectNumber].decrease();
+		if(Item != null && Item.objectNumber == 69)
+			this.arrowCount--;
+		return;
+	}
+	removeArrowFromShoot(){
+		if(this.naItems[69]==null || this.naItems[69]==0)
+			return;
+		else
+			this.naItems[69].decrease();
+
+		this.arrowCount--;
 		return;
 	}
 	removeRecipe(Recipe){
@@ -387,6 +405,9 @@ class Player extends Humanoid{
 		}
 		tab_lists();
 	}
+	removeArrowFromShoot(){
+		this.inventory.removeArrowFromShoot();
+	}
 	setObject(object){
 		this.heldObject = object;
 	}
@@ -396,6 +417,10 @@ class Player extends Humanoid{
 			this.speed=0.30;
 		else
 			this.speed=0.05;
+	}
+	getArrowCount(){
+
+		return this.inventory.arrowCount;
 	}
 	
 	move(){

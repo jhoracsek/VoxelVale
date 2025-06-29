@@ -1006,6 +1006,7 @@ function draw_toolbar_items(){
 	// Draw tools
 	var object;
 	const space = 0.65;
+	draw_c_text_small_stroke(2.15,8,player.getArrowCount())
 	for(let i = 0; i < 7; i++){
 		object = toolBarList[i];
 		if(object != null){

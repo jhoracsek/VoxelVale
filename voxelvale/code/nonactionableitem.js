@@ -30,11 +30,13 @@ class NonActionableItem {
 		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(currentMat));
 		this.draw();
 	}
+
+	copy(){return new this.constructor();}
 }
 
 
 function initializeNonActionableItems(){
-	nonActionableItems = [Copper];
+	nonActionableItems = [Copper, CopperBar, ArrowItem];
 }
 
 
@@ -104,7 +106,7 @@ class Copper extends NonActionableItem {
 }
 
 
-const ITEM_OBJNUMS = [WoodAxe, StonePickaxe, WoodenBow, Copper];
+
 
 class CopperBar extends NonActionableItem{
 	static objectNumber = 68;
@@ -113,21 +115,46 @@ class CopperBar extends NonActionableItem{
 
 	static sendData(){
 		//Three cubes
-		build_colored_bar(hexToRgbA('#ed9f61'));
+		build_colored_bar(hexToRgbA('#e58158'),hexToRgbA('#ac966b') );
 
 	}
 	constructor(){super();}
 
 }
 
-/*
+
+//let ArrowMat = mult(scale4(1.3mult(rotateZ(-55-29),mult(rotateX(-45),rotateY(-55))
+let ArrowMat = mult(rotateY(-55),mult(rotateX(-45),mult(rotateZ(-55-29),scale4(1.3,1.3,1.3,1))));
 class ArrowItem extends NonActionableItem {
-	static objectNumber = -1;
+	static objectNumber = 69;
 	static name = 'Arrow';
 	static desc = 'An arrow.';
 
 	static sendData(){build_arrow();}
 
 	constructor(){super();}
+
+	drawSmall(currentMat){
+
+		//mv = mult(mv,translate(2.5,0.15,zLay-0.3));
+		//mv = mult(mv,scale4(0.7,0.7,0.001))
+
+		//Save outside!!!
+		currentMat = mult(currentMat, ArrowMat);
+		currentMat = mult(translate(0,0.04,0,1),currentMat)
+
+		//mv = mult(mv,rotateZ(45));
+		//mv = mult(mv,rotateX(45));
+		//mv = mult(mv,rotateY(55));
+
+		//currentMat = mult(currentMat, mult(scale4(1.2,1.2,1.2,0),rotateX(0,45,0)));
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(currentMat));
+		gl.drawArrays(gl.TRIANGLES,this.index,this.numberOfVerts);
+	}
 }
-*/
+
+
+
+
+
+const ITEM_OBJNUMS = [WoodAxe, StonePickaxe, WoodenBow, Copper, CopperBar, ArrowItem];
