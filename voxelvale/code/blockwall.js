@@ -183,13 +183,20 @@ class BlockWallNew extends zObjectNew{
 			new Particle(this.posX+xOffset,this.posY+yOffset,this.posZ+zOffset, this.particleColor);
 		}
 	}
+	isArray(){return false;}
 	destroy(){
 		this.spawnParticles();
 		/*
 			Adjust if block is to drop and item.
 		*/
-		player.addToInventory(this.drop());
-
+		
+		if(this.drop().isArray()){
+			let arr = this.drop();
+			for(let i = 0; i < arr.length; i++)
+				player.addToInventory(arr[i])
+		}else{
+			player.addToInventory(this.drop());
+		}
 
 		return;
 	}
@@ -456,10 +463,11 @@ class WeirdBlock extends BlockWallNew{
 }
 
 class BrickBlock extends BlockWallNew{
-	static name = 'Brick';
+	static name = 'Stone Brick';
 	static objectNumber=10;
-	static desc = 'A brick block.'
+	static desc = 'A stone brick block.'
 	static texture = 12;
+	static tob='STONE';
 	constructor(X=null,Y=null,Z=null,ground=false){
 		super(X,Y,Z,ground);
 	}

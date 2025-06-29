@@ -123,39 +123,42 @@ function getKeyDown(key){
 	if(key.keyCode == 9){
 		//Stop tab from zipping around the page.
 		key.preventDefault();
-		activeToolBarItem = ((activeToolBarItem)%(NUM_TOOLBAR_ITEMS+1))+1
 
-		//if(toolBarList[activeToolBarItem-1] != null){
-			//console.log(activeToolBarItem-1);
-		if(activeToolBarItem == NUM_TOOLBAR_ITEMS+1){
-			player.setHeldObject(null);
-			return;	
+		if(inventory && currentMenu == 'INVENTORY'){
+			activeTab = (activeTab+1)%4;
+			switch(activeTab){
+				case 0:
+					selectedTab = 'BLOCK';active=-1;scrollOffset=0;
+					break;
+				case 1:
+					selectedTab = 'TOOL';active=-1;scrollOffset=0;
+					break;
+				case 2:
+					selectedTab = 'ITEM';active=-1;scrollOffset=0;
+					break;
+				case 3:
+					selectedTab = 'REC';active=-1;scrollOffset=0;
+					break;
+			}
 		}
-		player.setHeldObject(toolBarList[activeToolBarItem-1]);
-		//}
+
+		if(!inventory){
+			activeToolBarItem = ((activeToolBarItem)%(NUM_TOOLBAR_ITEMS+1))+1
+
+			//if(toolBarList[activeToolBarItem-1] != null){
+				//console.log(activeToolBarItem-1);
+			if(activeToolBarItem == NUM_TOOLBAR_ITEMS+1){
+				player.setHeldObject(null);
+				return;	
+			}
+			player.setHeldObject(toolBarList[activeToolBarItem-1]);
+			//}
+		}
 	}
 
 	//'~'
 	if(key.keyCode == 192){
-		tab_lists();
-		if(fQueue.isEmpty()==false){
-			inFunction=false;
-			fQueue.dequeue();
-			selectXCoor=8.5;
-			selectYCoor=4;
-			coorSys = vec3(selectXCoor,selectYCoor,0);
-			return;
-		}
-		inventory=!inventory;
-		if(inventory){
-			xCoor=8;
-			yCoor=4.5;
-			cursorCoor = vec2(xCoor,yCoor);
-		}else{
-			selectXCoor=8.5;
-			selectYCoor=4;
-			coorSys = vec3(selectXCoor,selectYCoor,0);
-		}
+		toggleInventory();
 	}
 
 	//'1'
@@ -464,7 +467,7 @@ canvas.addEventListener("wheel",function(event){
 		return;
 	event.preventDefault();
 	
-	if(inventory){
+	if(inventory && currentMenu == 'INVENTORY'){
 		if(scrollCooldown <= 0){
 			if(event.deltaY > 0){
 				scroll_list_down();
@@ -474,6 +477,18 @@ canvas.addEventListener("wheel",function(event){
 			}
 		}
 		scrollCooldown = 2;
+		return;
+	}else if(inventory && currentMenu == 'CRAFTING'){
+		if(scrollCooldown <= 0){
+			if(event.deltaY > 0){
+				craft_scroll_list_down();
+			}
+			if(event.deltaY < 0){
+				craft_scroll_list_up();
+			}
+		}
+		scrollCooldown = 2;
+		return;
 		return;
 	}
 

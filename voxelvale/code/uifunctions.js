@@ -272,6 +272,10 @@ class InterfaceHeldButton extends InterfaceButton{
 		}
 	}
 
+	getButtonID(){
+		return this.buttonID;
+	}
+
 	draw(){
 		//Click and hover.
 		let hovering = false;

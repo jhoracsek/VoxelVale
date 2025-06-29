@@ -93,8 +93,11 @@ function build_transparent_cursor(color, e=0){
 	cursor_push(p4,p3,p7,color);
 
 	//Back face
-	//cursor_push(p6,p5,p2,color);
-	//cursor_push(p2,p1,p5,color);
+	cursor_push(p6,p5,p2,color);
+	cursor_push(p2,p1,p5,color);
+
+	cursor_push(p1,p2,p3,color);
+	cursor_push(p2,p3,p4,color);
 }
 
 

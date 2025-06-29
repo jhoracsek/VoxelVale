@@ -131,6 +131,55 @@ function draw_triangle(x,y,d,c=UI_COLOURS[WHITE]){
 	ui_push(v1,v2,v3,c);
 }
 
+function toggleInventory(curCraftingStation = IN_NONE){
+
+	/*
+		Should reset other stuff here too!
+	*/
+	//Crafting menu
+	itemToCraft = -1;
+	craftListOffset = 0;
+
+	//Inventory
+	active =-1;
+	scrollOffset = 0;
+	if(curCraftingStation != IN_NONE){
+		currentCraftingStation = curCraftingStation;	
+		currentMenu='CRAFTING';
+	}else{
+		currentCraftingStation = IN_NONE;
+		currentMenu = 'INVENTORY';
+	}
+	
+	if(!inventory)
+		tab_lists();
+	if(fQueue.isEmpty()==false){
+		inFunction=false;
+		fQueue.dequeue();
+		selectXCoor=8.5;
+		selectYCoor=4;
+		coorSys = vec3(selectXCoor,selectYCoor,0);
+		return;
+	}
+	inventory=!inventory;
+	if(inventory){
+		//currentMenu = 'INVENTORY';
+		xCoor=8;
+		yCoor=4.5;
+		cursorCoor = vec2(xCoor,yCoor);
+		/*
+			Refresh craftableList when you open the inventory.
+			Note: make sure the flag for which crafting station you are
+			in is reset before this happens.
+		*/
+		craftableList=getEligibleRecipes();
+	}else{
+		selectXCoor=8.5;
+		selectYCoor=4;
+		coorSys = vec3(selectXCoor,selectYCoor,0);
+	}
+}
+
 
 var startDraw=[];
 var endDraw=[];
@@ -253,7 +302,7 @@ function tab_lists(){
 		//toolTabList=[new WoodAxe(),new StonePickaxe()];
 		toolTabList=player.getItemList();
 	}
-	itemTabList=player.getNonToolList();
+	itemTabList=player.getNonActionableItemList();
 	recipeTabList=player.getRecipeList();
 
 }
@@ -319,7 +368,7 @@ function draw_hold_condition(){
 
 
 function draw_drop_condition(){
-	return active+scrollOffset >= 0 && tabList[active+scrollOffset] != null && (activeTab == 0 || activeTab == 3); // And never on the recipes tab!
+	return active+scrollOffset >= 0 && tabList[active+scrollOffset] != null && (activeTab == 0 || activeTab == 2 || activeTab == 3); // And never on the recipes tab!
 }
 
 function on_click_hold(){
@@ -416,6 +465,11 @@ function draw_scroll_list(){
 		draw_c_text_small(textX+0.05,start+difference*(3-i)+0.45,tabList[i+scrollOffset].desc);
 		draw_c_text_med(textX+4.65,start+0.12+difference*(3-i),('Quantity:'));
 		draw_c_text_med(textX+5.56,start+0.12+difference*(3-i),(player.inventory.getQuantity(tabList[i+scrollOffset])));
+		if(selectedTab == 'REC'){
+			if(tabList[i+scrollOffset].craftingStation == REQUIRES_WORKBENCH)
+				draw_c_text_med_colored(textX+3.81,start+difference*(3-i)+0.66,'Requires: Workbench','#AAA');
+				//draw_c_text_med_colored(textX,start+difference*(3-i)+0.65-0.5,'Requires: Workbench', '#AAA');
+		}
 		if(active== i){
 			gl.drawArrays(gl.TRIANGLES,startDraw[3],endDraw[3]);
 		}
@@ -437,6 +491,7 @@ function draw_scroll_list(){
 //IF CLICK ARROW BUTTONS, ACTIVE++/ACTIVE--
 function draw_inventory_item(object,mv){
 
+	//if(selectedTab=='TOOL' || selectedTab=='ITEM'){
 	if(selectedTab=='TOOL'){
 		mv = mult(mv,translate(2.25,0.15,zLay-0.3));
 		mv = mult(mv,scale4(0.35,0.35,0.001))
@@ -468,6 +523,7 @@ function draw_display_item(object){
 		if(xSpin >= 360){
 			xSpin = 0;
 		}
+		//if(object.typeOfObj=='ITEM' || object.typeOfObj=='NON_ACTIONABLE_ITEM'){
 		if(object.typeOfObj=='ITEM'){
 			instanceMat = mult(instanceMat, translate(1.22,-1.05,0));
 			instanceMat = mult(instanceMat, scale4(1.25,1.25,0.01));
@@ -543,7 +599,12 @@ function scroll_arrows(){
 	draw_triangle(9.25,2.175,true);
 }
 
-
+function draw_c_text_fontsize(x1,y1,text1, size){
+	context.font = size.toString()+"px "+FONT;
+	var xCoor1 = x1*(canvas.width/16);
+    var yCoor1 = canvas.height - (y1*(canvas.height/9));
+    context.fillText(text1,xCoor1,yCoor1);
+}
 
 
 function draw_c_text(x1,y1,text1){
@@ -574,6 +635,15 @@ function draw_c_text_med(x1,y1,text1){
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
     context.fillText(text1,xCoor1,yCoor1);
+}
+
+function draw_c_text_med_colored(x1,y1,text1,c){
+	context.font = "13px "+FONT;
+	context.fillStyle = c;
+	var xCoor1 = x1*(canvas.width/16);
+    var yCoor1 = canvas.height - (y1*(canvas.height/9));
+    context.fillText(text1,xCoor1,yCoor1);
+    context.fillStyle = "white";
 }
 
 function draw_c_text_med_stroke(x1,y1,text1){
@@ -637,6 +707,7 @@ function draw_inventory(){
 
 	switch(currentMenu){
 		case 'INVENTORY':
+			heldIndex = inventoryButtonID;
 			draw_scroll_list();
 			set_mv_ui();
 
@@ -660,6 +731,7 @@ function draw_inventory(){
 
 			break;
 		case 'CRAFTING':
+			heldIndex = craftingButtonID;
 			draw_crafting_menu();
 			break;
 		}

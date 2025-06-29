@@ -19,16 +19,22 @@ DungeonWall			12
 TeleBlock			13
 Door				14
 BorderWall			15
+CopperStone			16
 
 
 WoodAxe				64
 StonePickaxe		65
 WoodenBow			66
+Copper 				67
+CopperBar			68
 
 
 WorkBenchRecipe		128
 WoodBlockRecipe		129
 DoorRecipe			130
+BrickBlockRecipe	131
+TestRecipe			132
+
 
 
 
@@ -39,19 +45,39 @@ DungeonCeiling		513
 CursorBlock			515
 
 
-Where to update whenever a new block/item is added?
-
-In saveload.js, in BlockWall.js (in Main.js if its an old item)
-
-Steps for adding block:
-
+Steps for adding 'new' blocks:
 1) If it's simple enough add to "blockwall.js".
 2) Set objectNumber to the next available number.
 3) Add to the list above.
-4) Add to simpleBlocks array in "blockwall.js".
+4) Add to 'simpleBlocks' array in "blockwall.js".
 5) Add to 'BLOCK_OBJNUMS' in "saveload.js".
 
+Steps for adding 'old' blocks:
+1) Add class.
+2) Set objectNumber to the next available number.
+3) Add to the list above.
+4) Add to 'BLOCK_OBJNUMS' in "saveload.js".
+5) Add in 'send_block()' in main.js.
+6) Save starting vertices as 'NAMEOFBLOCK_START'.
+7) Change index in block class to 'NAMEOFBLOCK_START'.
 
 Steps for adding recipes:
+1) Add class to "recipes.js".
+2) Set objectNumber to the next available number.
+3) Add to the list above.
+4) Add to 'RECIPE_OBJNUMS' in "recipes.js".
 
-1)
+Steps for adding non-actionable items:
+1) Add class to "items.js"
+2) Set objectNumber to the next available number.
+3) Add to the list above.
+4) Add to 'nonActionableItems' array in "nonactionableitems.js".
+5) Add to 'ITEM_OBJNUMS' in "nonactionableitems.js".
+6) Design build function in static method 'sendData()'.
+
+
+
+
+
+
+

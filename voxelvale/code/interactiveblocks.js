@@ -754,24 +754,18 @@ class WorkBench extends InteractiveBlock{
 	onHover(){
 		this.drawContents();
 	}
-
-	/*
-	draw(){
-		set_mv(this.instanceMat);
-		//gl.drawArrays(gl.LINES,lastByte,numberOfBytes);
-		if(this.ground){
-			gl.drawArrays(gl.TRIANGLES,this.index+24,6);
-			return;
-		}
-		if(hitBox){
-			gl.drawArrays(gl.LINES,numberOfByte[0],numberOfByte[1]);
-		}
-		gl.drawArrays(gl.TRIANGLES,this.index,this.numberOfVerts);
-
+	onClick(){
+		toggleInventory(IN_WORKBENCH);
+		
+		
+		/*
+		xCoor=8;
+		yCoor=4.5;
+		cursorCoor = vec2(xCoor,yCoor);
+		inFunction=true;
+		fQueue.enqueue(new QueuedFunction(this.menuFunction));
+		return;
+		*/
 	}
-	drawSmall(){
-		gl.drawArrays(gl.TRIANGLES,this.index,this.numberOfVerts);
-	}
-	*/
 
 }

@@ -145,7 +145,7 @@ function getWorldObj(){
 
 
 	/*
-		Inventory
+		Inventory ----------------------------
 	*/
 	let inventoryContents = player.getInventoryContents();
 	let inventoryObjNums = [];
@@ -161,7 +161,7 @@ function getWorldObj(){
 		for(let k = 0; k < q; k++)
 			inventoryObjNums.push(inventoryContents[1][i].objectNumber);
 	}
-	//Non tool items
+	//Non-actionable items
 	for(let i = 0; i < inventoryContents[2].length; i++){
 		let q = player.getObjectQuantity(inventoryContents[2][i]);
 		for(let k = 0; k < q; k++)
@@ -273,7 +273,7 @@ function loadWorldIntoGame(loadedWorld){
 
 
 	/*
-		Inventory
+		Inventory ------------------
 	*/
 	let inventoryContents = JSON.parse(loadedWorld.invObjNums);
 
@@ -325,8 +325,8 @@ function loadWorldIntoGame(loadedWorld){
 /*
 	Need to clean this up.
 */
-const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door,BorderWall];
-const ITEM_OBJNUMS = [WoodAxe, StonePickaxe, WoodenBow];
+const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door,BorderWall,CopperStone];
+
 
 
 function getObjectBasedOnObjectNumber(objectNumber){
@@ -359,5 +359,18 @@ function unflatten(vector){
 		mat[i%4][Math.floor(i/4)] = vector[i];
 	}
 	return mat;
+}
+//https://stackoverflow.com/questions/21646738/convert-hex-to-rgba
+function hexToRgbA(hex){
+    var c;
+    if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+        c= hex.substring(1).split('');
+        if(c.length== 3){
+            c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+        }
+        c= '0x'+c.join('');
+        return vec4( ((c>>16)&255)/255, ((c>>8)&255)/255, (c&255)/255, 1 );
+    }
+    return vec4(0,0,0,1);
 }
 

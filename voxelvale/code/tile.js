@@ -48,6 +48,52 @@ function build_block(Texture, oX=0.0065, oY=0.0065, Texture2 = Texture, Texture3
 	set_texture(Texture3,oX,oY);
 }
 
+function build_colored_cuboid(color){
+	for(let i = 0; i < 36; i++)
+		texCoords.push(vec2(2.0,2.0));
+	//Bottom
+	block_face( 1, 0, 3, 2, false, color);
+	
+	//Right
+	block_face( 2, 3, 7, 6 ,true, color);
+	
+	//Front
+	block_face( 3, 0, 4, 7,true, color);
+
+	//Back
+	block_face( 6, 5, 1, 2,true, color);
+	
+	//Top
+	block_face( 4, 5, 6, 7,true, color);
+
+	//Left
+	block_face( 5, 4, 0, 1,true, color);
+
+}
+
+function build_colored_bar(color){
+	for(let i = 0; i < 36; i++)
+		texCoords.push(vec2(2.0,2.0));
+	//Bottom
+	block_face( 1, 0, 3, 2, false, color);
+	
+	//Right
+	block_face( 2, 3, 7, 6 ,true, color);
+	
+	//Front
+	block_face( 3, 0, 4, 7,true, color);
+
+	//Back
+	block_face( 6, 5, 1, 2,true, color);
+	
+	//Top
+	block_face( 4, 5, 6, 7,true, color);
+
+	//Left
+	block_face( 5, 4, 0, 1,true, color);
+
+}
+
 //Wood(0), Weird(1), Grass(2), Tile(3),...
 function get_specific_block_offset(number){
 	return NM+(36*number);
@@ -245,16 +291,29 @@ class BlockWall extends zObject{
 	destroy(){
 
 
-		this.spawnParticles();
+		//this.spawnParticles();
 
 		//You can just adjust this so it adds a specified drop
 		//where the default can be the block unless otherwise
 		//specified...
-		player.addToInventory(this.drop());
+		//player.addToInventory(this.drop());
+
+		this.spawnParticles();
+		/*
+			Adjust if block is to drop and item.
+		*/
+		if(Array.isArray(this.drop())){
+			let arr = this.drop();
+			for(let i = 0; i < arr.length; i++)
+				player.addToInventory(arr[i])
+		}else{
+			player.addToInventory(this.drop());
+		}
 
 
 		return;
 	}
+	isArray(){return false;}
 	returnIndex(){
 		return this.index;
 	}

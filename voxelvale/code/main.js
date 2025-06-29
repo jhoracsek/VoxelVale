@@ -509,12 +509,19 @@ window.onload = function init(){
 	player.addToInventory(new DoorRecipe())
 	var workbenchRecipe = new WorkBenchRecipe();
 	player.addToInventory(workbenchRecipe);
+	player.addToInventory(new TestRecipe());
+	player.addToInventory(new BrickBlockRecipe());
 
 
 
 	player.addToInventory(new DirtBlock());
 
 	player.addToInventory(new BrickBlock());
+
+	player.addToInventory(new CopperStone());
+
+	player.addToInventory(new Copper());
+	player.addToInventory(new Copper());
 
 
 	var dropBox = new DropBox(null,null,null,[new WorkBench(), new StonePickaxe(), new DirtBlock(), new GrassBlock(), new WeirdBlock(), new GrassBlock(), new WoodBlock(), new WoodBlock(), new GrassBlock()]);
@@ -598,9 +605,11 @@ var arrowStart;
 var arrowHB;
 var dropBoxStart;
 var brickStart;
+var copperStart;
 
 
 var simpleBlocks = [];
+var nonActionableItems = [];
 
 function send_block(){
 	woodStart = vertices.length;
@@ -615,6 +624,13 @@ function send_block(){
 	for(let i = 0; i < simpleBlocks.length; i++){
 		simpleBlocks[i].index = vertices.length;
 		simpleBlocks[i].sendData();
+	}
+
+	initializeNonActionableItems();
+	for(let i = 0; i < nonActionableItems.length; i++){
+		nonActionableItems[i].index = vertices.length;
+		nonActionableItems[i].sendData();
+		nonActionableItems[i].numberOfVerts = vertices.length - nonActionableItems[i].index; 
 	}
 
 	dirtStart = vertices.length;
@@ -632,6 +648,9 @@ function send_block(){
 	stoneBlockStart = vertices.length;
 	sendStoneBlock = new StoneBlock();
 	sendStoneBlock.sendData();
+
+	copperStart = vertices.length;
+	(new CopperStone()).sendData();
 
 	doorStart = vertices.length;
 	sendDoor = new Door();
@@ -720,8 +739,8 @@ function send_data_to_GPU(){
 		cursorBytes[1] is associated with the green cursor block/tool lines.
 		cursorBytes[2] is associated with the red cursor block/tool lines.
 		cursorBytes[3] is associated with the green block/tool cursor.
-		cursorBytes[4] is associated with the red block/tool cursor
-		cursorBytes[5] .
+		cursorBytes[4] is associated with the red block/tool cursor.
+		cursorBytes[5] is associated with the blue block/tool cursor (this is used to look like a blue print for recipes.)
 	*/
 		// Holding nothing.
 		cursorBytes.push([vertices.length,null]);
@@ -751,7 +770,10 @@ function send_data_to_GPU(){
 		build_thick_wireframe(1, vec4(1,0,0,1), vec4(1,0,0,0.3));
 		cursorBytes[4][1] = vertices.length-cursorBytes[4][0];
 
-		//
+		// Holding block. (Blue)
+		cursorBytes.push([vertices.length,0]);
+		build_thick_wireframe(1, vec4(1,1,1,1), vec4(0.3,0.3,1,0.6));
+		cursorBytes[5][1] = vertices.length-cursorBytes[5][0];
 	
 	/*
 		Updated cursors end.

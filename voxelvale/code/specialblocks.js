@@ -211,7 +211,7 @@ class StoneBlock extends BlockWall{
 		this.index = stoneBlockStart;
 		this.numberOfVerts = 36;
 		this.name = 'Stone';
-		this.secondIndex;
+		this.secondIndex = this.index;
 		this.orient='NONE';
 		this.objectNumber=5;
 		this.tob='STONE';
@@ -264,67 +264,67 @@ class StoneBlock extends BlockWall{
 		//console.log(switchArr.join())
 		switch(switchArr.join()){
 			case "false,false,false,false":
-				this.index=stoneBlockStart;
+				this.index=this.secondIndex;
 				break;
 			case "true,true,true,true":
-				this.index=stoneBlockStart+36;
+				this.index=this.secondIndex+36;
 				break;
 			case "true,false,false,false":
 				this.rot = 90;
-				this.index=stoneBlockStart+36*4;
+				this.index=this.secondIndex+36*4;
 				break;
 			case "false,true,false,false":
 				this.rot = -90;
-				this.index=stoneBlockStart+36*4;
+				this.index=this.secondIndex+36*4;
 				break;
 			case "false,false,true,false":
-				this.index=stoneBlockStart+36*4;
+				this.index=this.secondIndex+36*4;
 				break;
 			case "false,false,false,true":
 				this.rot = 180;
-				this.index=stoneBlockStart+36*4;
+				this.index=this.secondIndex+36*4;
 				break;
 			case "true,false,true,false":
 				this.rot=0;
-				this.index=stoneBlockStart+36*3;
+				this.index=this.secondIndex+36*3;
 				break;
 			case "true,false,false,true":
 				this.rot=90;
-				this.index=stoneBlockStart+36*3;
+				this.index=this.secondIndex+36*3;
 				break;
 			case "false,true,true,false":
 				this.rot=-90;
-				this.index=stoneBlockStart+36*3;
+				this.index=this.secondIndex+36*3;
 				break;
 			case "false,true,false,true":
 				this.rot=180;
-				this.index=stoneBlockStart+36*3;
+				this.index=this.secondIndex+36*3;
 				break;
 			case "true,true,true,false":
-				this.index = stoneBlockStart+36*2;
+				this.index = this.secondIndex+36*2;
 				break;
 			case "true,true,false,true":
 				this.rot=180;
-				this.index = stoneBlockStart+36*2;
+				this.index = this.secondIndex+36*2;
 				break;
 			case "true,false,true,true":
 				this.rot=90;
-				this.index = stoneBlockStart+36*2;
+				this.index = this.secondIndex+36*2;
 				break;
 			case "false,true,true,true":
 				this.rot=-90;
-				this.index = stoneBlockStart+36*2;
+				this.index = this.secondIndex+36*2;
 				break;
 
 
 			case "false,false,true,true":
 				//this.rot=0;
-				this.index=stoneBlockStart+36;
+				this.index=this.secondIndex+36;
 				break;
 			//This is a case you don't have a model for :(
 			case "true,true,false,false":
 				//this.rot=0;
-				this.index=stoneBlockStart+36;
+				this.index=this.secondIndex+36;
 				break;
 
 		}
@@ -336,18 +336,37 @@ class StoneBlock extends BlockWall{
 		this.switchOrientation();
 	}
 	draw(){
-		//CONSIDER SCALING THIS!
-		//Maybe Do softshading?
-		//if(updateUnimportantMethods)
-		//	this.switchOrientation();
 		set_mv(this.instanceMat);
 		if(hitBox){
 			gl.drawArrays(gl.LINES,numberOfByte[0],numberOfByte[1]);
 		}
 		gl.drawArrays(gl.TRIANGLES,this.index,this.numberOfVerts);
 
-		//I think it's fine because it's only on drawn stones... Not ideal though.
-		//this.switchOrientation();
+	}
+}
+
+class CopperStone extends StoneBlock{
+	constructor(X=null,Y=null,Z=null){
+		super(X,Y,Z,25,false);
+		this.index = copperStart;
+		this.secondIndex = this.index;
+		this.numberOfVerts = 36;
+		this.name = 'Copper Ore';
+		this.secondIndex;
+		this.orient='NONE';
+		this.objectNumber=16;
+		this.tob='STONE';
+		this.desc = 'A copper ore block.'
+	}
+	sendData(){
+		draw_stone_single(25);		//INDEX <- stoneBlockStart;
+		draw_stone_middle(25);		//INDEX <- stoneBlockStart+36;
+		draw_stone_single_edge(25);	//INDEX <- stoneBlockStart+36*2;
+		draw_stone_corner_edge(25);	//INDEX <- stoneBlockStart+36*3;
+		draw_stone_triple_edge(25);	//INDEX <- stoneBlockStart+36*4;
+	}
+	drop(){
+		return [new StoneBlock(), new Copper()];
 	}
 }
 
@@ -393,8 +412,7 @@ function draw_wood_branch(){
 
 //var dS=0.15;
 var dS=0.15;
-var texStone=17;
-function draw_stone_single(){
+function draw_stone_single(texStone = 17){
 	var v1,v2,v3,v4,v5,v6,v7,v8;
 	v1=vec3(dS,dS,0);
 	v2=vec3(1-dS,dS,0);
@@ -429,7 +447,7 @@ function draw_stone_single(){
 	set_texture2(texStone);
 }
 
-function draw_stone_middle(){
+function draw_stone_middle(texStone = 17){
 	var v1,v2,v3,v4,v5,v6,v7,v8;
 	v1=vec3(0,0,0);
 	v2=vec3(1,0,0);
@@ -464,7 +482,7 @@ function draw_stone_middle(){
 	set_texture2(texStone);
 }
 
-function draw_stone_single_edge(){
+function draw_stone_single_edge(texStone = 17){
 	var v1,v2,v3,v4,v5,v6,v7,v8;
 	v1=vec3(0,dS,0);
 	v2=vec3(1,dS,0);
@@ -499,7 +517,7 @@ function draw_stone_single_edge(){
 	set_texture2(texStone);
 }
 
-function draw_stone_corner_edge(){
+function draw_stone_corner_edge(texStone = 17){
 	var v1,v2,v3,v4,v5,v6,v7,v8;
 	v1=vec3(0,dS,0);
 	v2=vec3(1-dS,dS,0);
@@ -534,7 +552,7 @@ function draw_stone_corner_edge(){
 	set_texture2(texStone);
 }
 
-function draw_stone_triple_edge(){
+function draw_stone_triple_edge(texStone = 17){
 	var v1,v2,v3,v4,v5,v6,v7,v8;
 	v1=vec3(dS,dS,0);
 	v2=vec3(1-dS,dS,0);

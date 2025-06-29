@@ -99,18 +99,28 @@ Some stuff todo
 
 
 	New todo.
-		1. Stone brick.										()
-			1.a) Recipe.									()
-			1.b) Texture.									()
+		1. Stone brick.										(X)
+			1.a) Recipe.									(X)
+			1.b) Texture.									(X)
 		2. Flesh out recipes (if not done in 1)				(X)
-		3. Fix crafting table.								()
-			3.a) Switching to inventory.					()
-			3.b) Layout.									()
-			3.c) Anything else.								()
+			2.a) Blueprints (small)							(X)
+			2.b) Blueprints (big)							(X)
+			2.c) Description								(X)
+			2.d) Lighten the blue color						(X)
+		3. Fix crafting table.								(X)
+			3.a) Switching to inventory.					(X)
+			3.b) Layout.									(X)
+			3.c) Anything else.								(X)
+			3.d) Fixed so much stuff lol 					(X)
 		4. Add one Ore 										()
-			4.a) Flesh out the idea.						()
-			4.b) Maybe Iron/Stell or equivalent.			()
-			4.c) Should go under item tab. 					()
+			4.a) Flesh out the idea.						(X)
+			4.b) Maybe Iron/Steel or equivalent.			(X)
+			4.c) Should go under item tab. 					(X)
+			4.d) This will require a lot of work.			(X)
+			4.e) Add block to mine.							(X)
+			4.f) Add to random generation.					(X)
+			4.g) Add bar.									()
+			4.h) Add recipe for bar.						()
 		5. Add arrow item.									()
 			5.a) Should go under 'Items'.					()
 			5.b) Add crafting recipe.						()
@@ -135,8 +145,23 @@ Some stuff todo
 			10.b) Inventory.								()
 			10.c) Devtools.									()
 		11. Automatically update version on index.html		()
-		12. Hold multiple recipes and be able to drop.		()
-			12.a) Save to firebase.							()
+		12. Hold multiple recipes and be able to drop.		(X)
+			12.a) Save to firebase.							(X)
+		13. Tab when in inventory should switch tab.		(X)
+		14. Fix items.										()
+			14.a) Added new (simpler) item class.			(X)
+			14.b) Added save load functionality.			(X)
+			14.c) Fixed tab.								(X)
+			14.d) Implement drawing/rendering.				()
+		15. Forge / Anvil									()
+		16. Remove notifications at startup.				()
+		17. Can pick up drop boxes while in inventory.		()
+
+
+3. Idea for Ore.
+
+	Do copper for a start.
+
 
 			
 

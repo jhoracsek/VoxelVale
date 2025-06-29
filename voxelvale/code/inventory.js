@@ -28,6 +28,8 @@ var UI_COLOURS = [
 ];
 
 
+
+
 //Should change to interfaceElements or something more specific!
 var interfaceBackgrounds = [];
 var craftingElements = [];
@@ -80,16 +82,22 @@ function loadWorldButton(){
 
 /*
 	This is the bottom bar that stays for all inventories.
+
+	inventoryButtonID, craftingButtonID will also be automatically switched based off which menu is open.
+	This happens in 'draw_inventory()' in 'UI.js'.
 */
+let inventoryButtonID, craftingButtonID;
 function add_interface_bottom_bar(){
 	let squish = 0.125
 	let buttonWidth = 2.5;
 	let buttonSpace = 3;
 	var inventoryButton = new InterfaceHeldButton(2.25, 1.25+squish, 2.25+buttonWidth, 2-squish,DARK_GREY,function(){currentMenu='INVENTORY';},"Inventory",true);
 	bottomBarElements.push(inventoryButton);
+	inventoryButtonID = inventoryButton.getButtonID();
 
 	var craftingButton = new InterfaceHeldButton(2.25+buttonSpace, 1.25+squish, (2.25+buttonWidth)+buttonSpace, 2-squish,DARK_GREY,function(){currentMenu='CRAFTING';},"Crafting");
 	bottomBarElements.push(craftingButton);
+	craftingButtonID = craftingButton.getButtonID();
 
 	var saveButton = new InterfaceButton(2.25+buttonSpace*2, 1.25+squish, (2.25+buttonWidth)+buttonSpace*2, 2-squish,DARK_GREY,saveWorldButton,"Save World");
 	bottomBarElements.push(saveButton);

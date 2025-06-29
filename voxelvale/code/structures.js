@@ -80,13 +80,29 @@ function gen_stone_cluster_big(X,Y){
 function gen_stone_cluster(X,Y){
 	var retList=[];
 	var clusterPattern = Math.round(Math.random()*10);
+
+	//This will be randomly chosen
+	let ORE;
+
+	//50 Percent no ore
+	//25 Percent Copper
+	let oddsForOre = Math.random();
+	if(oddsForOre < 0.25){
+		ORE = StoneBlock;
+	}else if(oddsForOre<0.75){
+		ORE = CopperStone;
+	}else{
+		ORE = StoneBlock;
+	}
+
+
 	switch(clusterPattern){
 		case 0:
 			retList.push(new StoneBlock(X,Y,-3));
-			retList.push(new StoneBlock(X,Y-1,-3));
-			retList.push(new StoneBlock(X,Y+1,-3));
-			retList.push(new StoneBlock(X-1,Y,-3));
-			retList.push(new StoneBlock(X+1,Y,-3));
+			retList.push(new ORE(X,Y-1,-3));
+			retList.push(new ORE(X,Y+1,-3));
+			retList.push(new ORE(X-1,Y,-3));
+			retList.push(new ORE(X+1,Y,-3));
 			break;
 		case 1:
 			retList.push(new StoneBlock(X,Y,-3));
@@ -101,8 +117,18 @@ function gen_stone_cluster(X,Y){
 			retList.push(new StoneBlock(X+1,Y+2,-3));
 			retList.push(new StoneBlock(X+1,Y+1,-3));
 		case 3:
+			retList.push(new StoneBlock(X,Y,-3));
+			retList.push(new ORE(X,Y+1,-3));
+			retList.push(new ORE(X,Y+2,-3));
+			retList.push(new ORE(X+1,Y+2,-3));
+			retList.push(new StoneBlock(X+1,Y+1,-3));
 
 		case 4:
+			retList.push(new StoneBlock(X,Y,-3));
+			retList.push(new ORE(X+1,Y,-3));
+			retList.push(new ORE(X,Y+1,-3));
+			retList.push(new StoneBlock(X+1,Y+1,-3));
+			break;
 
 		case 5:
 

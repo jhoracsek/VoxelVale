@@ -19,13 +19,14 @@ class Inventory{
 		this.blocks=[];
 		this.itemNums=[];
 		this.items=[];
-		//this.objects=[];
+		this.naItemNums=[];
+		this.naItems=[];
 		this.recipes=[];
 		this.recipeQuants=[];
 	}
 
 	getInventoryContents(){
-		return [this.getBlocks(), this.getItems(), this.getNonToolItems(), this.getRecipes()];
+		return [this.getBlocks(), this.getItems(), this.getNonActionableItems(), this.getRecipes()];
 	}
 
 	/*
@@ -36,11 +37,10 @@ class Inventory{
 		this.blocks=[];
 		this.itemNums=[];
 		this.items=[];
+		this.naItemNums=[];
+		this.naItems=[];
 		this.recipes=[];
 		this.recipeQuants=[];
-		//this.constructor();
-
-
 	}
 
 
@@ -50,6 +50,15 @@ class Inventory{
 			this.itemNums.push(Item.objectNumber);
 		}else{
 			this.items[Item.objectNumber].increase();
+		}
+		return;
+	}
+	addNonActionableItem(Item){
+		if(this.naItems[Item.objectNumber]==null){
+			this.naItems[Item.objectNumber]=new InventoryObject(Item);
+			this.naItemNums.push(Item.objectNumber);
+		}else{
+			this.naItems[Item.objectNumber].increase();
 		}
 		return;
 	}
@@ -83,6 +92,14 @@ class Inventory{
 			return;
 		else
 			this.items[Item.objectNumber].decrease();
+		return;
+	}
+
+	removeNonActionableItem(Item){
+		if(this.naItems[Item.objectNumber]==null || this.naItems[Item.objectNumber]==0)
+			return;
+		else
+			this.naItems[Item.objectNumber].decrease();
 		return;
 	}
 	removeRecipe(Recipe){
@@ -163,6 +180,14 @@ class Inventory{
 		else
 			return obj.quant;
 	}
+	getQuantityNonActionableItem(Item){
+		if(Item==null){return null;}
+		var obj=this.naItems[Item.objectNumber];
+		if(obj==null||obj.quant<=0)
+			return 0;
+		else
+			return obj.quant;
+	}
 	getQuantityRec(Recipe){
 		if(Recipe==null){return null;}
 		for(let i = 0; i < this.recipes.length; i++){
@@ -181,6 +206,10 @@ class Inventory{
 				break;
 			case 'REC':
 				return this.getQuantityRec(Object);
+				break;
+			case 'NON_ACTIONABLE_ITEM':
+				return this.getQuantityNonActionableItem(Object);
+				break;
 		}
 		return 0;
 	}
@@ -203,6 +232,14 @@ class Inventory{
 		for(var i=0;i<this.itemNums.length;i++){
 			if(this.items[this.itemNums[i]].quant>0)
 				retArray.push(this.items[this.itemNums[i]].object);
+		}
+		return retArray;
+	}
+	getNonActionableItems(){
+		var retArray=[];
+		for(var i=0;i<this.naItemNums.length;i++){
+			if(this.naItems[this.naItemNums[i]].quant>0)
+				retArray.push(this.naItems[this.naItemNums[i]].object);
 		}
 		return retArray;
 	}
@@ -297,6 +334,9 @@ class Player extends Humanoid{
 	getBlockList(){
 		return this.inventory.getBlocks();
 	}
+	getNonActionableItemList(){
+		return this.inventory.getNonActionableItems();
+	}
 	/*
 		Update the name. Right now just used in the tab list.
 	*/
@@ -321,6 +361,9 @@ class Player extends Humanoid{
 			case 'REC':
 				this.inventory.addRecipe(object);
 				break;
+			case 'NON_ACTIONABLE_ITEM':
+				this.inventory.addNonActionableItem(object);
+				break;
 		}
 		tab_lists();
 	}
@@ -337,6 +380,9 @@ class Player extends Humanoid{
 				break;
 			case 'REC':
 				this.inventory.removeRecipe(object);
+				break;
+			case 'NON_ACTIONABLE_ITEM':
+				this.inventory.removeNonActionableItem(object);
 				break;
 		}
 		tab_lists();
