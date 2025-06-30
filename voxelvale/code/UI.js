@@ -415,6 +415,32 @@ function get_where_to_drop(worldObj){
 	}
 }
 
+function drop_on_death(worldObj,object){
+	//Should get a position that you can drop, or if there
+	//is no position return null or something...
+	var dropSpace = worldObj.getDropBoxSpace(Math.round(player.posX), Math.round(player.posY));
+	
+	if(dropSpace==null){
+		return;
+	}
+
+	var PX = dropSpace[1][0];
+	var PY = dropSpace[1][1];
+	var PZ = dropSpace[1][2];
+
+	if(!dropSpace[0]){
+		//Create a new DropBox.
+		worldObj.addBlock(new DropBox(PX,PY,PZ,[object]));
+		player.removeFromInventory(object);
+	}else{
+		//Add to an existing DropBox.
+		
+		dB = dropSpace[1];
+		dB.addTo(object);
+		player.removeFromInventory(object);
+	}
+}
+
 /*
 	This function does two things.
 		Draws the scroll list and checks for clicks.
@@ -1006,12 +1032,12 @@ function draw_toolbar_items(){
 	// Draw tools
 	var object;
 	const space = 0.65;
-	draw_c_text_small_stroke(2.15,8,player.getArrowCount())
+	draw_c_text_small_stroke(2.2,8+toolbarHeightOffset,player.getArrowCount())
 	for(let i = 0; i < 7; i++){
 		object = toolBarList[i];
 		if(object != null){
 			if(i >= NUM_TOOLBAR_TOOLS)
-				draw_c_text_small_stroke(3.15+space*(i-NUM_TOOLBAR_TOOLS),8,player.getObjectQuantity(object));
+				draw_c_text_small_stroke(3.15+space*(i-NUM_TOOLBAR_TOOLS),8+toolbarHeightOffset,player.getObjectQuantity(object));
 			
 			//gl.drawArrays(gl.TRIANGLES,object.index,object.numberOfVerts);
 			if(i >= NUM_TOOLBAR_TOOLS){
@@ -1036,9 +1062,9 @@ function set_toolbar_matrices(){
 
 	var xpositions = [3.45, 0, -1, -2]
 
-	toolBarObjs.push(mult(viewMatrix,mult(translate(-7.4, 3.45,-10),scaleAndRotate)));
-	toolBarObjs.push(mult(viewMatrix,mult(translate(-7.4+0.65, 3.45,-10),scaleAndRotate)));
-	toolBarObjs.push(mult(viewMatrix,mult(translate(-7.4+0.65*2, 3.45,-10),scaleAndRotate)));
+	toolBarObjs.push(mult(viewMatrix,mult(translate(-7.4, 3.45+toolbarHeightOffset,-10),scaleAndRotate)));
+	toolBarObjs.push(mult(viewMatrix,mult(translate(-7.4+0.65, 3.45+toolbarHeightOffset,-10),scaleAndRotate)));
+	toolBarObjs.push(mult(viewMatrix,mult(translate(-7.4+0.65*2, 3.45+toolbarHeightOffset,-10),scaleAndRotate)));
 
 
 	//For blocks
@@ -1053,10 +1079,10 @@ function set_toolbar_matrices(){
 
 
 	for (let i = 0; i < 4; i++){
-		toolBarObjs.push(mult(viewMatrix,mult(translate(-4.97+0.65*i, 3.49,-9.5),scaleAndRotate)));
+		toolBarObjs.push(mult(viewMatrix,mult(translate(-4.97+0.65*i, 3.49+toolbarHeightOffset,-9.5),scaleAndRotate)));
 	}
 }
-
+const toolbarHeightOffset = 0.115;
 function draw_tool_bar(){
 
 	//gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(mult(viewMatrix,translate(-7.4,1.225,0))));
@@ -1070,14 +1096,16 @@ function draw_tool_bar(){
 
 	//gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(mult(viewMatrix,translate(-7.4,1.225-1.5-0.75,0))));
 	//gl.drawArrays(gl.TRIANGLES,startDraw[6],endDraw[6]);
-	draw_c_text_med_stroke(1.249,8.59,'Tools');
+	draw_c_text_med_stroke(1.249,8.59+toolbarHeightOffset,'Tools');
 	//draw_c_text_med_stroke(3.7732,8.59,'Items');
-	draw_c_text_med_stroke(3.767,8.59,'Blocks');
+	draw_c_text_med_stroke(3.767,8.59+toolbarHeightOffset,'Blocks');
 
 	const xlinepos=2.58;
-	draw_c_line(xlinepos,0.61,xlinepos,1,'#6a6a6a');
+	draw_c_line(xlinepos,0.61-toolbarHeightOffset,xlinepos,1-toolbarHeightOffset,'#6a6a6a');
 
-	const height = 3.7;
+	//const height = 3.7;
+	
+	const height = 3.7 + toolbarHeightOffset;
 	const space = 0.65;
 	var startX = -7.2-space;
 	for (let i = 0; i < 3; i++){
@@ -1088,7 +1116,7 @@ function draw_tool_bar(){
 			gl.drawArrays(gl.TRIANGLES,startDraw[8],endDraw[8]);
 		}
 		gl.drawArrays(gl.TRIANGLES,startDraw[8],endDraw[8]);
-		draw_c_text_small_stroke(0.58+space*i,8.323,i+1);
+		draw_c_text_small_stroke(0.58+space*i,8.323+toolbarHeightOffset,i+1);
 	}
 	startX += 0.3;
 	for (let i = 0; i < 4; i++){
@@ -1103,7 +1131,7 @@ function draw_tool_bar(){
 
 
 		gl.drawArrays(gl.TRIANGLES,startDraw[8],endDraw[8]);
-		draw_c_text_small_stroke(2.841+space*i,8.323,i+4);
+		draw_c_text_small_stroke(2.841+space*i,8.323+toolbarHeightOffset,i+4);
 
 	}
 

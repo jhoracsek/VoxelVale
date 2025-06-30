@@ -114,6 +114,7 @@ uniform vec4 sColor;
 
 //Cursor
 uniform bool cursorBlock;
+uniform bool flashing;
 
 //Particle
 uniform bool isParticle;
@@ -145,6 +146,11 @@ void main()
 
     if(cursorBlock == true){
         gl_FragColor = texture2D(texture, fTexCoord )*fColor*vec4(1.0, 1.0, 1.0, 0.3);
+        return;
+    }
+
+    if(flashing == true){
+        gl_FragColor = vec4(0.95,0.1,0.1,1.0);
         return;
     }
 
@@ -199,6 +205,7 @@ void main()
 <script type="text/javascript" src="voxelvale/code/notifications.js"></script>
 <script type="text/javascript" src="voxelvale/code/popup.js"></script>
 <script type="text/javascript" src="voxelvale/code/UI.js"></script>
+<script type="text/javascript" src="voxelvale/code/healthbar.js"></script>
 <script type="text/javascript" src="voxelvale/code/uifunctions.js"></script>
 <script type="text/javascript" src="voxelvale/code/inventory.js"></script>
 <script type="text/javascript" src="voxelvale/code/craftingmenu.js"></script>

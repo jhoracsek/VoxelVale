@@ -178,7 +178,7 @@ function getWorldObj(){
 
 	
 
-	return [xPositions, yPositions, zPositions,objectNumbers, blockInstanceInformationString, invObjectNumbers, [player.posX, player.posY]];
+	return [xPositions, yPositions, zPositions,objectNumbers, blockInstanceInformationString, invObjectNumbers, [player.posX, player.posY], player.health];
 }
 
 function loadWorldIntoGame(loadedWorld){
@@ -316,7 +316,7 @@ function loadWorldIntoGame(loadedWorld){
 	let playerPosition = loadedWorld.position;
 	player.posX = playerPosition[0];
 	player.posY = playerPosition[1];
-	
+	player.health = loadedWorld.health;
 
 }
 

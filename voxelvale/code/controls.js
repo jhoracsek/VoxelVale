@@ -53,6 +53,21 @@ function getKeyDown(key){
 	if(!isFocused || keyboardDisabled)
 		return;
 
+	//'ESCAPE'
+	if(key.keyCode == 27){
+		isFocused = false;
+	}
+
+	//'SPACE'
+	if(key.keyCode == 32){
+		key.preventDefault();
+		if(player.isDead){
+			player.respawn();
+		}
+	}
+	if(player.isDead){
+		return;
+	}
 
 	//'A' LEFT
 	if(key.keyCode == 65){
@@ -79,10 +94,7 @@ function getKeyDown(key){
 			player.isMovingDown = true;
 	}
 
-	//'ESCAPE'
-	if(key.keyCode == 27){
-		isFocused = false;
-	}
+
 
 
 	//'Q'
@@ -114,10 +126,6 @@ function getKeyDown(key){
 		
 	}
 
-	//'R'
-	if(key.keyCode == 82){
-		
-	}
 
 	//'TAB'
 	if(key.keyCode == 9){
@@ -145,52 +153,42 @@ function getKeyDown(key){
 		if(!inventory){
 			activeToolBarItem = ((activeToolBarItem)%(NUM_TOOLBAR_ITEMS+1))+1
 
-			//if(toolBarList[activeToolBarItem-1] != null){
-				//console.log(activeToolBarItem-1);
 			if(activeToolBarItem == NUM_TOOLBAR_ITEMS+1){
 				player.setHeldObject(null);
 				return;	
 			}
 			player.setHeldObject(toolBarList[activeToolBarItem-1]);
-			//}
 		}
 	}
 
 	//'~'
 	if(key.keyCode == 192){
+		key.preventDefault();
 		toggleInventory();
 	}
 
-	//'1'
-	if(key.keyCode == 49){
+	//'T'
+	if(key.keyCode == 84){
 		if(DEV_TOOLS){
-			var enemy=new Finder(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),-3);
+			//var enemy=new Finder(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),-3);
+			//enemy.initialize_enemy();
+			//enemyArray.push(enemy);
+
+			var enemy = new Undead(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),-6);
 			enemy.initialize_enemy();
 			enemyArray.push(enemy);
 		}
 
 	}
 
-	//'2'
-	if(key.keyCode == 50){
+	//'R'
+	if(key.keyCode == 82){
 		if(DEV_TOOLS){
 			fastMode=!fastMode;
 			tab_lists();
 			player.checkSpeed();
 		}
 	}
-
-	/*
-	key.preventDefault();
-		activeToolBarItem = ((activeToolBarItem)%(NUM_TOOLBAR_ITEMS+1))+1
-
-		if(activeToolBarItem == NUM_TOOLBAR_ITEMS+1){
-			player.setHeldObject(null);
-			return;	
-		}
-		player.setHeldObject(toolBarList[activeToolBarItem-1]);
-
-	*/
 
 	//'1'
 	if(key.keyCode == 49){
@@ -307,7 +305,7 @@ function checkHovering(){
 		else
 			selectedBlock = currentDungeon.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
 		
-		if(selectedBlock!=null){
+		if(selectedBlock!=null && !player.isDead){
 			selectedBlock.onHover();
 		}
 		blockOnTopOf = currentDungeon.getBlockAt(Math.round(player.posX),Math.round(player.posY),-2);
@@ -317,7 +315,7 @@ function checkHovering(){
 			selectedBlock = world.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),-3);
 		else
 			selectedBlock = world.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
-		if(selectedBlock!=null){
+		if(selectedBlock!=null && !player.isDead){
 			selectedBlock.onHover();
 		}
 		blockOnTopOf = world.getBlockAt(Math.round(player.posX-0.5),Math.round(player.posY-0.5),-2);
@@ -437,13 +435,13 @@ canvas.addEventListener("mousedown", function(event){
 			if(inDungeon){
 				//console.log(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
 				//var selectedBlock = currentDungeon.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
-				if(selectedBlock!=null){
+				if(selectedBlock!=null&& !player.isDead){
 					selectedBlock.onClick();
 				}
 
 			}else{
 				//var selectedBlock = world.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
-				if(selectedBlock!=null){
+				if(selectedBlock!=null&& !player.isDead){
 					selectedBlock.onClick();
 				}
 			}

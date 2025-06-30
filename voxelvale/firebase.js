@@ -117,6 +117,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebas
                 blockInstanceInfo: info[4],
                 invObjNums: info[5],
                 position: info[6],
+                health: info[7],
                 version: GAME_VERSION
                 //lastModified: new Date().toISOString()
             });

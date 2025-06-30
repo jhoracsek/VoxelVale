@@ -593,6 +593,27 @@ function get_draw_center(){
 	return [16/2,9/2];
 }
 
+//CANVAS_SIZE_X CANVAS_SIZE_Y
+/*
+	Assume size 1280, 720.
+*/
+function pixToCanX(x){
+	//Value ranging from [1,1280] to [0,16]
+	let canvas_x = x-1; //[0, 1279]
+	canvas_x = canvas_x/1279; // [0,1]
+	canvas_x = canvas_x*CANVAS_SIZE_X;
+	return canvas_x;
+}
+function pixToCanY(y){
+	//Value ranging from [1,720] to [0,9]
+
+	let canvas_y = y-1; //[0, 719]
+	canvas_y = canvas_y/719; // [0,1]
+	canvas_y = canvas_y*CANVAS_SIZE_Y;
+	return canvas_y;
+
+}
+
 
 
 

@@ -175,7 +175,9 @@ class Undead extends Humanoid{
 		}
 	}
 
+	//Don't think this is ever called.
 	checkCollisions(){
+
 		if (blocks[i].posX == (Math.floor(player.posX)+1) && blocks[i].posY == Math.floor(player.posY))
 				hitBox=true;
 			else if (blocks[i].posX == (Math.floor(player.posX)-1) && blocks[i].posY == Math.floor(player.posY))
@@ -203,6 +205,7 @@ class Undead extends Humanoid{
 
 		if(isColliding(this,player)){
 			//Should push!
+			player.isHit(this.angleFacing);
 			return;
 		}
 
@@ -271,6 +274,7 @@ class Undead extends Humanoid{
 
 		if(isColliding(this,player)){
 			//Should push!
+			player.isHit(this.angleFacing);
 			return;
 		}
 
@@ -351,6 +355,11 @@ class Undead extends Humanoid{
 		
 		var dX=pX-this.posX;
 		var dY=pY-this.posY;
+
+		if(player.isDead){
+			dX = -dX;
+			dY = -dY;
+		}
 
 		var hyp=Math.sqrt(dX*dX + dY*dY);
 

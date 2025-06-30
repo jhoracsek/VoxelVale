@@ -276,6 +276,7 @@ class Humanoid{
 		this.posY = Y;
 		this.posZ = Z;
 		this.health=10;
+		this.maxHealth = 10;
 		this.deathMarker=false;
 	}
 	healthDown(amount){
@@ -335,7 +336,22 @@ class Player extends Humanoid{
 		this.isShooting=false;
 		this.isPlacing=false;
 		this.completedAction=true;
+
+		this.health = 1;
+		this.maxHealth = 10;
+
 		this.inventory = new Inventory();
+
+		this.invulnerable = 0;
+		this.invulnerableTime = 40;
+		this.flash = false;
+
+		this.knockbackTimer = 0;
+		this.knockbackDirection = [0,0];
+		this.knockbackFrames = 5;
+		this.stopknockback = [false,false,false,false];
+
+		this.particleColor = vec3(1, 0, 0);
 	}
 
 	getInventoryContents(){
@@ -421,6 +437,57 @@ class Player extends Humanoid{
 	getArrowCount(){
 
 		return this.inventory.arrowCount;
+	}
+
+	isHit(angle,damage = 0.5){
+		if(this.invulnerable <= 0){
+			this.health -= damage;
+
+			this.knockbackTimer = this.knockbackFrames;
+			let rad = angle*(Math.PI/180);
+			this.knockbackDirection = [-Math.sin(rad)/this.knockbackFrames,-Math.cos(rad)/this.knockbackFrames];
+
+			//HERE SET ANGLE
+			angleFacing = angle;
+
+			this.invulnerable = this.invulnerableTime;
+		}
+	}
+
+	stopKnockback(val){
+		this.stopknockback = val;
+	}
+
+	/*
+		The angle here for example could be the direction
+		the enemy is facing in degrees.
+	*/
+	knockback(){
+		//Adjust z based on where in the knockbackTimer you are.
+		
+		//[colLeft,colRight,colUp,colDown]
+		let directions = [false, false, false, false];
+		if(this.knockbackDirection[0] < 0){
+			directions[0] = true;
+		}else if(this.knockbackDirection[0] > 0){
+			directions[1] = true;
+		}
+		if(this.knockbackDirection[1] < 0){
+			directions[3] = true;
+		}else if(this.knockbackDirection[1] > 0){
+			directions[2] = true;
+		}
+		let colDirections = this.stopknockback;
+
+		if(	(colDirections[0] && directions[0]) || (colDirections[1] && directions[1]) || (colDirections[2] && directions[2]) || (colDirections[3] && directions[3]) 	){
+			console.log('Stop knockbck!')
+			this.posX -= this.knockbackDirection[0]/4;
+			this.posY -= this.knockbackDirection[1]/4;
+			this.knockbackTimer = 0;
+			return;
+		}
+		this.posX += this.knockbackDirection[0];
+		this.posY += this.knockbackDirection[1];
 	}
 	
 	move(){
@@ -545,7 +612,99 @@ class Player extends Humanoid{
 
 		NM = vertices.length;
 	}
-	draw(){
+	spawnParticles(){
+		/*
+			Spawn particles
+		*/
+		var numParticles = Math.round(Math.random()*6) + 6;
+
+		for (let i = 0; i < numParticles; i++){
+			var zOffset = Math.random();
+			var xOffset = Math.random()-0.5;
+			var yOffset = Math.random()-0.5;
+			new Particle(this.posX+xOffset-0.5,this.posY+yOffset-0.5,this.posZ+zOffset, this.particleColor);
+		}
+	}
+	kill(){
+		this.isDead = true;
+		//Drop all inventory in drop box.
+		//spawn particles.
+		this.spawnParticles();
+		this.dropEverything();
+		this.update();
+	}
+
+	dropEverything(){
+		let toDrop = this.inventory.getInventoryContents();
+		let worldObj;
+		if(inDungeon) worldObj = currentDungeon;
+		else worldObj = world;
+		
+		//Drop box
+		//Blocks
+		
+		let blockLength = toDrop[0].length;
+		for(let i = 0; i < blockLength; i++){
+			let quant = this.inventory.getQuantityBlock(toDrop[0][i]);
+			for(let j = 0; j < quant; j++){
+				drop_on_death(worldObj,toDrop[0][i]);
+			}
+		}
+		//Non-actionable items
+		let naItemLength = toDrop[2].length;
+		for(let i = 0; i < naItemLength; i++){
+			let quant = this.inventory.getQuantityNonActionableItem(toDrop[2][i]);
+			for(let j = 0; j < quant; j++){
+				drop_on_death(worldObj,toDrop[2][i]);
+			}
+		}
+
+		//Recipes
+		let recipeLength = toDrop[3].length;
+		// This is slightly different because of how recipes are stored.
+		for(let i = 0; i < recipeLength; i++){
+			let quant = this.inventory.getQuantityRec(toDrop[3][0]);
+			for(let j = 0; j < quant; j++){
+				drop_on_death(worldObj,toDrop[3][0]);
+			}
+		}
+
+	}
+
+	respawn(){
+		this.isDead = false;
+		this.health = this.maxHealth;
+		player.posX = (WORLD_SIZE/2)*10;
+		player.posY = (WORLD_SIZE/2)*10;
+		//change coordinates to origin.
+		console.log('Respawn');
+
+		this.invulnerable = 0;
+		this.invulnerableTime = 40;
+		this.flash = false;
+
+		this.knockbackTimer = 0;
+		this.knockbackDirection = [0,0];
+		this.knockbackFrames = 5;
+		this.stopknockback = [false,false,false,false];
+
+		//CLEAR ENEMY QUEUE!!!!!!!!!
+		//player.resetInventory();
+		//let worldObj;
+		//if(inDungeon) worldObj = currentDungeon;
+		//else worldObj = world;
+		//drop_on_death(worldObj,...)
+		//Drop box
+	}
+	update(){
+		this.flash=false;
+		if(this.invulnerable > 0){
+			this.invulnerable--;
+			//5 here is the number of frames a flash stays active or inactive for.
+			if(Math.ceil((this.invulnerable-1)/6)%2 == 1)
+				this.flash = true;
+		}
+		
 		fixLegs = false;
 		this.completedAction = true;
 		if(!this.isMovingLeft && !this.isMovingRight && !this.isMovingUp && !this.isMovingDown)
@@ -567,13 +726,28 @@ class Player extends Humanoid{
 			player_placing();
 		}
 		player_moving(this.posX,this.posY,this.posZ);
-		traverse(bodyId);
 
+		if(this.knockbackTimer > 0){
+			this.knockback();
+			this.knockbackTimer--;
+		}
+	}
+	draw(){
+		if(this.isDead) return;
+		this.update();
+		
+		if(this.flash)
+			gl.uniform1i(flashingLoc, true);
+		
+		
+		traverse(bodyId);
+		if(this.flash)
+			gl.uniform1i(flashingLoc, false);
 	}
 	drawShadows(){
 
-
-		traverse_shadow(bodyId);
+		if(!this.isDead)
+			traverse_shadow(bodyId);
 	}
 	shoot(){
 
@@ -1464,4 +1638,13 @@ function tool(){
 
 		}
 	}
+}
+
+function onDeath(){
+	draw_filled_box(0,0,16,9,'rgba(0,0,0,0)','rgba(100,0,0,0.8)');
+	draw_centered_text(centerCoordinates[0], centerCoordinates[1]+0.5, "You died.");
+	draw_centered_text(centerCoordinates[0], centerCoordinates[1], "Press 'space' to respawn.");
+		//draw_centered_text(centerCoordinates[0], centerCoordinates[1]-0.5, "Right click to interact with blocks.");
+		//draw_centered_text(centerCoordinates[0], centerCoordinates[1]-1, "Scroll or use 'Q' and 'E' to adjust cursor.");
+		//draw_centered_text(centerCoordinates[0], centerCoordinates[1]-4, "VoxelVale "+GAME_VERSION, '11');
 }

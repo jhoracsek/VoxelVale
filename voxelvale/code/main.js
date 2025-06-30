@@ -121,6 +121,8 @@ var cursorBlockLoc;
 const cursorFramesToDisappear=120;
 var cursorDisplayTimer=cursorFramesToDisappear;
 
+var flashingLoc;
+
 var isParticleLoc;
 var isCeilingLoc;
 var inDungeonLoc;
@@ -550,6 +552,9 @@ window.onload = function init(){
 
 	cursorBlockLoc = gl.getUniformLocation(program, "cursorBlock");
 	gl.uniform1i(cursorBlockLoc, false);
+
+	flashingLoc = gl.getUniformLocation(program, "flashing");
+	gl.uniform1i(flashingLoc, false);
 
 	isParticleLoc = gl.getUniformLocation(program, "isParticle");
 	gl.uniform1i(isParticleLoc, false);
@@ -1062,6 +1067,7 @@ function render_data(){
 	clear_block_col();
 	
 	updateUpOne();
+	player.stopKnockback([colLeft,colRight,colUp,colDown]);
 	colLeft=false;
 	colRight=false;
 	colUp=false;
@@ -1148,6 +1154,8 @@ function render_data(){
 
 				/*
 					This is where you handle player collisions with blocks.
+
+					Why is this not handled in the player class?!?! :/
 				*/
 				if(colRight == false && directions[RIGHT]){
 					if(blocks[i].type != 'SPECIAL_BLOCK'){
@@ -1446,10 +1454,28 @@ function render_data(){
     updateUnimportantMethods=false;
     updateToolBar();
 
+    // Draw players health bar
+    //draw_healthbar(0.5, 7.4979, 5.3, 7.81084, 49)
+    //Can you pixToCan but once you're done calculate all the numbers!
+
+    // Maybe bottom right?
+    let pinch = 0.1;
+    draw_healthbar(0.5+pinch, pixToCanY(615+12), 5.3-pinch, pixToCanY(623+9), Math.max(player.health,0), player.maxHealth);
+    
+
+    // Should draw enemies health bars.
+
+
     if(inventory || inFunction){
 		draw_inventory_cursor_overlay();
     }
     checkHovering();
+
+    if(player.health<=0 && !player.isDead){
+    	player.kill();
+    }else if(player.health<=0){
+    	onDeath();
+    }
 
 
     //UNFOCUSED OVERLAY
@@ -1458,11 +1484,12 @@ function render_data(){
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+1.5, "Press on the window to begin playing!");
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+1, "Use 'WASD' to move.")
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+0.5, "Press ~ to open inventory.");
-		draw_centered_text(centerCoordinates[0], centerCoordinates[1], "Left click to use items and place blocks.");
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1], "Left click to use tools and place blocks.");
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-0.5, "Right click to interact with blocks.");
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-1, "Scroll or use 'Q' and 'E' to adjust cursor.");
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-4, "VoxelVale "+GAME_VERSION, '11');
 	}
+
 }
 
 const NO_ITEM_HELD = 0;
@@ -1473,7 +1500,7 @@ const BOW_HELD = 3;
 var currentlyHeldObject = 0;
 
 function draw_cursor_full(){
-	if(!inventory && !inFunction){
+	if(!inventory && !inFunction && !player.isDead){
 		
 		if(player.heldObject != null){
 			if(player.heldObject.typeOfObj === 'BLOCK'){

@@ -65,7 +65,7 @@ class DropBox extends X_Y_Z_TextureBlock{
 
 	addTo(block){
 		//Make sure to run this.refreshQuantities().
-
+		//console.log(block)
 		this.objectsReturned.push(block);
 
 		this.refreshQuantities();
@@ -133,7 +133,7 @@ class DropBox extends X_Y_Z_TextureBlock{
 
 
 	returnBounds(){
-		
-		return null;
+		return [vec3(mult(translate(-1000,0,-1000),vec4(-1000,0,-1000,1))), vec3(mult(translate(-1000,0,-1000),vec4(-1000,0,-1000,1)))];
+		//return null;
 	}
 }
