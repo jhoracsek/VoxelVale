@@ -169,7 +169,7 @@ class zObject{
 		return;
 	}
 	//Returns an array of the items needed to craft the item, along with the quantity of the item needed.
-	//EX: return [[new WeirdBlock(),3],[new WoodBlock(),3],[new WoodAxe(),4],[new StonePickaxe(),1],[new WeirdBlock(),3],[new GrassBlock(),3]];
+	//EX: return [[new WeirdBlock(),3],[new WoodBlock(),3],[new WoodAxe(),4],[new WeirdBlock(),3],[new GrassBlock(),3]];
 	getRecipe(){
 		return null;
 	}
@@ -355,11 +355,12 @@ class BlockWall extends zObject{
 		return [this.posX,this.posY,this.posZ];
 	}
 	returnBounds(){
-		if(fixedView)
-			return [vec3(this.posX,this.posY,this.posZ), vec3(this.posX+1,this.posY+1,this.posZ+1)];
-		else
-			return [vec3(mult(translate(0,0,0),vec4(this.posX,this.posY,this.posZ,1))), vec3(mult(translate(0,0,0),vec4(this.posX+1,this.posY+1,this.posZ+1,1)))];
-			//return [vec3(mult(translate(player.posX,player.posY,0),vec4(this.posX,this.posY,this.posZ,1))),vec3(mult(translate(player.posX,player.posY,0),vec4(this.posX+1,this.posY+1,this.posZ+1,1)))];
+		if(fixedView){
+			return [vec3(this.posX,this.posY,this.posZ), vec3(this.posX+1,this.posY+1,this.posZ+0.5)];
+		}
+		else{
+			return [vec3(mult(translate(0,0,0),vec4(this.posX,this.posY,this.posZ,1))), vec3(mult(translate(0,0,0),vec4(this.posX+1,this.posY+1,this.posZ+0.5,1)))];
+		}
 	}
 	sendData(){
 		build_block(this.texture);

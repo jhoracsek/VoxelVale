@@ -332,6 +332,13 @@ class StoneBlock extends BlockWall{
 		this.instanceMat = mult(this.instanceMat,rotateZ(this.rot));
 		this.instanceMat = mult(this.instanceMat,translate(-0.5,-0.5,0));
 	}
+	returnBounds(){
+		if(fixedView)
+			return [vec3(this.posX,this.posY,this.posZ+0.1), vec3(this.posX+1,this.posY+1,this.posZ+1)];
+		else
+			return [vec3(mult(translate(0,0,0),vec4(this.posX,this.posY,this.posZ+0.1,1))), vec3(mult(translate(0,0,0),vec4(this.posX+1,this.posY+1,this.posZ+1,1)))];
+			//return [vec3(mult(translate(player.posX,player.posY,0),vec4(this.posX,this.posY,this.posZ,1))),vec3(mult(translate(player.posX,player.posY,0),vec4(this.posX+1,this.posY+1,this.posZ+1,1)))];
+	}
 	update(){
 		this.switchOrientation();
 	}

@@ -195,8 +195,8 @@ function add_crafting_interface_elements(){
 	var background = new InterfaceBackground(2,1.25,14,7.75,BLACK);
 	var leftMidSection = new InterfaceBackground(2,2,9.5,7,DARK_GREY,false,false,false,true);
 	var rightMidSection = new InterfaceBackground(9.5,2,14,7,DARK_GREY,false,false,false,true);
-	var rightBoxUpper = new InterfaceBackground(9.6, 2.7, 13.9, 6.6, GREY);
-	var rightBoxLower = new InterfaceBackground(9.6, 2.1, 13.9, 2.6, GREY);
+	var rightBoxUpper = new InterfaceBackground(9.6, 2.7, 13.9, 6.6, BLACK);
+	var rightBoxLower = new InterfaceBackground(9.6, 2.1, 13.9, 2.6, BLACK);
 
 	craftingElements.push(background);
 	craftingElements.push(leftMidSection);

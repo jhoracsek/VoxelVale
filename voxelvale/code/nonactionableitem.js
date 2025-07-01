@@ -157,4 +157,4 @@ class ArrowItem extends NonActionableItem {
 
 
 
-const ITEM_OBJNUMS = [WoodAxe, StonePickaxe, WoodenBow, Copper, CopperBar, ArrowItem];
+const ITEM_OBJNUMS = [WoodAxe, StonePickaxe, WoodenBow, Copper, CopperBar, ArrowItem, CopperPickaxe, CopperAxe];

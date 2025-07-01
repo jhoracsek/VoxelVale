@@ -12,17 +12,25 @@
 
 
 //let healthBorderColor = "rgba(50,0,0,1)";
-let healthBorderColor = "rgba(200,100,100,1)";
-let healthFillColor = "rgba(200,0,0,0.7)";
-let healthBarBackColor = "rgba(60,0,0,0.7)";
 
+
+//let healthBorderColor = "rgba(200,100,100,1)";
+//let healthFillColor = "rgba(200,0,0,0.7)";
+//let healthBarBackColor = "rgba(60,0,0,0.7)";
+
+let healthBorderColor = "rgba(200,100,100,";
+let healthFillColor = "rgba(200,0,0,";
+let healthBarBackColor = "rgba(60,0,0,";
 
 
 
 /*
 	Experiment with context.fill(); before vs after context.stroke();
+
+
+    Add opacity for fade in and out!
 */
-function draw_healthbar(x1, y1, x2, y2, health, maxHealth, borderRadius=40){
+function draw_healthbar(x1, y1, x2, y2, health, maxHealth, borderRadius=40,opacity=1){
 	let xCoor1 = x1*(canvas.width/16);
     let yCoor1 = canvas.height - (y1*(canvas.height/9));
     let xCoor2 = x2*(canvas.width/16);
@@ -37,7 +45,7 @@ function draw_healthbar(x1, y1, x2, y2, health, maxHealth, borderRadius=40){
     // Calculate where to stop drawing health portion of the bar.
     let endHealth = width-convertedDamage;
 	context.lineWidth = 2;
-    context.strokeStyle = healthBorderColor;
+    context.strokeStyle = healthBorderColor + (opacity).toString() + ")";
     context.beginPath();
     context.roundRect(xCoor1, yCoor1, xCoor2-xCoor1, yCoor2-yCoor1,[borderRadius]);
     context.stroke();
@@ -47,19 +55,24 @@ function draw_healthbar(x1, y1, x2, y2, health, maxHealth, borderRadius=40){
     // If health is within some small episilon of being full, only draw health.
     if(health >= maxHealth-0.01){
     	context.roundRect(xCoor1, yCoor1, endHealth, yCoor2-yCoor1,[borderRadius,borderRadius,borderRadius,borderRadius]);
-    	context.fillStyle = healthFillColor;
+    	context.fillStyle = healthFillColor + (opacity*0.7).toString() + ")";
     	context.fill();
     }
     else{
     	//Otherwise draw both sides.
-    	context.roundRect(xCoor1, yCoor1, endHealth, yCoor2-yCoor1,[borderRadius,0,0,borderRadius]);
-    	context.fillStyle = healthFillColor;
-    	context.fill();
+        if(health > 0){
+        	context.roundRect(xCoor1, yCoor1, endHealth, yCoor2-yCoor1,[borderRadius,0,0,borderRadius]);
+        	context.fillStyle = healthFillColor + (opacity*0.7).toString() + ")";
+        	context.fill();
+        }
 
     	//Draw right side.
     	context.beginPath();
-	    context.roundRect(xCoor1+endHealth, yCoor1, (xCoor2-xCoor1)-endHealth, yCoor2-yCoor1,[0,borderRadius,borderRadius,0]);
-	    context.fillStyle = healthBarBackColor;
+	    if(health <= 0)
+            context.roundRect(xCoor1+endHealth, yCoor1, (xCoor2-xCoor1)-endHealth, yCoor2-yCoor1,[borderRadius,borderRadius,borderRadius,borderRadius]);
+	    else
+            context.roundRect(xCoor1+endHealth, yCoor1, (xCoor2-xCoor1)-endHealth, yCoor2-yCoor1,[0,borderRadius,borderRadius,0]);
+        context.fillStyle = healthBarBackColor+ (opacity*0.7).toString() + ")";
 	    context.fill();
     }
  

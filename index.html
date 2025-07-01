@@ -5,6 +5,7 @@
     <script src="/socket.io/socket.io.js"></script>
 
     <title> VoxelVale </title>
+    <link rel="icon" type="image/x-icon" href="/res/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
@@ -145,7 +146,11 @@ void main()
     }
 
     if(cursorBlock == true){
-        gl_FragColor = texture2D(texture, fTexCoord )*fColor*vec4(1.0, 1.0, 1.0, 0.3);
+        if(fTexCoord[0] > 1.0){
+            gl_FragColor = fColor*vec4(1.0, 1.0, 1.0, 0.2);
+        }else{
+            gl_FragColor = texture2D(texture, fTexCoord )*fColor*vec4(1.0, 1.0, 1.0, 0.3);    
+        }
         return;
     }
 
@@ -210,6 +215,7 @@ void main()
 <script type="text/javascript" src="voxelvale/code/inventory.js"></script>
 <script type="text/javascript" src="voxelvale/code/craftingmenu.js"></script>
 <script type="text/javascript" src="voxelvale/code/item.js"></script>
+<script type="text/javascript" src="voxelvale/code/wireframe.js"></script>
 <script type="text/javascript" src="voxelvale/code/nonactionableitem.js"></script>
 <script type="text/javascript" src="voxelvale/code/recipes.js"></script>
 <script type="text/javascript" src="voxelvale/code/projectiles.js"></script>
@@ -221,6 +227,7 @@ void main()
 <script type="text/javascript" src="voxelvale/code/particles.js"></script>
 <script type="text/javascript" src="voxelvale/code/music.js"></script>
 <script type="text/javascript" src="voxelvale/code/sounds.js"></script>
+<script type="text/javascript" src="voxelvale/code/helpers.js"></script>
 <script type="text/javascript" src="voxelvale/code/saveload.js"></script>
 
 <!--
@@ -269,20 +276,18 @@ void main()
                 </div>
             </div>
         </div>
-        <div style="text-align: center; font-size: 11px; color:#000">Version: Alpha 0.0.1 | <a target="_blank" rel="noopener noreferrer" class="bug" href="https://docs.google.com/forms/d/e/1FAIpQLSeGaSDpu5x3GT1NgmaPX4DZB6JiqrphzgQs86RfYrY6pL8NeQ/viewform?usp=dialog">Report a bug.</a></div>
+        <div style="text-align: center; font-size: 11px; color:#000"><a target="_blank" rel="noopener noreferrer" class="bug" href="https://docs.google.com/forms/d/e/1FAIpQLSeGaSDpu5x3GT1NgmaPX4DZB6JiqrphzgQs86RfYrY6pL8NeQ/viewform?usp=dialog">Report a bug.</a></div>
     </div>
     <div style="margin: auto;scroll-margin-top: 80px;" id="about">
         <div class="boxBorder colorStyle">   
             <h1>About</h1>
             <hr class="section-underline">
             <div class = "textBox">
-                VoxelVale is a browser-based game developed independently by me, Jay. It's inspired by the openess of early Zelda games, the creative freedom of Minecraft, and the random nature of roguelike games like The Binding of Isaac. It's built entirely in JavaScript and WebGL.<br><br>
+                VoxelVale is a browser-based game developed independently by me, Jay. It’s inspired by the open-world exploration of early Zelda games, the creative freedom of Minecraft, and the unpredictable nature of rogue like games like The Binding of Issac (although most of these features aren’t in the game yet). It’s built entirely using JavaScript and WebGL.<br><br>
 
-                Initially, VoxelVale was just a pet project I worked on sporadically over a few months in 2021 (after taking a graphics course). I had built an interesting foundation for a game, but hadn't fleshed out much of the gameplay. I began reviving it in April 2025 out of boredom, and started to see the potential for more interesting gameplay. 
+                Initially, VoxelVale was a pet project I worked on sporadically over a few months in 2021 (after taking a graphics course). I had built an interesting foundation for a game, but hadn't fleshed out much of the gameplay. I began reviving it in April 2025 out of boredom, and started to see the potential for more interesting gameplay. I made the decision to share it for free in case anyone else thought it looked interesting. This is a self-funded endeavour that I sink a little too much time into, so if you enjoy the gameplay so far, please consider becoming a Patron! I plan to add some interesting perks for members in the future.<br><br>
 
-                I made the decision to share it for free in case anyone else thought it looked interesting. This is a self-funded endevor that I sink a little too much time into, so if you enjoy the gameplay so far, please consider becoming a Patron! I plan to add some interesting perks for members.<br><br>
-
-                As a last remark, the game is still very early in development. There will be a lot of features that don't behave as expected, and a lot of bugs. If you see any you can report them using the link below the game. Updates on the development will all be visible on Patreon. If you have ideas or things you would like to see in the game, you can connect with me over Patreon. <br><br>
+                As a last remark, the game is still very early in development. There will be a lot of features that don't behave as expected, and a lot of bugs. If you see any you can report them using the link below the game. Some things are also very poorly optimized, which might affect performance. My priority right now is on fleshing out the gameplay, but I should eventually get to optimizations. Updates on the development will all be visible on Patreon. If you have ideas or things you would like to see in the game, you can connect with me over on Patreon.<br><br>
 
                 That's all thanks for reading!
             </div>

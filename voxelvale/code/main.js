@@ -53,6 +53,8 @@ var ambientProductPlayer = vec4(0.8, 0.8, 0.8, 0.8);
 var ambientProduct = mult(lightAmbient, materialAmbient);
 var diffuseProduct = mult(lightDiffuse, materialDiffuse);
 var specularProduct = mult(lightSpecular, materialSpecular);
+
+var disableNotifications = true;
 /*
 	Lighting end.
 */
@@ -70,6 +72,9 @@ var sColor;
 //var lPosition = vec4(0, 0, -0.6, 1);
 var lPosition = vec4(0, 0, -0.7, 1);
 var sMatrix;
+
+var lPositionForEnemy =vec4(0, -0.2, -1, 1);
+var sMatrixForEnemy;
 
 var lPositionForPlayer = vec4(0, -0.1, -2, 1);
 var sMatrixForPlayer;
@@ -129,6 +134,8 @@ var inDungeonLoc;
 var opacityFactorLoc;
 
 var inDungeon = true;
+
+const recipeColor = vec4(0.3,0.3,1,0.4);
 
 
 /*
@@ -394,7 +401,8 @@ window.onload = function init(){
 
 	//This is our projection onto the z = -0.201 plane from the perspective of the light defined by the coordinate lPosition. 
 	sMatrix = computeShadowMatrix(lPosition, vec4(0.0,0.0,1.0,0.201));
-	sMatrixForPlayer = computeShadowMatrix(lPositionForPlayer, vec4(0.0,0.0,1.0,0.201))			
+	sMatrixForPlayer = computeShadowMatrix(lPositionForPlayer, vec4(0.0,0.0,1.0,0.201));
+	sMatrixForEnemy = computeShadowMatrix(lPositionForEnemy, vec4(0.0,0.0,1.0,0.201));		
 	// Sets textureImage to contain colour values of "textures/textures.png".
 	create_image();
 	canvas = document.getElementById("gl-canvas");
@@ -497,6 +505,12 @@ window.onload = function init(){
 	player.addToInventory(pick);
 	toolBarList.push(pick);
 
+	player.addToInventory(new CopperPickaxe());
+	player.addToInventory(new CopperAxe());
+
+	player.addToInventory(new CopperPickRecipe());
+	player.addToInventory(new CopperAxeRecipe());
+
 	var bow = new WoodenBow();	
 	player.addToInventory(bow);
 	toolBarList.push(bow);
@@ -525,13 +539,9 @@ window.onload = function init(){
 
 	player.addToInventory(new Copper());
 	player.addToInventory(new Copper());
-	player.addToInventory(new ArrowItem());
-	player.addToInventory(new ArrowItem());
-	player.addToInventory(new ArrowItem());
-	player.addToInventory(new ArrowItem());
-	player.addToInventory(new ArrowItem());
-	player.addToInventory(new ArrowItem());
-
+	for(let i = 0; i < 100; i++)
+		player.addToInventory(new ArrowItem());
+	
 
 	var dropBox = new DropBox(null,null,null,[new WorkBench(), new StonePickaxe(), new DirtBlock(), new GrassBlock(), new WeirdBlock(), new GrassBlock(), new WoodBlock(), new WoodBlock(), new GrassBlock()]);
 	//var dropBox = new DropBox(null,null,null,[new DirtBlock(), new GrassBlock(), new WeirdBlock(), new WoodBlock()]);
@@ -586,7 +596,7 @@ window.onload = function init(){
 	set_toolbar_matrices();
 
 
-
+	disableNotifications = false;
 
 
 
@@ -679,6 +689,18 @@ function send_block(){
 	pickaxeStart = vertices.length;
 	sendPickaxe = new StonePickaxe();
 	sendPickaxe.sendData();
+
+	CopperPickaxe.index = vertices.length;
+	(new CopperPickaxe()).sendData();
+	CopperPickaxe.numberOfVerts = vertices.length - CopperPickaxe.index;
+
+	CopperPickRecipe.sendData();
+
+	CopperAxe.index = vertices.length;
+	(new CopperAxe()).sendData();
+	CopperAxe.numberOfVerts = vertices.length - CopperAxe.index;
+
+	CopperAxeRecipe.sendData();
 
 	bowStart = vertices.length;
 	sendBow = new WoodenBow();
@@ -784,7 +806,7 @@ function send_data_to_GPU(){
 
 		// Holding block. (Blue)
 		cursorBytes.push([vertices.length,0]);
-		build_thick_wireframe(1, vec4(1,1,1,1), vec4(0.3,0.3,1,0.4));
+		build_thick_wireframe(1, vec4(1,1,1,1), recipeColor);
 		cursorBytes[5][1] = vertices.length-cursorBytes[5][0];
 	
 	/*
@@ -804,6 +826,8 @@ function send_data_to_GPU(){
 		Push undead wireframe.
 		This should be abstracted to all enemies.
 	*/
+	Undead.sendData();
+
 	undeadHitboxStart = vertices.length;
 	push_wireframe_indices(undeadHitboxBounds[0],undeadHitboxBounds[1]);
 	undeadHitboxSize = vertices.length - undeadHitboxStart;
@@ -1275,6 +1299,23 @@ function render_data(){
 			ceilingBlocks[i].drawShadows();
 		}
 	}
+
+	//Here
+	if(projectileArray.isEmpty()==false){
+		for(var i=0;i<projectileArray.getLength();i++){		
+				projectileArray.accessElement(i).drawShadows();
+			
+		}
+	}
+
+	gl.uniform4fv(sColor, flatten(vec4(0.0,0.0,0.0,0.1)));
+	gl.uniformMatrix4fv( shadowMatrixLoc, false, flatten(sMatrixForEnemy));
+	if(enemyArray.isEmpty()==false){
+		for(var i=0;i<enemyArray.getLength();i++){
+			enemyArray.accessElement(i).drawShadows();
+		}
+	}
+
 	gl.uniform4fv(sColor, flatten(vec4(0.0,0.0,0.0,0.2)));
 	
 	/*
@@ -1283,6 +1324,10 @@ function render_data(){
 	if(!fixedView){
 		gl.uniformMatrix4fv( shadowMatrixLoc, false, flatten(sMatrixForPlayer));
 		player.drawShadows();
+		//HERE
+
+		
+		
 	}else{
 
 	}
@@ -1444,6 +1489,12 @@ function render_data(){
 			draw_map();
 	}
 
+	
+	updateLogic()
+
+
+
+
 
 	// Reset projection matrix.
 	gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix));
@@ -1477,7 +1528,8 @@ function render_data(){
     	onDeath();
     }
 
-
+    //draw_centered_text(1,15, "FPS: "+averageFPS.toString(), '11');
+    //draw_centered_text(14, 1, "FPS: "+(averageFPS.toFixed(2)).toString());
     //UNFOCUSED OVERLAY
 	if(!isFocused){
 		draw_filled_box(0,0,16,9,'rgba(0,0,0,0)','rgba(0,0,0,0.5)');
@@ -1489,6 +1541,28 @@ function render_data(){
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-1, "Scroll or use 'Q' and 'E' to adjust cursor.");
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-4, "VoxelVale "+GAME_VERSION, '11');
 	}
+
+}
+
+
+/*
+	Moving forward any logic updates should happen here.
+*/
+var logicCounter = 0;
+function updateLogic(){
+	logicCounter = (logicCounter + 1)%60;
+	/*
+		Spawning undead enemies.
+	*/
+
+	// Roughly every second try to spawn an enemy.
+	if(logicCounter == 0){
+		if(Math.random() <= SPAWN_RATE && SPAWN_ENEMIES && enemyArray.getLength() < MAX_ENEMIES_IN_WORLD){
+			spawnEnemy()
+		}
+	}
+
+
 
 }
 
@@ -1517,6 +1591,7 @@ function draw_cursor_full(){
 					//AND HERE
 					//upOne = -3;
 					//upOneStore = upOne;
+
 					draw_bow_vector((coorSys[0]+player.posX)-9,(coorSys[1]+player.posY)-4.5,-3);
 					currentlyHeldObject = BOW_HELD;
 				}
@@ -1567,6 +1642,7 @@ let   frameCursor = 0;
 let   numFrames = 0;   
 const maxFrames = 20;
 let   totalFPS = 0;
+let averageFPS=0;
 
 function render(now){
 	gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
@@ -1590,7 +1666,7 @@ function render(now){
 	}
 	*/
 
-	/*
+	
 	now *= 0.001;                          // convert to seconds
 	const deltaTime = now - then;          // compute time since last frame
 	then = now;                            // remember time for next frame
@@ -1609,8 +1685,8 @@ function render(now){
 	// wrap the cursor
 	frameCursor %= maxFrames;
 
-	const averageFPS = totalFPS / numFrames;
-	*/
+	averageFPS = totalFPS / numFrames;
+	
 
 	//document.querySelector("#fpsavg").textContent = averageFPS.toFixed(1);  // update avg display
 

@@ -127,7 +127,7 @@ Some stuff todo
 			5.c) Reduce quantity on shoot.					(X)
 			5.d) Add counter below bow.						(X)
 			5.e) Once 0, player cannot shoot.				(X)
-		6. Health bar. (make it a general interface for enemies as well.)										()
+		6. Health bar. 										(X)
 			6.a) Rough design/idea.							(X)
 			6.b) Same size as toolbar.						(X)
 			6.c) Same rounded edges (same border rad).		(X)
@@ -142,30 +142,42 @@ Some stuff todo
 			6.l) Knockback cannot clip!						(X)
 			6.m) Save player health.						(X)
 			6.n) Disable actions.							(X)
-		7. Random Enemy spans.								()
-			7.a) May as well give enemy red flash.			()
-			7.b) Dropboxes with loot.						()
-			7.c) Maybe like every 60 frames there is a chanc()
-			7.d) Get border-coordinates						()
-			7.e) Tweak z-level to avoid overlap.			()
-			7.f) Only 4 enemies at a time.					()
-			7.g) Fix enemy knockback like player.			()
-			7.h) Small enemy health bar above their head	()
-		8. Door 											()
-			8.a) Recipe. 									()
-			8.b) Crafting.									()
-			8.c) Update texture.							()
-		9. Tool upgrade.									()
-			9.a) Ability to upgrade with bar.				()
-			9.b) Old tool used to craft.					()
-			9.c) Can make it the same Class!				()
-			9.d) Or make a new class?						()
-		9. Update about setion.								()
-		10. Clean up.										()
+			6.o) Kill all enemies on respawn.				(X)
+		7. Enemies.											(X)
+			7.a) Random spawning.							(X)
+			7.b) Start with spawning blocks.				(X)
+			7.c) Get good list of positions out of bounds.	(X)
+			7.d) Border coordinates.						(X)
+			7.e) Spawn them (max 4-5).						(X)
+			7.f) Easily be able to change spawn rate.		(X)
+			7.g) Also define what 'spawn rate' means.		(X)
+			7.h) Maybe like every 60 frames there is a chanc(X)
+			7.i) Add flag in 'flags.js' to disable spawning.(X)
+			7.i) May as well give enemy red flash.			(X)
+			7.j) Dropboxes with loot.						(X)
+			7.k) Tweak z-level to avoid overlap.			(X)
+			7.l) Fix enemy knockback like player.			(X)
+			7.m) Small enemy health bar above their head	(X)
+			7.n) Only draw if they are sufficiently close.	(X)
+			7.o) Or if they've been hit recently.			(X)
+			7.n) Despawn enemies if they are very far.		(X)
+			7.o) Particles on death.						(X)
+			7.p) Make enemy arrows particles red.			(X)
+		8. Door 											(X)
+			8.a) Recipe. 									(X)
+			8.b) Crafting.									(X)
+			8.c) Update texture.							(X)
+		9. Tool upgrade.									(X)
+			9.a) Ability to upgrade with bar.				(X)
+			9.b) Make a new class.							(X)
+			9.c) Pickaxe.									(X)
+			9.d) Axe.										(X)
+		9. Update about setion.								(X)
+		10. Clean up.										() (Do last)
 			10.a) Toolbar.									()
 			10.b) Inventory.								()
 			10.c) Devtools.									()
-		11. Automatically update version on index.html		()
+		11. Automatically update version on index.html		(X)
 		12. Hold multiple recipes and be able to drop.		(X)
 			12.a) Save to firebase.							(X)
 		13. Tab when in inventory should switch tab.		(X)
@@ -174,56 +186,89 @@ Some stuff todo
 			14.b) Added save load functionality.			(X)
 			14.c) Fixed tab.								(X)
 			14.d) Implement drawing/rendering.				(X)
-		15. Forge / Anvil									()
-		16. Remove notifications at startup.				()
-		17. Can pick up drop boxes while in inventory.		()
-			17.a) Click in general. Double click workbench.	()
-		18. Fix all the newly added stuff in the crafting m.()
-		19. Toggle off inventory with bow looks weird.		()
-		20. Try recipes with normal lines or something?		()
-		21. Iron (same as copper)							()
-		22. Faviocon.										()
-		23. Patreon stuff.									()
-		24. Maybe change border back to 1px in inventory.	()
-			24.a) Pixel to canvas function for precision.	()
-		25. Make sure you turn the overlay back on!			()
-		26. Make enemies green.								()
-			26.a) Fix weird lighting.						()
-		27. Bow cursor.										()
-			27.a) Make it feel nicer to move.				()
+		15. Forge / Anvil									(Skip)
+		16. Remove notifications at startup.				(X)
+			16. a) And on load.								(X)
+		17. Can pick up drop boxes while in inventory.		(X)
+			17.a) Click in general. Double click workbench.	(X)
+		18. Fix all the newly added stuff in the crafting m.(X)
+		19. Toggle off inventory with bow looks weird.		(X)
+		20. Try recipes with normal lines or something?		(Skip)
+		21. Iron (same as copper)							(Skip)
+		22. Faviocon.										(X)
+		23. Patreon stuff.									(X) (Have to wait.)
+		24. Maybe change border back to 1px in inventory.	(X)
+			24.a) Pixel to canvas function for precision.	(Skip)
+		25. Make sure you turn the overlay back on!			(X)
+		26. Make enemies green (or grey).					(X)
+			26.a) Fix weird lighting.						(X)
+			26.b) Try red eyes?								(X)
+			26.c) Something about zombie is glitching.		(X)
+			26.d) Shadows									(X)
+		27. Bow cursor.										(Skip)
+			27.a) Make it feel nicer to move.				(Skip)
 		28. Adjust mouse sensitivity.						()
 		29. Consumables?									()
-		30. Should inventory pause game?					()
+		30. Should inventory pause game?					(Skip)
 		31. Arrow despawn?									()
 			31.a) Shoot above layer 1 blocks.				()
 		32. Sprinting? Over player head. Green.				()
 		33. Text attribution for logo?						()
-		34. Push arrow count to right slightly.				()
+		34. Push arrow count to right slightly.				(X)
 		35. ZOMBIES CANNOT COLLIDE WITH DROPBOX.			(X)
+		36. Cannot close window with cmd w while in game	(Skip)
+		37. Adding shadows to arrows would be helpful.		(X)
+			37.a) Maybe enemies as well?					(Skip)
+		38. Fix bounds on Stone for arrows.					(X)
+		39. No way to see how many objects returned from cr.(Skip)
+		40. Double check arrows with doors.					(X)
+		41. Option for user to turn off mobs.				()
+		42. Ghosts as a mob.								(Skip)
+			42.a) Would be super easy to implement.			(Skip)
+		43. Clear enemies on load world?					()
+		44. Decide which loot to give enemies dropbox.		()
+		45. Fix the ceiling thing.							()
+		46. Tweak player animations.						()
+			46.a) Revert walking.							()
+			46.b) Maybe stop animation when action stops.	()
+		47. Tweak inventory lighting a little.				()
+		48. Save toolbar.									()
+		49. Check door texture and others on top monitor.	()
+		50. Try testing on windows laptop.					()
+		50. Add all skipped items to new list.				()
+		52. Any lingering 'console.log'.					()
+
+		Anything added here cannot be done before release.
+		53. Dropbox attaches to stone.						()
 
 
-3. Idea for Ore.
 
-	Do copper for a start.
+Add to about, still needs to be optimized.
 
+
+For simplicity, you can stop enemies when they're hit and collide with a block,
+but at that point just make it so they can move through blocks for a few frames to
+avoid getting stuck.
+
+
+
+I kind of have an idea for improving rendering. You could just store objectNumbers per portion.
+you do lose some instance info for grass blocks. But when you render you could just call a static
+draw function which you get by using the objectNumber on an array like when saving.
+
+Could also have a tandem array that defines instance variables. (Just an idea, don't worry about it now.)
 
 			
 
 
 	Notes:
-		Tools should upgrade!!!
 		Iron Pick, Iron Axe.
-		Arrows should be limited. Flint maybe?
-		Enemies can spawn dropboxes on death.
-		Need to add health.
 		Dungeons will definitely not be saved for the first update.
-		Just spawn zombies randomly.
 		Day/Night?
 		The light on the character?
 		Ores (mythical and stuff)
 		Door crafting
-		FIX CRAFTING.
-
+		
 
 Which fonts:
 

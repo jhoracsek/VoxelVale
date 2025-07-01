@@ -253,8 +253,108 @@ class ArrowRecipe extends Recipe{
 }
 
 
+/*
+	Make general tool recipe class?
+*/
+class CopperPickRecipe extends Recipe{
+	static objectNumber = 134;
+	static craftingStation = REQUIRES_WORKBENCH;
+	static indexWireframe = 0; get indexWireframe() {return this.constructor.indexWireframe;}
+	static numWireframeVerts = 0; get numWireframeVerts() {return this.constructor.numWireframeVerts;}
 
-const RECIPE_OBJNUMS = [WorkBenchRecipe,WoodBlockRecipe,DoorRecipe,BrickBlockRecipe,CopperBarRecipe, ArrowRecipe];
+	static index = 0; get index() {return this.constructor.index;}
+	static numberOfVerts = 0; get numberOfVerts() {return this.constructor.numberOfVerts;}
+
+	static sendData(){
+		CopperPickRecipe.indexWireframe = vertices.length;
+		build_pickaxe_wireframe();
+		CopperPickRecipe.numWireframeVerts = vertices.length - CopperPickRecipe.indexWireframe;
+
+		CopperPickRecipe.index = vertices.length;
+		build_pickaxe_blue();
+		CopperPickRecipe.numberOfVerts = vertices.length - CopperPickRecipe.index;
+	}
+
+	constructor(){
+		super(new CopperPickaxe(), [[new CopperBar(),6], [new WoodBlock(), 2]],1);
+		this.desc='Recipe for a copper pickaxe.';
+	}
+
+
+	drawSmallObject(currentMat,scale=0.95){
+		gl.uniform1i(cursorBlockLoc, true);
+		//	Highest y: 2.5
+		//	Lowest y: 0.05
+		//	Midsection: 1.275
+		let mat = mult(translate(0,2.5,0),mult(scale4(scale,1,scale,1), translate(0,-2.5,0)));
+		this.object.drawSmall(mult(currentMat,mat));
+		gl.uniform1i(cursorBlockLoc, false);
+	}
+
+	drawSmall(currentMat){
+
+		this.drawSmallObject(currentMat);
+
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(currentMat));
+		gl.drawArrays(gl.LINES,this.indexWireframe,this.numWireframeVerts);
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(currentMat));
+		gl.drawArrays(gl.TRIANGLES,this.index,this.numberOfVerts);
+	}
+}
+
+
+
+
+class CopperAxeRecipe extends Recipe{
+	static objectNumber = 135;
+	static craftingStation = REQUIRES_WORKBENCH;
+
+	static indexWireframe = 0; get indexWireframe() {return this.constructor.indexWireframe;}
+	static numWireframeVerts = 0; get numWireframeVerts() {return this.constructor.numWireframeVerts;}
+
+	static index = 0; get index() {return this.constructor.index;}
+	static numberOfVerts = 0; get numberOfVerts() {return this.constructor.numberOfVerts;}
+	
+
+	static sendData(){
+		CopperAxeRecipe.indexWireframe = vertices.length;
+		build_axe_wireframe();
+		CopperAxeRecipe.numWireframeVerts = vertices.length - CopperAxeRecipe.indexWireframe;
+
+		CopperAxeRecipe.index = vertices.length;
+		build_axe_blue();
+		CopperAxeRecipe.numberOfVerts = vertices.length - CopperAxeRecipe.index;
+	}
+
+	constructor(){
+		super(new CopperAxe(), [[new CopperBar(),6], [new WoodBlock(), 2]],1);
+		this.desc='Recipe for a copper axe.';
+	}
+
+	drawSmallObject(currentMat,scale=0.95){
+		gl.uniform1i(cursorBlockLoc, true);
+		//	Highest y: 2.5
+		//	Lowest y: 0.05
+		//	Midsection: 1.275
+		let mat = mult(translate(0,2.5,0),mult(scale4(scale,1,scale,1), translate(0,-2.5,0)));
+		this.object.drawSmall(mult(currentMat,mat));
+		gl.uniform1i(cursorBlockLoc, false);
+	}
+
+	drawSmall(currentMat){
+
+		this.drawSmallObject(currentMat);
+
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(currentMat));
+		gl.drawArrays(gl.LINES,this.indexWireframe,this.numWireframeVerts);
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(currentMat));
+		gl.drawArrays(gl.TRIANGLES,this.index,this.numberOfVerts);
+	}
+}
+
+
+
+const RECIPE_OBJNUMS = [WorkBenchRecipe,WoodBlockRecipe,DoorRecipe,BrickBlockRecipe,CopperBarRecipe, ArrowRecipe, CopperPickRecipe,CopperAxeRecipe];
 
 
 

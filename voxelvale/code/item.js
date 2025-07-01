@@ -13,7 +13,8 @@ class Item extends zObject{
 		this.objectNumber=null;
 		this.desc = 'NO DESCRIPTION';
 		this.type = 'DEFAULT_ITEM';
-		this.typeOfObj = 'ITEM'
+		this.typeOfObj = 'ITEM';
+		this.toolType = 'NONE';
 	}
 	sendData(){
 		this.renderFunction();
@@ -44,8 +45,8 @@ class WoodAxe extends Tool{
 		this.index=axeStart;
 		this.numberOfVerts=axeVerts;
 		this.toolType = 'AXE';
-		this.name='Standard Axe';
-		this.desc='A standard stone axe.';
+		this.name='Stone Axe';
+		this.desc='A standard stone axe for chopping wood.';
 		this.objectNumber=64;
 	}
 }
@@ -56,11 +57,47 @@ class StonePickaxe extends Tool{
 		this.index=pickaxeStart;
 		this.numberOfVerts=pickaxeVerts;
 		this.toolType = 'PICK_AXE';
-		this.name='Standard Pickaxe';
-		this.desc='A standard stone pickaxe.';
+		this.name='Stone Pickaxe';
+		this.desc='A standard stone pickaxe for mining.';
 		this.objectNumber=65;
 	}
 }
+
+class CopperPickaxe extends Tool{
+	static index = 0; get index() {return this.constructor.index;}
+	static numberOfVerts = 0; get numberOfVerts() {return this.constructor.numberOfVerts;}
+	constructor(X=null,Y=null,Z=null){
+		super(X,Y,Z,build_pickaxe,1.2);
+		
+		this.toolType = 'PICK_AXE';
+		this.name='Copper Pickaxe';
+		this.desc='A copper pickaxe for mining.';
+		this.objectNumber=70;
+		//this.renderArgs = hexToRgbA('#FF0000');
+	}
+
+	sendData(){
+		this.renderFunction(hexToRgbA('#e55f28'));
+	}
+
+}
+
+class CopperAxe extends Tool{
+	static index = 0; get index() {return this.constructor.index;}
+	static numberOfVerts = 0; get numberOfVerts() {return this.constructor.numberOfVerts;}
+	constructor(X=null,Y=null,Z=null){
+		super(X,Y,Z,build_axe,1.2);
+		this.toolType = 'AXE';
+		this.name='Copper Axe';
+		this.desc='A copper axe for chopping wood.';
+		this.objectNumber=71;
+	}
+	sendData(){
+		this.renderFunction(hexToRgbA('#e55f28'));
+	}
+}
+
+
 
 //Abstract Item, not to be used
 class Weapon extends Item{
@@ -88,7 +125,7 @@ class WoodenBow extends Weapon{
 		if(projectileCooldown <= 0){
 			//projectileArray.push(new Arrow(cursorDirection,cursorPower,player.posX,player.posY,upOne));
 			if(player.getArrowCount() > 0) {
-				projectileArray.push(new Arrow(cursorDirection,cursorPower,player.posX,player.posY,-3));
+				projectileArray.push(new Arrow(cursorDirection,cursorPower,player.posX,player.posY,-4));
 				player.removeArrowFromShoot();
 				sound_ArrowShoot();
 				projectileCooldown = this.cooldown;
@@ -199,6 +236,9 @@ function draw_bow_vector(X=0,Y=0,Z=0){
 	var opp = cursorCoordinates[1]-(player.posY-0.5);
 	var adj = cursorCoordinates[0]-(player.posX-0.5);
 
+	//var opp = X;
+	//var adj = Y;
+
 	var theta = Math.atan(opp/adj);
 	
 	var rotMV;
@@ -277,10 +317,10 @@ function item_push_verts(v1,v2,v3,c){
 }
 
 var axeVerts=0;
-function build_axe(){
+function build_axe(c = vec4(0.5,0.5,0.5,1)){
 	//RANGE xE(-1(left),3(right)) yE(-2(bottom),3(top))
 	var colour=vec4(0.9,0.6,0.15,1);
-	var colourAxe = vec4(0.5,0.5,0.5,1);
+	var colourAxe = c;
 	var testColour = vec4(1.0,0,0,1);
 	axeVerts=buildRectangularPrism(0,2,-0.025,0.25,0.05,0.025,colour);
 	//BUILD LITTLE TOP PIECE AND CHANGE COLOUR 
@@ -329,10 +369,10 @@ function build_axe(){
 }
 
 var pickaxeVerts=0;
-function build_pickaxe(){
+function build_pickaxe(c = vec4(0.5,0.5,0.5,1)){
 	//RANGE xE(-1(left),3(right)) yE(-2(bottom),3(top))
 	var colour=vec4(0.9,0.6,0.15,1);
-	var colourAxe = vec4(0.5,0.5,0.5,1);
+	var colourAxe = c;
 	var testColour = vec4(1.0,0,0,1);
 	pickaxeVerts=buildRectangularPrism(0,2,-0.025,0.25,0.05,0.025,colour);
 	//BUILD LITTLE TOP PIECE AND CHANGE COLOUR 

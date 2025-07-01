@@ -453,7 +453,7 @@ function draw_context_line(x1,y1,x2,y2, c='#FFFFFF'){
    	context.moveTo(xCoor1,yCoor1);
  	context.lineTo(xCoor2,yCoor2);
  	context.strokeStyle = c;
- 	context.lineWidth = 2;
+ 	context.lineWidth = 1;
   	context.stroke();
   	context.lineWidth = 1;
   	return;
@@ -472,7 +472,7 @@ function draw_box_border(x1,y1,x2,y2,left=true,right=true,top=true,bottom=true){
     var yCoor2 = canvas.height - (y2*(canvas.height/9));
     
     context.strokeStyle = "#CCC";
-	context.lineWidth = 2;
+	context.lineWidth = 1;
     
     if(left&&right&&top&&bottom){
 		context.beginPath();
@@ -528,6 +528,21 @@ function draw_filled_box(x1,y1,x2,y2,c1='#CCC', c2='#111'){
 	context.fillStyle = temp;
     context.lineWidth = 1;
 }
+
+function draw_test_line(x1,y1,x2,y2, c='#FFFFFF'){
+    var xCoor1 = x1*(canvas.width/16);
+    var yCoor1 = canvas.height - (y1*(canvas.height/9));
+    var xCoor2 = x2*(canvas.width/16);
+    var yCoor2 = canvas.height - (y2*(canvas.height/9));
+
+    context.beginPath(); 
+   	context.moveTo(xCoor1,yCoor1);
+ 	context.lineTo(xCoor2,yCoor2);
+ 	context.strokeStyle = c;
+ 	//context.lineWidth =1;
+  	context.stroke();
+}
+
 
 function draw_left_text(x1,y1,text1,size='18'){
 	context.font = size+"px "+FONT;

@@ -182,6 +182,7 @@ function getWorldObj(){
 }
 
 function loadWorldIntoGame(loadedWorld){
+	disableNotifications = true;
 	/*
 		World
 	*/
@@ -317,7 +318,7 @@ function loadWorldIntoGame(loadedWorld){
 	player.posX = playerPosition[0];
 	player.posY = playerPosition[1];
 	player.health = loadedWorld.health;
-
+	disableNotifications = false;
 }
 
 

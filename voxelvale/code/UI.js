@@ -161,6 +161,7 @@ function toggleInventory(curCraftingStation = IN_NONE){
 		coorSys = vec3(selectXCoor,selectYCoor,0);
 		return;
 	}
+
 	inventory=!inventory;
 	if(inventory){
 		//currentMenu = 'INVENTORY';
@@ -177,6 +178,9 @@ function toggleInventory(curCraftingStation = IN_NONE){
 		selectXCoor=8.5;
 		selectYCoor=4;
 		coorSys = vec3(selectXCoor,selectYCoor,0);
+
+		cursorCoordinates[1]=(player.posY-0.5);
+		cursorCoordinates[0]=(player.posX-0.5);
 	}
 }
 
@@ -441,6 +445,35 @@ function drop_on_death(worldObj,object){
 	}
 }
 
+
+/*
+	When enemies die.
+*/
+function enemy_drop(worldObj,object, PX, PY){
+	//Should get a position that you can drop, or if there
+	//is no position return null or something...
+	var dropSpace = worldObj.getDropBoxSpace(Math.round(PX), Math.round(PY));
+	
+	if(dropSpace==null){
+		return;
+	}
+
+	var PX = dropSpace[1][0];
+	var PY = dropSpace[1][1];
+	var PZ = dropSpace[1][2];
+
+	if(!dropSpace[0]){
+		//Create a new DropBox.
+		worldObj.addBlock(new DropBox(PX,PY,PZ,[object]));
+		
+	}else{
+		//Add to an existing DropBox.
+		
+		dB = dropSpace[1];
+		dB.addTo(object);
+	}
+}
+
 /*
 	This function does two things.
 		Draws the scroll list and checks for clicks.
@@ -518,7 +551,7 @@ function draw_scroll_list(){
 function draw_inventory_item(object,mv){
 
 	//if(selectedTab=='TOOL' || selectedTab=='ITEM'){
-	if(selectedTab=='TOOL'){
+	if(selectedTab=='TOOL' || (object.typeOfObj=='REC' && object.object.type=='TOOL')){
 		mv = mult(mv,translate(2.25,0.15,zLay-0.3));
 		mv = mult(mv,scale4(0.35,0.35,0.001))
 		mv = mult(mv,rotateZ(-35));
@@ -550,7 +583,7 @@ function draw_display_item(object){
 			xSpin = 0;
 		}
 		//if(object.typeOfObj=='ITEM' || object.typeOfObj=='NON_ACTIONABLE_ITEM'){
-		if(object.typeOfObj=='ITEM'){
+		if(object.typeOfObj=='ITEM' || (object.typeOfObj=='REC' && object.object.type=='TOOL')){ //(object.typeOfObj=='REC' && object.object.type=='TOOL')
 			instanceMat = mult(instanceMat, translate(1.22,-1.05,0));
 			instanceMat = mult(instanceMat, scale4(1.25,1.25,0.01));
 			instanceMat = mult(instanceMat,rotateZ(45));
@@ -954,12 +987,14 @@ function add_to_toolbar(Object){
 	}
 	const objNum = Object.objectNumber;
 
-	if(objNum == 64){
+	if(Object.toolType == 'AXE'){
 		activeToolBarItem = 1;
+		toolBarList[0] = Object;
 		return;
 	}
-	if(objNum == 65){
+	if(Object.toolType == 'PICK_AXE'){
 		activeToolBarItem = 2;
+		toolBarList[1] = Object;
 		return;
 	}
 	if(objNum == 66){

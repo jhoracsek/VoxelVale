@@ -146,17 +146,53 @@ class Projectile{
 			gl.drawArrays(gl.LINES,this.hbIndex,this.hbEnd);
 	}
 	returnBounds(){
+		/*
+			Old, trying to account for dip.
+			Don't do this. All collisions are just rectangular prisms
+			so all this does is make this box larger.
+		*/
 		var dip=180*Math.atan(this.downwardVelocity)/Math.PI;
 		var locMV=rotateX(dip);
 		locMV=mult(locMV,rotateZ(this.direction));
 		var setMV=mult(translate(this.pX,this.pY,this.pZ),locMV);
-
+		
+		//var setMV=translate(this.pX,this.pY,this.pZ);
 		
 		return [mult(setMV, this.bounds[0]), mult(setMV, this.bounds[1])];
 	}
 	sendHitBoxData(){
 		//Make a square with returnBounds  
 		push_wireframe_indices(this.bounds[0],this.bounds[1]);
+	}
+
+	drawShadows(){
+		var dip=180*Math.atan(this.downwardVelocity)/Math.PI;
+		var locMV=rotateX(dip);
+		locMV=mult(locMV,rotateZ(this.direction));
+		var setMV= mult(translate(this.pX,this.pY,-2),locMV);
+		set_mv(setMV);
+		gl.drawArrays(gl.TRIANGLES,this.index,this.numberOfVertices);
+		return;
+
+
+		var dip=180*Math.atan(this.downwardVelocity)/Math.PI;
+		var locMV=rotateX(dip);
+		locMV=mult(locMV,rotateZ(this.direction));
+		var setMV= mult(translate(this.pX,this.pY,this.pZ),locMV);
+
+		var thisModelViewMatrix = mult(modelViewMatrix, setMV);
+
+		/*
+			We then calculate modelViewShadow, by applying sMatrix. sMatrix is calculated by the method "computeShadowMatrix".
+			sMatrix represents the projection of our model onto the plane at level z = -0.2 (more precisely z = -0.201, so shadows sit above blocks),
+			from the perspective of the light (in eye-space). So applying sMatrix to our block gives us the coordinates of the shadow in
+			eyespace.
+		*/
+		var modelViewShadow = mult(sMatrix, thisModelViewMatrix);
+
+		// Set current model view matrix and draw the shadow.
+		gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(modelViewShadow));
+		gl.drawArrays(gl.TRIANGLES,this.index,this.numberOfVerts);
 	}
 }
 
@@ -167,7 +203,9 @@ class Arrow extends Projectile{
 		this.numberOfVertices=arrowVerts;
 		this.hbIndex=arrowHB;
 		//this.bounds=[vec4(-0.12 ,0.72,-0.12,1),vec4(0.12,1,0.12,1)];
-		this.bounds=[vec4(-0.12 ,0.1,-0.12,1),vec4(0.12,1,0.12,1)];
+		//this.bounds=[vec4(-0.12 ,0.1,-0.12,1),vec4(0.12,1,0.12,1)];
+		//Just make bound the tip??
+		this.bounds=[vec4(-0.15 ,0.5,-0.15,1),vec4(0.15,1,0.15,1)];
 	}
 
 	//Since this can only be used by player only check enemy collisions
@@ -198,7 +236,10 @@ class Arrow extends Projectile{
 				for(let k = 0; k < 3; k++){
 
 					if (worldObj.isSpaceOccupied(PX[i],PY[j],PZ[k])){
-						if(isColliding_Original(this, new BoundObject(PX[i],PY[j],PZ[k]))){
+						//Should get bounds from the block in case it's smaller depth.
+						let candidateBlock = worldObj.getBlockAt(PX[i],PY[j],PZ[k]);
+						if(isColliding_Original(this,candidateBlock)){
+							console.log(candidateBlock.name)
 							//Check if it's a ceiling.
 							var block = worldObj.getBlockAt(PX[i],PY[j],PZ[k]);
 
@@ -228,9 +269,10 @@ class Arrow extends Projectile{
 			//console.log(this.returnBounds()[0])
 			//console.log(player.returnBounds()[0])
 			if(isColliding_Original(this,enemyArray.accessElement(i))){
+				this.particleColor = vec3(0.3, 0, 0);
 				this.destroy();
 				enemyArray.accessElement(i).hit(this.direction);
-				enemyArray.accessElement(i).healthDown(2.5);
+			
 			}
 		}
 	}

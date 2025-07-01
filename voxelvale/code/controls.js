@@ -170,13 +170,22 @@ function getKeyDown(key){
 	//'T'
 	if(key.keyCode == 84){
 		if(DEV_TOOLS){
-			//var enemy=new Finder(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),-3);
-			//enemy.initialize_enemy();
-			//enemyArray.push(enemy);
+			/*
+			//Spawn Finder
+			var enemy=new Finder(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),-3);
+			enemy.initialize_enemy();
+			enemyArray.push(enemy);
+			*/
 
+			
+			//Spawn Zombie
 			var enemy = new Undead(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),-6);
 			enemy.initialize_enemy();
 			enemyArray.push(enemy);
+			
+
+			//spawnEnemy();
+
 		}
 
 	}
@@ -305,7 +314,7 @@ function checkHovering(){
 		else
 			selectedBlock = currentDungeon.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
 		
-		if(selectedBlock!=null && !player.isDead){
+		if(selectedBlock!=null && !player.isDead &&!inventory){
 			selectedBlock.onHover();
 		}
 		blockOnTopOf = currentDungeon.getBlockAt(Math.round(player.posX),Math.round(player.posY),-2);
@@ -315,7 +324,7 @@ function checkHovering(){
 			selectedBlock = world.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),-3);
 		else
 			selectedBlock = world.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
-		if(selectedBlock!=null && !player.isDead){
+		if(selectedBlock!=null && !player.isDead&& !inventory){
 			selectedBlock.onHover();
 		}
 		blockOnTopOf = world.getBlockAt(Math.round(player.posX-0.5),Math.round(player.posY-0.5),-2);
@@ -435,13 +444,13 @@ canvas.addEventListener("mousedown", function(event){
 			if(inDungeon){
 				//console.log(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
 				//var selectedBlock = currentDungeon.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
-				if(selectedBlock!=null&& !player.isDead){
+				if(selectedBlock!=null&& !player.isDead && !inventory){
 					selectedBlock.onClick();
 				}
 
 			}else{
 				//var selectedBlock = world.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
-				if(selectedBlock!=null&& !player.isDead){
+				if(selectedBlock!=null&& !player.isDead && !inventory){
 					selectedBlock.onClick();
 				}
 			}

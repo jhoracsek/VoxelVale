@@ -731,6 +731,7 @@ class WorkBench extends InteractiveBlock{
 		let c = vec4(0.5,1,0,1);
 
 		c = mult(this.instanceMat, c);
+
 		c = mult(modelViewMatrix, c);
 		c = mult(projectionMatrix, c);
 

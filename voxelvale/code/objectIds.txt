@@ -28,6 +28,8 @@ WoodenBow			66
 Copper 				67
 CopperBar			68
 ArrorItem			69
+CopperPickaxe		70
+CopperAxe 			71
 
 
 WorkBenchRecipe		128
@@ -36,6 +38,8 @@ DoorRecipe			130
 BrickBlockRecipe	131
 CopperBarRecipe		132
 ArrowRecipe			133
+CopperPickRecipe	134
+CopperAxeRecipe		135
 
 
 
@@ -76,6 +80,13 @@ Steps for adding non-actionable items:
 4) Add to 'nonActionableItems' array in "nonactionableitems.js".
 5) Add to 'ITEM_OBJNUMS' in "nonactionableitems.js".
 6) Design build function in static method 'sendData()'.
+
+Steps for adding tools:
+1) Add class
+2) Set objectNumber to the next available number.
+3) Add to the list above.
+4) Add to 'ITEM_OBJNUMS' in "nonactionableitems.js".
+5) Design build function.
 
 
 

@@ -44,7 +44,7 @@ class zObjectNew{
 		return;
 	}
 	//Returns an array of the items needed to craft the item, along with the quantity of the item needed.
-	//EX: return [[new WeirdBlock(),3],[new WoodBlock(),3],[new WoodAxe(),4],[new StonePickaxe(),1],[new WeirdBlock(),3],[new GrassBlock(),3]];
+	//EX: return [[new WeirdBlock(),3],[new WoodBlock(),3],[new WoodAxe(),4],[new WeirdBlock(),3],[new GrassBlock(),3]];
 	getRecipe(){
 		return null;
 	}

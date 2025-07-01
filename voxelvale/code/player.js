@@ -284,9 +284,11 @@ class Humanoid{
 		return;
 	}
 	checkIfDead(){
-		if(this.health<=0)
+		if(this.health<=0){
 			this.deathMarker=true;
-		return;
+			return true;
+		}
+		return false;
 	}
 	setHeldObject(OBJECT){
 		if(this.heldObject != null)
@@ -337,7 +339,7 @@ class Player extends Humanoid{
 		this.isPlacing=false;
 		this.completedAction=true;
 
-		this.health = 1;
+		this.health = 10;
 		this.maxHealth = 10;
 
 		this.inventory = new Inventory();
@@ -384,7 +386,8 @@ class Player extends Humanoid{
 		return this.inventory.getQuantity(Object);
 	}
 	addToInventory(object){
-		nQueue.addNotification(new Notification(object,1));
+		if(!disableNotifications)
+			nQueue.addNotification(new Notification(object,1));
 		switch(object.typeOfObj){
 			case 'ITEM':
 				this.inventory.addItem(object);
@@ -480,7 +483,7 @@ class Player extends Humanoid{
 		let colDirections = this.stopknockback;
 
 		if(	(colDirections[0] && directions[0]) || (colDirections[1] && directions[1]) || (colDirections[2] && directions[2]) || (colDirections[3] && directions[3]) 	){
-			console.log('Stop knockbck!')
+			
 			this.posX -= this.knockbackDirection[0]/4;
 			this.posY -= this.knockbackDirection[1]/4;
 			this.knockbackTimer = 0;
@@ -600,12 +603,16 @@ class Player extends Humanoid{
 	}
 	sendData(){
 		head2();
+
 		headVerts = vertices.length;
 		build_shoulder();
 		shoulderVerts = vertices.length - headVerts;
+
 		build_torso();
 		torsoVerts = vertices.length - shoulderVerts-headVerts;
+
 		build_leg();
+
 		legVerts = vertices.length -torsoVerts-shoulderVerts-headVerts;
 		build_eye();
 		eyeVerts = vertices.length - legVerts -torsoVerts-shoulderVerts-headVerts;
@@ -669,6 +676,8 @@ class Player extends Humanoid{
 			}
 		}
 
+		
+
 	}
 
 	respawn(){
@@ -677,7 +686,7 @@ class Player extends Humanoid{
 		player.posX = (WORLD_SIZE/2)*10;
 		player.posY = (WORLD_SIZE/2)*10;
 		//change coordinates to origin.
-		console.log('Respawn');
+	
 
 		this.invulnerable = 0;
 		this.invulnerableTime = 40;
@@ -687,6 +696,13 @@ class Player extends Humanoid{
 		this.knockbackDirection = [0,0];
 		this.knockbackFrames = 5;
 		this.stopknockback = [false,false,false,false];
+
+		//Kill all enemies
+		if(enemyArray.isEmpty()==false){
+			for(var i=0;i<enemyArray.getLength();i++){
+				enemyArray.accessElement(i).deathMarker=true;
+			}
+		}
 
 		//CLEAR ENEMY QUEUE!!!!!!!!!
 		//player.resetInventory();
@@ -1100,13 +1116,22 @@ function body_push(v1, v2, v3, c=vec4(1,1,1,1)){
 	colours.push(c);
 	colours.push(c);
 
-    var cross1 = subtract(v2,v1); 
-	var cross2 = subtract(v3,v1);
-	var norm =((cross(cross1, cross2)));
-	norm = vec3(norm);
-	for(var i =0; i < 3; i++)
-		normals.push(norm);
+	if(flipPlayerNorms){
+		var cross1 = subtract(v3,v1); 
+		var cross2 = subtract(v2,v1);
+		var norm =((cross(cross1, cross2)));
+		norm = vec3(norm);
+		for(var i =0; i < 3; i++)
+			normals.push(norm);
 
+	}else{
+	    var cross1 = subtract(v2,v1); 
+		var cross2 = subtract(v3,v1);
+		var norm =((cross(cross1, cross2)));
+		norm = vec3(norm);
+		for(var i =0; i < 3; i++)
+			normals.push(norm);
+	}
     return;
 }
 
@@ -1174,7 +1199,7 @@ function soften_edge(vertice, centerOfMass, soften=0.1){
 	return [retVerts[0],retVerts[1],retVerts[2],retVerts[3]];
 }
 
-function head2(){
+function head2(c = vec4(1.0,0.7,0.50,1)){
 	var topVerts=[];
 	var leftVerts=[];
 	var rightVerts=[];
@@ -1209,22 +1234,23 @@ function head2(){
 		var pushOrder = [vertsPush[0],vertsPush[1],vertsPush[3],vertsPush[1],vertsPush[2],vertsPush[3],vertsPush[0],vertsPush[2],vertsPush[3]];
 		//var pushOrder = [vertsPush[0],vertsPush[3],vertsPush[2]];
 		for(var j = 0; j < pushOrder.length; j+=3){
-			special_push(pushOrder[j],pushOrder[j+1],pushOrder[j+2]);
+			special_push(pushOrder[j],pushOrder[j+1],pushOrder[j+2],c);
 		}
 	}
-	draw_z_face(faceVerts,soften);
-	draw_z_face(backVerts,soften);
+	
+	draw_z_face(faceVerts,soften,c);
+	draw_z_face(backVerts,soften,c);
 
-	draw_x_face(leftVerts,soften);
-	draw_x_face(rightVerts,soften);
+	draw_x_face(leftVerts,soften,c);
+	draw_x_face(rightVerts,soften,c);
 
-	draw_y_face(topVerts,soften);
-	draw_y_face(bottomVerts,soften);
+	draw_y_face(topVerts,soften,c);
+	draw_y_face(bottomVerts,soften,c);
 
 	NM = vertices.length;
 	return;
 }
-function draw_z_face(vertArray,soften){
+function draw_z_face(vertArray,soften, c = vec4(1.0,0.7,0.50,1)){
 	//For alt just make it push the other direction!
 	var tL, tR, bL, bR;
 	var tZ = vertArray[0][2];
@@ -1232,28 +1258,28 @@ function draw_z_face(vertArray,soften){
 	tR = vec3(0.5-soften, 0.5-soften, tZ);
 	bL = vec3(-0.5+soften, -0.5+soften, tZ);
 	bR = vec3(0.5-soften, -0.5+soften, tZ);
-	special_push(tL, bL, bR);
-	special_push(bR, tR, tL);
+	special_push(tL, bL, bR,c);
+	special_push(bR, tR, tL,c);
 	
-	special_push(vertArray[0],vertArray[1],bL);
-	special_push(vertArray[2],vertArray[3],tL);
-	special_push(vertArray[4],vertArray[5],tR);
-	special_push(vertArray[6],vertArray[7],bR);
+	special_push(vertArray[0],vertArray[1],bL,c);
+	special_push(vertArray[2],vertArray[3],tL,c);
+	special_push(vertArray[4],vertArray[5],tR,c);
+	special_push(vertArray[6],vertArray[7],bR,c);
 
-	special_push(vertArray[3],vertArray[1],tL);
-	special_push(bL,tL,vertArray[1]);
+	special_push(vertArray[3],vertArray[1],tL,c);
+	special_push(bL,tL,vertArray[1],c);
 
-	special_push(vertArray[0],bR,bL);
-	special_push(vertArray[0],vertArray[6],bR);
+	special_push(vertArray[0],bR,bL,c);
+	special_push(vertArray[0],vertArray[6],bR,c);
 
-	special_push(bR,vertArray[7],vertArray[5]);
-	special_push(vertArray[5], tR, bR);
+	special_push(bR,vertArray[7],vertArray[5],c);
+	special_push(vertArray[5], tR, bR,c);
 
-	special_push(vertArray[4],vertArray[2],tR);
-	special_push(vertArray[2],tL,tR);
+	special_push(vertArray[4],vertArray[2],tR,c);
+	special_push(vertArray[2],tL,tR,c);
 	return;
 }
-function draw_x_face(vertArray,soften){
+function draw_x_face(vertArray,soften, c = vec4(1.0,0.7,0.50,1)){
 	var tL, tR, bL, bR;
 	var tX = vertArray[0][0];
 	tL = vec3(tX, 0.5-soften,-0.5+soften);
@@ -1261,28 +1287,28 @@ function draw_x_face(vertArray,soften){
 	bR = vec3(tX, -0.5+soften,0.5-soften);
 	bL = vec3(tX, -0.5+soften,-0.5+soften);
 
-	special_push(tL, bL, bR);
-	special_push(bR, tR, tL);
+	special_push(tL, bL, bR,c);
+	special_push(bR, tR, tL,c);
 	
-	special_push(vertArray[6],vertArray[7],bL);
-	special_push(vertArray[4],vertArray[5],tL);
-	special_push(vertArray[0],vertArray[1],tR);
-	special_push(vertArray[2],vertArray[3],bR);
+	special_push(vertArray[6],vertArray[7],bL,c);
+	special_push(vertArray[4],vertArray[5],tL,c);
+	special_push(vertArray[0],vertArray[1],tR,c);
+	special_push(vertArray[2],vertArray[3],bR,c);
 
-	special_push(vertArray[4],vertArray[6],tL);
-	special_push(vertArray[6],bL,tL);
+	special_push(vertArray[4],vertArray[6],tL,c);
+	special_push(vertArray[6],bL,tL,c);
 
-	special_push(vertArray[5],tL,tR);
-	special_push(tR,vertArray[1],vertArray[5])
+	special_push(vertArray[5],tL,tR,c);
+	special_push(tR,vertArray[1],vertArray[5],c)
 
-	special_push(tR,bR,vertArray[2])
-	special_push(vertArray[2],vertArray[0],tR)
+	special_push(tR,bR,vertArray[2],c)
+	special_push(vertArray[2],vertArray[0],tR,c)
 
-	special_push(bR,bL,vertArray[7])
-	special_push(vertArray[7],vertArray[3],bR)
+	special_push(bR,bL,vertArray[7],c)
+	special_push(vertArray[7],vertArray[3],bR,c)
 	return;
 }
-function draw_y_face(vertArray,soften){
+function draw_y_face(vertArray,soften, c = vec4(1.0,0.7,0.50,1)){
 	var tL, tR, bL, bR;
 	var tY = vertArray[0][1];
 	tL = vec3(-0.5+soften, tY, 0.5-soften);
@@ -1290,44 +1316,50 @@ function draw_y_face(vertArray,soften){
 	bL = vec3(-0.5+soften,tY, -0.5+soften);
 	bR = vec3(0.5-soften,tY, -0.5+soften);
 
-	special_push(bL, bR, tL);
-	special_push(tR, tL, bR);
+	special_push(bL, bR, tL, c);
+	special_push(tR, tL, bR, c);
 	
-	special_push(vertArray[5],vertArray[4],bL);
-	special_push(vertArray[0],vertArray[1],tL);
-	special_push(vertArray[3],vertArray[2],tR);
-	special_push(vertArray[6],vertArray[7],bR);
+	special_push(vertArray[5],vertArray[4],bL, c);
+	special_push(vertArray[0],vertArray[1],tL, c);
+	special_push(vertArray[3],vertArray[2],tR, c);
+	special_push(vertArray[6],vertArray[7],bR, c);
 
-	special_push(vertArray[5],tL,vertArray[1]);
-	special_push(vertArray[5],bL,tL);
+	special_push(vertArray[5],tL,vertArray[1], c);
+	special_push(vertArray[5],bL,tL, c);
 
-	special_push(bL,vertArray[4],bR);
-	special_push(bR,vertArray[4],vertArray[6]);
+	special_push(bL,vertArray[4],bR, c);
+	special_push(bR,vertArray[4],vertArray[6], c);
 
-	special_push(vertArray[3],tR,bR);
-	special_push(bR,vertArray[7],vertArray[3]);
+	special_push(vertArray[3],tR,bR, c);
+	special_push(bR,vertArray[7],vertArray[3], c);
 
-	special_push(vertArray[2],vertArray[0],tL);
-	special_push(tR,vertArray[2],tL);
+	special_push(vertArray[2],vertArray[0],tL, c);
+	special_push(tR,vertArray[2],tL, c);
 	return;
 }
 
-function special_push(v1, v2, v3){
+let flipPlayerNorms = false;
+
+function special_push(v1, v2, v3, c = vec4(1.0,0.7,0.50,1)){
 	vertices.push(v1);
 	vertices.push(v2);
 	vertices.push(v3);
-
+	//Player skin colour
 	for(var z =0; z < 3; z++)
-		colours.push(vec4(1.0,0.7,0.50,1));
+		colours.push(c);
 	var cross2 = subtract(v2,v1); 
 	var cross1 = subtract(v3,v1);
 	var norm = cross(cross1, cross2);
 	norm = vec3(norm);
-	
-	normals.push(vec3(v1[0],v1[1],v1[2]));
-    normals.push(vec3(v2[0],v2[1],v2[2]));
-    normals.push(vec3(v3[0],v3[1],v3[2]));
-
+	if(flipPlayerNorms){
+		normals.push((vec3(-v1[0],-v1[1],-v1[2])));
+	    normals.push((vec3(-v2[0],-v2[1],-v2[2])));
+	    normals.push((vec3(-v3[0],-v3[1],-v3[2])));
+	}else{
+		normals.push((vec3(v1[0],v1[1],v1[2])));
+	    normals.push((vec3(v2[0],v2[1],v2[2])));
+	    normals.push((vec3(v3[0],v3[1],v3[2])));
+	}
     //normals.push(vec3(0,0,0));
     //normals.push(vec3(0,0,0));
     //normals.push(vec3(0,0,0));
@@ -1343,20 +1375,20 @@ function build_hair(){
 
 }
 
-function build_shoulder(){
-	cube([6,6,6,6,6,6],vec4(0.35, 0.24, 0.19,1));
+function build_shoulder(c=vec4(0.35, 0.24, 0.19,1)){
+	cube([6,6,6,6,6,6],c);
 }
 
-function build_torso(){
-	cube([6,6,6,6,6,6],vec4(0.35, 0.24, 0.19,1) );
+function build_torso(c=vec4(0.35, 0.24, 0.19,1)){
+	cube([6,6,6,6,6,6],c );
 }
 
-function build_leg(){
-	cube([7,7,7,7,7,7],vec4(0.2,0.42,0.68,1));
+function build_leg(c=vec4(0.2,0.42,0.68,1)){
+	cube([7,7,7,7,7,7],c);
 }
 
-function build_eye(){
-	cube([-1,-1,-1,-1,-1,-1],vec4(0,0,0,1));
+function build_eye(c=vec4(0,0,0,1)){
+	cube([-1,-1,-1,-1,-1,-1],c);
 }
 
 
@@ -1490,9 +1522,13 @@ function traverse(id){
 function traverse_shadow(id){
 	if(id == null) return;
 	if(!fixedView){
-		shadowMV = translate(1,1,0);
-		shadowMV = mult(shadowMV, scale4(0.125,(1/4.5),0.1))
-		shadowMV = mult(shadowMV,translate(-8,-4.5,0));
+		//shadowMV = translate(1,1,0);
+		//shadowMV = mult(shadowMV, scale4(0.125,(1/4.5),0.1))
+		//shadowMV = mult(shadowMV,translate(-8,-4.5,0));
+
+		//shadowMV = translate(1,1,0);
+		shadowMV = scale4(0.125,(1/4.5),0.1);
+		//shadowMV = mult(shadowMV,translate(-8,-4.5,0));
 	}else{
 		shadowMV = translate(0,0,0);
 		shadowMV = mult(shadowMV, scale4(0.125,(1/4.5),0.1))
@@ -1512,6 +1548,34 @@ function traverse_shadow(id){
 	}
 	return;
 }
+/*
+function traverse_enemy_shadow(id){
+	if(id == null) return;
+	if(!fixedView){
+		shadowMV = scale4(0.125,(1/4.5),0.1);
+
+		var thisModelViewMatrix = mult(modelViewMatrix, translate);
+		var modelViewShadow = mult(sMatrix, thisModelViewMatrix);
+
+	}else{
+		shadowMV = translate(0,0,0);
+		shadowMV = mult(shadowMV, scale4(0.125,(1/4.5),0.1))
+		shadowMV = mult(shadowMV,translate(-8,-4.5,0));
+	}
+	modelViewStack.push(shadowMV);
+	shadowMV = mult(shadowMV, humanoid[id].transform);
+	shadowMV = mult(sMatrixForPlayer, shadowMV);
+	modelViewMatrix = shadowMV;
+	humanoid[id].render();
+
+	if(humanoid[id].child != null)
+		traverse(humanoid[id].child);
+	shadowMV = modelViewStack.pop();
+	if(humanoid[id].sibling != null){
+		traverse(humanoid[id].sibling);
+	}
+	return;
+}*/
 
 function build_humanoid(){
 
@@ -1526,7 +1590,8 @@ function scale4(a, b, c) {
 }
 var move = 0;
 function body(){
-	move++;
+	
+	//move++;
 	var scalemat = scale4(BODY_WIDTH, BODY_HEIGHT, BODY_DEPTH);
 	var instanceMat = scalemat;
 	instanceMat = mult(translate(0,0.25,0),instanceMat);
