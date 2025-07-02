@@ -264,7 +264,7 @@ class BlockWall extends zObject{
 				var blockBelowBelow = world.getBlockAt(this.posX,this.posY,this.posZ+2);
 
 				this.isCeiling = true;
-				if(blockBelow!=null && blockBelowBelow!=null){
+				if(blockBelow!=null){ //&& blockBelowBelow!=null){
 					this.isCeiling = false;
 					this.drawLeft = true;
 					this.drawRight = true;
@@ -294,12 +294,25 @@ class BlockWall extends zObject{
 
 				}
 			}
-			else if(this.posZ == -5){
-				//var blockAbove = world.getBlockAt(this.posX,this.posY,this.posZ-1);
-				if(world.getBlockAt(this.posX,this.posY,this.posZ+1)!=null){
+			else if(this.posZ == -5 && false){
+				var blockAbove = world.getBlockAt(this.posX,this.posY,this.posZ-1);
+				var blockBelow = world.getBlockAt(this.posX,this.posY,this.posZ+1);
+				if(blockAbove != null){
+					this.drawTop = false;
+				}
+
+				this.isCeiling = true;
+				if(blockBelow!=null){
 					this.isCeiling = false;
+					this.drawLeft = true;
+					this.drawRight = true;
+					this.drawBack = true;
+					this.drawFront = true;
 				}else{
-					this.isCeiling = true;
+					this.drawLeft = (blockLeft==null)
+					this.drawRight = (blockRight==null)
+					this.drawBack = (blockBehind==null)
+					this.drawFront = (blockInfront==null)
 				}
 			}
 
@@ -408,24 +421,17 @@ class BlockWall extends zObject{
 		}else{
 			set_mv(this.instanceMat);
 			this.setCeilOpac();
-		
-
-			//Right
-			if(this.drawRight)
-				gl.drawArrays(gl.TRIANGLES,this.index+6,6);
-			//Left
-			if(this.drawLeft)
-				gl.drawArrays(gl.TRIANGLES,this.index+30,6);
-
-
-			
-
 			//Front
 			if(this.drawFront)
 				gl.drawArrays(gl.TRIANGLES,this.index+12,6);
-
 			
-
+			//Left
+			if(this.drawLeft)
+				gl.drawArrays(gl.TRIANGLES,this.index+30,6);
+			//Right
+			if(this.drawRight)
+				gl.drawArrays(gl.TRIANGLES,this.index+6,6);
+			
 			//Back
 			if(this.drawBack)
 				gl.drawArrays(gl.TRIANGLES,this.index+18,6);

@@ -386,7 +386,7 @@ function on_click_hold(){
 
 function on_click_drink(){
 	if(tabList[selectedItemIndex] != null){
-		player.health += 1;
+		player.health = Math.min(player.maxHealth, player.health+1);
 		player.removeFromInventory(tabList[selectedItemIndex]);
 	}
 	

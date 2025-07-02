@@ -1253,6 +1253,7 @@ function render_data(){
 			}
 		}
 	}
+	//console.log('Collisions:', colUp, colDown, colLeft,colRight)
 
 	var transparentBlocksNeg6 = [];
 	var transparentBlocksNeg5 = [];
@@ -1264,7 +1265,8 @@ function render_data(){
 				if(block.posZ == -6 || block.posZ == -7){
 					transparentBlocksNeg6.push(block);
 				}else{
-					transparentBlocksNeg5.push(block);
+					//transparentBlocksNeg5.push(block);
+					block.draw();
 				}
 			}else{
 				block.draw();
@@ -1419,6 +1421,7 @@ function render_data(){
     set_light();
 	gl.uniform1i(isCeilingLoc, true);
 
+	/*
 	for(var i = 0; i < transparentBlocksNeg5.length; i++){
 		if(add_block_to_draw_list(transparentBlocksNeg5[i],drawDistanceX, drawDistanceY)){
 			transparentBlocksNeg5[i].drawTopBlock();
@@ -1429,7 +1432,7 @@ function render_data(){
 			transparentBlocksNeg5[i].draw();
 		}
 	}
-
+	*/
 	gl.uniform1i(isCeilingLoc, false);
 	gl.disable(gl.STENCIL_TEST);
 

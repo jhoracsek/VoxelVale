@@ -98,6 +98,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebas
     });
 
     window.saveWorld = async function(worldData) {
+        //console.log('Saving...')
         const user = auth.currentUser;
         if (!user) {
             alert("You must be logged in to save!");
@@ -118,10 +119,11 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebas
                 invObjNums: info[5],
                 position: info[6],
                 health: info[7],
+                toolbar: info[8],
                 version: GAME_VERSION
                 //lastModified: new Date().toISOString()
             });
-            console.log("World saved!");
+            //console.log("World saved!");
             pQueue.empty();
             keyboardDisabled=false;
             disableInventoryCursor = false;
@@ -152,6 +154,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebas
         }
         if(loadedWorld!=null){
             loadWorldIntoGame(loadedWorld);
-            console.log('Done!');
+            //console.log('Done!');
         }
     }

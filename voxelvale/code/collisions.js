@@ -125,7 +125,7 @@ function directionInhibited(moving, fixed){
 */
 
 function directionInhibitedOffset(moving, fixed){
-	var offset = 0.05;
+	var offset = 0.1;
 
 	// Define moving box points.
 	var p0,p1,p2,p3;

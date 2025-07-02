@@ -64,7 +64,7 @@ function spawnEnemy(){
 	let x = Math.round((player.posX)+XBound);
 	let y = Math.round((player.posY)+YBound);
 
-	if(!world.isSpaceOccupied(x,y,-3)){
+	if(!world.isSpaceOccupied(x,y,-3) && !world.isSpaceOccupied(x+1,y,-3) && !world.isSpaceOccupied(x-1,y,-3) && !world.isSpaceOccupied(x,y+1,-3) && !world.isSpaceOccupied(x,y-1,-3)){
 		var enemy = new Undead(x,y,-6);
 		enemy.initialize_enemy();
 		enemyArray.push(enemy);

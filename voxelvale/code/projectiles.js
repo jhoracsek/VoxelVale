@@ -129,8 +129,8 @@ class Projectile{
 		if(enemyArray.isEmpty())
 			return;
 		for(var i=0;i<enemyArray.getLength();i++){
-			if(isColliding(this,enemyArray.accessElement(i)))
-				console.log('IM HIT')
+			//if(isColliding(this,enemyArray.accessElement(i)))
+			//	console.log('IM HIT')
 		}
 		return;
 	}
@@ -144,6 +144,12 @@ class Projectile{
 		gl.drawArrays(gl.TRIANGLES,this.index,this.numberOfVertices);
 		if(hitBox)
 			gl.drawArrays(gl.LINES,this.hbIndex,this.hbEnd);
+
+		if(this.verticalVelocity==0){
+			this.markedToDestroy=true;
+			this.destroy();
+		}
+
 	}
 	returnBounds(){
 		/*
@@ -239,7 +245,7 @@ class Arrow extends Projectile{
 						//Should get bounds from the block in case it's smaller depth.
 						let candidateBlock = worldObj.getBlockAt(PX[i],PY[j],PZ[k]);
 						if(isColliding_Original(this,candidateBlock)){
-							console.log(candidateBlock.name)
+							//console.log(candidateBlock.name)
 							//Check if it's a ceiling.
 							var block = worldObj.getBlockAt(PX[i],PY[j],PZ[k]);
 

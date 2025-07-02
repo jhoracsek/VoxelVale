@@ -6,6 +6,7 @@ var isFocused = false;
 var keyboardDisabled = false;
 
 var upOneStore = -1;
+var spaceHeld = false;
 
 
 /*
@@ -63,6 +64,8 @@ function getKeyDown(key){
 		key.preventDefault();
 		if(player.isDead){
 			player.respawn();
+		}else{
+			//spaceHeld = true;
 		}
 	}
 	if(player.isDead){
@@ -297,6 +300,10 @@ function getKeyUp(key){
 	//DOWN
 	if(key.keyCode == 83){
 		player.isMovingDown = false;
+	}
+
+	if(key.keyCode == 32){
+		//spaceHeld = false;
 	}
 }
 

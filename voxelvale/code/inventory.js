@@ -105,6 +105,14 @@ function add_interface_bottom_bar(){
 	var loadButton = new InterfaceButton(2.25+buttonSpace*3, 1.25+squish, (2.25+buttonWidth)+buttonSpace*3, 2-squish,DARK_GREY,loadWorldButton,"Load World");
 	bottomBarElements.push(loadButton);
 
+	//Enemy toggle button
+	let eX = 14;
+	let eY = 8.25;
+	var enemyToggleButton = new InterfaceButton(eX, eY, eX+1.75, eY+0.5,DARK_GREY,function(){SPAWN_ENEMIES=!SPAWN_ENEMIES},"",'12');//Turn enemies off
+	bottomBarElements.push(enemyToggleButton);
+	var enemyButtonText = new InterfaceText(eX, eY, eX+1.75, eY+0.5,"Turn enemies off.",'12',false,getEnemySpawn);
+	bottomBarElements.push(enemyButtonText);
+
 	/*
 
 		Music play bar.

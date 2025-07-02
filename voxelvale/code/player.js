@@ -342,6 +342,9 @@ class Player extends Humanoid{
 		this.health = 10;
 		this.maxHealth = 10;
 
+		this.stamina = 10;
+		this.maxStamina = 10;
+
 		this.inventory = new Inventory();
 
 		this.invulnerable = 0;
@@ -519,7 +522,7 @@ class Player extends Humanoid{
 		//	player_angle_by_diff(diffX,diffY)
 		
 		//if(this.isMovingDown && this.isMovingLeft){
-
+		
 		if(diffX < 0 && diffY < 0){
 			if(!this.isShooting)
 				angleFacing = 45;
@@ -713,6 +716,7 @@ class Player extends Humanoid{
 		//Drop box
 	}
 	update(){
+		
 		this.flash=false;
 		if(this.invulnerable > 0){
 			this.invulnerable--;
@@ -747,6 +751,15 @@ class Player extends Humanoid{
 			this.knockback();
 			this.knockbackTimer--;
 		}
+		/*
+		if(spaceHeld && this.stamina > 0){
+			console.log(this.stamina)
+			this.speed = 0.3;
+			this.stamina = this.stamina-0.05;
+		}else{
+			this.speed = 0.05;
+			this.stamina = Math.min(this.stamina+0.05, this.maxStamina);
+		}*/
 	}
 	draw(){
 		if(this.isDead) return;
@@ -754,8 +767,7 @@ class Player extends Humanoid{
 		
 		if(this.flash)
 			gl.uniform1i(flashingLoc, true);
-		
-		
+		//draw_healthbar(0, 0, 2, 1, this.stamina, this.maxStamina,40,1)	
 		traverse(bodyId);
 		if(this.flash)
 			gl.uniform1i(flashingLoc, false);
@@ -1042,18 +1054,29 @@ function player_moving(X,Y,Z){
 	initialize_node(leftLegId);
 	initialize_node(rightLegId);
 	//initialize_node(toolId);
-	if(player.idle && armAngleRight==0 )
+	//if(player.idle && armAngleRight==0 )
+	if(player.idle && (armAngleRight < 3 && armAngleRight>-3 ) )
 		return;
 
 	if(switchDirection){
-		legAngle+=2;
-		armAngleRight+=3.75;
+		if(spaceHeld && player.stamina > 0){
+			legAngle+=2*1.2;
+			armAngleRight+=3.75*1.2;
+		}else{
+			legAngle+=2;
+			armAngleRight+=3.75;
+		}
 		//armAngleLeft-=3.75;
 	}
 	else{
-		legAngle-=2;
-		//armAngleLeft+=3.75;
-		armAngleRight-=3.75;
+		if(spaceHeld && player.stamina > 0){
+			legAngle-=2*1.2;
+			armAngleRight-=3.75*1.2;
+		}else{
+			legAngle-=2;
+			//armAngleLeft+=3.75;
+			armAngleRight-=3.75;
+		}
 	}
 	//if(!player.isSwinging){
 		armAngleLeft = -armAngleRight;

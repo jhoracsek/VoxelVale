@@ -176,9 +176,13 @@ function getWorldObj(){
 
 	const invObjectNumbers = JSON.stringify(inventoryObjNums);
 
-	
+	toolbarIDs = [];
+	for(let i = 0; i < toolBarList.length; i++){
+		if(toolBarList[i]!=null)
+			toolbarIDs.push(toolBarList[i].objectNumber);
+	}
 
-	return [xPositions, yPositions, zPositions,objectNumbers, blockInstanceInformationString, invObjectNumbers, [player.posX, player.posY], player.health];
+	return [xPositions, yPositions, zPositions,objectNumbers, blockInstanceInformationString, invObjectNumbers, [player.posX, player.posY], player.health, toolbarIDs];
 }
 
 function loadWorldIntoGame(loadedWorld){
@@ -284,13 +288,19 @@ function loadWorldIntoGame(loadedWorld){
 	keyboardDisabled=false;
 	disableInventoryCursor = false;
 	player.resetInventory();
-	toolBarList = [];
+	toolBarList = [null, null, null, null, null, null, null];
+	toolBarIDs = loadedWorld.toolbar;
 	for(let i = 0; i < inventoryContents.length; i++){
 
 		//Update using new method!!!
 		if(inventoryContents[i] < 64){
 			//Block
-			player.addToInventory(new BLOCK_OBJNUMS[inventoryContents[i]](null,null,null));
+			let object = new BLOCK_OBJNUMS[inventoryContents[i]](null,null,null)
+			player.addToInventory(object);
+			for(let j = 0; j < toolBarIDs.length;j++){
+				if(inventoryContents[i] == toolBarIDs[j])
+					toolBarList[j] =object;
+			}
 		}
 		else if(inventoryContents[i] < 128){
 			//Item
@@ -299,12 +309,10 @@ function loadWorldIntoGame(loadedWorld){
 			/*
 				Add tools to toolbar.
 			*/
-			if(inventoryContents[i] == 64)
-				toolBarList.push(item);
-			if(inventoryContents[i] == 65)
-				toolBarList.push(item);
-			if(inventoryContents[i] == 66)
-				toolBarList.push(item);
+			for(let j = 0; j < toolBarIDs.length;j++){
+				if(inventoryContents[i] == toolBarIDs[j])
+					toolBarList[j] =item;
+			}
 		}
 		else if(inventoryContents[i] < 256){
 			//Recipe
@@ -318,7 +326,9 @@ function loadWorldIntoGame(loadedWorld){
 	player.posX = playerPosition[0];
 	player.posY = playerPosition[1];
 	player.health = loadedWorld.health;
+	//toolBarList = loaded.toolbar;
 	disableNotifications = false;
+	enemyArray = new ProperArray();
 }
 
 
