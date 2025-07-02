@@ -41,12 +41,12 @@ function build_line_between_points(point1 = vec3(0,0,0), point2 = vec3(1,1,1), t
 /*
 	For an individual line
 */
-function wireframe_line(v1 ,v2){
+function wireframe_line(v1 ,v2, c=vec4(1,1,1,1)){
 	vertices.push(v1);
 	vertices.push(v2);
 
-	colours.push(vec4(1,1,1,1));
-	colours.push(vec4(1,1,1,1));
+	colours.push(c);
+	colours.push(c);
 
 	for(var i =0; i < 2; i++){
 		texCoords.push(vec2(2.0,2.0));

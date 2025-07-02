@@ -542,7 +542,7 @@ window.onload = function init(){
 	for(let i = 0; i < 100; i++)
 		player.addToInventory(new ArrowItem());
 	
-
+	player.addToInventory(new HealthPotion());
 	var dropBox = new DropBox(null,null,null,[new WorkBench(), new StonePickaxe(), new DirtBlock(), new GrassBlock(), new WeirdBlock(), new GrassBlock(), new WoodBlock(), new WoodBlock(), new GrassBlock()]);
 	//var dropBox = new DropBox(null,null,null,[new DirtBlock(), new GrassBlock(), new WeirdBlock(), new WoodBlock()]);
 	

@@ -370,6 +370,10 @@ function draw_hold_condition(){
 	return active+scrollOffset >= 0 && tabList[active+scrollOffset] != null && activeTab < 2; // And never on the recipes tab!
 }
 
+function draw_drink_condition(){
+	return active+scrollOffset >= 0 && tabList[active+scrollOffset] != null && activeTab == 2 && tabList[active+scrollOffset].isConsumable; // And never on the recipes tab!
+}
+
 
 function draw_drop_condition(){
 	return active+scrollOffset >= 0 && tabList[active+scrollOffset] != null && (activeTab == 0 || activeTab == 2 || activeTab == 3); // And never on the recipes tab!
@@ -378,6 +382,15 @@ function draw_drop_condition(){
 function on_click_hold(){
 	if(tabList[selectedItemIndex] != null)
 		player.setHeldObject(tabList[selectedItemIndex]); add_to_toolbar(tabList[selectedItemIndex])
+}
+
+function on_click_drink(){
+	if(tabList[selectedItemIndex] != null){
+		player.health += 1;
+		player.removeFromInventory(tabList[selectedItemIndex]);
+	}
+	
+		//player.setHeldObject(tabList[selectedItemIndex]); add_to_toolbar(tabList[selectedItemIndex])
 }
 
 function on_click_drop(){

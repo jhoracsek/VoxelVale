@@ -30,6 +30,7 @@ CopperBar			68
 ArrorItem			69
 CopperPickaxe		70
 CopperAxe 			71
+HealthPotion		72
 
 
 WorkBenchRecipe		128
