@@ -180,7 +180,7 @@ function draw_recipe_list(recipe){
 	var bigList=false;
 	if(recipe.isCraftable()){
 		draw_c_text_med(9.75,2.3,'Craft');
-		draw_2D_square(mult(translate(9.65,2.15,-9.1),scale4(0.75,0.4,1)),DARKEST_GREY);
+		draw_2D_square(mult(translate(9.65,2.15,-9.1),scale4(0.75,0.4,1)),GREY);
 		click_in_bounds(9.65,2.15,9.65+0.75,2.15+0.4,function(){recipe.craftObject()});
 	}else{
 		draw_c_text_med(9.75,2.3,'Cannot craft');

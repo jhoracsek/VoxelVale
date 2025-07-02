@@ -107,7 +107,7 @@ function add_interface_bottom_bar(){
 
 	//Enemy toggle button
 	let eX = 14;
-	let eY = 8.25;
+	let eY = 0.25;
 	var enemyToggleButton = new InterfaceButton(eX, eY, eX+1.75, eY+0.5,DARK_GREY,function(){SPAWN_ENEMIES=!SPAWN_ENEMIES},"",'12');//Turn enemies off
 	bottomBarElements.push(enemyToggleButton);
 	var enemyButtonText = new InterfaceText(eX, eY, eX+1.75, eY+0.5,"Turn enemies off.",'12',false,getEnemySpawn);

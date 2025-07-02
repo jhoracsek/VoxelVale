@@ -234,9 +234,9 @@ Some stuff todo
 		47. Tweak inventory lighting a little.				(Skip)
 		48. Save toolbar.									(X)
 		49. Check door texture and others on top monitor.	(Skip)
-		50. Try testing on windows laptop.					()
+		50. Try testing on windows laptop.					(X)
 		50. Add all skipped items to new list.				()
-		52. Any lingering 'console.log'.					()
+		52. Any lingering 'console.log'.					(X)
 
 		Anything added here cannot be done before release.
 		53. Dropbox attaches to stone.						()

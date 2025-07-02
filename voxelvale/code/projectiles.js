@@ -211,7 +211,7 @@ class Arrow extends Projectile{
 		//this.bounds=[vec4(-0.12 ,0.72,-0.12,1),vec4(0.12,1,0.12,1)];
 		//this.bounds=[vec4(-0.12 ,0.1,-0.12,1),vec4(0.12,1,0.12,1)];
 		//Just make bound the tip??
-		this.bounds=[vec4(-0.15 ,0.5,-0.15,1),vec4(0.15,1,0.15,1)];
+		this.bounds=[vec4(-0.15 ,0.35,-0.15,1),vec4(0.15,1,0.15,1)];
 	}
 
 	//Since this can only be used by player only check enemy collisions

@@ -510,14 +510,14 @@ canvas.addEventListener("wheel",function(event){
 	if(scroll <= -1){
 		if(scrollCooldown <= 0){
 			upOne = Math.min(upOne+1, -2);
-			scrollCooldown = 4;
+			scrollCooldown = 3;
 		}
 		scroll = 0;
 	}
 	if(scroll >= 1){
 		if(scrollCooldown <= 0){
 			upOne = Math.max(upOne-1,-6);
-			scrollCooldown = 4;
+			scrollCooldown = 3;
 		}
 		scroll = 0;
 	}//Add a cooldown.

@@ -505,11 +505,11 @@ window.onload = function init(){
 	player.addToInventory(pick);
 	toolBarList.push(pick);
 
-	player.addToInventory(new CopperPickaxe());
-	player.addToInventory(new CopperAxe());
+	//player.addToInventory(new CopperPickaxe());
+	//player.addToInventory(new CopperAxe());
 
-	player.addToInventory(new CopperPickRecipe());
-	player.addToInventory(new CopperAxeRecipe());
+	//player.addToInventory(new CopperPickRecipe());
+	//player.addToInventory(new CopperAxeRecipe());
 
 	var bow = new WoodenBow();	
 	player.addToInventory(bow);
@@ -520,34 +520,34 @@ window.onload = function init(){
 	toolBarList.push(workbench);
 
 	player.addToInventory(new WoodBlockRecipe())
-	player.addToInventory(new WoodBlockRecipe())
-	player.addToInventory(new WoodBlockRecipe())
+	//player.addToInventory(new WoodBlockRecipe())
+	//player.addToInventory(new WoodBlockRecipe())
 	player.addToInventory(new DoorRecipe())
 	var workbenchRecipe = new WorkBenchRecipe();
 	player.addToInventory(workbenchRecipe);
-	player.addToInventory(new CopperBarRecipe());
-	player.addToInventory(new BrickBlockRecipe());
+	//player.addToInventory(new CopperBarRecipe());
+	//player.addToInventory(new BrickBlockRecipe());
 	player.addToInventory(new ArrowRecipe());
 
 
 
-	player.addToInventory(new DirtBlock());
+	//player.addToInventory(new DirtBlock());
 
-	player.addToInventory(new BrickBlock());
+	//player.addToInventory(new BrickBlock());
 
-	player.addToInventory(new CopperStone());
+	//player.addToInventory(new CopperStone());
 
-	player.addToInventory(new Copper());
-	player.addToInventory(new Copper());
-	for(let i = 0; i < 100; i++)
+	//player.addToInventory(new Copper());
+	//player.addToInventory(new Copper());
+	for(let i = 0; i < 10; i++)
 		player.addToInventory(new ArrowItem());
 	
 	player.addToInventory(new HealthPotion());
-	var dropBox = new DropBox(null,null,null,[new WorkBench(), new StonePickaxe(), new DirtBlock(), new GrassBlock(), new WeirdBlock(), new GrassBlock(), new WoodBlock(), new WoodBlock(), new GrassBlock()]);
+	//var dropBox = new DropBox(null,null,null,[new WorkBench(), new StonePickaxe(), new DirtBlock(), new GrassBlock(), new WeirdBlock(), new GrassBlock(), new WoodBlock(), new WoodBlock(), new GrassBlock()]);
 	//var dropBox = new DropBox(null,null,null,[new DirtBlock(), new GrassBlock(), new WeirdBlock(), new WoodBlock()]);
 	
-	player.addToInventory(dropBox);
-	toolBarList.push(dropBox);
+	//player.addToInventory(dropBox);
+	//toolBarList.push(dropBox);
 
 	//Testing
 	//toolBarList.push(null);
@@ -557,7 +557,7 @@ window.onload = function init(){
 	//player.addToInventory(new WeirdBlock());
 	//toolBarList.push(test);
 
-	for(let i = 0; i < 4; i++)
+	for(let i = 0; i < 3; i++)
 		toolBarList.push(null);
 
 	cursorBlockLoc = gl.getUniformLocation(program, "cursorBlock");

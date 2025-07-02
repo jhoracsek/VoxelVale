@@ -191,7 +191,35 @@ class Undead extends Humanoid{
 		let worldObj;
 		if(inDungeon) worldObj = currentDungeon;
 		else worldObj = world;
-		enemy_drop(worldObj, new Copper(), this.posX, this.posY);
+		enemy_drop(worldObj, new HealthPotion(), this.posX, this.posY);
+
+		//How many additional drops?
+		//In expectation.
+		/*
+			BrickBlockRecipe
+			CopperBarRecipe
+			CopperPickRecipe
+			CopperAxeRecipe
+		*/
+		let r;
+		r = Math.random();
+		if(r < 0.2){
+			enemy_drop(worldObj, new BrickBlockRecipe(), this.posX, this.posY);
+		}
+		r = Math.random();
+		if(r < 0.2){
+			enemy_drop(worldObj, new CopperBarRecipe(), this.posX, this.posY);
+		}
+		r = Math.random();
+		if(r < 0.2){
+			enemy_drop(worldObj, new CopperPickRecipe(), this.posX, this.posY);
+		}
+		r = Math.random();
+		if(r < 0.2){
+			enemy_drop(worldObj, new CopperAxeRecipe(), this.posX, this.posY);
+		}
+
+
 	}
 
 	initialize_enemy(){
