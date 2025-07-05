@@ -98,6 +98,130 @@ class CopperAxe extends Tool{
 }
 
 
+/*
+	This is an abstract type.
+
+	The sole super argument is strength which defines how much damage the sword does.
+*/
+class Sword extends Tool{
+	static index = 0; get index() {return this.constructor.index;}
+	static numberOfVerts = 0; get numberOfVerts() {return this.constructor.numberOfVerts;}
+	static wireframeIndexStart = 0;
+	static wireframeNumber = 0;
+	static bounds = [vec4(-0.25,-0.25,-0.25,1),vec4(0.25,0.25,0.25,1)]; get bounds() {return this.constructor.bounds;}
+	static color = vec4(0.5,0.5,0.5,1); get color() {return this.constructor.color;}
+
+	constructor(strength){
+		super(null,null,null,null,strength);
+		this.toolType = 'SWORD';
+		this.currentHeldMatrix = mat4();
+	}
+
+	static sendData(){
+		this.index = vertices.length;
+		build_sword(this.color);
+		this.numberOfVerts = vertices.length - this.index;
+
+		this.wireframeIndexStart = vertices.length;
+		push_wireframe_indices(this.bounds[0],this.bounds[1]);
+		this.wireframeNumber = vertices.length - this.wireframeIndexStart;
+	}
+
+
+
+	checkCollisions(){
+		if(enemyArray.isEmpty() || !player.attackHitBox)
+			return;
+		for(var i=0;i<enemyArray.getLength();i++){
+			let cols = colDirection(this,enemyArray.accessElement(i).hitHurtBox);
+			if(cols[0]||cols[1]||cols[2]||cols[3]){
+				//SPAWN PARTICLES
+				//this.particleColor = vec3(0.3, 0, 0);
+				//this.destroy();
+				let attackedEnemy = enemyArray.accessElement(i);
+				if(attackedEnemy.invulnerable <= 0)
+					attackedEnemy.spawnParticles(); 
+				attackedEnemy.hit(180-angleFacing, this.strength);
+				
+			
+			}
+		}
+	}
+
+	/*
+		Updates when the object is held.
+	*/
+	updateWhenHeld(currentMat){
+		this.currentHeldMatrix = currentMat;
+		this.checkCollisions();
+	}
+
+	drawSmall(currentMat){
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(currentMat));
+		gl.drawArrays(gl.TRIANGLES,this.index,this.numberOfVerts);
+	}
+
+	returnBounds(){
+
+		var curPos = translate(player.posX,player.posY,player.posZ);
+		curPos = mult(curPos,rotateZ(-angleFacing))
+		curPos = mult(curPos, translate(0,0,-3.5));
+		curPos = mult(curPos,rotateX(armAngleRightSwing))
+		curPos = mult(curPos, translate(0.375,-1.25,0));
+		curPos = mult(curPos,rotateX(-armAngleRightSwing))
+		curPos = mult(curPos,rotateZ(angleFacing))
+
+		let b1 = mult(curPos, Sword.bounds[0])
+		let b2 =  mult(curPos, Sword.bounds[1])
+
+		return [vec4(Math.min(b1[0],b2[0]), Math.min(b1[1],b2[1]),-10,1),vec4(Math.max(b1[0],b2[0]), Math.max(b1[1],b2[1]),10,1)];
+	}
+
+
+	drawTransparent(currentMat){
+		this.drawSmall(currentMat);
+		if(hitBox && player.attackHitBox){
+			let curPos = scale4(0.125,(1/4.5),0.1);
+
+			curPos = mult(curPos,rotateZ(-angleFacing))
+			curPos = mult(curPos, translate(0,0,-3));
+			curPos = mult(curPos,rotateX(armAngleRightSwing))
+			curPos = mult(curPos, translate(0.375,-1.25,0));
+			curPos = mult(curPos,rotateX(-armAngleRightSwing))
+			curPos = mult(curPos,rotateZ(angleFacing))
+		
+			gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(curPos));
+			gl.drawArrays(gl.LINES,this.constructor.wireframeIndexStart,this.constructor.wireframeNumber);
+		}
+	}
+
+	draw(){
+		this.update();
+		set_mv(this.instanceMat);
+	}
+}
+
+class StoneSword extends Sword{
+	static color = vec4(0.5,0.5,0.5,1);
+	constructor(){
+		super(1);
+		this.name='Stone Sword';
+		this.desc='A stone sword for attacking enemies.';
+		this.objectNumber=73;
+	}
+}
+
+class CopperSword extends Sword{
+	static color = hexToRgbA('#e55f28');
+	constructor(){
+		super(1.5);
+		this.name='Copper Sword';
+		this.desc='A copper sword for attacking enemies.';
+		this.objectNumber=74;
+	}
+}
+
+
 
 //Abstract Item, not to be used
 class Weapon extends Item{
@@ -123,12 +247,10 @@ class WoodenBow extends Weapon{
 	}
 	onLClick(){
 		if(projectileCooldown <= 0){
-			//projectileArray.push(new Arrow(cursorDirection,cursorPower,player.posX,player.posY,upOne));
-			if(player.getArrowCount() > 0) {
+			if(player.getArrowCount() > 0 && shootingCooldown >= shootingCooldownStart) {
 				projectileArray.push(new Arrow(cursorDirection,cursorPower,player.posX,player.posY,-4));
 				player.removeArrowFromShoot();
 				sound_ArrowShoot();
-				projectileCooldown = this.cooldown;
 			}
 			return true;
 		}
@@ -365,6 +487,129 @@ function build_axe(c = vec4(0.5,0.5,0.5,1)){
 	v3=vec3(-0.25,1.95,0);
 	pushvs(v1,v2,v3,colourAxe);
 	axeVerts+=6;
+	return;
+}
+
+function build_sword(c = vec4(0.5,0.5,0.5,1), isBlue=false){
+
+	var colourHandle=vec4(0.9,0.6,0.15,1);
+	var secondColor=vec4(0.8,0.5,0.1,1)
+	
+	if(isBlue){
+		colourHandle = mult_colors(colourHandle,recipeColor);
+		//colourHandle[3] = 0.6
+		secondColor = mult_colors(secondColor,recipeColor);
+		//secondColor[3] = 0.6
+	}
+
+	let handleHeight = 0.5;
+	let guardHeight = 0.15;
+	let guardWidth = 0.1
+	let bladeHeight = 2.5;
+
+	var bladeOuter = c;
+	var bladeInner = vec4(c[0]+0.1,c[1]+0.1,c[2]+0.1,1);
+
+	if(isBlue){
+		bladeOuter = mult_colors(bladeOuter,recipeColor);
+		bladeInner = mult_colors(bladeInner,recipeColor);
+		//bladeOuter[3] = 0.6
+		//bladeInner[3] = 0.6
+	}
+
+
+	//ADD A PUMMEL!
+	// Hilt
+	buildRectangularPrism(0,0.20,-0.05, 0.25,0.05,0.05,colourHandle);	//Pummel
+	buildRectangularPrism(0.05,0.2+handleHeight,-0.025, 0.2,0.05,0.025,secondColor);			//Handle
+	buildRectangularPrism(-0.1-guardWidth/2,0.2+handleHeight+guardHeight,-0.05, 0.35+guardWidth/2,0.2+handleHeight,0.05,colourHandle);			//Guard
+	buildRectangularPrism(0.05,bladeHeight, -0.025, 0.2,0.2+handleHeight+guardHeight,0.025,bladeInner);		//Sword prism/Center of blade.
+
+	let v1, v2, v3, v4;
+	let p1, p2;	
+
+	/*
+		Left side of blade.
+	*/
+
+
+	 //Vertices out left face.
+	v1 = vec3(0.05,bladeHeight, -0.025);
+	v2 = vec3(0.05,0.2+handleHeight+guardHeight, -0.025);
+	v3 = vec3(0.05,bladeHeight, 0.025);
+	v4 = vec3(0.05,0.2+handleHeight+guardHeight,0.025);
+
+	//Edge vertices.
+	p1 = vec3(0,bladeHeight,0);
+	p2 = vec3(0,0.2+handleHeight+guardHeight,0);
+
+	pushvs(v1,p2,p1,bladeOuter);
+	pushvs(p2,v1,v2,bladeOuter);
+	pushvs(v3,p2,p1,bladeOuter);
+	pushvs(p2,v3,v4,bladeOuter);
+	//pushvs(v2,v3,v4,c);
+
+
+	 //Vertices out right face.
+	v1 = vec3(0.2,bladeHeight, -0.025);
+	v2 = vec3(0.2,0.2+handleHeight+guardHeight, -0.025);
+	v3 = vec3(0.2,bladeHeight, 0.025);
+	v4 = vec3(0.2,0.2+handleHeight+guardHeight,0.025);
+
+	//Edge vertices.
+	p1 = vec3(0.25,bladeHeight,0);
+	p2 = vec3(0.25,0.2+handleHeight+guardHeight,0);
+
+	pushvs(v1,p2,p1,bladeOuter);
+	pushvs(p2,v1,v2,bladeOuter);
+	pushvs(v3,p2,p1,bladeOuter);
+	pushvs(p2,v3,v4,bladeOuter);
+
+
+	/*
+		Top portion of the sword.
+	*/
+
+	let tipHeight = bladeHeight + 0.2; //This is the very top of the sword.
+	//Top face of blade prism vertices
+	v1 = vec3(0.05,bladeHeight, -0.025);
+	v2 = vec3(0.05,bladeHeight, 0.025);
+	v3 = vec3(0.2,bladeHeight, -0.025);
+	v4 = vec3(0.2,bladeHeight, 0.025);
+
+	//Tip of blade
+	p1 = vec3(0.05,tipHeight, 0);
+	p2 = vec3(0.2,tipHeight, 0);
+
+	pushvs(v1,p2,p1,bladeOuter);
+	pushvs(p2,v1,v3,bladeOuter);
+	pushvs(v2,p2,p1,bladeOuter);
+	pushvs(p2,v2,v4,bladeOuter);
+
+
+	/*
+		The top edges (Left side)
+	*/
+
+	v1 = vec3(0.05,bladeHeight, -0.025);
+	v2 = vec3(0.05,bladeHeight, 0.025);
+	v3 = vec3(0.05,tipHeight, 0);
+	v4 = vec3(0,bladeHeight,0);
+
+	pushvs(v2,v3,v4,bladeOuter);
+	pushvs(v1,v3,v4,bladeOuter);
+
+	/*
+		The top edges (Right side)
+	*/
+	v1 = vec3(0.2,bladeHeight, -0.025);
+	v2 = vec3(0.2,bladeHeight, 0.025);
+	v3 = vec3(0.2,tipHeight, 0);
+	v4 = vec3(0.25,bladeHeight,0);
+
+	pushvs(v2,v3,v4,bladeOuter);
+	pushvs(v1,v3,v4,bladeOuter);
+
 	return;
 }
 

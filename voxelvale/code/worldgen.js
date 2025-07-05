@@ -427,6 +427,13 @@ class World{
 				if(block != null){
 					chunk.push(block);
 				}
+				/*
+                    Also get dirt.
+                */
+                block = this.getBlockAt(PX+i, PY+j, -1)
+                if(block != null){
+                    chunk.push(block);
+                }
 			}
 		}
 		return chunk;
@@ -506,6 +513,18 @@ class World{
         
 
         return null;
+    }
+
+    /*
+		Should return false if the space is null,
+		or a block with no collision box.
+    */
+    isSpaceSolid(PX, PY, PZ){
+    	var block = this.getBlockAt(PX,PY,PZ);
+    	if(block == null) return false;
+    	let objNum = block.objectNumber;
+    	if(objNum == 9 || objNum == 13) return false;
+    	return true;
     }
 
 }

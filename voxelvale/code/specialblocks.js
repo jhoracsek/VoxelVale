@@ -242,13 +242,13 @@ class StoneBlock extends BlockWall{
 			return;
 
 		if(!inDungeon){
-			if(world.getBlockAt(this.posX-1,this.posY,this.posZ)!=null)
+			if(world.isSpaceSolid(this.posX-1,this.posY,this.posZ))
 				bLeft=true;
-			if(world.getBlockAt(this.posX+1,this.posY,this.posZ)!=null)
+			if(world.isSpaceSolid(this.posX+1,this.posY,this.posZ))
 				bRight=true;
-			if(world.getBlockAt(this.posX,this.posY-1,this.posZ)!=null)
+			if(world.isSpaceSolid(this.posX,this.posY-1,this.posZ))
 				bDown=true;
-			if(world.getBlockAt(this.posX,this.posY+1,this.posZ)!=null)
+			if(world.isSpaceSolid(this.posX,this.posY+1,this.posZ))
 				bUp=true;
 		}else if(currentDungeon != null){
 			if(currentDungeon.getBlockAt(this.posX-1,this.posY,this.posZ)!=null)

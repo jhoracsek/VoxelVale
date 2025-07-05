@@ -326,6 +326,8 @@ function loadWorldIntoGame(loadedWorld){
 	player.posX = playerPosition[0];
 	player.posY = playerPosition[1];
 	player.health = loadedWorld.health;
+	activeToolBarItem = 0;
+	player.heldObject = null;
 	//toolBarList = loaded.toolbar;
 	disableNotifications = false;
 	enemyArray = new ProperArray();
@@ -336,7 +338,7 @@ function loadWorldIntoGame(loadedWorld){
 /*
 	Need to clean this up.
 */
-const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door,BorderWall,CopperStone];
+const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door,BorderWall,CopperStone,CopperBrick];
 
 
 
@@ -371,17 +373,5 @@ function unflatten(vector){
 	}
 	return mat;
 }
-//https://stackoverflow.com/questions/21646738/convert-hex-to-rgba
-function hexToRgbA(hex){
-    var c;
-    if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
-        c= hex.substring(1).split('');
-        if(c.length== 3){
-            c= [c[0], c[0], c[1], c[1], c[2], c[2]];
-        }
-        c= '0x'+c.join('');
-        return vec4( ((c>>16)&255)/255, ((c>>8)&255)/255, (c&255)/255, 1 );
-    }
-    return vec4(0,0,0,1);
-}
+
 

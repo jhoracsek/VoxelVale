@@ -273,6 +273,18 @@ class Dungeon{
         return this.blocks3D[PX + xOffset][PY + yOffset][PZ + zOffset];
     }
 
+    /*
+        Should return false if the space is null,
+        or a block with no collision box.
+    */
+    isSpaceSolid(PX, PY, PZ){
+        var block = this.getBlockAt(PX,PY,PZ);
+        if(block == null) return false;
+        let objNum = block.objectNumber;
+        if(objNum == 9 || objNum == 13) return false;
+        return true;
+    }
+
     getGrid(){
         return this.grid;
     }
@@ -497,6 +509,13 @@ class Dungeon{
                     chunk.push(block);
                 }
                 block = this.getBlockAt(PX+i, PY+j, -4);
+                if(block != null){
+                    chunk.push(block);
+                }
+                /*
+                    Also get dirt.
+                */
+                block = this.getBlockAt(PX+i, PY+j, -1)
                 if(block != null){
                     chunk.push(block);
                 }

@@ -157,3 +157,64 @@ function cursor_push(p1, p2, p3, c=vec4(1,0,0,1)){
 		normals.push(vec3(0,0,0));
 	}
 }
+
+/*
+	Outlines for grid mode.
+*/
+
+
+function build_grid_mode_wireframe(length=1, c1=vec4(1,0,0,1)){
+	const thickness = 0.025;
+	const offset = length/2;
+
+	var mat;
+
+	//TOP
+	mat = translate(offset,0,0);
+	build_line(thickness, mat, length,c1);
+
+	mat = rotateZ(90);
+	mat = mult(translate(length,offset,0), mat);
+	build_line(thickness, mat, length,c1);
+
+	mat = translate(offset,length,0);
+	build_line(thickness, mat, length,c1);
+
+	mat = rotateZ(90);
+	mat = mult(translate(0,offset,0), mat);
+	build_line(thickness, mat, length,c1);
+
+
+	//Sides
+	mat = rotateY(90);
+	mat = mult(translate(0,0,offset), mat);
+	build_line(thickness, mat, length,c1);
+
+	mat = rotateY(90);
+	mat = mult(translate(length,0,offset), mat);
+	build_line(thickness, mat, length,c1);
+
+	mat = rotateY(90);
+	mat = mult(translate(0,length,offset), mat);
+	build_line(thickness, mat, length,c1);
+
+	mat = rotateY(90);
+	mat = mult(translate(length,length,offset), mat);
+	build_line(thickness, mat, length,c1);
+
+
+	//Bottom
+	mat = translate(offset,0,length);
+	build_line(thickness, mat, length,c1);
+
+	mat = rotateZ(90);
+	mat = mult(translate(length,offset,length), mat);
+	build_line(thickness, mat, length,c1);
+
+	mat = translate(offset,length,length);
+	build_line(thickness, mat, length,c1);
+
+	mat = rotateZ(90);
+	mat = mult(translate(0,offset,length), mat);
+	build_line(thickness, mat, length,c1);
+}

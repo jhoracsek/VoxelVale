@@ -128,6 +128,101 @@ function build_pickaxe_wireframe(){
 	return;
 }
 
+
+
+function build_sword_wireframe(){
+
+
+	var white=vec4(1,1,1,1);
+	
+	let handleHeight = 0.5;
+	let guardHeight = 0.15;
+	let guardWidth = 0.1
+	let bladeHeight = 2.5;
+
+
+	//ADD A PUMMEL!
+	// Hilt
+	wireframe_prism(vec3(0,0.20,-0.05),vec3(0.25,0.05,0.05));	//Pummel
+	wireframe_prism(vec3(0.05,0.2+handleHeight,-0.025),vec3(0.2,0.05,0.025))	//Handle
+	wireframe_prism(vec3(-0.1-guardWidth/2,0.2+handleHeight+guardHeight,-0.05), vec3(0.35+guardWidth/2,0.2+handleHeight,0.05));			//Guard
+	wireframe_prism(vec3(0.05,bladeHeight, -0.025),vec3(0.2,0.2+handleHeight+guardHeight,0.025));		//Sword prism/Center of blade.
+
+	
+	let v1, v2, v3, v4;
+	let p1, p2;	
+
+	/*
+		Left side of blade.
+	*/
+
+
+	 //Vertices out left face.
+	v1 = vec3(0.05,bladeHeight, -0.025);
+	v2 = vec3(0.05,0.2+handleHeight+guardHeight, -0.025);
+	v3 = vec3(0.05,bladeHeight, 0.025);
+	v4 = vec3(0.05,0.2+handleHeight+guardHeight,0.025);
+
+	//Edge vertices.
+	p1 = vec3(0,bladeHeight,0);
+	p2 = vec3(0,0.2+handleHeight+guardHeight,0);
+
+	//wireframe_line(v2,v3);
+	wireframe_line(p1,p2);
+	wireframe_line(p1,v1);
+	wireframe_line(p1,v3);
+	wireframe_line(p2,v2);
+	wireframe_line(p2,v4);
+
+	 //Vertices out right face.
+	v1 = vec3(0.2,bladeHeight, -0.025);
+	v2 = vec3(0.2,0.2+handleHeight+guardHeight, -0.025);
+	v3 = vec3(0.2,bladeHeight, 0.025);
+	v4 = vec3(0.2,0.2+handleHeight+guardHeight,0.025);
+
+	//Edge vertices.
+	p1 = vec3(0.25,bladeHeight,0);
+	p2 = vec3(0.25,0.2+handleHeight+guardHeight,0);
+
+	wireframe_line(p1,p2);
+	wireframe_line(p1,v1);
+	wireframe_line(p1,v3);
+	wireframe_line(p2,v2);
+	wireframe_line(p2,v4);
+
+
+	/*
+		Top portion of the sword.
+	*/
+
+	let tipHeight = bladeHeight + 0.2; //This is the very top of the sword.
+	//Top face of blade prism vertices
+	v1 = vec3(0.05,bladeHeight, -0.025);
+	v2 = vec3(0.05,bladeHeight, 0.025);
+	v3 = vec3(0.2,bladeHeight, -0.025);
+	v4 = vec3(0.2,bladeHeight, 0.025);
+
+	//Tip of blade
+	p1 = vec3(0.05,tipHeight, 0);
+	p2 = vec3(0.2,tipHeight, 0);
+
+
+	wireframe_line(p1,p2);
+	wireframe_line(p1,v1);
+	wireframe_line(p1,v2);
+	wireframe_line(p2,v3);
+	wireframe_line(p2,v4);
+
+	v1 = vec3(0,bladeHeight,0);
+	v2 = vec3(0.25,bladeHeight,0);
+	wireframe_line(p1,v1);
+	wireframe_line(p2,v2);
+
+
+
+	return;
+}
+
 function build_axe_wireframe(){
 
 
@@ -180,88 +275,98 @@ function build_axe_wireframe(){
 }
 
 
-function build_axe_blue(colour = recipeColor){
+function build_axe_blue(cB = vec4(0.5,0.5,0.5,1)){
 
-	buildRectangularPrism(0,2,-0.025,0.25,0.05,0.025,colour);
-	buildRectangularPrism(0.25,2.5,-0.025,0,2.4,0.025,colour);
-	buildRectangularPrism(0.35,2.4,-0.05, -0.1,2,0.05,colour);
+	var colourHandle=vec4(0.9,0.6,0.15,1);
+
+	colourHandle = mult_colors(colourHandle,recipeColor);
+	let colourBlade = mult_colors(cB, recipeColor);
+
+	buildRectangularPrism(0,2,-0.025,0.25,0.05,0.025,colourHandle);
+	buildRectangularPrism(0.25,2.5,-0.025,0,2.4,0.025,colourHandle);
+	buildRectangularPrism(0.35,2.4,-0.05, -0.1,2,0.05,colourBlade);
 
 	var v1=vec3(0.35,2,0.05);
 	var v2=vec3(0.6,1.8,0);
 	var v3=vec3(0.6,2.6,0);
 	var v4=vec3(0.35,2.4,0.05);
-	buildArbQuadrilateral(v1,v2,v3,v4,colour);
+	buildArbQuadrilateral(v1,v2,v3,v4,colourBlade);
 	v1=vec3(0.35,2,-0.05);
 	v4=vec3(0.35,2.4,-0.05);
-	buildArbQuadrilateral(v1,v2,v3,v4,colour);
+	buildArbQuadrilateral(v1,v2,v3,v4,colourBlade);
 
 	v1=vec3(0.6,2.6,0);
 	v2=vec3(0.35,2.4,-0.05);
 	v3=vec3(0.35,2.4,0.05);
-	pushvs(v1,v2,v3,colour);
+	pushvs(v1,v2,v3,colourBlade);
 	v1=vec3(0.6,1.8,0);
 	v2=vec3(0.35,2,-0.05);
 	v3=vec3(0.35,2,0.05);
-	pushvs(v1,v2,v3,colour);
+	pushvs(v1,v2,v3,colourBlade);
 
 
 	v1=vec3(-0.1,2,0.05);
 	v2=vec3(-0.1,2.4,0.05);
 	v3=vec3(-0.25,2.45,0);
 	v4=vec3(-0.25,1.95,0);
-	buildArbQuadrilateral(v1,v2,v3,v4,colour);
+	buildArbQuadrilateral(v1,v2,v3,v4,colourBlade);
 	v1=vec3(-0.1,2,-0.05);
 	v2=vec3(-0.1,2.4,-0.05);
-	buildArbQuadrilateral(v1,v2,v3,v4,colour);
+	buildArbQuadrilateral(v1,v2,v3,v4,colourBlade);
 	
 	v1=vec3(-0.1,2.4,0.05);
 	v2=vec3(-0.1,2.4,-0.05);
 	v3=vec3(-0.25,2.45,0);
-	pushvs(v1,v2,v3,colour);
+	pushvs(v1,v2,v3,colourBlade);
 	v1=vec3(-0.1,2,0.05);
 	v2=vec3(-0.1,2,-0.05);
 	v3=vec3(-0.25,1.95,0);
-	pushvs(v1,v2,v3,colour);
+	pushvs(v1,v2,v3,colourBlade);
 	return;
 }
 
-function build_pickaxe_blue(colour = recipeColor){
+function build_pickaxe_blue(cB = vec4(0.5,0.5,0.5,1)){
 
-	buildRectangularPrism(0,2,-0.025,0.25,0.05,0.025,colour);
-	buildRectangularPrism(0.25,2.5,-0.025,0,2.4,0.025,colour);
-	buildRectangularPrism(0.35,2.4,-0.05, -0.1,2,0.05,colour);
+	var colourHandle=vec4(0.9,0.6,0.15,1);
+
+	colourHandle = mult_colors(colourHandle,recipeColor);
+	let colourBlade = mult_colors(cB, recipeColor);
+
+	buildRectangularPrism(0,2,-0.025,0.25,0.05,0.025,colourHandle);		//Handle
+	buildRectangularPrism(0.25,2.5,-0.025,0,2.4,0.025,colourHandle);	//Top bit
+	buildRectangularPrism(0.35,2.4,-0.05, -0.1,2,0.05,colourBlade);
 	var v1=vec3(0.35,2,0.05);
 	var v2=vec3(0.7,1.8,0);
 	var v3=vec3(0.7,1.8,0);
 	var v4=vec3(0.35,2.4,0.05);
-	buildArbQuadrilateral(v1,v2,v3,v4,colour);
+	buildArbQuadrilateral(v1,v2,v3,v4,colourBlade);
 	v1=vec3(0.35,2,-0.05);
 	v4=vec3(0.35,2.4,-0.05);
-	buildArbQuadrilateral(v1,v2,v3,v4,colour);
+	buildArbQuadrilateral(v1,v2,v3,v4,colourBlade);
 	v1=vec3(0.7,1.8,0);
 	v2=vec3(0.35,2.4,-0.05);
 	v3=vec3(0.35,2.4,0.05);
-	pushvs(v1,v2,v3,colour);
+	pushvs(v1,v2,v3,colourBlade);
 	v1=vec3(0.7,1.8,0);
 	v2=vec3(0.35,2,-0.05);
 	v3=vec3(0.35,2,0.05);
-	pushvs(v1,v2,v3,colour);
+	pushvs(v1,v2,v3,colourBlade);
 
 	var v1=vec3(-0.1,2,0.05);
 	var v2=vec3(-0.45,1.8,0);
 	var v3=vec3(-0.45,1.8,0);
 	var v4=vec3(-0.1,2.4,0.05);
-	buildArbQuadrilateral(v2,v1,v4,v3,colour);
+	buildArbQuadrilateral(v2,v1,v4,v3,colourBlade);
 	v1=vec3(-0.1,2,-0.05);
 	v4=vec3(-0.1,2.4,-0.05);
-	buildArbQuadrilateral(v2,v1,v4,v3,colour);
+	buildArbQuadrilateral(v2,v1,v4,v3,colourBlade);
 	v1=vec3(-0.45,1.8,0);
 	v2=vec3(-0.1,2.4,-0.05);
 	v3=vec3(-0.1,2.4,0.05);
-	pushvs(v1,v3,v2,colour);
+	pushvs(v1,v3,v2,colourBlade);
 	v1=vec3(-0.45,1.8,0);
 	v2=vec3(-0.1,2,-0.05);
 	v3=vec3(-0.1,2,0.05);
-	pushvs(v1,v3,v2,colour);
+	pushvs(v1,v3,v2,colourBlade);
 	return;
 }

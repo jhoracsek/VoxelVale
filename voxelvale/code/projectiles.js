@@ -33,6 +33,8 @@ class Projectile{
 		this.pY=initY;
 		this.pZ=initZ;
 		this.particleColor = vec3(0.5,0.5,0.5);
+		this.blockHitBox = null;
+
 	}
 
 	spawnParticles(){
@@ -142,10 +144,12 @@ class Projectile{
 		var setMV= mult(translate(this.pX,this.pY,this.pZ),locMV);
 		set_mv(setMV);
 		gl.drawArrays(gl.TRIANGLES,this.index,this.numberOfVertices);
-		if(hitBox)
+		if(hitBox){
 			gl.drawArrays(gl.LINES,this.hbIndex,this.hbEnd);
+			this.blockHitBox.draw();
+		}
 
-		if(this.verticalVelocity==0){
+		if((Math.abs(this.verticalVelocity)<=0.002 && Math.abs(this.horizontalVelocity)<=0.002) && Math.abs(this.downwardVelocity)<=0.000){//||this.downwardVelocity==0){
 			this.markedToDestroy=true;
 			this.destroy();
 		}
@@ -212,6 +216,8 @@ class Arrow extends Projectile{
 		//this.bounds=[vec4(-0.12 ,0.1,-0.12,1),vec4(0.12,1,0.12,1)];
 		//Just make bound the tip??
 		this.bounds=[vec4(-0.15 ,0.35,-0.15,1),vec4(0.15,1,0.15,1)];
+
+		this.blockHitBox = new ArrowBlockHitBox(this);
 	}
 
 	//Since this can only be used by player only check enemy collisions
@@ -244,18 +250,18 @@ class Arrow extends Projectile{
 					if (worldObj.isSpaceOccupied(PX[i],PY[j],PZ[k])){
 						//Should get bounds from the block in case it's smaller depth.
 						let candidateBlock = worldObj.getBlockAt(PX[i],PY[j],PZ[k]);
-						if(isColliding_Original(this,candidateBlock)){
+						if(isColliding_Original(this.blockHitBox,candidateBlock)){
 							//console.log(candidateBlock.name)
 							//Check if it's a ceiling.
 							var block = worldObj.getBlockAt(PX[i],PY[j],PZ[k]);
 
 							if(block.isTall){
-								if(isColliding_Original(this,block)){
+								if(isColliding_Original(this.blockHitBox,block)){
 									this.destroy();
 									return;									
 								}
 							}else if(block.isTop){
-								if(isColliding_Original(this,block.bottom)){
+								if(isColliding_Original(this.blockHitBox,block.bottom)){
 									this.destroy();
 									return;									
 								}
@@ -277,8 +283,8 @@ class Arrow extends Projectile{
 			if(isColliding_Original(this,enemyArray.accessElement(i))){
 				this.particleColor = vec3(0.3, 0, 0);
 				this.destroy();
-				enemyArray.accessElement(i).hit(this.direction);
-			
+				//enemyArray.accessElement(i).hit(this.direction, 1.5);
+				enemyArray.accessElement(i).hit(this.direction, 1.5);
 			}
 		}
 	}

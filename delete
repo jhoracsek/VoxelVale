@@ -173,10 +173,10 @@ Some stuff todo
 			9.c) Pickaxe.									(X)
 			9.d) Axe.										(X)
 		9. Update about setion.								(X)
-		10. Clean up.										() (Do last)
-			10.a) Toolbar.									()
-			10.b) Inventory.								()
-			10.c) Devtools.									()
+		10. Clean up.										(X) (Do last)
+			10.a) Toolbar.									(X)
+			10.b) Inventory.								(X)
+			10.c) Devtools.									(NA)
 		11. Automatically update version on index.html		(X)
 		12. Hold multiple recipes and be able to drop.		(X)
 			12.a) Save to firebase.							(X)
@@ -186,62 +186,180 @@ Some stuff todo
 			14.b) Added save load functionality.			(X)
 			14.c) Fixed tab.								(X)
 			14.d) Implement drawing/rendering.				(X)
-		15. Forge / Anvil									(Skip)
+		
 		16. Remove notifications at startup.				(X)
 			16. a) And on load.								(X)
 		17. Can pick up drop boxes while in inventory.		(X)
 			17.a) Click in general. Double click workbench.	(X)
 		18. Fix all the newly added stuff in the crafting m.(X)
 		19. Toggle off inventory with bow looks weird.		(X)
-		20. Try recipes with normal lines or something?		(Skip)
-		21. Iron (same as copper)							(Skip)
+
 		22. Faviocon.										(X)
 		23. Patreon stuff.									(X) (Have to wait.)
 		24. Maybe change border back to 1px in inventory.	(X)
-			24.a) Pixel to canvas function for precision.	(Skip)
+			24.a) Pixel to canvas function for precision.	(Good enough)
 		25. Make sure you turn the overlay back on!			(X)
 		26. Make enemies green (or grey).					(X)
 			26.a) Fix weird lighting.						(X)
 			26.b) Try red eyes?								(X)
 			26.c) Something about zombie is glitching.		(X)
 			26.d) Shadows									(X)
-		27. Bow cursor.										(Skip)
-			27.a) Make it feel nicer to move.				(Skip)
-		28. Adjust mouse sensitivity.						(Skip)
+
 		29. Consumables?									(X)
-		30. Should inventory pause game?					(Skip)
 		31. Arrow despawn?									(X)
 			31.a) Shoot above layer 1 blocks.				(X)
-		32. Sprinting? Over player head. Green.				(Skip)
 		33. Text attribution for logo?						(X)
 		34. Push arrow count to right slightly.				(X)
 		35. ZOMBIES CANNOT COLLIDE WITH DROPBOX.			(X)
-		36. Cannot close window with cmd w while in game	(Skip)
 		37. Adding shadows to arrows would be helpful.		(X)
-			37.a) Maybe enemies as well?					(Skip)
+			37.a) Maybe enemies as well?					(X)
 		38. Fix bounds on Stone for arrows.					(X)
-		39. No way to see how many objects returned from cr.(Skip)
 		40. Double check arrows with doors.					(X)
 		41. Option for user to turn off mobs.				(X)
-		42. Ghosts as a mob.								(Skip)
-			42.a) Would be super easy to implement.			(Skip)
 		43. Clear enemies on load world?					(X)
 		44. Decide which loot to give enemies dropbox.		()
 		45. Fix the ceiling thing.							(X)		(Only level z=-6 is ceiling right now... good enough)
-		46. Tweak player animations.						(Skip)
-			46.a) Revert walking.							(Skip)
-			46.b) Maybe stop animation when action stops.	(Skip)
-		47. Tweak inventory lighting a little.				(Skip)
+
 		48. Save toolbar.									(X)
-		49. Check door texture and others on top monitor.	(Skip)
 		50. Try testing on windows laptop.					(X)
 		50. Add all skipped items to new list.				()
 		52. Any lingering 'console.log'.					(X)
 
 		Anything added here cannot be done before release.
-		53. Dropbox attaches to stone.						()
-		54. More sounds.									()
 
+Skipped:
+		20. Try recipes with normal lines or something?		(Skip)
+		27. Bow cursor.										(Skip)
+			27.a) Make it feel nicer to move.				(Skip)
+		28. Adjust mouse sensitivity.						(Skip)
+		32. Sprinting? Over player head. Green.				(Skip)
+		36. Cannot close window with cmd w while in game	(Skip)
+		39. No way to see how many objects returned from cr.(Skip)
+		42. Ghosts as a mob.								(Skip)
+			42.a) Would be super easy to implement.			(Skip)
+		46. Tweak player animations.						(Skip)
+			46.a) Revert walking.							(Skip)
+			46.b) Maybe stop animation when action stops.	(Skip)
+		47. Tweak inventory lighting a little.				(Skip)
+		49. Check door texture and others on top monitor.	(Skip)
+
+
+Update Alpha 0.2.0
+	1. Fix notifications being too small							(X)
+		1.a) Added variable font size.								(X)
+	2. Turn enemies off actually despawns them.						(X)
+	3. Attack enemies with tools.									(X)
+		3.a) Start by making a new melee item.						(X)
+		3.b) Define a hit box.										(X)
+		3.c) Only while swinging down								(X)
+		3.d) Tweak timer a little.									(X)
+		3.e) Custom cursor (similar to bow.)						(X)
+		3.f) Design sword.											(X)
+		3.g) Rotate angle of sword in hand.							(X)
+		3.h) Make enemy hitbox bigger. 								(X)
+		3.i) Revert mining thing with angle!						(X)
+	4. Sword in toolbar.											(X)
+	5. Enemies still squish into each other.						(X)
+	6. Held item issue with loading.								(X)
+	7. Make sword an abstract object.								(X)
+		7.a) Particles when hit.									(X)
+		7.b) Tone down the number of particles.						(X)
+	8. Add recipe for copper sword.									(X)
+		8.a) Tweak appearance of recipe.							(X)
+	9. Add copper sword.											(X)
+	10. Adjust damage of both swords.								(X)
+		10.a) Stone.												(X)
+		10.b) Copper.												(X)
+	11. Fix arrow cooldown/animation.								(X)
+	12. Arrow collisions are again broken.							(X)
+		12.a) I changed the collision to remove z-range.			(X)
+		12.b) Also change z-range of zombies to -10, 10.			(X)
+		12.c) Additionally, give arrows two collisions.				(X)
+		12.d) Confirm with doors.									(X)
+		12.e) The collisions with blocks are pretty good now :)		(X)
+	13. Add Copper brick.											(X)
+		13.a) Add recipe.											(X)
+	
+	14. New function to multiply colors.							(X)
+	15. Fix recipes.												(X)
+
+	14. Zombie can walk over holes.									(X)
+	14. Fix DropBox attaching to stone.								(X)
+	15. Scale to 1080p for recording.								(X)
+	21. Grid mode. Thick wireframe.									(X)
+		21.a) Snap to grid.											(X)
+	16. Patreon banner.												()
+	17. Not an update but figure out early access thing.			()
+	18. Can't do local storage. Eventually put on steam.			()
+	19. Ores underground?											()
+	20. Stone below stone (this is a better idea.)					()
+		20.a) Can even make stone spill out the side.				()
+	
+	22. Google authentication is really important.					()
+
+	21. Moving on up! Name for moving up update.					()
+
+	
+
+
+Update Alpha 0.3.0
+	14. Athelas														()
+			14.a) Flesh this idea out.									()
+			14.b) Zombies no longer drop potions.						()
+	5. Iron. (Make it mythical)										()
+		Mining iron requires copper
+		Red cursor
+		Make iron blue.
+	5. More sounds.													()
+	5. Another few blocks.											()
+	5. Maybe expand toolbar.										()
+	5. Sprinting.													()
+	5. Update arrow recipe same as tools.
+		5. Also you can just tint the blue instead of making two	()
+		5. Objects, it might look nicer.							()
+
+Maybe another minor update before this.
+
+Check phone for ideas.
+
+Also add the umm little areas with drop boxes.
+
+reddit.
+
+Update Alpha 1.0.0
+	5. Day night cycle.
+	5. Torches or lighting.
+	5. Forge/Anvil.													()
+
+
+Update Alpha 1.1.0
+	5. Ghost enemy.
+	
+Update Alpha 1.2.0
+	5. Enemy path finding.											()
+
+
+Sheep (animals), armour, water.
+
+Package updates and work ahead!
+
+GPU and clear space. Screen recording.
+
+
+
+Add pinned post on patreon describing what the deal is. Tuesday releases bi-weekly (every two weeks).
+Poll should sword be their own inventory slot?
+
+
+Update notes. (Alpha 0.2.0)
+	Notification text fixed.
+	Turning enemies off now despawns all current enemies.
+	Updated enemy hitboxes adjusted slightly.
+	Added swords.
+	Toolbar is now saved.
+	Fixed a toolbar bug.
+
+Idea. Hit boxes always square. Can have many...
 
 
 Add to about, still needs to be optimized.
@@ -250,6 +368,8 @@ Add to about, still needs to be optimized.
 For simplicity, you can stop enemies when they're hit and collide with a block,
 but at that point just make it so they can move through blocks for a few frames to
 avoid getting stuck.
+
+redesign all hit boxes with new hitbox class.
 
 
 

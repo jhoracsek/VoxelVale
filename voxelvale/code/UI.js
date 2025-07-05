@@ -294,7 +294,8 @@ function tab_lists(){
 			new GrassBlock(),
 			new WoodBranch(),
 			new WoodLog(),
-			new StoneBlock()
+			new StoneBlock(),
+			new BrickBlock()
 			];
 		toolTabList=[
 			new WoodAxe(),
@@ -672,7 +673,7 @@ function scroll_arrows(){
 }
 
 function draw_c_text_fontsize(x1,y1,text1, size){
-	context.font = size.toString()+"px "+FONT;
+	context.font = (size*canvas_multiplier).toString()+"px "+FONT;
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
     context.fillText(text1,xCoor1,yCoor1);
@@ -680,14 +681,14 @@ function draw_c_text_fontsize(x1,y1,text1, size){
 
 
 function draw_c_text(x1,y1,text1){
-	context.font = "18px "+FONT;
+	context.font = (18*canvas_multiplier).toString()+"px "+FONT;
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
     context.fillText(text1,xCoor1,yCoor1);
 }
 
 function draw_c_text_small_stroke(x1,y1,text1){
-	context.font = "10px "+FONT;
+	context.font = (10*canvas_multiplier).toString()+"px "+FONT;
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
     context.strokeStyle = '#333';
@@ -696,21 +697,28 @@ function draw_c_text_small_stroke(x1,y1,text1){
 }
 
 function draw_c_text_small(x1,y1,text1){
-	context.font = "10px "+FONT;
+	context.font = (10*canvas_multiplier).toString()+"px "+FONT;
+	var xCoor1 = x1*(canvas.width/16);
+    var yCoor1 = canvas.height - (y1*(canvas.height/9));
+    context.fillText(text1,xCoor1,yCoor1);
+}
+
+function draw_c_text_variable_size(x1,y1,text1,size='10'){
+	context.font = (size*canvas_multiplier).toString()+"px "+FONT;
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
     context.fillText(text1,xCoor1,yCoor1);
 }
 
 function draw_c_text_med(x1,y1,text1){
-	context.font = "13px "+FONT;
+	context.font = (13*canvas_multiplier).toString()+"px "+FONT;
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
     context.fillText(text1,xCoor1,yCoor1);
 }
 
 function draw_c_text_med_colored(x1,y1,text1,c){
-	context.font = "13px "+FONT;
+	context.font = (13*canvas_multiplier).toString()+"px "+FONT;
 	context.fillStyle = c;
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
@@ -719,7 +727,7 @@ function draw_c_text_med_colored(x1,y1,text1,c){
 }
 
 function draw_c_text_med_stroke(x1,y1,text1){
-	context.font = "13px "+FONT;
+	context.font = (13*canvas_multiplier).toString()+"px "+FONT;
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
     context.strokeStyle = '#333';
@@ -968,9 +976,9 @@ function draw_inventory_cursor_overlay(){
  	context.fillStyle = "#FFFFFF";
  	context.fill(cursor,"evenodd")
  	context.strokeStyle = '#000000';
- 	context.lineWidth = 1;
+ 	context.lineWidth = 1*canvas_multiplier;
   	context.stroke(cursor,"evenodd");
-  	context.lineWidth = 1;
+  	context.lineWidth = 1*canvas_multiplier;
 
 	//Need to make sure these are drawn at the highest level!
 	/*
@@ -1010,8 +1018,9 @@ function add_to_toolbar(Object){
 		toolBarList[1] = Object;
 		return;
 	}
-	if(objNum == 66){
+	if(objNum == 66 || (Object.typeOfObj=='ITEM' && Object.toolType=='SWORD')){
 		activeToolBarItem = 3;
+		toolBarList[2] = Object;
 		return;
 	}
 	//toolBarList, activeToolBarItem = 3. From: 3, 4, 5, 6 const NUM_TOOLBAR_TOOLS = 3; const NUM_TOOLBAR_ITEMS = 7;
@@ -1080,7 +1089,8 @@ function draw_toolbar_items(){
 	// Draw tools
 	var object;
 	const space = 0.65;
-	draw_c_text_small_stroke(2.2,8+toolbarHeightOffset,player.getArrowCount())
+	if(toolBarList[2].objectNumber == 66)
+		draw_c_text_small_stroke(2.2,8+toolbarHeightOffset,player.getArrowCount())
 	for(let i = 0; i < 7; i++){
 		object = toolBarList[i];
 		if(object != null){

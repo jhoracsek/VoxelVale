@@ -1,5 +1,8 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+    
+
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
     import { getFirestore, doc, setDoc, getDoc, collection } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
@@ -20,12 +23,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebas
     const analytics = getAnalytics(app);
     const auth = getAuth(app);
     const database = getFirestore(app);
+    const provider = new GoogleAuthProvider();
 
     let displayName = null;
 
     window.signUp = async function (){
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('password').value;
+        const email = document.getElementById('emailSu').value;
+        const pass = document.getElementById('passwordSu').value;
 
         createUserWithEmailAndPassword(auth, email, pass)
         .then((userCredential) =>{
@@ -78,6 +82,19 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebas
 
     window.logOut = async function () {
         signOut(auth).then(() => {});
+    }
+
+    window.googleSignInBtn = async function(){
+         try {
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+            console.log("Signed in user:", user);
+            // Optional: redirect or show welcome message
+          } catch (error) {
+            console.error("Error during Google sign-in:", error.message);
+            alert("Google sign-in failed: " + error.message);
+          }
+
     }
 
     onAuthStateChanged(auth, (user) => {

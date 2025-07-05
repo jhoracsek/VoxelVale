@@ -14,6 +14,8 @@ class zObjectNew{
 	static sendData(){}
 	
 	constructor(){}
+
+	updateWhenHeld(){}
 	
 	isCraftable(){
 		var neededObjects=this.getRecipe();
@@ -51,6 +53,9 @@ class zObjectNew{
 	copy(){
 		return new this.constructor();
 	}
+	update(){
+
+	}
 	onLClick(){
 		return;
 	}
@@ -80,9 +85,14 @@ class BlockWallNew extends zObjectNew{
 	static texture = -1; get texture() {return this.constructor.texture;}
 	static sound = 'STONE'; get sound() {return this.constructor.sound;}
 	static isInteractable = false; get isInteractable() {return this.constructor.isInteractable;}
+	static correctTextureOrientation = false;
 
 	static sendData(){
-		build_block(this.texture,0.0,0.0);
+		if(!this.correctTextureOrientation){
+			build_block(this.texture,0.0,0.0);
+		}else{
+			build_block_flip_top(this.texture,0,0,this.texture,this.texture)
+		}
 	}
 	
 	constructor(X,Y,Z,ground){
@@ -244,6 +254,7 @@ class BlockWallNew extends zObjectNew{
 			if(hitBox){
 				gl.drawArrays(gl.LINES,numberOfByte[0],numberOfByte[1]);
 			}
+		
 			gl.drawArrays(gl.TRIANGLES,this.index+6,this.numberOfVerts-6);
 		}else{
 			set_mv(this.instanceMat);
@@ -262,6 +273,8 @@ class BlockWallNew extends zObjectNew{
 			//Back
 			if(this.drawBack)
 				gl.drawArrays(gl.TRIANGLES,this.index+18,6);
+
+			
 			
 			//Bottom
 			//gl.drawArrays(gl.TRIANGLES,this.index,6);
@@ -269,6 +282,7 @@ class BlockWallNew extends zObjectNew{
 	}
 
 	drawTopBlock(){
+		
 		if(!this.drawTop) return;
 		set_mv(this.instanceMat);
 		this.setCeilOpac();
@@ -428,6 +442,7 @@ class GrassBlock extends BlockWallNew{
 			if(hitBox){
 				gl.drawArrays(gl.LINES,numberOfByte[0],numberOfByte[1]);
 			}
+			
 			switch(this.isCool){
 				case 0:
 					gl.drawArrays(gl.TRIANGLES,this.index+42,this.numberOfVerts-6);
@@ -442,6 +457,7 @@ class GrassBlock extends BlockWallNew{
 		}else{
 			if(this.posZ == -6)
 				set_mv(this.originalInstanceMat);
+
 			this.setCeilOpac();
 			//Front
 			if(this.drawFront)
@@ -459,6 +475,7 @@ class GrassBlock extends BlockWallNew{
 				gl.drawArrays(gl.TRIANGLES,this.index+18,6);
 			//Bottom
 			//gl.drawArrays(gl.TRIANGLES,this.index,6);
+
 		}
 	}
 	
@@ -469,7 +486,7 @@ class GrassBlock extends BlockWallNew{
 */
 
 function initialize_simpleBlocks(){
-	simpleBlocks = [GrassBlock, WeirdBlock, BrickBlock, StoneFloorBlock, DungeonWall, BorderWall];
+	simpleBlocks = [GrassBlock, WeirdBlock, BrickBlock, StoneFloorBlock, DungeonWall, BorderWall,CopperBrick];
 }
 
 class WeirdBlock extends BlockWallNew{
@@ -488,6 +505,7 @@ class BrickBlock extends BlockWallNew{
 	static desc = 'A stone brick block.'
 	static texture = 12;
 	static tob='STONE';
+	static correctTextureOrientation = true;
 	constructor(X=null,Y=null,Z=null,ground=false){
 		super(X,Y,Z,ground);
 	}
@@ -519,6 +537,19 @@ class BorderWall extends BlockWallNew{
 	static objectNumber=15;
 	static desc = 'How did you get this in your inventory?!'
 	static texture = 51;
+	static correctTextureOrientation = true;
+	constructor(X=null,Y=null,Z=null,ground=false){
+		super(X,Y,Z,ground);
+	}
+}
+
+class CopperBrick extends BlockWallNew{
+	static name = 'Copper Brick';
+	static objectNumber=17;
+	static desc = 'A copper brick block.'
+	static texture = 52;
+	static tob='STONE';
+	static correctTextureOrientation = true;
 	constructor(X=null,Y=null,Z=null,ground=false){
 		super(X,Y,Z,ground);
 	}

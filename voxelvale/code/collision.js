@@ -3,13 +3,34 @@ var isStopLeft=false;
 var isStopUp=false;
 var isStopDown=false;
 var colOffset=0.1;
-var colZOffset=-0.5;
-function isInZRange(objectOne, objectTwo){
-	if(objectOne.returnBounds()[1][2] >= (objectTwo.returnBounds()[0][2]+colZOffset) &&  objectOne.returnBounds()[1][2] <= (objectTwo.returnBounds()[1][2]-colZOffset))
+var colZOffset=-0.05;
+function isInZRangeOld(objectOne, objectTwo){
+
+	let o1ZLow = objectOne.returnBounds()[0][2];
+	let o1ZHigh = objectOne.returnBounds()[1][2];
+
+	let o2ZLow = objectTwo.returnBounds()[0][2];
+	let o2ZHigh = objectTwo.returnBounds()[1][2];
+
+	if(o1ZHigh >= (o2ZLow+colZOffset) &&  o1ZHigh <= (o2ZHigh-colZOffset))
 		return true;
-	if(objectOne.returnBounds()[0][2] >= (objectTwo.returnBounds()[0][2]+colZOffset) &&  objectOne.returnBounds()[0][2] <= (objectTwo.returnBounds()[1][2]-colZOffset))
+	if(o1ZLow >= (o2ZLow+colZOffset) &&  o1ZLow <= (o2ZHigh-colZOffset))
 		return true;
 	return false;
+}
+
+function isInZRange(objectOne, objectTwo){
+	
+	let o1ZLow = objectOne.returnBounds()[0][2];
+	let o1ZHigh = objectOne.returnBounds()[1][2];
+
+	let o2ZLow = objectTwo.returnBounds()[0][2];
+	let o2ZHigh = objectTwo.returnBounds()[1][2];
+
+	if( (o1ZHigh < o2ZLow) || (o1ZLow > o2ZHigh))
+		return false;
+
+	return true;
 }
 /*
 	For collisions with non-tile objects.
@@ -27,6 +48,88 @@ class BoundObject{
 			return [vec3(mult(translate(0,0,0),vec4(this.posX,this.posY,this.posZ,1))), vec3(mult(translate(0,0,0),vec4(this.posX+1,this.posY+1,this.posZ+1,1)))];
 	}
 }
+
+/*
+	I think it's fair to treat hit/hurt boxes as 2D objects. This is just a class for 2D collisions that ignore any depth.
+*/
+class HitBox{
+	constructor(bounds, hbS, hbN, obj){
+		this.bound1 = bounds[0];
+		this.bound2 = bounds[1];
+
+		this.hitboxStart = hbS;
+		this.hitboxNumber = hbN;
+
+		this.obj = obj;
+	}
+	returnBounds(){
+		let curPos = translate(this.obj.posX, this.obj.posY, this.obj.posZ);
+		curPos = mult(curPos,rotateZ(-this.obj.angleFacing));
+		curPos = mult(curPos,translate(0, -0.5,0));
+		curPos = mult(curPos,rotateZ(this.obj.angleFacing));
+
+		let b1 = mult(curPos, this.bound1);
+		let b2 =  mult(curPos, this.bound2);
+		return [vec4(Math.min(b1[0],b2[0]), Math.min(b1[1],b2[1]),-10,1),vec4(Math.max(b1[0],b2[0]), Math.max(b1[1],b2[1]),10,1)];
+	}
+
+	draw(){
+
+		let curPos = modelViewMatrix;
+		curPos = mult(curPos,translate(this.obj.posX, this.obj.posY, this.obj.posZ));
+		curPos = mult(curPos,rotateZ(-this.obj.angleFacing));
+		curPos = mult(curPos,translate(0, -0.5,0));
+		curPos = mult(curPos,rotateZ(this.obj.angleFacing));
+		
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(curPos));
+		gl.drawArrays(gl.LINES,this.hitboxStart,this.hitboxNumber);
+	}
+}
+
+/*
+	Preserves height.
+*/
+class ArrowBlockHitBox{
+	static bound1 = vec4(-0.15,-0.15,-0.1,1);
+	static bound2 = vec4(0.15,0.15,0,1);
+	
+	static index = 0;
+	static numberOfVerts = 0;
+
+	static sendData(){
+		this.index = vertices.length;
+		push_wireframe_indices(this.bound1,this.bound2,vec4(0,0,1,0.7))
+		this.numberOfVerts = vertices.length - this.index;
+	}
+
+	constructor(obj){
+		this.obj = obj;
+	}
+
+	returnBounds(){
+		let curPos = translate(this.obj.pX, this.obj.pY, this.obj.pZ);
+		curPos = mult(curPos,rotateZ(this.obj.direction));
+		curPos = mult(curPos,translate(0,0.8,0));
+		curPos = mult(curPos,rotateZ(-this.obj.direction));
+
+		let b1 = mult(curPos, ArrowBlockHitBox.bound1);
+		let b2 =  mult(curPos, ArrowBlockHitBox.bound2);
+		
+		return [vec4(Math.min(b1[0],b2[0]), Math.min(b1[1],b2[1]), Math.min(b1[2],b2[2]),1),vec4(Math.max(b1[0],b2[0]), Math.max(b1[1],b2[1]),Math.max(b1[2],b2[2]),1)];
+	}
+
+	draw(){
+		let curPos = modelViewMatrix;
+		curPos = mult(curPos,translate(this.obj.pX, this.obj.pY, this.obj.pZ));
+		curPos = mult(curPos,rotateZ(this.obj.direction));
+		curPos = mult(curPos,translate(0,0.8,0));
+		curPos = mult(curPos,rotateZ(-this.obj.direction));
+		
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(curPos));
+		gl.drawArrays(gl.LINES,ArrowBlockHitBox.index,ArrowBlockHitBox.numberOfVerts);
+	}
+}
+
 function isCollidingRight(objectOne, objectTwo){
 	if(objectTwo==null || objectOne == null)return false;
 	if(!isInZRange(objectOne, objectTwo)) return false;

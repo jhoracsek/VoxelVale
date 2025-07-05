@@ -214,6 +214,7 @@ void main()
 <script type="text/javascript" src="voxelvale/code/uifunctions.js"></script>
 <script type="text/javascript" src="voxelvale/code/inventory.js"></script>
 <script type="text/javascript" src="voxelvale/code/craftingmenu.js"></script>
+<script type="text/javascript" src="voxelvale/code/helpers.js"></script>
 <script type="text/javascript" src="voxelvale/code/item.js"></script>
 <script type="text/javascript" src="voxelvale/code/wireframe.js"></script>
 <script type="text/javascript" src="voxelvale/code/nonactionableitem.js"></script>
@@ -227,7 +228,6 @@ void main()
 <script type="text/javascript" src="voxelvale/code/particles.js"></script>
 <script type="text/javascript" src="voxelvale/code/music.js"></script>
 <script type="text/javascript" src="voxelvale/code/sounds.js"></script>
-<script type="text/javascript" src="voxelvale/code/helpers.js"></script>
 <script type="text/javascript" src="voxelvale/code/saveload.js"></script>
 
 <!--
@@ -239,7 +239,7 @@ void main()
 
 
 
-<body style="background-color: rgb(var(--color-bg));" id="body">
+<body style="background-color: rgb(var(--color-bg)); width:100%" id="body">
     <header>
        <div style="float:left; padding-left:25px; margin:0px;"class="vertical-center"> <img border="0" style="image-rendering: pixelated;" width="148%" src="res/logo.png"></div>
        
@@ -247,25 +247,46 @@ void main()
             <a class = "navbox" href="#about">About</a>
             <a class = "navbox" href="#attributions">Atributions</a>
             <a class = "navbox" target="_blank" rel="noopener noreferrer" href="https://patreon.com/VoxelVale">Patreon</a>
+            <a class = "navbox" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/@VoxelVale">Youtube</a>
         </nav>
         <nav class="vertical-center" style="padding-right:0px; padding-left: 0px;right: 0px; visibility: hidden" id = "loggedout">
           <ul style="padding-right:0px; padding-left:0px;">
-            <li  style="padding-right:10px; padding-right:10px;margin: 0px; margin-top:4px;"> <input type="email" id="email" placeholder="Email"></input></li>
-            <li  style="padding-right:10px; padding-right:10px;margin: 0px; margin-right: 10px; margin-top:4px;"> <input type="password" id="password" placeholder="Password"></input></li>
-            <li  style="padding:5px;padding-right:10px;margin: 0px;"> <button onclick="logIn()">Log In</button></li>
-            <li  style="padding:5px;padding-right:10px;margin: 0px;"> <button onclick="signUp();">Sign Up</button></li>
+            <!--<li  style="padding-right:10px; padding-right:10px;margin: 0px; margin-top:4px;"> <input type="email" id="email" placeholder="Email"></input></li>
+            <li  style="padding-right:10px; padding-right:10px;margin: 0px; margin-right: 10px; margin-top:4px;"> <input type="password" id="password" placeholder="Password"></input></li>-->
+            <li  style="padding:5px;padding-right:10px;margin: 0px;"><div class="dropdown"><span>Login</span><div class="dropdown-content">
+                <div style="padding-bottom: 10px;"><input type="email" id="email" placeholder="Email"></input></div>
+                <div style="padding-bottom: 10px;"><input type="password" id="password" placeholder="Password"></input></div>
+                <div style = "width: 100%;margin: auto;text-align: center;"><button  onclick="logIn()">Login</button></div>
+            </div></div></li>
+            <!--<li  style="padding:5px;padding-right:10px;margin: 0px;"> <button onclick="logIn()">Log In</button></li>-->
+            <li style="padding:5px;padding-right:10px;margin: 0px;"> | </li>
+            <li  style="padding:5px;padding-right:10px;margin: 0px;"><div class="dropdown"><span>Sign Up</span><div class="dropdown-content">
+                <div style="padding-bottom: 10px;"><input type="email" id="emailSu" placeholder="Email"></input></div>
+                <div style="padding-bottom: 10px;"><input type="password" id="passwordSu" placeholder="Password"></input></div>
+                <div style = "width: 100%;margin: auto;text-align: center;"> <button style="margin: auto;" onclick="signUp();">Sign Up</button></div>
+            </div></div></li>
+
+
+
+            
+
+            <!--<li  style="padding:5px;padding-right:10px;margin: 0px;"> <button onclick="signUp();">Sign Up</button></li>-->
+            <li style="padding:5px;padding-right:10px;margin: 0px;"> | </li>
+            <li  style="padding:5px;padding-right:10px;margin: 0px;margin-right:10px;"><button onclick="googleSignInBtn()">Sign in with Google</button></li>
           </ul>
         </nav>
         <nav class="vertical-center" style="padding-right:0px; padding-left: 0px;right: 0px; visibility:hidden;" id = "loggedin">
           <ul style="padding-right:0px; padding-left:0px;">
             <li  style="padding:5px;padding-right:10px;margin: 0px; margin-right: 10px;margin-top:1px;" id="useremail"> </li>
             <li  style="padding:5px;padding-right:10px;margin: 0px;margin-right:10px;"><button onclick="logOut()">Log Out</button></li>
+
           </ul>
         </nav>
   </header>
     <!-- GAME CONTAINER -->
+
     <div class="gameBackground" style="padding-top:97px;">
-        <div style="padding: 1rem 1rem;   max-width: 1280px;  margin: auto; ">
+        <div style="padding: 1rem 1rem; min-width: 1280px;   max-width: 1280px;  margin: auto; ">
             <div class="gameBorder colorStyle" style="height: 720px; padding:0px;">   
                 <div class=container>
                     <canvas id="gl-canvas" width="1280" height="720" stencil="true">
@@ -276,8 +297,9 @@ void main()
                 </div>
             </div>
         </div>
-        <div style="text-align: center; font-size: 11px; color:#000"><a target="_blank" rel="noopener noreferrer" class="bug" href="https://docs.google.com/forms/d/e/1FAIpQLSeGaSDpu5x3GT1NgmaPX4DZB6JiqrphzgQs86RfYrY6pL8NeQ/viewform?usp=dialog">Report a bug.</a></div>
+        <div style="text-align: center; font-size: 11px; color:#000"><a target="_blank" rel="noopener noreferrer" class="bug" href="https://patreon.com/VoxelVale">Want to play the latest update? Become a member on Patreon!</a> | <a target="_blank" rel="noopener noreferrer" class="bug" href="https://docs.google.com/forms/d/e/1FAIpQLSeGaSDpu5x3GT1NgmaPX4DZB6JiqrphzgQs86RfYrY6pL8NeQ/viewform?usp=dialog">Report a bug.</a></div>
     </div>
+
     <div style="margin: auto;scroll-margin-top: 80px;" id="about">
         <div class="boxBorder colorStyle">   
             <h1>About</h1>

@@ -20,6 +20,7 @@ TeleBlock			13
 Door				14
 BorderWall			15
 CopperStone			16
+CopperBrick			17
 
 
 WoodAxe				64
@@ -31,6 +32,8 @@ ArrorItem			69
 CopperPickaxe		70
 CopperAxe 			71
 HealthPotion		72
+StoneSword			73
+CopperSword 		74
 
 
 WorkBenchRecipe		128
@@ -41,6 +44,8 @@ CopperBarRecipe		132
 ArrowRecipe			133
 CopperPickRecipe	134
 CopperAxeRecipe		135
+CopperSwordRecipe	136
+CopperBrickRecipe	137
 
 
 

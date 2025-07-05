@@ -23,6 +23,8 @@ class NonActionableItem {
 	static sendData(){}
 
 	constructor(){}
+	update(){}
+	updateWhenHeld(){}
 	draw(){
 		gl.drawArrays(gl.TRIANGLES,this.index,this.numberOfVerts);
 	} 
@@ -352,4 +354,4 @@ class HealthPotion extends NonActionableItem {
 
 
 
-const ITEM_OBJNUMS = [WoodAxe, StonePickaxe, WoodenBow, Copper, CopperBar, ArrowItem, CopperPickaxe, CopperAxe, HealthPotion];
+const ITEM_OBJNUMS = [WoodAxe, StonePickaxe, WoodenBow, Copper, CopperBar, ArrowItem, CopperPickaxe, CopperAxe, HealthPotion, StoneSword, CopperSword];

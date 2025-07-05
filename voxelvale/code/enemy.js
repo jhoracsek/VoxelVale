@@ -4,13 +4,17 @@
 var universalEnemyId;
 
 
-//var boxX = 0.35;
-//var boxY = 0.35;
-var boxX = 0.25;
-var boxY = 0.25;
+var boxX = 0.40;
+var boxY = 0.40;
+//var boxX = 0.25;
+//var boxY = 0.25;
 var enemyShadow = false;
 
-var undeadHitboxBounds = [vec3(-boxX,-boxY,1.25), vec3(boxX,boxY,3.1)];
+//var undeadHitboxBounds = [vec3(-boxX,-boxY,1.25), vec3(boxX,boxY,3.1)];
+var undeadHitboxBounds = [vec3(-boxX,-boxY,-2), vec3(boxX,boxY,4.1)];
+
+let undeadhurtBoxSize = [1.2,1.2]
+var undeadHurtBox = [vec4(-undeadhurtBoxSize[0]/2,-0.7,-2,1), vec4(undeadhurtBoxSize[0]/2,0.25,2,1)]
 
 class Undead extends Humanoid{
 	constructor(X,Y,Z){
@@ -31,7 +35,7 @@ class Undead extends Humanoid{
 		this.speed = 0.045;
 		//this.speed = Math.random() * 0.05 + 0.04;
 		this.maxSpeed = 0.045;
-		this.initialSpeed = 0.025;
+		this.initialSpeed = 0.04;
 		universalEnemyId++;
 
 		this.posXNew=this.posX;
@@ -55,6 +59,7 @@ class Undead extends Humanoid{
 		this.particleColor = vec3(0.3, 0, 0);
 
 		this.zDrawHeight = 3.25-0.0005 + (Math.random()*0.001);
+		this.drawOffset = -0.0005 + (Math.random()*0.001);
 		this.displayWidth = 2;
 
 		this.displayToolbar=false;
@@ -62,7 +67,12 @@ class Undead extends Humanoid{
 
 		this.fullHealthOpacityTimer = 0;
 		this.fullHealthOpacityTimerMax = 60*4;
-			
+
+		this.hitHurtBox = new HitBox(undeadHurtBox, Undead.hitHurtBoxStart, Undead.hitHurtBoxNumber, this);
+
+		
+		this.particleCooldownMax = 20;
+		this.particleCooldown = 0;
 	}
 
 	isEqual(otherEnemy){
@@ -82,10 +92,18 @@ class Undead extends Humanoid{
 	*/
 	drawContents(){
 		if(inventory|| inFunction) return;
-		let c = vec4(-boxX-0.125,boxY,0,1);
-		let c2 = vec4(boxX+0.125,boxY+0.1,0,1);
-		let zVal = this.posZ+1.25;// best so far
+		/*
+	
+		*/
+		let drawWidth = 0.25;
+		let drawHeight = 0.25;
+		let c = vec4(-drawWidth-0.125,drawHeight,0,1);
+		let c2 = vec4(drawWidth+0.125,drawHeight+0.1,0,1);
+		//let zVal = this.posZ+1.25;// best so far
 		//let zVal = this.posZ;
+
+		//After I fixed the zPosition stuff
+		let zVal = -6+1.25;
 		c = mult(translate(this.posX,this.posY,zVal), c);
 		c = mult(modelViewMatrix, c);
 		c = mult(projectionMatrix, c);
@@ -113,11 +131,11 @@ class Undead extends Humanoid{
 		//draw_centered_text(c[0],c[1]+0.1,"Use workbench.",'12');
 	}
 
-	hit(angle, damage = 2){
+	hit(angle, damage = 1){
 		this.fullHealthOpacityTimer=this.fullHealthOpacityTimerMax;
 		if(this.invulnerable <= 0){
 			this.health -= damage;
-
+			this.particleCooldown = this.particleCooldownMax;
 			this.knockbackTimer = this.knockbackFrames;
 			let rad = angle*(Math.PI/180);
 			this.knockbackDirection = [-Math.sin(rad)/this.knockbackFrames, Math.cos(rad)/this.knockbackFrames];
@@ -129,6 +147,8 @@ class Undead extends Humanoid{
 
 			if(this.checkIfDead()){
 				this.died();
+			}else{
+
 			}
 			
 
@@ -168,6 +188,8 @@ class Undead extends Humanoid{
 	}
 
 	spawnParticles(){
+		if(this.particleCooldown > 0)
+			return;
 		/*
 			Spawn particles
 		*/
@@ -211,14 +233,21 @@ class Undead extends Humanoid{
 			enemy_drop(worldObj, new CopperBarRecipe(), this.posX, this.posY);
 		}
 		r = Math.random();
-		if(r < 0.2){
+		if(r < 0.15){
 			enemy_drop(worldObj, new CopperPickRecipe(), this.posX, this.posY);
 		}
 		r = Math.random();
-		if(r < 0.2){
+		if(r < 0.15){
 			enemy_drop(worldObj, new CopperAxeRecipe(), this.posX, this.posY);
 		}
-
+		r = Math.random();
+		if(r < 0.15){
+			enemy_drop(worldObj, new CopperSwordRecipe(), this.posX, this.posY);
+		}
+		r = Math.random();
+		if(r < 0.15){
+			enemy_drop(worldObj, new CopperBrickRecipe(), this.posX, this.posY);
+		}
 
 	}
 
@@ -237,7 +266,8 @@ class Undead extends Humanoid{
 	}
 	initialize_node(id,X=0,Y=0,Z=0){
 		var m = mat4();
-		Z=-this.zDrawHeight;
+		//Z=-this.zDrawHeight;
+		Z+=this.drawOffset;
 		switch(id){
 			case bodyId:
 				m = scale4(0.5,0.5,0.5);
@@ -315,6 +345,9 @@ class Undead extends Humanoid{
 
 	static eyeStart = 0;
 	static eyeNumber = 0;
+
+	static hitHurtBoxStart = 0;
+	static hitHurtBoxNumber = 0;
 
 
 	static body(){
@@ -552,12 +585,20 @@ class Undead extends Humanoid{
 
 			var directions = colDirection(this,enemyArray.accessElement(i));
 
+			if(directions[0]+directions[1]+directions[2]+directions[3] > 2){
+				this.posXNew += (0.5-Math.random()*1)
+				this.posYNew += (0.5-Math.random()*1)
+			}
+
 			
 			if(directions[LEFT] == true){
-
+				//nudge right
+				//if(dX)
+				//	this.posXNew += 0.1*Math.random();
 				canMoveLeft = false;
 			}
 			if(directions[RIGHT] == true){
+				//this.posXNew -= 0.1*Math.random();
 				canMoveRight = false;
 			}
 		}
@@ -565,10 +606,10 @@ class Undead extends Humanoid{
 		if( (canMoveLeft && dX < 0) || (canMoveRight && dX >= 0)){
 			this.posXNew += this.speed*(dX/hyp);
 			if(dX > 0 && !canMoveLeft){
-				//this.posX += this.speed*(dX/hyp)/4;
+				this.posX += this.speed*(dX/hyp)/4;
 			}
 			if(dX < 0 && !canMoveRight){
-				//this.posX += this.speed*(dX/hyp)/4;
+				this.posX += this.speed*(dX/hyp)/4;
 			}
 
 			return true;
@@ -665,8 +706,11 @@ class Undead extends Humanoid{
 		b1 = mult(mat,b1);
 		b2 = mult(mat,b2);
 
-		var bound1 = vec4(Math.min(b1[0],b2[0]), Math.min(b1[1],b2[1]), Math.min(b1[2],b2[2]),1 );
-		var bound2 = vec4(Math.max(b1[0],b2[0]), Math.max(b1[1],b2[1]), Math.max(b1[2],b2[2]),1 );
+		//var bound1 = vec4(Math.min(b1[0],b2[0]), Math.min(b1[1],b2[1]), Math.min(b1[2],b2[2]),1 );
+		//var bound2 = vec4(Math.max(b1[0],b2[0]), Math.max(b1[1],b2[1]), Math.max(b1[2],b2[2]),1 );
+
+		var bound1 = vec4(Math.min(b1[0],b2[0]), Math.min(b1[1],b2[1]), -100,1 );
+		var bound2 = vec4(Math.max(b1[0],b2[0]), Math.max(b1[1],b2[1]), 100,1 );
 	
 		return [bound1, bound2];
 		
@@ -820,6 +864,8 @@ class Undead extends Humanoid{
 	}
 
 	update(){
+		if(this.particleCooldown > 0)
+			this.particleCooldown--;
 		if(this.fullHealthOpacityTimer > 0){
 			this.fullHealthOpacityTimer--;
 		}
@@ -859,6 +905,10 @@ class Undead extends Humanoid{
 		Undead.eyeNumber = vertices.length - Undead.eyeStart;
 		
 		NM = vertices.length;
+
+		Undead.hitHurtBoxStart = vertices.length;
+		push_wireframe_indices(undeadHurtBox[0],undeadHurtBox[1],vec4(0,0,1,0.7));
+		Undead.hitHurtBoxNumber = vertices.length - Undead.hitHurtBoxStart;
 	}
 
 	draw(){
@@ -904,6 +954,7 @@ class Undead extends Humanoid{
 		if(hitBox){
 			//set_mv(mult(translate(this.posX,this.posY,this.posZ),rotateZ(-this.angleFacing)));
 			gl.drawArrays(gl.LINES,undeadHitboxStart,undeadHitboxSize);
+			this.hitHurtBox.draw();
 		}
 		if(this.displayToolbar || this.fullHealthOpacityTimer > 0)
 			this.drawContents();

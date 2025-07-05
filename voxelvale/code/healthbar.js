@@ -44,7 +44,7 @@ function draw_healthbar(x1, y1, x2, y2, health, maxHealth, borderRadius=40,opaci
 
     // Calculate where to stop drawing health portion of the bar.
     let endHealth = width-convertedDamage;
-	context.lineWidth = 2;
+	context.lineWidth = 2*canvas_multiplier;
     context.strokeStyle = healthBorderColor + (opacity).toString() + ")";
     context.beginPath();
     context.roundRect(xCoor1, yCoor1, xCoor2-xCoor1, yCoor2-yCoor1,[borderRadius]);
@@ -81,7 +81,7 @@ function draw_healthbar(x1, y1, x2, y2, health, maxHealth, borderRadius=40,opaci
 
     //Reset
     context.fillStyle = temp;
-    context.lineWidth = 1;
+    context.lineWidth = 1*canvas_multiplier;
 }
 
 
@@ -94,12 +94,12 @@ function draw_filled_box_test(x1,y1,x2,y2,c1='#CCC', c2='#111'){
     var temp = context.fillStyle;
     context.fillStyle = c2;
     context.strokeStyle = c1;
-	context.lineWidth = 2;
+	context.lineWidth = 2*canvas_multiplier;
   
 	context.beginPath();
 	context.strokeRect(xCoor1, yCoor1, xCoor2-xCoor1, yCoor2-yCoor1);
 	context.fillRect(xCoor1, yCoor1, xCoor2-xCoor1, yCoor2-yCoor1)
 
 	context.fillStyle = temp;
-    context.lineWidth = 1;
+    context.lineWidth = 1*canvas_multiplier;
 }

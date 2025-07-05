@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <title> VoxelVale </title>
+    <link rel="icon" type="image/x-icon" href="/res/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+    .container{
+        position:relative;
+        font-size:65px;
+        outline: none;
+        margin: 0;
+        padding: 0;
+    }
+    .container:focus{
+        outline: none;
+    }
+    #gl-canvas{
+        z-index:0;
+        font-family: 'MDIO';
+    }
+    #text-canvas{
+        pointer-events: none;
+        position:absolute;
+        left:0px;
+        top:0px;
+        z-index:1;
+        font-family: 'MDIO';
+    }
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="res/style.css">
+
+</head>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+precision mediump float;
+attribute vec4 vPosition;
+attribute vec3 vNormal;
+attribute vec4 vColor;
+uniform mat4 projectionMatrix;
+uniform mat4 modelViewMatrix;
+uniform mat4 shadowMatrix;
+varying vec4 fColor;
+
+varying float magnitude;
+
+//Texturing...
+attribute vec2 vTexCoord;
+varying vec2 fTexCoord;
+
+//Lighting...
+uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+uniform vec4 lightPosition;
+uniform float shininess;
+
+
+void main()
+{
+    vec4 pos = modelViewMatrix * vPosition;
+    vec3 position = -(pos).xyz;
+    vec3 light = -lightPosition.xyz;
+    vec3 L = normalize(light-position);
+
+    //Distance fall off.
+    float dist = length(light-position);
+    float attenuation = 1.0/(0.5 + 0.25*dist + 0.1*dist*dist);
+
+    vec3 E = normalize(-position);
+    vec3 H = normalize(L+E);
+
+    vec4 NN = vec4(vNormal,0);
+    vec3 N = normalize((modelViewMatrix*NN).xyz);
+
+    vec4 ambient = ambientProduct;
+
+    float KD = max(dot(L,N),0.0);
+    vec4 diffuse = KD*diffuseProduct*attenuation;
+
+    float KS = pow(max(dot(N,H),0.0),shininess);
+    vec4 specular = KS*specularProduct;
+
+    if(dot(L,N)<0.0) specular = vec4(0.0,0.0,0.0,1.0);
+
+    fColor = (ambient+diffuse+specular) * vColor;
+    //fColor = vColor;
+    //fColor = (diffuse + ambient)*vColor;
+
+    fTexCoord = vTexCoord;
+
+    gl_PointSize = 5.0;
+
+    gl_Position = projectionMatrix*modelViewMatrix*vPosition;
+
+
+    magnitude = length((gl_Position).xy);
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+precision mediump float;
+
+varying vec4 fColor;
+
+varying float magnitude;
+
+varying vec2 fTexCoord;
+uniform sampler2D texture;
+
+uniform bool disableTex;
+
+uniform vec4 sColor;
+
+//Cursor
+uniform bool cursorBlock;
+uniform bool flashing;
+
+//Particle
+uniform bool isParticle;
+uniform vec4 particleColor;
+
+//Ceilings
+uniform bool isCeiling;
+uniform float opacityFactor;
+uniform bool inDungeon;
+
+void main()
+{
+
+
+    gl_FragColor = texture2D(texture, fTexCoord )*fColor;
+    //gl_FragColor = fColor;
+
+    if(fTexCoord[0] > 1.0 || fTexCoord[1] > 1.0)
+        gl_FragColor = fColor;
+
+    if(sColor[0] == 0.0){
+        vec2 uv = gl_FragCoord.xy / vec2(1920, 1080);
+        vec2 centered = uv - vec2(0.5);
+        float dist = length(centered);
+        float fade = smoothstep(0.5, 0.0, dist);
+        gl_FragColor = vec4(sColor.rgb, sColor.a*fade);
+        return;
+    }
+
+    if(cursorBlock == true){
+        if(fTexCoord[0] > 1.0){
+            gl_FragColor = fColor*vec4(1.0, 1.0, 1.0, 0.2);
+        }else{
+            gl_FragColor = texture2D(texture, fTexCoord )*fColor*vec4(1.0, 1.0, 1.0, 0.3);    
+        }
+        return;
+    }
+
+    if(flashing == true){
+        gl_FragColor = vec4(0.95,0.1,0.1,1.0);
+        return;
+    }
+
+    if(isParticle == true){
+        gl_FragColor = particleColor;
+        return;
+    }
+
+    if(isCeiling == true && inDungeon != true ){
+        vec2 uv = gl_FragCoord.xy / vec2(1280, 720);
+        vec2 centered = uv - vec2(0.5,0.6);
+        float dist = length(centered);
+        float fade = smoothstep(0.4, 0.0, dist);
+        float sub = fade-opacityFactor;
+        gl_FragColor = vec4((texture2D(texture, fTexCoord )*fColor).xyz,(1.0-sub));
+        return;
+    }
+
+    if(isCeiling == true && inDungeon == true ){
+        vec2 uv = gl_FragCoord.xy / vec2(1920, 1080);
+        vec2 centered = uv - vec2(0.5,0.5);
+        float dist = length(centered);
+        float fade = smoothstep(0.75, 0.1, dist);
+        float sub = fade-opacityFactor;
+        gl_FragColor = vec4((texture2D(texture, fTexCoord )*fColor).xyz,(1.0-sub));
+        return;
+    }
+}
+</script>
+
+<script type="text/javascript" src="voxelvale/Common/webgl-utils.js"></script>
+<script type="text/javascript" src="voxelvale/Common/initShaders.js"></script>
+<script type="text/javascript" src="voxelvale/Common/MV.js"></script>
+
+<script type="text/javascript" src="voxelvale/code/flags.js"></script>
+<script type="text/javascript" src="voxelvale/code/worldgen.js"></script>
+<script type="text/javascript" src="voxelvale/code/datastructures.js"></script>
+<script type="text/javascript" src="voxelvale/code/controls.js"></script>
+<script type="text/javascript" src="voxelvale/code/modelingtools.js"></script>
+<script type="text/javascript" src="voxelvale/code/main.js"></script>
+<script type="text/javascript" src="voxelvale/code/player.js"></script>
+<script type="text/javascript" src="voxelvale/code/tile.js"></script>
+<script type="text/javascript" src="voxelvale/code/blockwall.js"></script>
+<script type="text/javascript" src="voxelvale/code/xyzblock.js"></script>
+<script type="text/javascript" src="voxelvale/code/dropbox.js"></script>
+<script type="text/javascript" src="voxelvale/code/scenes.js"></script>
+<script type="text/javascript" src="voxelvale/code/dungeons.js"></script>
+<script type="text/javascript" src="voxelvale/code/collision.js"></script>
+<script type="text/javascript" src="voxelvale/code/collisions.js"></script>
+<script type="text/javascript" src="voxelvale/code/enemy.js"></script>
+<script type="text/javascript" src="voxelvale/code/enemyroller.js"></script>
+<script type="text/javascript" src="voxelvale/code/notifications.js"></script>
+<script type="text/javascript" src="voxelvale/code/popup.js"></script>
+<script type="text/javascript" src="voxelvale/code/UI.js"></script>
+<script type="text/javascript" src="voxelvale/code/healthbar.js"></script>
+<script type="text/javascript" src="voxelvale/code/uifunctions.js"></script>
+<script type="text/javascript" src="voxelvale/code/inventory.js"></script>
+<script type="text/javascript" src="voxelvale/code/craftingmenu.js"></script>
+<script type="text/javascript" src="voxelvale/code/helpers.js"></script>
+<script type="text/javascript" src="voxelvale/code/item.js"></script>
+<script type="text/javascript" src="voxelvale/code/wireframe.js"></script>
+<script type="text/javascript" src="voxelvale/code/nonactionableitem.js"></script>
+<script type="text/javascript" src="voxelvale/code/recipes.js"></script>
+<script type="text/javascript" src="voxelvale/code/projectiles.js"></script>
+<script type="text/javascript" src="voxelvale/code/structures.js"></script>
+<script type="text/javascript" src="voxelvale/code/buildingfunctions.js"></script>
+<script type="text/javascript" src="voxelvale/code/specialblocks.js"></script>
+<script type="text/javascript" src="voxelvale/code/interactiveblocks.js"></script>
+<script type="text/javascript" src="voxelvale/code/cursorfunctions.js"></script>
+<script type="text/javascript" src="voxelvale/code/particles.js"></script>
+<script type="text/javascript" src="voxelvale/code/music.js"></script>
+<script type="text/javascript" src="voxelvale/code/sounds.js"></script>
+<script type="text/javascript" src="voxelvale/code/saveload.js"></script>
+
+<!--
+<script type="text/javascript" src="voxelvale/voxelvale.min.js"></script>
+-->
+
+<script type="module" src="voxelvale/firebase.js"></script>
+
+
+
+
+
+   
+            
+                <div class=container style="max-height: 1080px; overflow: hidden;background-color:rgba(0, 0, 0, 0.4);">
+                    <canvas id="gl-canvas" width="1920" height="1080" stencil="true">
+                    <!-- The following message is displayed if the browser doesn’t -- support HTML5 -->
+                    Sorry; your web browser does not support HTML5’s canvas element.
+                    </canvas>
+                    <canvas id="text-canvas" width="1920" height="1080"></canvas>
+                </div>
+           
+   
+
+
+<script type="text/javascript">
+    var socket = io();
+    var initialized = false;
+</script>
+
+<script type="text/javascript" src="net.js"></script>
+<img id="scream" src="voxelvale/textures/textures.png" width="256" height="256" hidden></img>
+<canvas id="myCanvas" width="256" height="256" hidden></canvas>
+
+</html>

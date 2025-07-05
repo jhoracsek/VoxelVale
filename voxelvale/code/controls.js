@@ -7,6 +7,7 @@ var keyboardDisabled = false;
 
 var upOneStore = -1;
 var spaceHeld = false;
+var gridMode = false;
 
 
 /*
@@ -27,6 +28,8 @@ var spaceHeld = false;
 		A: 	65
 		S: 	83
 		D: 	68
+
+		G: 	71
 
 		P: 	80
 
@@ -95,6 +98,11 @@ function getKeyDown(key){
 		//updateCursorColour();
 		//if(!isStopDown)
 			player.isMovingDown = true;
+	}
+
+	//'G' Toggle grid mode.
+	if(key.keyCode == 71){
+		gridMode = !gridMode;
 	}
 
 
@@ -182,7 +190,7 @@ function getKeyDown(key){
 
 			
 			//Spawn Zombie
-			var enemy = new Undead(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),-6);
+			var enemy = new Undead(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),-3.25);
 			enemy.initialize_enemy();
 			enemyArray.push(enemy);
 			
@@ -263,23 +271,27 @@ function getKeyDown(key){
 	//For testing models
 	//'ARROW_DOWN' Down
 	if(key.keyCode == 40){
+		key.preventDefault();
 		if(DEV_TOOLS)
-			controlledYSpin-=3;
+			controlledYSpin-=10;
 	}
 	//'ARROW_UP' Up
 	if(key.keyCode == 38){
+		key.preventDefault();
 		if(DEV_TOOLS)
-			controlledYSpin+=3;
+			controlledYSpin+=10;
 	}
 	//'ARROW_RIGHT' Right
 	if(key.keyCode == 39){
+		key.preventDefault();
 		if(DEV_TOOLS)
-			controlledXSpin+=3;
+			controlledXSpin+=10;
 	}
 	//'ARROW_LEFT' Left
 	if(key.keyCode == 37){
+		key.preventDefault();
 		if(DEV_TOOLS)
-			controlledXSpin-=3;
+			controlledXSpin-=10;
 	}
 
 }
@@ -316,7 +328,7 @@ function getKeyUp(key){
 function checkHovering(){
 	if(inDungeon){
 		//console.log(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
-		if(currentlyHeldObject == NO_ITEM_HELD || currentlyHeldObject == BOW_HELD)
+		if(currentlyHeldObject == NO_ITEM_HELD || currentlyHeldObject == BOW_HELD || currentlyHeldObject == SWORD_HELD)
 			selectedBlock = currentDungeon.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),-3);
 		else
 			selectedBlock = currentDungeon.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
@@ -327,7 +339,7 @@ function checkHovering(){
 		blockOnTopOf = currentDungeon.getBlockAt(Math.round(player.posX),Math.round(player.posY),-2);
 
 	}else{
-		if(currentlyHeldObject == NO_ITEM_HELD || currentlyHeldObject == BOW_HELD)
+		if(currentlyHeldObject == NO_ITEM_HELD || currentlyHeldObject == BOW_HELD || currentlyHeldObject == SWORD_HELD)
 			selectedBlock = world.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),-3);
 		else
 			selectedBlock = world.getBlockAt(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);

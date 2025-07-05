@@ -453,9 +453,9 @@ function draw_context_line(x1,y1,x2,y2, c='#FFFFFF'){
    	context.moveTo(xCoor1,yCoor1);
  	context.lineTo(xCoor2,yCoor2);
  	context.strokeStyle = c;
- 	context.lineWidth = 1;
+ 	context.lineWidth = 1*canvas_multiplier;
   	context.stroke();
-  	context.lineWidth = 1;
+  	context.lineWidth = 1*canvas_multiplier;
   	return;
 }
 
@@ -472,7 +472,7 @@ function draw_box_border(x1,y1,x2,y2,left=true,right=true,top=true,bottom=true){
     var yCoor2 = canvas.height - (y2*(canvas.height/9));
     
     context.strokeStyle = "#CCC";
-	context.lineWidth = 1;
+	context.lineWidth = 1*canvas_multiplier;
     
     if(left&&right&&top&&bottom){
 		context.beginPath();
@@ -507,7 +507,7 @@ function draw_box_border(x1,y1,x2,y2,left=true,right=true,top=true,bottom=true){
     	}
 
     }
-    context.lineWidth = 1;
+    context.lineWidth = 1*canvas_multiplier;
 }
 
 function draw_filled_box(x1,y1,x2,y2,c1='#CCC', c2='#111'){
@@ -519,14 +519,14 @@ function draw_filled_box(x1,y1,x2,y2,c1='#CCC', c2='#111'){
     var temp = context.fillStyle;
     context.fillStyle = c2;
     context.strokeStyle = c1;
-	context.lineWidth = 2;
+	context.lineWidth = 2*canvas_multiplier;
   
 	context.beginPath();
 	context.strokeRect(xCoor1, yCoor1, xCoor2-xCoor1, yCoor2-yCoor1);
 	context.fillRect(xCoor1, yCoor1, xCoor2-xCoor1, yCoor2-yCoor1)
 
 	context.fillStyle = temp;
-    context.lineWidth = 1;
+    context.lineWidth = 1*canvas_multiplier;
 }
 
 function draw_test_line(x1,y1,x2,y2, c='#FFFFFF'){
@@ -545,7 +545,7 @@ function draw_test_line(x1,y1,x2,y2, c='#FFFFFF'){
 
 
 function draw_left_text(x1,y1,text1,size='18'){
-	context.font = size+"px "+FONT;
+	context.font = (size*canvas_multiplier).toString()+"px "+FONT;
 	context.textAlign = "left";
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
@@ -559,7 +559,7 @@ function draw_left_text(x1,y1,text1,size='18'){
 }
 
 function draw_right_text(x1,y1,text1,size='18'){
-	context.font = size+"px "+FONT;
+	context.font = (size*canvas_multiplier).toString()+"px "+FONT;
 	context.textAlign = "right";
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
@@ -573,7 +573,7 @@ function draw_right_text(x1,y1,text1,size='18'){
 }
 
 function draw_centered_text(x1,y1,text1,size='18'){
-	context.font = size+"px "+FONT;
+	context.font = (size*canvas_multiplier).toString()+"px "+FONT;
 	context.textAlign = "center";
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
@@ -589,7 +589,7 @@ function draw_centered_text(x1,y1,text1,size='18'){
 
 function measure_text(text1,size='18'){
 	let length = 0;
-	context.font = size+"px "+FONT;
+	context.font = (size*canvas_multiplier).toString()+"px "+FONT;
 	context.textAlign = "center";
     context.textBaseline = "middle";
 

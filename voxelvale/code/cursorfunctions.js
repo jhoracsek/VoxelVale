@@ -91,6 +91,32 @@ function draw_cursor_block(X=0,Y=0,Z=0,Block=null){
 	}
 }
 
+const gridLength = 2;
+function draw_grid_mode_cursor(X=0,Y=0,Z=0){
+
+
+	for(let i = -gridLength; i <= gridLength; i++){
+		for(let j = -gridLength; j <= gridLength; j++){
+			//for(let k = -1; k <= 1; k++){
+				if(!(i == 0 && j == 0) && !(Math.abs(i)==gridLength && gridLength==Math.abs(j))){ //&& k == 0)){	
+					//set_mv(translate(X+i,Y+j,Z+k));
+					set_mv(translate(X+i,Y+j,Z));
+					if(Math.abs(i) == gridLength || Math.abs(j) == gridLength)
+						gl.drawArrays(gl.TRIANGLES,gridModeFrameStart1,gridModeFrameNum1);
+					else
+						gl.drawArrays(gl.TRIANGLES,gridModeFrameStart,gridModeFrameNum);
+				}
+			//}
+		}
+	}
+
+	
+
+	
+
+	
+}
+
 
 function draw_cursor_point(X=0,Y=0,Z=0){
 	if(cursorDisplayTimer < cursorFramesToDisappear){

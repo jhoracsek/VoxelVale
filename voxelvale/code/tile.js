@@ -192,6 +192,7 @@ class zObject{
 	drawTransparent(currentMat){
 		this.drawSmall(currentMat);
 	}
+	updateWhenHeld(){}
 }
 
 class BlockWall extends zObject{

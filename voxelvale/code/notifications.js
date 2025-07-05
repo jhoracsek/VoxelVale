@@ -1,10 +1,12 @@
 
 //Gonna have to make this an object that redraws itself at a lower alpha each time
-function draw_notification_box(x1,y1,x2,y2,a=1,text='none',number=1){
+function draw_notification_box(x1,y1,x2,y2,a=1,text='none',number=1,size='10'){
+
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
     var xCoor2 = x2*(canvas.width/16);
     var yCoor2 = canvas.height - (y2*(canvas.height/9));
+
     context.globalAlpha = a;
 	context.fillStyle = "#111111";
 	context.fillRect(xCoor1, yCoor1, xCoor2-xCoor1, yCoor2-yCoor1);
@@ -13,9 +15,10 @@ function draw_notification_box(x1,y1,x2,y2,a=1,text='none',number=1){
 	context.beginPath();
 	context.rect(xCoor1, yCoor1, xCoor2-xCoor1, yCoor2-yCoor1);
 	context.stroke();
-	draw_c_text_small(x1+0.05,y1-0.25,text);
-	draw_c_text_small(x1+0.05,y1-0.37,number);
+	draw_c_text_variable_size(x1+0.05,y1-0.25,text,size);
+	draw_c_text_variable_size(x1+0.05,y1-0.37,number);
 	context.globalAlpha = 1;
+
 	return;
 }
 
@@ -56,11 +59,19 @@ class NotificationQueue{
 }
 
 class Notification{
+	static width = 1.5;
 	constructor(OBJECT,QUANTITY){
 		this.name=OBJECT.name;
 		this.quantity=QUANTITY;
 		this.alpha=1;
 		this.exist=true;
+		this.width=1.5;
+		this.fontSize = 10;
+		
+		while(measure_text(this.name,this.fontSize.toString()) > (this.width-0.1)){
+			this.fontSize--;	
+		}
+		
 	}
 	//Make it so only the first one fades away?
 	update(){
@@ -75,7 +86,7 @@ class Notification{
 		this.quantity++;
 	}
 	draw(y=0){
-		draw_notification_box(14.25,(8.6+y),15.75,(8.1+y),this.alpha,this.name,this.quantity);
+		draw_notification_box(14.25,(8.6+y),14.25+Notification.width,(8.1+y),this.alpha,this.name,this.quantity,this.fontSize.toString());
 		//draw_notification_box(14.25,(8.6+y),15.75,(8.1+y),this.alpha,this.name);
 		/*this.alpha-=0.005;
 		if(this.alpha <= 0){

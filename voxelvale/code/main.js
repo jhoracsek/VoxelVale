@@ -505,14 +505,13 @@ window.onload = function init(){
 	player.addToInventory(pick);
 	toolBarList.push(pick);
 
-	//player.addToInventory(new CopperPickaxe());
-	//player.addToInventory(new CopperAxe());
-
-	//player.addToInventory(new CopperPickRecipe());
-	//player.addToInventory(new CopperAxeRecipe());
+	let sword = new StoneSword();
+	player.addToInventory(sword);
 
 	var bow = new WoodenBow();	
 	player.addToInventory(bow);
+
+	//toolBarList.push(sword);
 	toolBarList.push(bow);
 
 	var workbench = new WorkBench();
@@ -520,45 +519,40 @@ window.onload = function init(){
 	toolBarList.push(workbench);
 
 	player.addToInventory(new WoodBlockRecipe())
-	//player.addToInventory(new WoodBlockRecipe())
-	//player.addToInventory(new WoodBlockRecipe())
 	player.addToInventory(new DoorRecipe())
 	var workbenchRecipe = new WorkBenchRecipe();
 	player.addToInventory(workbenchRecipe);
-	//player.addToInventory(new CopperBarRecipe());
-	//player.addToInventory(new BrickBlockRecipe());
 	player.addToInventory(new ArrowRecipe());
 
 
-
-	//player.addToInventory(new DirtBlock());
-
-	//player.addToInventory(new BrickBlock());
-
-	//player.addToInventory(new CopperStone());
-
-	//player.addToInventory(new Copper());
-	//player.addToInventory(new Copper());
-	for(let i = 0; i < 10; i++)
-		player.addToInventory(new ArrowItem());
-	
+	if(DEV_TOOLS){
+		for(let i = 0; i < 300; i++)
+			player.addToInventory(new ArrowItem());
+	}else{
+		for(let i = 0; i < 10; i++)
+			player.addToInventory(new ArrowItem());
+	}
 	player.addToInventory(new HealthPotion());
-	//var dropBox = new DropBox(null,null,null,[new WorkBench(), new StonePickaxe(), new DirtBlock(), new GrassBlock(), new WeirdBlock(), new GrassBlock(), new WoodBlock(), new WoodBlock(), new GrassBlock()]);
-	//var dropBox = new DropBox(null,null,null,[new DirtBlock(), new GrassBlock(), new WeirdBlock(), new WoodBlock()]);
-	
-	//player.addToInventory(dropBox);
-	//toolBarList.push(dropBox);
 
-	//Testing
-	//toolBarList.push(null);
-	//var test = new TestBlock();
-	//player.addToInventory(test);
-	//player.addToInventory(new WoodBlock());
-	//player.addToInventory(new WeirdBlock());
-	//toolBarList.push(test);
 
-	for(let i = 0; i < 3; i++)
-		toolBarList.push(null);
+	/*
+		Add objects to inventory for testing here.
+	*/
+	if(DEV_TOOLS){
+		player.addToInventory(new CopperPickRecipe());
+		player.addToInventory(new CopperAxeRecipe());
+		player.addToInventory(new CopperSwordRecipe());
+		player.addToInventory(new CopperBrick());
+	}
+	toolBarList.push(null);
+	toolBarList.push(null);
+	toolBarList.push(null);
+
+
+	/*
+		End adding objects to testing.
+	*/
+
 
 	cursorBlockLoc = gl.getUniformLocation(program, "cursorBlock");
 	gl.uniform1i(cursorBlockLoc, false);
@@ -629,6 +623,13 @@ var dropBoxStart;
 var brickStart;
 var copperStart;
 
+/*
+	For grid mode
+*/
+var gridModeFrameStart;
+var gridModeFrameNum;
+var gridModeFrameStart1;
+var gridModeFrameNum1;
 
 var simpleBlocks = [];
 var nonActionableItems = [];
@@ -702,6 +703,11 @@ function send_block(){
 
 	CopperAxeRecipe.sendData();
 
+	CopperSwordRecipe.sendData();
+
+	StoneSword.sendData();
+	CopperSword.sendData();
+
 	bowStart = vertices.length;
 	sendBow = new WoodenBow();
 	sendBow.sendData();
@@ -715,6 +721,18 @@ function send_block(){
 
 	dropBoxStart = vertices.length;
 	(new DropBox()).sendData();
+
+	gridModeFrameStart = vertices.length;
+	//wireframe_prism(vec3(0,0,0), vec3(1,1,1));
+	build_grid_mode_wireframe(1, vec4(1,1,1,0.15));
+	gridModeFrameNum = vertices.length - gridModeFrameStart;
+
+
+	gridModeFrameStart1 = vertices.length;
+	build_grid_mode_wireframe(1, vec4(1,1,1,0.09));
+	gridModeFrameNum1 = vertices.length - gridModeFrameStart1;
+
+
 
 }
 function clear(){
@@ -831,6 +849,9 @@ function send_data_to_GPU(){
 	undeadHitboxStart = vertices.length;
 	push_wireframe_indices(undeadHitboxBounds[0],undeadHitboxBounds[1]);
 	undeadHitboxSize = vertices.length - undeadHitboxStart;
+
+
+	ArrowBlockHitBox.sendData();
 
 
 	/*
@@ -1030,6 +1051,7 @@ function render_data(){
 		projectileCooldown--;
 	}
 	
+	updateLogic();
 
 	if(!hold)
 		blockCounter=0;
@@ -1106,7 +1128,6 @@ function render_data(){
 	gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"),flatten(vec4(0.0, 0.0, -0.1, 1.0)) );
 	
 	player.draw();
-
 	/*
 		Reset light position and ambient lighting after drawing player.
 	*/
@@ -1493,7 +1514,6 @@ function render_data(){
 	}
 
 	
-	updateLogic()
 
 
 
@@ -1565,6 +1585,11 @@ function updateLogic(){
 		}
 	}
 
+	//Moved to player.js
+	//if(player.heldObject != null){
+	//	player.heldObject.updateWhenHeld();
+	//}
+
 
 
 }
@@ -1573,6 +1598,7 @@ const NO_ITEM_HELD = 0;
 const BLOCK_HELD = 1; 
 const TOOL_HELD = 2;
 const BOW_HELD = 3;
+const SWORD_HELD = 4;
 
 var currentlyHeldObject = 0;
 
@@ -1582,13 +1608,26 @@ function draw_cursor_full(){
 		if(player.heldObject != null){
 			if(player.heldObject.typeOfObj === 'BLOCK'){
 				set_light_full();
-				draw_cursor_block( (coorSys[0]+player.posX)-9,(coorSys[1]+player.posY)-4.5,upOne,player.heldObject);
+				if(!gridMode)
+					draw_cursor_block( (coorSys[0]+player.posX)-9,(coorSys[1]+player.posY)-4.5,upOne,player.heldObject);
+				else{
+					draw_cursor_block( Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne,player.heldObject);
+					draw_grid_mode_cursor(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne)
+				}
 				currentlyHeldObject = BLOCK_HELD;
 			}
 			else{
-				if(blockCursor){
+				if(player.heldObject.toolType == 'SWORD'){
 					set_light_full();
-					draw_cursor((coorSys[0]+player.posX)-9,(coorSys[1]+player.posY)-4.5,upOne);
+					draw_cursor_point((coorSys[0]+player.posX)-9,(coorSys[1]+player.posY)-4.5,-3);
+					currentlyHeldObject = SWORD_HELD;
+				}
+				else if(blockCursor){
+					set_light_full();
+					if(!gridMode)
+						draw_cursor((coorSys[0]+player.posX)-9,(coorSys[1]+player.posY)-4.5,upOne);
+					else
+						draw_cursor(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
 					currentlyHeldObject = TOOL_HELD;
 				}else{
 					//AND HERE
@@ -1668,7 +1707,6 @@ function render(now){
 	console.log(info)
 	}
 	*/
-
 	
 	now *= 0.001;                          // convert to seconds
 	const deltaTime = now - then;          // compute time since last frame

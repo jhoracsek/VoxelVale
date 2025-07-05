@@ -307,7 +307,8 @@ class Humanoid{
 	returnBounds(){
 		//return [vec3(mult(translate(this.posX,this.posY,this.posZ),vec4(-0.25,-0.25,4,1))),vec3(mult(translate(this.posX,this.posY,this.posZ),vec4(0.25,0.25,1.25,1)))];
 		//return [vec3(mult(translate(this.posX,this.posY,this.posZ),vec4(-0.25,-0.25,3.1,1))),vec3(mult(translate(this.posX,this.posY,this.posZ),vec4(0.25,0.25,1.25,1)))];
-		return [vec3(mult(translate(this.posX,this.posY,this.posZ),vec4(-0.25,-0.25,1.25,1))),vec3(mult(translate(this.posX,this.posY,this.posZ),vec4(0.25,0.25,3.1,1)))];
+		let hbSize = 0.30;
+		return [vec3(mult(translate(this.posX,this.posY,this.posZ),vec4(-hbSize,-hbSize,1.25,1))),vec3(mult(translate(this.posX,this.posY,this.posZ),vec4(hbSize,hbSize,3.1,1)))];
 		
 		/*
 		if(fixedView)
@@ -320,6 +321,7 @@ class Humanoid{
 }
 
 var fastMode=false;
+var drawingPlayerShadow=false;
 class Player extends Humanoid{
 	constructor(X,Y,Z=0){
 		super(X,Y,Z);
@@ -336,6 +338,7 @@ class Player extends Humanoid{
 		this.isMoving = false;
 		this.isSwinging=false;
 		this.isShooting=false;
+		this.isAttacking=false;
 		this.isPlacing=false;
 		this.completedAction=true;
 
@@ -357,6 +360,8 @@ class Player extends Humanoid{
 		this.stopknockback = [false,false,false,false];
 
 		this.particleColor = vec3(1, 0, 0);
+		this.attackHitBox = false;
+
 	}
 
 	getInventoryContents(){
@@ -522,29 +527,29 @@ class Player extends Humanoid{
 		//	player_angle_by_diff(diffX,diffY)
 		
 		//if(this.isMovingDown && this.isMovingLeft){
-		
+		let shouldSetAngle = true;
 		if(diffX < 0 && diffY < 0){
-			if(!this.isShooting)
+			if(shouldSetAngle)
 				angleFacing = 45;
 		}
 		//if(this.isMovingDown && this.isMovingRight){
 		if(diffX > 0 && diffY < 0){
-			if(!this.isShooting)
+			if(shouldSetAngle)
 				angleFacing = -45;
 		}
 
 		//if(this.isMovingUp && this.isMovingLeft){
 		if(diffX < 0 && diffY > 0){
-			if(!this.isShooting)
+			if(shouldSetAngle)
 				angleFacing = 135;
 		}
 		//if(this.isMovingUp && this.isMovingRight){
 		if(diffX > 0 && diffY > 0){
-			if(!this.isShooting)
+			if(shouldSetAngle)
 				angleFacing = -135;
 		}
 
-		if(!this.isShooting){
+		if(shouldSetAngle){
 			if(diffX == 0){
 				if(diffY > 0){
 					angleFacing = 180;
@@ -577,28 +582,28 @@ class Player extends Humanoid{
 		this.idle = false;
 		if(!isStopLeft)
 			this.posX-=this.speed;
-		if(!this.isShooting)
+		if(this.shouldSetAngleByWalking())
 			angleFacing = 90;
 	}
 	moveRight(){
 		this.idle = false;
 		if(!isStopRight)
 			this.posX+=this.speed;
-		if(!this.isShooting)
+		if(this.shouldSetAngleByWalking())
 			angleFacing = -90;
 	}
 	moveUp(){
 		this.idle = false;
 		if(!isStopUp)
 			this.posY+=this.speed;
-		if(!this.isShooting)
+		if(this.shouldSetAngleByWalking())
 			angleFacing = 180;
 	}
 	moveDown(){
 		this.idle = false;
 		if(!isStopDown)
 			this.posY-=this.speed;
-		if(!this.isShooting)
+		if(this.shouldSetAngleByWalking())
 			angleFacing = 0;
 	}
 	stopMoving(){
@@ -734,9 +739,19 @@ class Player extends Humanoid{
 		if(this.isSwinging){
 			this.completedAction = false;
 			player_swinging();
+		
 		}else{
 			sound_StopSwinging();
 		}
+		if(this.isAttacking){
+			this.completedAction = false;
+			//this.attackHitBox = true;
+			player_attacking();
+		
+		}else{
+			sound_StopSwinging();
+		}
+
 		if(this.isShooting){
 			this.completedAction = false;
 			player_shooting();
@@ -767,18 +782,27 @@ class Player extends Humanoid{
 		
 		if(this.flash)
 			gl.uniform1i(flashingLoc, true);
-		//draw_healthbar(0, 0, 2, 1, this.stamina, this.maxStamina,40,1)	
+		//draw_healthbar(0, 0, 2, 1, this.stamina, this.maxStamina,40,1)
+		drawingPlayerShadow = false;
 		traverse(bodyId);
 		if(this.flash)
 			gl.uniform1i(flashingLoc, false);
 	}
 	drawShadows(){
 
-		if(!this.isDead)
+		if(!this.isDead){
+			drawingPlayerShadow = true;
 			traverse_shadow(bodyId);
+		}
 	}
 	shoot(){
 
+	}
+	/*
+		Returns true if the condition to update the players angle by walking is true.
+	*/
+	shouldSetAngleByWalking(){
+		return !this.isShooting; //&& !this.isPlacing; //&& !( this.isSwinging && this.heldObject.toolType=='SWORD');
 	}
 }
 
@@ -850,24 +874,33 @@ function check_player_action(){
 		//if(player.heldObject.onLClick() == true)
 			player.isShooting = true;
 	}else if(player.heldObject.type != 'BLOCK_WALL'){
-		player.isSwinging = true;
-		var activeItem = player.heldObject.type;
-		switch(activeItem){
-			case 'TOOL':
-				if(fastMode){
-					world.removeBlockByPos(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
-				}
-				else if(blockCounter > (blockCounterMax/player.heldObject.strength)){
-					blockCounter=0;
-					if(cursorGreen || fastMode){
-						if(!fixedView){
-							world.removeBlockByPos(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
-						}else{
-							currentDungeon.removeBlockByPos(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
+
+		if(player.heldObject.typeOfObj == 'ITEM' && player.heldObject.toolType == 'SWORD'){
+			//Holding a sword.
+			player.isAttacking = true;
+
+		}else{
+
+			//Holding a tool.
+			player.isSwinging = true;
+			var activeItem = player.heldObject.type;
+			switch(activeItem){
+				case 'TOOL':
+					if(fastMode){
+						world.removeBlockByPos(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
+					}
+					else if(blockCounter > (blockCounterMax/player.heldObject.strength)){
+						blockCounter=0;
+						if(cursorGreen || fastMode){
+							if(!fixedView){
+								world.removeBlockByPos(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
+							}else{
+								currentDungeon.removeBlockByPos(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),upOne);
+							}
 						}
 					}
-				}
-				break;
+					break;
+			}
 		}
 	}else{
 		//Sound played in "controls.js".
@@ -894,6 +927,7 @@ var armAngleLeftTilt=0;
 function player_swinging(){
 	armAngleLeftSwing=armAngleLeft;
 	player_body_angle_to_cursor();
+	//player_angle_to_cursor();
 	if(phase1){
 		armAngleRightSwing=0;
 		phase1=false;
@@ -903,6 +937,8 @@ function player_swinging(){
 		if(armAngleRightSwing > 120){
 			sound_StartSwinging();
 			phase2=true;
+		}else{
+			//player.attackHitBox = false;
 		}
 	}
 	if(phase2){
@@ -914,23 +950,89 @@ function player_swinging(){
 			phase1=true;
 		}
 	}
-
 }
+
+var attackingPhase1=true;
+var attackingPhase2=false;
+var attackingPhase3=false;
+var attackingPhase3Cooldown=20;
+function player_attacking(){
+	armAngleLeftSwing=armAngleLeft;
+	//player_body_angle_to_cursor();
+	player_angle_to_cursor();
+	if(attackingPhase1 && !attackingPhase3){
+		armAngleRightSwing=0;
+		attackingPhase1=false;
+	}
+	if(!attackingPhase2 && !attackingPhase3){
+		armAngleRightSwing+=3.5;
+		if(armAngleRightSwing > 120){
+			sound_StartSwinging();
+			player.attackHitBox = true;
+			attackingPhase2=true;
+		}else{
+			player.attackHitBox = false;
+		}
+	}
+	if(attackingPhase2 && !attackingPhase3){
+		armAngleRightSwing-=10;
+		player.attackHitBox = true;
+		if(armAngleRightSwing<40){
+			armAngleRightSwing=0;
+			attackingPhase2=false;
+			attackingPhase1=false;
+			attackingPhase3 = true;
+			player.attackHitBox = false;
+		}
+	}
+	if(attackingPhase3){
+		if(attackingPhase3Cooldown > 0){
+			attackingPhase3Cooldown--;
+		}else{
+			attackingPhase1 = true;
+			attackingPhase3 = false;
+			attackingPhase3Cooldown = 20;
+			player.isAttacking=false;
+		}
+	}
+}
+
+var shootingPhase1=true;
+var shootingCooldownStart = 15;
+var shootingCooldown=shootingCooldownStart;
 function player_shooting(){
-	if(hold){
+	if(hold && shootingPhase1){
 		armAngleRightSwing=90;
 		armAngleRightTilt = 5;
 		armAngleLeftTilt = -22.5;
 		armAngleLeftSwing=90;
-
+		shootingPhase1 = false;
 		player_angle_to_cursor();
 
+	}else if(!shootingPhase1){
+		player_angle_to_cursor();
+		if(shootingCooldown > 0)
+			shootingCooldown--;
+		else{
+			if(!hold){
+				armAngleRightSwing=0;
+				armAngleRightTilt=0;
+				armAngleLeftTilt=0;
+				armAngleLeftSwing=0;
+				player.isShooting = false;
+				shootingPhase1 = true;
+				shootingCooldown = shootingCooldownStart;	
+			}else{
+				shootingPhase1 = true;
+			}
+		}
 	}else{
 		armAngleRightSwing=0;
 		armAngleRightTilt=0;
 		armAngleLeftTilt=0;
 		armAngleLeftSwing=0;
 		player.isShooting = false;
+		shootingCooldown = shootingCooldownStart;
 	}
 
 }
@@ -1017,7 +1119,11 @@ function player_angle_to_cursor(){
 }
 var fixLegs = false;
 function player_body_angle_to_cursor(){
-	if(player.isMoving) return;
+
+	if(player.isMoving && player.heldObject != null &&
+		!(player.heldObject.typeOfObj=='ITEM' && player.heldObject.toolType == 'SWORD')) 
+		return;
+
 	var opp = cursorCoordinates[1]-(player.posY-0.5);
 	var adj = cursorCoordinates[0]-(player.posX-0.5);
 	if(adj==0 && opp==0){
@@ -1700,7 +1806,7 @@ function right_eye(){
 function tool(){
 	if(player.heldObject == null)
 		return;
-
+	
 	if(player.heldObject.typeOfObj == 'BLOCK'){
 		var instanceMat = translate(-0.3,-1.25,-0.65);
 		//instanceMat = mult(instanceMat,rotateX(-35));
@@ -1709,13 +1815,25 @@ function tool(){
 		instanceMat = mult(instanceMat,rotateX(100));
 		var transformMat = mult(modelViewMatrix, instanceMat);
 		player.heldObject.drawTransparent(transformMat);
-	}else{
-		if(!player.isShooting){
+	}else if (player.heldObject.typeOfObj == 'ITEM'){
+		
+		if(player.heldObject.toolType == 'SWORD'){
+			var instanceMat = translate(0,-1.5,0.15);
+			instanceMat = mult(instanceMat,rotateX(-85));
+			instanceMat = mult(instanceMat,rotateY(90));
+			var transformMat = mult(modelViewMatrix, instanceMat);
+			player.heldObject.drawTransparent(transformMat);
+			if(!drawingPlayerShadow)
+				player.heldObject.updateWhenHeld(transformMat)
+
+		}else if(!player.isShooting){
 			var instanceMat = translate(0,-2,0.15);
 			instanceMat = mult(instanceMat,rotateX(-35));
 			instanceMat = mult(instanceMat,rotateY(90));
 			var transformMat = mult(modelViewMatrix, instanceMat);
 			player.heldObject.drawTransparent(transformMat);
+			if(!drawingPlayerShadow)
+				player.heldObject.updateWhenHeld(transformMat);
 		}else{
 			var instanceMat = translate(-.2,-1.75,1.25);
 			instanceMat = mult(instanceMat,rotateX(-90));
@@ -1723,7 +1841,8 @@ function tool(){
 			instanceMat = mult(instanceMat,rotateY(10));
 			var transformMat = mult(modelViewMatrix, instanceMat);
 			player.heldObject.drawTransparent(transformMat);
-
+			if(!drawingPlayerShadow)
+				player.heldObject.updateWhenHeld(transformMat);
 		}
 	}
 }
@@ -1732,7 +1851,4 @@ function onDeath(){
 	draw_filled_box(0,0,16,9,'rgba(0,0,0,0)','rgba(100,0,0,0.8)');
 	draw_centered_text(centerCoordinates[0], centerCoordinates[1]+0.5, "You died.");
 	draw_centered_text(centerCoordinates[0], centerCoordinates[1], "Press 'space' to respawn.");
-		//draw_centered_text(centerCoordinates[0], centerCoordinates[1]-0.5, "Right click to interact with blocks.");
-		//draw_centered_text(centerCoordinates[0], centerCoordinates[1]-1, "Scroll or use 'Q' and 'E' to adjust cursor.");
-		//draw_centered_text(centerCoordinates[0], centerCoordinates[1]-4, "VoxelVale "+GAME_VERSION, '11');
 }
