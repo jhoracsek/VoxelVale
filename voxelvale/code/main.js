@@ -358,9 +358,11 @@ function configure_texture(image){
 //Thank you MDN webdocs
 async function lockChangeAlert(){
 	if(document.pointerLockElement===canvas || document.mozPointerLockElement===canvas){
+		if(!isFocused)
+			resumeMusic();
 		isFocused = true;
 		
-		resumeMusic();
+		
 		document.addEventListener("mousemove",mouseMoveUpdate,false);
 	}else{
 		document.removeEventListener("mousemove",mouseMoveUpdate,false);
@@ -511,8 +513,8 @@ window.onload = function init(){
 	var bow = new WoodenBow();	
 	player.addToInventory(bow);
 
-	//toolBarList.push(sword);
-	toolBarList.push(bow);
+	toolBarList.push(sword);
+	//toolBarList.push(bow);
 
 	var workbench = new WorkBench();
 	player.addToInventory(workbench);
@@ -543,6 +545,7 @@ window.onload = function init(){
 		player.addToInventory(new CopperAxeRecipe());
 		player.addToInventory(new CopperSwordRecipe());
 		player.addToInventory(new CopperBrick());
+		
 	}
 	toolBarList.push(null);
 	toolBarList.push(null);
@@ -1026,7 +1029,6 @@ function render_data(){
 		Update body background position
 	*/
 
-    //console.log(isFocused);
 
 	frameCount = (frameCount+1)%60;
 	if(scrollCooldown > 0){
@@ -1555,13 +1557,15 @@ function render_data(){
     //draw_centered_text(14, 1, "FPS: "+(averageFPS.toFixed(2)).toString());
     //UNFOCUSED OVERLAY
 	if(!isFocused){
+		var offset = 0.25;
 		draw_filled_box(0,0,16,9,'rgba(0,0,0,0)','rgba(0,0,0,0.5)');
-		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+1.5, "Press on the window to begin playing!");
-		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+1, "Use 'WASD' to move.")
-		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+0.5, "Press ~ to open inventory.");
-		draw_centered_text(centerCoordinates[0], centerCoordinates[1], "Left click to use tools and place blocks.");
-		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-0.5, "Right click to interact with blocks.");
-		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-1, "Scroll or use 'Q' and 'E' to adjust cursor.");
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+1.5+offset, "Press on the window to begin playing!");
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+1+offset, "Use 'WASD' to move.")
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+0.5+offset, "Press ~ to open inventory.");
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+offset, "Left click to use tools and place blocks.");
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-0.5+offset, "Right click to interact with blocks.");
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-1+offset, "Scroll or use 'Q' and 'E' to adjust cursor.");
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-1.5+offset, "Press 'G' to toggle grid mode.");
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-4, "VoxelVale "+GAME_VERSION, '11');
 	}
 

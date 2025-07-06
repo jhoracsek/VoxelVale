@@ -6,226 +6,7 @@ Some stuff todo
 
 
 
-	Want to do the hover block thing		()
-		This means fix the upOne thing		()
 
-	Fix player movement						()
-	
-	Do the bad ceiling blocks				()
-
-	World saving
-		Drop boxes							()
-		Fuck it do dungeons					()
-		Should save door orientation		()
-
-	fix safari issues.
-		Some sounds don't work.
-		Just fix the point and click thing too.		()
-
-	Remove testing functions.
-
-	optimize a little. Works poorly on
-	old laptop, but old one works fine??
-
-
-	Priority List:
-
-		1. Attempt to fix canvas lock / cursor				(X)
-			1.a) Should work on Safari as well				(X)
-		2. Saving: dropboxes and doors.						(X)
-			2.a) DropBoxes									(X)
-			2.b) Doors										(X)
-		3. Safari sound (and music) issues.					(X)
-			3.a) Music (must be mp3)						(X)
-			3.b) Sounds (must be wav/mp3)					(X)
-		4. Remove/Disable testing functions.				(X)
-		5. Change cursor controls to Q and E 				(X)
-		6. Set number keys to correspond to toolbar			(X)
-		7. Deal with upone.									(X)
-		8. Deal with hovering.								(X)
-			8.a) Interactive blocks only at z = -3.			(X)
-		9. Fix the save thing when hit escape.				(X)
-		10. Fix text on linux.								(X)
-			10.a) Can maybe change font overall.			(X)
-		11. Can look at the firebase thing.					(X)
-			11.a) Fixed nameservers							(X)
-			11.b) Add email.								(X)
-			11.c) Try to fix template						(X) (It's fine. No longer shows up in spam)
-		12. Try loading world from laptop.					(X)
-		13. Safari Logo.									(X)
-		14. Add more music.									(X)
-		15. Add world border.								(X)
-		16. Fix bow vector.									(X)
-			16.a) Make so it's a fixed distance ring 		(X)
-			16.b) Kind of fixed distance.					(X)
-			16.c) Do the power thing.						(X)
-		17. Door hovering.									(X)
-			17.a) For simplicity it should follow cursor.	(X)
-			17.b) Add 'Close door.'							(X)
-		18. Fix hover thing in crafting						(X)
-		19. Add text to attributions.						(N/A)
-		20. Commit all these changes.						(X)
-		21. Add dungeon flag.								(X)
-			21.a) New file									(X)
-		22. Volume Sliders (Important can get annoying)		(X)
-			22.a) Button that moves with cursor.			(X)
-			22.b) Only moves when held.						(X)
-			22.c) Only moves within range.					(X)
-			22.d) Range is associated with [0,1].			(X)
-			22.e) Corresponds with volume.					(X)
-			22.f) One for sound and music.					(X)
-			22.g) Make it look okay.						(X)
-			22.h) Add backgrounds							(X)
-			22.i) Position									(X)
-			22.j) Add text 									(X)
-			22.k) Reconfigure								(X)
-		23. Music Crackling.								(X) (Ignore, can't duplicate, maybe it fixed itself.)
-		24. Add version, disable devtools.					(X)
-			24. a) Add version to save.						(X)
-		25. Credit the texture packs						(Nah)
-			25. a) Be very specific							(Nah)
-		26. Pause music on 'ESC'							(X)
-		27. Expand workbench hover box 						(X)
-		28. Change 'QUANTITY'								(X)
-		29. Door can be opened from top or bottom			(X)
-		30. Look into code obfuscation						(X)
-			30. a) Try to find a nice solution.				(X)
-			30. b) Find easy way to push/pull to lightsail	(X)
-		31. New todo list 									(X)
-			31. a) Organize notes below						(X)
-		32. Commit all changes								(X)
-		32. Download squid game	:)							(X)
-
-
-
-	New todo.
-		1. Stone brick.										(X)
-			1.a) Recipe.									(X)
-			1.b) Texture.									(X)
-		2. Flesh out recipes (if not done in 1)				(X)
-			2.a) Blueprints (small)							(X)
-			2.b) Blueprints (big)							(X)
-			2.c) Description								(X)
-			2.d) Lighten the blue color						(X)
-		3. Fix crafting table.								(X)
-			3.a) Switching to inventory.					(X)
-			3.b) Layout.									(X)
-			3.c) Anything else.								(X)
-			3.d) Fixed so much stuff lol 					(X)
-		4. Add one Ore 										(X)
-			4.a) Flesh out the idea.						(X)
-			4.b) Maybe Iron/Steel or equivalent.			(X)
-			4.c) Should go under item tab. 					(X)
-			4.d) This will require a lot of work.			(X)
-			4.e) Add block to mine.							(X)
-			4.f) Add to random generation.					(X)
-			4.g) Add bar.									(X)
-			4.h) Add recipe for bar.						(X)
-		5. Add arrow item.									(X)
-			5.a) Should go under 'Items'.					(X)
-			5.b) Add crafting recipe.						(X)
-			5.c) Reduce quantity on shoot.					(X)
-			5.d) Add counter below bow.						(X)
-			5.e) Once 0, player cannot shoot.				(X)
-		6. Health bar. 										(X)
-			6.a) Rough design/idea.							(X)
-			6.b) Same size as toolbar.						(X)
-			6.c) Same rounded edges (same border rad).		(X)
-			6.d) Add optional border.						(X)
-			6.e) Work out method for depleting it.			(X)
-			6.f) Add player health ranging from 0-?.		(X)
-			6.g) Enemy should hurt you. 					(X)
-			6.h) Enemy causes knockback as well?			(X)
-			6.i) Invulnerable flash.						(X)
-			6.j) Tweak design and placement.				(X)
-			6.k) What happens when health = 0?				(X)
-			6.l) Knockback cannot clip!						(X)
-			6.m) Save player health.						(X)
-			6.n) Disable actions.							(X)
-			6.o) Kill all enemies on respawn.				(X)
-		7. Enemies.											(X)
-			7.a) Random spawning.							(X)
-			7.b) Start with spawning blocks.				(X)
-			7.c) Get good list of positions out of bounds.	(X)
-			7.d) Border coordinates.						(X)
-			7.e) Spawn them (max 4-5).						(X)
-			7.f) Easily be able to change spawn rate.		(X)
-			7.g) Also define what 'spawn rate' means.		(X)
-			7.h) Maybe like every 60 frames there is a chanc(X)
-			7.i) Add flag in 'flags.js' to disable spawning.(X)
-			7.i) May as well give enemy red flash.			(X)
-			7.j) Dropboxes with loot.						(X)
-			7.k) Tweak z-level to avoid overlap.			(X)
-			7.l) Fix enemy knockback like player.			(X)
-			7.m) Small enemy health bar above their head	(X)
-			7.n) Only draw if they are sufficiently close.	(X)
-			7.o) Or if they've been hit recently.			(X)
-			7.n) Despawn enemies if they are very far.		(X)
-			7.o) Particles on death.						(X)
-			7.p) Make enemy arrows particles red.			(X)
-		8. Door 											(X)
-			8.a) Recipe. 									(X)
-			8.b) Crafting.									(X)
-			8.c) Update texture.							(X)
-		9. Tool upgrade.									(X)
-			9.a) Ability to upgrade with bar.				(X)
-			9.b) Make a new class.							(X)
-			9.c) Pickaxe.									(X)
-			9.d) Axe.										(X)
-		9. Update about setion.								(X)
-		10. Clean up.										(X) (Do last)
-			10.a) Toolbar.									(X)
-			10.b) Inventory.								(X)
-			10.c) Devtools.									(NA)
-		11. Automatically update version on index.html		(X)
-		12. Hold multiple recipes and be able to drop.		(X)
-			12.a) Save to firebase.							(X)
-		13. Tab when in inventory should switch tab.		(X)
-		14. Fix items.										(X)
-			14.a) Added new (simpler) item class.			(X)
-			14.b) Added save load functionality.			(X)
-			14.c) Fixed tab.								(X)
-			14.d) Implement drawing/rendering.				(X)
-		
-		16. Remove notifications at startup.				(X)
-			16. a) And on load.								(X)
-		17. Can pick up drop boxes while in inventory.		(X)
-			17.a) Click in general. Double click workbench.	(X)
-		18. Fix all the newly added stuff in the crafting m.(X)
-		19. Toggle off inventory with bow looks weird.		(X)
-
-		22. Faviocon.										(X)
-		23. Patreon stuff.									(X) (Have to wait.)
-		24. Maybe change border back to 1px in inventory.	(X)
-			24.a) Pixel to canvas function for precision.	(Good enough)
-		25. Make sure you turn the overlay back on!			(X)
-		26. Make enemies green (or grey).					(X)
-			26.a) Fix weird lighting.						(X)
-			26.b) Try red eyes?								(X)
-			26.c) Something about zombie is glitching.		(X)
-			26.d) Shadows									(X)
-
-		29. Consumables?									(X)
-		31. Arrow despawn?									(X)
-			31.a) Shoot above layer 1 blocks.				(X)
-		33. Text attribution for logo?						(X)
-		34. Push arrow count to right slightly.				(X)
-		35. ZOMBIES CANNOT COLLIDE WITH DROPBOX.			(X)
-		37. Adding shadows to arrows would be helpful.		(X)
-			37.a) Maybe enemies as well?					(X)
-		38. Fix bounds on Stone for arrows.					(X)
-		40. Double check arrows with doors.					(X)
-		41. Option for user to turn off mobs.				(X)
-		43. Clear enemies on load world?					(X)
-		44. Decide which loot to give enemies dropbox.		()
-		45. Fix the ceiling thing.							(X)		(Only level z=-6 is ceiling right now... good enough)
-
-		48. Save toolbar.									(X)
-		50. Try testing on windows laptop.					(X)
-		50. Add all skipped items to new list.				()
-		52. Any lingering 'console.log'.					(X)
-
-		Anything added here cannot be done before release.
 
 Skipped:
 		20. Try recipes with normal lines or something?		(Skip)
@@ -244,7 +25,59 @@ Skipped:
 		49. Check door texture and others on top monitor.	(Skip)
 
 
-Update Alpha 0.2.0
+Update notes. (Alpha 0.1.0)
+	Features:
+		Added swords: Stone and Copper.
+		Added Copper Bricks.
+		Added grid mode, accessed by pressing 'G'.
+
+	Changes:
+		Toolbar is now saved.
+		Turning enemies off now despawns all current enemies.
+		Increased arrow cooldown.
+
+	Fixes:	
+		Overlapping notification text.
+		Enemy hitboxes adjusted.
+		Held object no longer remains the same on load.
+		Bow shooting animation.
+		Enemies can no longer walk over holes in the ground.
+		Loot box no longer attaches to stone.
+		Recipes for copper pickaxe and axe are less glitchy.
+		Fixed paused music glitch.
+
+	Outside the game:
+		Added google authentication.
+
+
+What to film (No music):
+	Start with logo on blurred background.
+	
+	Using sword on enemies.
+	Crafting sword (copper)
+	Using copper sword on enemies.
+	Crafting copper block.
+	Placing copper block.
+	Simple build using copper blocks.
+
+	Showcase grid mode.
+		(add user who suggested it.)
+
+	Show shooting.
+
+	Add fixes/changes (blurred background).
+
+	Patreon member shoutout.
+
+Hey guys, it's Jay.
+
+Starts in your inventory by default.
+
+
+
+
+
+Update Alpha 0.1.0
 	1. Fix notifications being too small							(X)
 		1.a) Added variable font size.								(X)
 	2. Turn enemies off actually despawns them.						(X)
@@ -300,9 +133,16 @@ Update Alpha 0.2.0
 	21. Moving on up! Name for moving up update.					()
 
 	
+	Fix player movement						()
+	
+	Do the bad ceiling blocks				()
 
+
+	REALLY WEIRD PLAYER MOVEMENT BUG. (When holding
+	sword at least?)
 
 Update Alpha 0.3.0
+13. Make copper ore randomly drop 2 sometimes.
 	14. Athelas														()
 			14.a) Flesh this idea out.									()
 			14.b) Zombies no longer drop potions.						()
@@ -351,13 +191,7 @@ Add pinned post on patreon describing what the deal is. Tuesday releases bi-week
 Poll should sword be their own inventory slot?
 
 
-Update notes. (Alpha 0.2.0)
-	Notification text fixed.
-	Turning enemies off now despawns all current enemies.
-	Updated enemy hitboxes adjusted slightly.
-	Added swords.
-	Toolbar is now saved.
-	Fixed a toolbar bug.
+
 
 Idea. Hit boxes always square. Can have many...
 

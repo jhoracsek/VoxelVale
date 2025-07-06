@@ -26,7 +26,7 @@ function randomIntInRange(minimum, maximum){
 	getSpawnPosition?
 */
 function spawnEnemy(){
-
+	if(!hasInteractedWithWindow) return;
 	/*
 		Good bounds
 	*/

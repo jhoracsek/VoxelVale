@@ -167,7 +167,7 @@ void main()
     }
 
     if(isCeiling == true && inDungeon != true ){
-        vec2 uv = gl_FragCoord.xy / vec2(1280, 720);
+        vec2 uv = gl_FragCoord.xy / vec2(1920, 1080);
         vec2 centered = uv - vec2(0.5,0.6);
         float dist = length(centered);
         float fade = smoothstep(0.4, 0.0, dist);
