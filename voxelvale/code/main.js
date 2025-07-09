@@ -525,10 +525,11 @@ window.onload = function init(){
 	var workbenchRecipe = new WorkBenchRecipe();
 	player.addToInventory(workbenchRecipe);
 	player.addToInventory(new ArrowRecipe());
+	player.addToInventory(new ChestRecipe());
 
 
 	if(DEV_TOOLS){
-		for(let i = 0; i < 300; i++)
+		for(let i = 0; i < 50; i++)
 			player.addToInventory(new ArrowItem());
 	}else{
 		for(let i = 0; i < 10; i++)
@@ -545,12 +546,24 @@ window.onload = function init(){
 		player.addToInventory(new CopperAxeRecipe());
 		player.addToInventory(new CopperSwordRecipe());
 		player.addToInventory(new CopperBrick());
+		chest = new Chest()
+		player.addToInventory(chest);
+		player.addToInventory(new WoodBlock())
+		player.addToInventory(new WoodBlock())
+		player.addToInventory(new WoodBlock())
+		player.addToInventory(new GrassBlock())
+		player.addToInventory(new WoodLog())
 		
-	}
-	toolBarList.push(null);
-	toolBarList.push(null);
-	toolBarList.push(null);
 
+		toolBarList.push(chest);
+		toolBarList.push(null);
+		toolBarList.push(null);
+
+	}else{
+		toolBarList.push(null);
+		toolBarList.push(null);
+		toolBarList.push(null);
+	}
 
 	/*
 		End adding objects to testing.
@@ -1528,7 +1541,7 @@ function render_data(){
     universalCounter++;
     blockCounter++;
     updateUnimportantMethods=false;
-    updateToolBar();
+    //updateToolBar();
 
     // Draw players health bar
     //draw_healthbar(0.5, 7.4979, 5.3, 7.81084, 49)
@@ -1554,18 +1567,22 @@ function render_data(){
     }
 
     //draw_centered_text(1,15, "FPS: "+averageFPS.toString(), '11');
-    //draw_centered_text(14, 1, "FPS: "+(averageFPS.toFixed(2)).toString());
+    
+    if(DEV_TOOLS){
+    	//draw_centered_text(14, 1, "FPS: "+(averageFPS.toFixed(2)).toString());
+    }
     //UNFOCUSED OVERLAY
 	if(!isFocused){
-		var offset = 0.25;
+		var offset = 0.5;
 		draw_filled_box(0,0,16,9,'rgba(0,0,0,0)','rgba(0,0,0,0.5)');
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+1.5+offset, "Press on the window to begin playing!");
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+1+offset, "Use 'WASD' to move.")
-		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+0.5+offset, "Press ~ to open inventory.");
-		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+offset, "Left click to use tools and place blocks.");
-		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-0.5+offset, "Right click to interact with blocks.");
-		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-1+offset, "Scroll or use 'Q' and 'E' to adjust cursor.");
-		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-1.5+offset, "Press 'G' to toggle grid mode.");
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+0.5+offset, "Press 'space' to sprint.")
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+offset, "Press '~'' to open inventory.");
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-0.5+offset, "Left click to use tools and place blocks.");
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-1+offset, "Right click to interact with blocks.");
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-1.5+offset, "Scroll or use 'Q' and 'E' to adjust cursor.");
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-2+offset, "Press 'G' to toggle grid mode.");
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-4, "VoxelVale "+GAME_VERSION, '11');
 	}
 

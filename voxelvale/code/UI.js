@@ -9,6 +9,16 @@ var inventorySlots=[];
 
 
 
+/*
+	These are flags for which crafting station/inventory object you are currently in.
+*/
+const IN_NONE = 0;
+const IN_WORKBENCH = 1;
+const IN_CHEST = 2;
+
+//currentCraftingStation
+let currentStation = IN_NONE;
+
 //cursorCoor
 var disableInventoryCursor = false;
 function click_in_bounds(x1,y1,x2,y2,func,func2=function(){}){
@@ -131,7 +141,7 @@ function draw_triangle(x,y,d,c=UI_COLOURS[WHITE]){
 	ui_push(v1,v2,v3,c);
 }
 
-function toggleInventory(curCraftingStation = IN_NONE){
+function toggleInventory(curMenu = IN_NONE, curInvBlock = null){
 
 	/*
 		Should reset other stuff here too!
@@ -143,11 +153,23 @@ function toggleInventory(curCraftingStation = IN_NONE){
 	//Inventory
 	active =-1;
 	scrollOffset = 0;
-	if(curCraftingStation != IN_NONE){
-		currentCraftingStation = curCraftingStation;	
+
+	//Chest Menu
+	leftScrollOffset = 0;
+	rightScrollOffset =0 ;
+	if(curMenu == IN_WORKBENCH){
+		currentStation = curMenu;	
 		currentMenu='CRAFTING';
+	}else if(curMenu == IN_CHEST){
+		currentInventoryBlock = curInvBlock;
+		currentStation = IN_CHEST;
+		currentMenu = 'CHEST';
+		build_chest_list();
+
 	}else{
-		currentCraftingStation = IN_NONE;
+		currentStation = IN_NONE;
+		if(currentMenu == 'CHEST')
+			currentInventoryBlock.isOpen = false;
 		currentMenu = 'INVENTORY';
 	}
 	
@@ -500,6 +522,12 @@ function enemy_drop(worldObj,object, PX, PY){
 var selectedItemIndex = -1;
 function draw_scroll_list(){
 
+	draw_c_text_med(2.25,2.15,('Carry Weight:'));//draw_c_text_med_right
+	draw_c_text_med_right(3.85,2.15,player.weight);
+	draw_c_text_med(3.85,2.15,'/100');
+
+
+
 	click_in_bounds(2.1,  7.375,  3.425 ,7,function(){selectedTab = 'BLOCK';active=-1;scrollOffset=0; activeTab =0;});
 	click_in_bounds(3.6,  7.375,  4.9   ,7,function(){selectedTab = 'TOOL';active=-1;scrollOffset=0; activeTab = 1;});
 	click_in_bounds(5.075,7.375,  6.375   ,7,function(){selectedTab = 'ITEM';active=-1;scrollOffset=0; activeTab = 2;});
@@ -531,6 +559,9 @@ function draw_scroll_list(){
 	}
 
 	tabListLength = tabList.length;
+
+	scrollOffset = Math.min(scrollOffset, get_max_scroll_length());
+
 	for(var i = 0; i < Math.min(tabListLength-scrollOffset,4); i++){
 		var mv = translate(0,start+difference*(3-i),0);
 		set_mv_ui(mv);
@@ -717,6 +748,15 @@ function draw_c_text_med(x1,y1,text1){
     context.fillText(text1,xCoor1,yCoor1);
 }
 
+function draw_c_text_med_right(x1,y1,text1){
+    context.textAlign = "right";
+	context.font = (13*canvas_multiplier).toString()+"px "+FONT;
+	var xCoor1 = x1*(canvas.width/16);
+    var yCoor1 = canvas.height - (y1*(canvas.height/9));
+    context.fillText(text1,xCoor1,yCoor1);
+    context.textAlign = "left";
+}
+
 function draw_c_text_med_colored(x1,y1,text1,c){
 	context.font = (13*canvas_multiplier).toString()+"px "+FONT;
 	context.fillStyle = c;
@@ -808,8 +848,12 @@ function draw_inventory(){
 	
 			//This is where the updated stuff is included.
 			draw_interface_inventory();
-
 			break;
+		case 'CHEST':
+			heldIndex = craftingButtonID;
+			draw_chest_menu();
+			break;
+
 		case 'CRAFTING':
 			heldIndex = craftingButtonID;
 			draw_crafting_menu();

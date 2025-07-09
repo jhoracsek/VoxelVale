@@ -30,10 +30,10 @@ function getEligibleRecipes(){
 	var allRecipes = player.getRecipeList();
 	var returnedRecipes = [];
 	/*
-		Switches based on the current crafting station: 'currentCraftingStation',
+		Switches based on the current crafting station: 'currentStation',
 		as defined in 'craftingmenu.js'.
 	*/
-	switch(currentCraftingStation){
+	switch(currentStation){
 		case IN_NONE:
 			for(let i = 0; i < allRecipes.length; i++)
 				if(allRecipes[i].craftingStation == REQUIRES_NO_CRAFTING_STATION)
@@ -409,9 +409,38 @@ class CopperBrickRecipe extends Recipe{
 	}
 }
 
+class ChestRecipe extends Recipe{
+	static objectNumber = 138;
+	static craftingStation = REQUIRES_WORKBENCH;
+	constructor(){
+		super(new Chest(), [[new WoodBlock(),12]],1);
+		this.desc='Recipe for a workbench.';
+	}
+
+	
+	drawSmall(currentMat){
+		this.drawSmallObject(currentMat);
+
+		currentMat = mult(currentMat,translate(1,0,0));
+		currentMat = mult(currentMat,mult(rotateY(-90),scale4(1,1,1)));
+
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(mult(currentMat, this.object.topMatOriginal)));
+		gl.drawArrays(gl.TRIANGLES,cursorBytes[5][0],cursorBytes[5][1]);
+
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(mult(currentMat, this.object.bottomMatOriginal)));
+		gl.drawArrays(gl.TRIANGLES,cursorBytes[5][0],cursorBytes[5][1]);
+
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(mult(currentMat, this.object.latchMatOriginal)));
+		gl.drawArrays(gl.TRIANGLES,cursorBytes[5][0],cursorBytes[5][1]);
+
+		return;
+	}
+	
+}
 
 
-const RECIPE_OBJNUMS = [WorkBenchRecipe,WoodBlockRecipe,DoorRecipe,BrickBlockRecipe,CopperBarRecipe, ArrowRecipe, CopperPickRecipe,CopperAxeRecipe,CopperSwordRecipe,CopperBrickRecipe];
+
+const RECIPE_OBJNUMS = [WorkBenchRecipe,WoodBlockRecipe,DoorRecipe,BrickBlockRecipe,CopperBarRecipe, ArrowRecipe, CopperPickRecipe,CopperAxeRecipe,CopperSwordRecipe,CopperBrickRecipe,ChestRecipe];
 
 
 

@@ -486,7 +486,7 @@ class GrassBlock extends BlockWallNew{
 */
 
 function initialize_simpleBlocks(){
-	simpleBlocks = [GrassBlock, WeirdBlock, BrickBlock, StoneFloorBlock, DungeonWall, BorderWall,CopperBrick];
+	simpleBlocks = [GrassBlock, WeirdBlock, BrickBlock, StoneFloorBlock, DungeonWall, BorderWall,CopperBrick,Chest];
 }
 
 class WeirdBlock extends BlockWallNew{

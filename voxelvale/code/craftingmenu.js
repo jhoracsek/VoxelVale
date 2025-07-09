@@ -17,13 +17,9 @@ Using draw_2D_square(mv,index)
 	Pretty stupid names I know, but that's how I did it :/
 */
 
-/*
-	These are flags for which crafting station you are currently in.
-*/
-const IN_NONE = 0;
-const IN_WORKBENCH = 1;
 
-let currentCraftingStation = IN_NONE;
+
+
 
 
 
@@ -36,7 +32,7 @@ function draw_crafting_menu(){
 	draw_c_text(2.2,6.685,'Recipes:');
 	draw_c_text(9.7,6.685,'Required materials:');
 
-	switch(currentCraftingStation){
+	switch(currentStation){
 		case IN_NONE:
 			draw_c_text_fontsize(2.2,7.1,'Crafting menu',22);
 			draw_craftable_list();

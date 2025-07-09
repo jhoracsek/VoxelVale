@@ -26,28 +26,30 @@ Skipped:
 
 
 Update notes. (Alpha 0.1.0)
-	Features:
-		Added swords: Stone and Copper.
-		Added Copper Bricks.
-		Added grid mode, accessed by pressing 'G'.
+Features:
+	Added copper and stone swords.
+	Added copper bricks.
+	Added grid mode, accessed by pressing 'G'.
+	Toolbar is now saved.
 
-	Changes:
-		Toolbar is now saved.
-		Turning enemies off now despawns all current enemies.
-		Increased arrow cooldown.
+Changes:
+	Increased arrow cooldown.
 
-	Fixes:	
-		Overlapping notification text.
-		Enemy hitboxes adjusted.
-		Held object no longer remains the same on load.
-		Bow shooting animation.
-		Enemies can no longer walk over holes in the ground.
-		Loot box no longer attaches to stone.
-		Recipes for copper pickaxe and axe are less glitchy.
-		Fixed paused music glitch.
+Fixes:	
+	Overlapping notification text.
+	Enemy hitboxes adjusted.
+	Held object no longer remains the same on load.
+	Bow shooting animation.
+	Expanded arrow hitbox.
+	Enemies can no longer walk over holes in the ground.
+	Loot box no longer attaches to stone.
+	Recipes for copper pickaxe and axe are less glitchy.
+	Fixed paused music glitch.
+	Enemies no longer spawn before the game starts.
+	Turning enemies off now despawns all current enemies.
 
-	Outside the game:
-		Added google authentication.
+Website changes:
+	Added Google authentication.
 
 
 What to film (No music):
@@ -141,8 +143,53 @@ Update Alpha 0.1.0
 	REALLY WEIRD PLAYER MOVEMENT BUG. (When holding
 	sword at least?)
 
-Update Alpha 0.3.0
-13. Make copper ore randomly drop 2 sometimes.
+Update Alpha 0.2.0 | Weight a minute!
+	1. Chests 														()
+		1.a) Add block.												(X)
+		1.b) Make interactable.										(X)
+		1.c) Make a basic layout for testing.						(X)
+		1.d) Idea for layout.										(X)
+		1.e) Implement layout.										(X)
+		1.f) Implement drawContents (just open chest).				(X)
+		1.g) Implement storing for blocks.							(X)
+		1.h) Add switching between tabs.							(X)
+		1.g) Make open/close.										(X)
+		1.h) Design texture.										(X)
+		1.i) Implement texturing.									(X)
+		1.j) Implement saving/loading.								(X)
+		1.k) Fix the scrollOffset when things removed.				(X)
+		1.l) Honestly same thing in inventory.						(X)
+		1.k) Fix the position at which it refreshes (not ev. fram.) ()
+			I don't even care about this...
+		1.l) Fix chest displaying recipes.							(X)
+		1.l) Fix chest text too long recipes.						(X)
+		1.l) Add capacity.											(X)
+		1.l) All items go to inventory when broken.					(X)
+		1.l) Recipe. 												(X)
+
+	Tool bar looks weird when you place stuff again...				(X)
+	WHAT TO NAME THE PLAYER WEIGHT????								(X)
+	Fix the tool thing save with chest.								()
+	3. Player weight.												(X)
+		3.a) Fix arm/leg angle speed.								(X)
+	4. Sprinting.													(X)
+		4.a) Do the particles :)									(X)
+		4.b) Check the sound.										()
+
+
+Update Alpha 0.3.0 | Can you hear me?
+
+I kind of like 'drawContents' without the background.
+Include object properties like damage and stuff in the inventory.
+Start commenting on other videos man carrying thign.
+
+Online Update | Better Together!
+
+Update Alpha 0.4.0 | Pass me a brew.
+	1.l) Fix inventory ordering thing.								()
+		Sometimes when you drop the order is preserved...
+		Like drop and pick back up.
+	2. Make copper ore randomly drop 2 sometimes.					()
 	14. Athelas														()
 			14.a) Flesh this idea out.									()
 			14.b) Zombies no longer drop potions.						()
@@ -157,6 +204,9 @@ Update Alpha 0.3.0
 	5. Update arrow recipe same as tools.
 		5. Also you can just tint the blue instead of making two	()
 		5. Objects, it might look nicer.							()
+
+
+Let there be (better?) light!
 
 Maybe another minor update before this.
 

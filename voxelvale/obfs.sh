@@ -10,7 +10,7 @@ terser \
 	code/main.js \
 	code/player.js \
 	code/tile.js \
-	code//blockwall.js \
+	code/blockwall.js \
 	code/xyzblock.js \
 	code/dropbox.js \
 	code/scenes.js \
@@ -22,10 +22,14 @@ terser \
 	code/notifications.js \
 	code/popup.js \
 	code/UI.js \
+	code/healthbar.js \
 	code/uifunctions.js \
 	code/inventory.js \
 	code/craftingmenu.js \
+	code/helpers.js \
 	code/item.js \
+	code/wireframe.js \
+	code/nonactionableitem.js \
 	code/recipes.js \
 	code/projectiles.js \
 	code/structures.js \

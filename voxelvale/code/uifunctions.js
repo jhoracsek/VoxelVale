@@ -235,8 +235,21 @@ class InterfaceCanvasButton {
 		this.y1 = Y1;
 		this.y2 = Y2;
 
+		this.width = X2-X1;
+		this.height = Y2-Y1;
+
 		this.colorBorder = c1;
 		this.colorBackground = c2;
+	}
+
+	setYPos(pY){
+		this.y1 = pY-this.height/2;
+		this.y2 = pY+this.height/2;
+	}
+
+	setXPos(pX){
+		this.x1 = pX-this.width/2;
+		this.x2 = pX+this.width/2;
 	}
 
 	draw(){
@@ -246,8 +259,11 @@ class InterfaceCanvasButton {
 
 		//Click and hover.
 		let hovering = false;
-		click_in_bounds(this.x1,this.y1,this.x2,this.y2, this.clickFunction, function(){hovering=true} );
-
+		let imClicked = false;
+		if(this.clickFunction != null)
+			click_in_bounds(this.x1,this.y1,this.x2,this.y2, this.clickFunction, function(){hovering=true} );
+		else
+			click_in_bounds(this.x1,this.y1,this.x2,this.y2, function(){imClicked=true;}, function(){hovering=true} );
 		if(!hovering ){
 			draw_filled_box(this.x1,this.y1,this.x2,this.y2,this.colorBorder,this.colorBackground);
 		}else{
@@ -256,20 +272,25 @@ class InterfaceCanvasButton {
 
 		draw_centered_text((this.x1+this.x2)/2,(this.y1+this.y2)/2,this.text,this.size);
 		this.imDrawn = true;
+
+		return imClicked;
 	}
 }
 
 var heldButtonCount = 0;
 var heldIndex = -1;
 var clickedThisButton = false;
+
 class InterfaceHeldButton extends InterfaceButton{
-	constructor(X1,Y1,X2,Y2,colorNum,func1=function(){},text="null",clickedByDefault=false){
+	constructor(X1,Y1,X2,Y2,colorNum,func1=function(){},text="null",clickedByDefault=false, updateTextFunction=function(){return "null";}){
 		super(X1,Y1,X2,Y2,colorNum,func1,text);
 		this.buttonID = heldButtonCount;
 		heldButtonCount++;
 		if(clickedByDefault){
 			heldIndex = this.buttonID;
 		}
+		this.textFunction = updateTextFunction;
+
 	}
 
 	getButtonID(){
@@ -291,7 +312,7 @@ class InterfaceHeldButton extends InterfaceButton{
 		draw_box_border(this.x1,this.y1,this.x2,this.y2);
 
 		//Draw text (should be centered)
-		draw_centered_text((this.x1+this.x2)/2,(this.y1+this.y2)/2,this.text);
+		draw_centered_text((this.x1+this.x2)/2,(this.y1+this.y2)/2,this.textFunction());
 
 		//Draw background
 		gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(this.instanceMat) );
@@ -406,6 +427,8 @@ function build_interface(){
 
 	add_crafting_interface_elements();
 
+	add_chest_interface_elements();
+
 	add_interface_bottom_bar();
 }
 function draw_bottom_bar(){
@@ -437,6 +460,17 @@ function draw_interface_crafting(){
 	
 	for(let i = 0; i < craftingElements.length; i++){
 		craftingElements[i].draw();
+	}
+	draw_bottom_bar();
+	reset_pv();
+}
+
+function draw_interface_chest(){
+	set_ui_pv();
+	set_light_full();
+	
+	for(let i = 0; i < chestElements.length; i++){
+		chestElements[i].draw();
 	}
 	draw_bottom_bar();
 	reset_pv();

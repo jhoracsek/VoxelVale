@@ -68,7 +68,7 @@ function getKeyDown(key){
 		if(player.isDead){
 			player.respawn();
 		}else{
-			//spaceHeld = true;
+			spaceHeld = true;
 		}
 	}
 	if(player.isDead){
@@ -143,7 +143,7 @@ function getKeyDown(key){
 		//Stop tab from zipping around the page.
 		key.preventDefault();
 
-		if(inventory && currentMenu == 'INVENTORY'){
+		if(inventory && (currentMenu == 'INVENTORY' || currentMenu == 'CHEST')){
 			activeTab = (activeTab+1)%4;
 			switch(activeTab){
 				case 0:
@@ -315,7 +315,7 @@ function getKeyUp(key){
 	}
 
 	if(key.keyCode == 32){
-		//spaceHeld = false;
+		spaceHeld = false;
 	}
 }
 
@@ -515,7 +515,29 @@ canvas.addEventListener("wheel",function(event){
 		}
 		scrollCooldown = 2;
 		return;
-		return;
+	}else if(inventory && currentMenu == 'CHEST'){
+		let overLeft = false;
+		click_in_bounds(2,2,8,7,function(){},function(){overLeft=true});
+		if(scrollCooldown <= 0 && overLeft){
+			if(event.deltaY > 0){
+				left_scroll_list_down();
+			}
+			if(event.deltaY < 0){
+				left_scroll_list_up();
+			}
+		}
+		let overRight = false;
+		click_in_bounds(8,2,14,7,function(){},function(){overRight=true});
+		if(scrollCooldown <= 0 && overRight){
+			if(event.deltaY > 0){
+				right_scroll_list_down();
+			}
+			if(event.deltaY < 0){
+				right_scroll_list_up();
+			}
+		}
+
+		scrollCooldown = 2;
 	}
 
 	scroll += event.deltaY * -0.02;

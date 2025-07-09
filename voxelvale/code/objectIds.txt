@@ -21,6 +21,7 @@ Door				14
 BorderWall			15
 CopperStone			16
 CopperBrick			17
+Chest				18
 
 
 WoodAxe				64
@@ -46,9 +47,7 @@ CopperPickRecipe	134
 CopperAxeRecipe		135
 CopperSwordRecipe	136
 CopperBrickRecipe	137
-
-
-
+ChestRecipe			138
 
 
 
@@ -93,6 +92,11 @@ Steps for adding tools:
 3) Add to the list above.
 4) Add to 'ITEM_OBJNUMS' in "nonactionableitems.js".
 5) Design build function.
+
+
+
+For 'tob':
+	Right now either 'WOOD' or 'STONE'.
 
 
 

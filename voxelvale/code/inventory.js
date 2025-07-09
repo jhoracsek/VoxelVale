@@ -33,6 +33,7 @@ var UI_COLOURS = [
 //Should change to interfaceElements or something more specific!
 var interfaceBackgrounds = [];
 var craftingElements = [];
+var chestElements = [];
 var bottomBarElements = [];
 /*
 	Add elements to the interface as defined in "uifunctions.js".
@@ -87,15 +88,19 @@ function loadWorldButton(){
 	This happens in 'draw_inventory()' in 'UI.js'.
 */
 let inventoryButtonID, craftingButtonID;
+function primary_text_button(){return 'Inventory';}
+function secondary_text_button(){if(currentStation == IN_CHEST) return "Chest"; return "Crafting"}
+function secondary_button_function(){if(currentStation == IN_CHEST){currentMenu = 'CHEST';} else {currentMenu = 'CRAFTING';} }
+
 function add_interface_bottom_bar(){
 	let squish = 0.125
 	let buttonWidth = 2.5;
 	let buttonSpace = 3;
-	var inventoryButton = new InterfaceHeldButton(2.25, 1.25+squish, 2.25+buttonWidth, 2-squish,DARK_GREY,function(){currentMenu='INVENTORY';},"Inventory",true);
+	var inventoryButton = new InterfaceHeldButton(2.25, 1.25+squish, 2.25+buttonWidth, 2-squish,DARK_GREY,function(){currentMenu='INVENTORY';},"Inventory",true,primary_text_button);
 	bottomBarElements.push(inventoryButton);
 	inventoryButtonID = inventoryButton.getButtonID();
 
-	var craftingButton = new InterfaceHeldButton(2.25+buttonSpace, 1.25+squish, (2.25+buttonWidth)+buttonSpace, 2-squish,DARK_GREY,function(){currentMenu='CRAFTING';},"Crafting");
+	var craftingButton = new InterfaceHeldButton(2.25+buttonSpace, 1.25+squish, (2.25+buttonWidth)+buttonSpace, 2-squish,DARK_GREY,secondary_button_function,"Crafting",false,secondary_text_button);
 	bottomBarElements.push(craftingButton);
 	craftingButtonID = craftingButton.getButtonID();
 
@@ -204,8 +209,8 @@ function add_interface_elements(){
 
 function add_crafting_interface_elements(){
 	var background = new InterfaceBackground(2,1.25,14,7.75,BLACK);
-	var leftMidSection = new InterfaceBackground(2,2,9.5,7,DARK_GREY,false,false,false,true);
-	var rightMidSection = new InterfaceBackground(9.5,2,14,7,DARK_GREY,false,false,false,true);
+	var leftMidSection = new InterfaceBackground(2,2,9.5,7,DARK_GREY,false,false,true,true);
+	var rightMidSection = new InterfaceBackground(9.5,2,14,7,DARK_GREY,false,false,true,true);
 	var rightBoxUpper = new InterfaceBackground(9.6, 2.7, 13.9, 6.6, BLACK);
 	var rightBoxLower = new InterfaceBackground(9.6, 2.1, 13.9, 2.6, BLACK);
 
@@ -214,4 +219,9 @@ function add_crafting_interface_elements(){
 	craftingElements.push(rightMidSection);
 	craftingElements.push(rightBoxUpper);
 	craftingElements.push(rightBoxLower);
+
+	ChestEntry.sendData()
 }
+
+
+

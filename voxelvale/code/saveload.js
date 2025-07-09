@@ -34,7 +34,7 @@ function getWorldObj(){
 	let objNums = [];
 
 
-	let instanceBlocksObjectNumbers = [9, 14];
+	let instanceBlocksObjectNumbers = [9, 14, 18];
 	let instanceBlocks = [];
 
 	for(let i = 0; i <= world.size; i++){
@@ -86,6 +86,7 @@ function getWorldObj(){
 		Current blocks and objectNumbers:
 			DropBox 		9
 			Door 			14
+			Chest 			18
 		These objectNumbers should be added to 'instanceBlocksObjectNumbers'.
 
 		This information will be stored as [objectNumber, pX, pY, pZ, 'additional data dependent on block']
@@ -134,6 +135,48 @@ function getWorldObj(){
 				store.push(door.orientationAngle);
 				store.push(door.isLeft);
 				break;
+
+			/*
+				Chest
+
+				getBlockList 	returns [block, quantity]
+				getToolList		returns [tool, quantity]
+				getItemList		returns [item, quantity]
+				getRecipeList	returns [recipe, quantity]
+	
+				orientation
+
+				We can simple store as
+				store = [..., orientation, obj1Num, obj1Quant, obj2Num, obj2Quant,...]
+			*/
+			case 18:
+				let chest = instanceBlocks[i];
+				store.push(chest.orientation);
+
+				let blockList = chest.getBlockList();
+				let toolList = chest.getToolList();
+				let itemList = chest.getItemList();
+				let recipeList = chest.getRecipeList();
+
+				for(let j = 0; j < blockList.length; j++){
+					store.push(blockList[j][0].objectNumber);
+					store.push(blockList[j][1]);
+				}
+				for(let j = 0; j < toolList.length; j++){
+					store.push(toolList[j][0].objectNumber);
+					store.push(toolList[j][1]);
+				}
+				for(let j = 0; j < itemList.length; j++){
+					store.push(itemList[j][0].objectNumber);
+					store.push(itemList[j][1]);
+				}
+				for(let j = 0; j < recipeList.length; j++){
+					store.push(recipeList[j][0].objectNumber);
+					store.push(recipeList[j][1]);
+				}
+
+				break;
+
 		}
 		blockInstanceInformation.push(store);
 	}
@@ -250,6 +293,9 @@ function loadWorldIntoGame(loadedWorld){
 				}
 				break;
 			/*
+
+				Door
+
 				Need to load:
 					4: originalInstanceMat		(needs to be unflattened)
 					5: instanceMat 			(needs to be unflattened)	
@@ -270,6 +316,24 @@ function loadWorldIntoGame(loadedWorld){
 				blockToChange.relativeAngle = store[8];
 				blockToChange.orientationAngle = store[9];
 				blockToChange.isLeft = store[10];
+				break;
+
+			
+			/*
+				Chest
+
+				store is formatted as:
+				store = [..., orientation, obj1Num, obj1Quant, obj2Num, obj2Quant,...]
+				Where orientation is 4.
+			*/
+			case 18:
+				blockToChange.orientation = store[4];
+				for(let j = 5; j < store.length; j+=2){
+					let objNum = store[j];
+					let objQuant = store[j+1];
+					blockToChange.addObject(getObjectBasedOnObjectNumber(objNum), objQuant);
+
+				}
 				break;
 				
 		}
@@ -338,7 +402,7 @@ function loadWorldIntoGame(loadedWorld){
 /*
 	Need to clean this up.
 */
-const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door,BorderWall,CopperStone,CopperBrick];
+const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door,BorderWall,CopperStone,CopperBrick,Chest];
 
 
 

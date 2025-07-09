@@ -1,10 +1,10 @@
 
 
 
-const GAME_VERSION = "Alpha 0.1.0"
-const DEV_TOOLS = false;
+const GAME_VERSION = "Alpha 0.2.0"
+const DEV_TOOLS = true;
 const GEN_DUNGEONS = false;
-var SPAWN_ENEMIES = true;
+var SPAWN_ENEMIES = false;
 const MAX_ENEMIES_IN_WORLD = 5;
 
 /*

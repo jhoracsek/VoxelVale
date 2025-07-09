@@ -25,6 +25,8 @@ class Inventory{
 		this.recipeQuants=[];
 
 		this.arrowCount = 0;
+
+		this.itemCount = 0;
 	}
 
 	getInventoryContents(){
@@ -49,6 +51,7 @@ class Inventory{
 
 
 	addItem(Item){
+		this.itemCount++;
 		if(this.items[Item.objectNumber]==null){
 			this.items[Item.objectNumber]=new InventoryObject(Item);
 			this.itemNums.push(Item.objectNumber);
@@ -58,6 +61,7 @@ class Inventory{
 		return;
 	}
 	addNonActionableItem(Item){
+		this.itemCount++;
 		if(this.naItems[Item.objectNumber]==null){
 			this.naItems[Item.objectNumber]=new InventoryObject(Item);
 			this.naItemNums.push(Item.objectNumber);
@@ -70,6 +74,7 @@ class Inventory{
 		return;
 	}
 	addBlock(Block){
+		this.itemCount++;
 		if(this.blocks[Block.objectNumber]==null){
 			this.blocks[Block.objectNumber]=new InventoryObject(Block);
 			this.blockNums.push(Block.objectNumber);
@@ -79,6 +84,7 @@ class Inventory{
 		return;
 	}
 	addRecipe(Recipe){
+		this.itemCount++;
 		//Make sure it's not a duplicate.
 		let duplicate = false;
 		for(let i = 0; i < this.recipes.length; i++){
@@ -95,6 +101,7 @@ class Inventory{
 
 	}
 	removeItem(Item){
+		this.itemCount--;
 		if(this.items[Item.objectNumber]==null || this.items[Item.objectNumber]==0)
 			return;
 		else
@@ -103,6 +110,7 @@ class Inventory{
 	}
 
 	removeNonActionableItem(Item){
+		this.itemCount--;
 		if(this.naItems[Item.objectNumber]==null || this.naItems[Item.objectNumber]==0)
 			return;
 		else
@@ -112,6 +120,7 @@ class Inventory{
 		return;
 	}
 	removeArrowFromShoot(){
+		this.itemCount--;
 		if(this.naItems[69]==null || this.naItems[69]==0)
 			return;
 		else
@@ -121,6 +130,7 @@ class Inventory{
 		return;
 	}
 	removeRecipe(Recipe){
+		this.itemCount--;
 		if(Recipe==null){return null;}
 		for(let i = 0; i < this.recipes.length; i++){
 			if(this.recipes[i].objectNumber == Recipe.objectNumber){
@@ -149,6 +159,7 @@ class Inventory{
 		}
 	}
 	removeBlock(Block){
+		this.itemCount--;
 		if(this.blocks[Block.objectNumber]==null || this.blocks[Block.objectNumber]==0)
 			return;
 		else{
@@ -171,6 +182,8 @@ class Inventory{
 								activeToolBarItem = 8;
 								player.heldObject=null;
 							}
+
+							updateToolBar();
 							return;
 						}
 					}
@@ -347,6 +360,7 @@ class Player extends Humanoid{
 
 		this.stamina = 10;
 		this.maxStamina = 10;
+		this.sprintCooldown = 0;
 
 		this.inventory = new Inventory();
 
@@ -362,7 +376,12 @@ class Player extends Humanoid{
 		this.particleColor = vec3(1, 0, 0);
 		this.attackHitBox = false;
 
+		
+		this.maxWeight = 100;
+
 	}
+
+	get weight(){return this.inventory.itemCount;}
 
 	getInventoryContents(){
 		return this.inventory.getInventoryContents();
@@ -640,6 +659,20 @@ class Player extends Humanoid{
 			new Particle(this.posX+xOffset-0.5,this.posY+yOffset-0.5,this.posZ+zOffset, this.particleColor);
 		}
 	}
+
+	spawnSprintParticles(){
+		/*
+			Spawn particles
+		*/
+		var numParticles = Math.round(Math.random()*0.9);
+
+		for (let i = 0; i < numParticles; i++){
+			var zOffset = Math.random()+3.5;
+			var xOffset = Math.random()-0.5;
+			var yOffset = Math.random()-0.5;
+			new Particle(this.posX+xOffset-0.5,this.posY+yOffset-0.5,this.posZ+zOffset, blockOnTopOf.particleColor);
+		}
+	}
 	kill(){
 		this.isDead = true;
 		//Drop all inventory in drop box.
@@ -721,7 +754,36 @@ class Player extends Humanoid{
 		//Drop box
 	}
 	update(){
-		
+
+		if(fastMode){
+			this.speed=0.30;
+		} else if(this.isSlow()){
+			this.speed = 0.01;
+			this.stamina = this.maxStamina;
+		} else if(this.isSprinting()){
+			this.speed = 0.08;
+			this.stamina = this.stamina-0.05;
+			//Now if stamina hits 0, we should start a cooldown.
+			if(this.stamina <= 0){
+				this.sprintCooldown = 150;
+			}
+			this.spawnSprintParticles();
+		} else {
+			this.speed = 0.05;
+			//If you hit the cooldown, stamina regen should be slightly slower.
+			if(this.sprintCooldown){
+				this.stamina = Math.min(this.stamina+0.03, this.maxStamina);
+			}else{
+				this.stamina = Math.min(this.stamina+0.05, this.maxStamina);
+			}
+		}
+
+
+		if(this.sprintCooldown > 0)
+			this.sprintCooldown--;
+
+		//console.log(this.isSprinting());
+
 		this.flash=false;
 		if(this.invulnerable > 0){
 			this.invulnerable--;
@@ -766,15 +828,8 @@ class Player extends Humanoid{
 			this.knockback();
 			this.knockbackTimer--;
 		}
-		/*
-		if(spaceHeld && this.stamina > 0){
-			console.log(this.stamina)
-			this.speed = 0.3;
-			this.stamina = this.stamina-0.05;
-		}else{
-			this.speed = 0.05;
-			this.stamina = Math.min(this.stamina+0.05, this.maxStamina);
-		}*/
+		
+		
 	}
 	draw(){
 		if(this.isDead) return;
@@ -782,11 +837,13 @@ class Player extends Humanoid{
 		
 		if(this.flash)
 			gl.uniform1i(flashingLoc, true);
-		//draw_healthbar(0, 0, 2, 1, this.stamina, this.maxStamina,40,1)
+
+		this.displaySprintBar();
 		drawingPlayerShadow = false;
 		traverse(bodyId);
 		if(this.flash)
 			gl.uniform1i(flashingLoc, false);
+
 	}
 	drawShadows(){
 
@@ -804,6 +861,32 @@ class Player extends Humanoid{
 	shouldSetAngleByWalking(){
 		return !this.isShooting; //&& !this.isPlacing; //&& !( this.isSwinging && this.heldObject.toolType=='SWORD');
 	}
+
+	isSlow(){
+		return this.weight > this.maxWeight;
+	}
+
+	displaySprintBar(){
+		if(inventory || inFunction) return;
+		let width = 0.6;
+		if(this.isSlow() && spaceHeld){
+			draw_staminabar(8-width/2, 4.5+1.4, 8+width/2, 4.6+1.4-0.03, 0, this.maxStamina,40,1,true);
+		}
+		else if(this.stamina < this.maxStamina && !this.isSlow()){
+			
+			if(this.sprintCooldown > 0){
+				draw_staminabar(8-width/2, 4.5+1.4, 8+width/2, 4.6+1.4-0.03, this.stamina, this.maxStamina,40,1,true);
+			}else{
+				draw_staminabar(8-width/2, 4.5+1.4, 8+width/2, 4.6+1.4-0.03, this.stamina, this.maxStamina,40,1);
+			}
+		}
+	}
+
+	isSprinting(){
+		return spaceHeld && this.stamina > 0 && this.sprintCooldown <= 0 && !this.isSlow();
+	}
+
+
 }
 
 function set_humanoid_texture(){
@@ -1150,8 +1233,22 @@ function player_body_angle_to_cursor(){
 }
 
 function player_moving(X,Y,Z){
-	if(legAngle > 35 || legAngle < -35) 
-		switchDirection = !switchDirection;	
+	//Need to making so that if you're already trying to decrement, you don't switch.
+	let threshold = 35;
+	if(player.isSlow())
+		threshold = 25;
+	if(legAngle > threshold){
+		switchDirection = false;
+	} else if (legAngle < -threshold) {
+		switchDirection = true;	
+	}
+	
+	/*
+		if legAngle > 35, say 45, 
+
+	*/
+
+
 	if(!fixedView){X=0;Y=0;}
 
 	initialize_node(bodyId,X,Y,Z);
@@ -1159,35 +1256,41 @@ function player_moving(X,Y,Z){
 	initialize_node(leftArmId);
 	initialize_node(leftLegId);
 	initialize_node(rightLegId);
-	//initialize_node(toolId);
 	//if(player.idle && armAngleRight==0 )
 	if(player.idle && (armAngleRight < 3 && armAngleRight>-3 ) )
 		return;
 
+	let sprintMultiplier = 1.12;
+	let slowMultiplier = 0.5;
+	
 	if(switchDirection){
-		if(spaceHeld && player.stamina > 0){
-			legAngle+=2*1.2;
-			armAngleRight+=3.75*1.2;
+		// Try to recreate the glitch.
+		//isSprinting() 
+		if(player.isSprinting()){
+			legAngle+=2*sprintMultiplier;
+			armAngleRight+=3.75*sprintMultiplier;
+		}else if(player.isSlow()){
+			legAngle+=2*slowMultiplier;
+			armAngleRight+=3.75*slowMultiplier;
 		}else{
 			legAngle+=2;
 			armAngleRight+=3.75;
 		}
-		//armAngleLeft-=3.75;
 	}
+
 	else{
-		if(spaceHeld && player.stamina > 0){
-			legAngle-=2*1.2;
-			armAngleRight-=3.75*1.2;
+		if(player.isSprinting()){
+			legAngle-=2*sprintMultiplier;
+			armAngleRight-=3.75*sprintMultiplier;
+		}else if(player.isSlow()){
+			legAngle-=2*slowMultiplier;
+			armAngleRight-=3.75*slowMultiplier;
 		}else{
 			legAngle-=2;
-			//armAngleLeft+=3.75;
 			armAngleRight-=3.75;
 		}
 	}
-	//if(!player.isSwinging){
-		armAngleLeft = -armAngleRight;
-		//armAngleRight = -armAngleLeft;
-	//}
+	armAngleLeft = -armAngleRight;
 }
 
 var NM;
