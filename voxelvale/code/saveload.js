@@ -223,6 +223,8 @@ function getWorldObj(){
 	for(let i = 0; i < toolBarList.length; i++){
 		if(toolBarList[i]!=null)
 			toolbarIDs.push(toolBarList[i].objectNumber);
+		else
+			toolbarIDs.push(-1);
 	}
 
 	return [xPositions, yPositions, zPositions,objectNumbers, blockInstanceInformationString, invObjectNumbers, [player.posX, player.posY], player.health, toolbarIDs];

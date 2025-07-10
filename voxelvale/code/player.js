@@ -101,12 +101,14 @@ class Inventory{
 
 	}
 	removeItem(Item){
-		this.itemCount--;
+		
 		if(this.items[Item.objectNumber]==null || this.items[Item.objectNumber]==0)
-			return;
-		else
+			return 0;
+		else{
+			this.itemCount--;
 			this.items[Item.objectNumber].decrease();
-		return;
+		}
+		return this.items[Item.objectNumber];
 	}
 
 	removeNonActionableItem(Item){
@@ -437,7 +439,17 @@ class Player extends Humanoid{
 		*/
 		switch(object.typeOfObj){
 			case 'ITEM':
-				this.inventory.removeItem(object);
+				let quant = this.inventory.removeItem(object).quant;
+				//Need to update toolbar here.
+				//If the tools quantity is <= 0 and it's the active tool in the toolbar
+				//then remove it.
+				if(quant <= 0){
+					for(let i = 0; i < 3; i++){
+						if(toolBarList[i] !=null && toolBarList[i].objectNumber == object.objectNumber){
+							toolBarList[i] = null;
+						}
+					}
+				}
 				break;
 			case 'BLOCK':
 				this.inventory.removeBlock(object);

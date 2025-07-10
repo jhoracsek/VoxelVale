@@ -159,6 +159,8 @@ function getKeyDown(key){
 					selectedTab = 'REC';active=-1;scrollOffset=0;
 					break;
 			}
+			if(currentMenu == 'CHEST')
+				refreshList=true;
 		}
 
 		if(!inventory){

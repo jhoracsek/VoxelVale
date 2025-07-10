@@ -11,7 +11,7 @@ const MAX_ENEMIES_IN_WORLD = 5;
 	Set to 1.5 for 1080p
 	Set to 1 for 720p (default)
 */
-const canvas_multiplier = 1;
+const canvas_multiplier = 1.5;
 
 /*
 	The probability an enemy is spawned roughly every second.

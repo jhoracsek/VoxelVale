@@ -164,7 +164,7 @@ function toggleInventory(curMenu = IN_NONE, curInvBlock = null){
 		currentInventoryBlock = curInvBlock;
 		currentStation = IN_CHEST;
 		currentMenu = 'CHEST';
-		build_chest_list();
+		refreshList = true;
 
 	}else{
 		currentStation = IN_NONE;
@@ -1133,7 +1133,7 @@ function draw_toolbar_items(){
 	// Draw tools
 	var object;
 	const space = 0.65;
-	if(toolBarList[2].objectNumber == 66)
+	if(toolBarList[2]!=null && toolBarList[2].objectNumber == 66)
 		draw_c_text_small_stroke(2.2,8+toolbarHeightOffset,player.getArrowCount())
 	for(let i = 0; i < 7; i++){
 		object = toolBarList[i];

@@ -144,7 +144,7 @@ Update Alpha 0.1.0
 	sword at least?)
 
 Update Alpha 0.2.0 | Weight a minute!
-	1. Chests 														()
+	1. Chests 														(X)
 		1.a) Add block.												(X)
 		1.b) Make interactable.										(X)
 		1.c) Make a basic layout for testing.						(X)
@@ -159,8 +159,9 @@ Update Alpha 0.2.0 | Weight a minute!
 		1.j) Implement saving/loading.								(X)
 		1.k) Fix the scrollOffset when things removed.				(X)
 		1.l) Honestly same thing in inventory.						(X)
-		1.k) Fix the position at which it refreshes (not ev. fram.) ()
-			I don't even care about this...
+		1.k) Fix the position at which it refreshes (not ev. fram.) (X)
+			I don't even care about this... (No please fix this!)
+			Fixed it a little. It's fine.
 		1.l) Fix chest displaying recipes.							(X)
 		1.l) Fix chest text too long recipes.						(X)
 		1.l) Add capacity.											(X)
@@ -170,11 +171,14 @@ Update Alpha 0.2.0 | Weight a minute!
 	Tool bar looks weird when you place stuff again...				(X)
 	WHAT TO NAME THE PLAYER WEIGHT????								(X)
 	Fix the tool thing save with chest.								()
+		Now workbench is saved.
 	3. Player weight.												(X)
 		3.a) Fix arm/leg angle speed.								(X)
 	4. Sprinting.													(X)
 		4.a) Do the particles :)									(X)
 		4.b) Check the sound.										()
+
+	5. 
 
 
 Update Alpha 0.3.0 | Can you hear me?

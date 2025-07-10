@@ -10,7 +10,7 @@
 */
 
 var currentInventoryBlock = null;
-
+var refreshList = false;
 
 function draw_chest_menu(){
 
@@ -73,10 +73,10 @@ function draw_chest_inventory_list(){
 
 
 
-	click_in_bounds(2.1,  7.375,  3.425 ,7,function(){selectedTab = 'BLOCK';active=-1;leftScrollOffset=0; rightScrollOffset=0; activeTab =0;});
-	click_in_bounds(3.6,  7.375,  4.9   ,7,function(){selectedTab = 'TOOL';active=-1;leftScrollOffset=0; rightScrollOffset=0; activeTab = 1;});
-	click_in_bounds(5.075,7.375,  6.375   ,7,function(){selectedTab = 'ITEM';active=-1;leftScrollOffset=0; rightScrollOffset=0; activeTab = 2;});
-	click_in_bounds(6.55,7.375,  7.85   ,7,function(){selectedTab = 'REC';active=-1;leftScrollOffset=0; rightScrollOffset=0; activeTab = 3;});
+	click_in_bounds(2.1,  7.375,  3.425 ,7,function(){selectedTab = 'BLOCK';active=-1;leftScrollOffset=0; rightScrollOffset=0; activeTab =0;refreshList=true;});
+	click_in_bounds(3.6,  7.375,  4.9   ,7,function(){selectedTab = 'TOOL';active=-1;leftScrollOffset=0; rightScrollOffset=0; activeTab = 1;refreshList=true;});
+	click_in_bounds(5.075,7.375,  6.375   ,7,function(){selectedTab = 'ITEM';active=-1;leftScrollOffset=0; rightScrollOffset=0; activeTab = 2;refreshList=true;});
+	click_in_bounds(6.55,7.375,  7.85   ,7,function(){selectedTab = 'REC';active=-1;leftScrollOffset=0; rightScrollOffset=0; activeTab = 3;refreshList=true;});
 
 	//Number of objects carried.
 	draw_c_text_med(2.25,2.15,('Carry Weight:'));//draw_c_text_med_right
@@ -167,8 +167,7 @@ function build_chest_list(){
 		Start with just blocks.
 	*/
 	//Now get player list.
-
-
+	if(!refreshList) return;
 
 	let blockListInventory = []; //player.getBlockList();
 	switch(selectedTab){
@@ -218,6 +217,7 @@ function build_chest_list(){
 	for(let i = 0; i < chestListChestPair.length; i++){
 		chestListChest.push(new ChestEntry(chestListChestPair[i][0], true, chestListChestPair[i][1]));
 	}
+	refreshList = false;
 }
 
 
@@ -256,6 +256,7 @@ class ChestEntry{
 		
 		currentInventoryBlock.addObject(this.obj);
 		player.removeFromInventory(this.obj);
+		refreshList = true;
 	}
 
 	moveAllToChest(){
@@ -264,11 +265,13 @@ class ChestEntry{
 		for(let i = 0; i < quant; i++){
 			player.removeFromInventory(this.obj);		
 		}
+		refreshList = true;
 	}
 
 	moveOneToInventory(){
 		player.addToInventory(this.obj);
 		currentInventoryBlock.removeObject(this.obj);
+		refreshList = true;
 	}
 
 	moveAllToInventory(){
@@ -279,6 +282,7 @@ class ChestEntry{
 			player.addToInventory(this.obj)
 		}
 		currentInventoryBlock.removeObject(this.obj, quant);
+		refreshList = true;
 	}
 
 	static sendData(){
