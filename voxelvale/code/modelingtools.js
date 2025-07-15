@@ -121,3 +121,24 @@ function buildRectangularPrism(x1,y1,z1,x2,y2,z2,c){
 	numVertsToReturn += buildRectangleYZ(y1,z1,y2,z2,x2,c);
 	return numVertsToReturn;
 }
+
+function buildPrism(vector1, vector2, c, c2=c, c3=c2, c4=c2, c5=c2, c6=c2){
+	let x1 = vector1[0];
+	let y1 = vector1[1];
+	let z1 = vector1[2];
+
+	let x2 = vector2[0];
+	let y2 = vector2[1];
+	let z2 = vector2[2];
+
+	var numVertsToReturn=0;
+	numVertsToReturn += buildRectangleXY(x1,y1,x2,y2,z1,c);
+	numVertsToReturn += buildRectangleXY(x1,y1,x2,y2,z2,c2);
+
+	numVertsToReturn += buildRectangleXZ(x1,z1,x2,z2,y1,c3);
+	numVertsToReturn += buildRectangleXZ(x1,z1,x2,z2,y2,c4);
+	
+	numVertsToReturn += buildRectangleYZ(y1,z1,y2,z2,x1,c5);
+	numVertsToReturn += buildRectangleYZ(y1,z1,y2,z2,x2,c6);
+	return numVertsToReturn;
+}

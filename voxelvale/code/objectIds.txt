@@ -22,6 +22,7 @@ BorderWall			15
 CopperStone			16
 CopperBrick			17
 Chest				18
+Water				19
 
 
 WoodAxe				64
@@ -35,6 +36,7 @@ CopperAxe 			71
 HealthPotion		72
 StoneSword			73
 CopperSword 		74
+WoodenBucket		75
 
 
 WorkBenchRecipe		128

@@ -974,8 +974,10 @@ function check_player_action(){
 			//Holding a sword.
 			player.isAttacking = true;
 
-		}else{
+		}else if(player.heldObject.typeOfObj == 'ITEM' && player.heldObject.toolType == 'BUCKET'){
 
+
+		}else{
 			//Holding a tool.
 			player.isSwinging = true;
 			var activeItem = player.heldObject.type;

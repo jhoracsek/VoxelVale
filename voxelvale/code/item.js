@@ -262,6 +262,175 @@ class WoodenBow extends Weapon{
 	onRelease(){
 		blockCursor=true;
 	}
+}
+
+
+class Bucket extends Item{
+	static color = vec4(0.5,0.5,0.5,1); get color() {return this.constructor.color;}
+
+	static bucketStart = 0;
+	static bucketNumber = 0;
+
+	static index = 0; get index() {return this.constructor.index;}
+	static numberOfVerts = 0; get numberOfVerts() {return this.constructor.numberOfVerts;}
+
+	static waterStart = 0;
+	static waterNumber = 0;
+
+	constructor(Capacity){
+		super(null,null,null,build_axe);
+		this.strength= -1;
+		this.capacity = Capacity;
+		this.type='TOOL'
+		this.actionType='SLURP';
+		this.toolType='BUCKET';
+		this.weaponType = 'NONE';
+		this.unitsOfWater = 4;
+
+		this.desc2 = this.unitsOfWater.toString()+'Poop butt fart.'
+	}
+
+
+	static sendData(){
+		this.bucketStart = vertices.length;
+		/*
+			MAKE INSIDE BLACK!!!!
+		*/
+		build_bucket(hexToRgbA('#784f07'));
+		this.bucketNumber = vertices.length - this.bucketStart;
+
+		this.index = this.bucketStart;
+		this.numberOfVerts = this.bucketNumber;
+
+		this.waterStart = vertices.length;
+		build_bucket_water();
+		this.waterNumber = vertices.length-this.waterStart;
+
+		//this.wireframeIndexStart = vertices.length;
+		//push_wireframe_indices(this.bounds[0],this.bounds[1]);
+		//this.wireframeNumber = vertices.length - this.wireframeIndexStart;
+	}
+
+	drawWaterInBucket(currentMat){
+		this.desc2 = 'Amount held: ('+(Math.round(this.unitsOfWater * 100) / 100).toString()+'/'+this.capacity.toString()+').'
+		if(this.unitsOfWater <= 0.5){
+			return;
+		}else if(this.unitsOfWater == 1){
+			currentMat = mult(currentMat, translate(0,0,0.23));
+		}else if(this.unitsOfWater <= this.capacity/2){
+			//Draw a little.
+			currentMat = mult(currentMat, translate(0,0,0.2));
+		}else if(this.unitsOfWater < this.capacity){
+			currentMat = mult(currentMat, translate(0,0,0.1));
+		}
+
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(currentMat));
+		gl.drawArrays(gl.TRIANGLES,this.constructor.waterStart,this.constructor.waterNumber);
+
+		return;
+	}
+
+	drawToolbar(currentMat){
+		currentMat = mult(currentMat, rotateZ(35));
+
+		currentMat = mult(currentMat, rotateX(90));
+		currentMat = mult(currentMat, rotateZ(-35));
+		currentMat = mult(currentMat, rotateY(-35));
+
+		currentMat = mult(currentMat, translate(1,0,0));
+		currentMat = mult(translate(0.01,0.075,0.01),currentMat);
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(currentMat));
+		gl.drawArrays(gl.TRIANGLES,this.constructor.bucketStart,this.constructor.bucketNumber);
+		this.drawWaterInBucket(currentMat);
+		/*
+			Draw water if sufficiently full.
+			Maybe make back vertices dark?
+			or just draw dark panel on the back?
+		*/
+
+
+		/*
+			DRAW THE LITTLE WATER FILL METER HERE :) SHOULD BE SIMPLE ENOUGH.
+		*/
+		let startX = 1.9;
+		let startY = 8.1;
+		draw_arb_bar(startX,startY , startX+0.4, startY+.05, this.unitsOfWater, this.capacity, 40,0.7,2)
+	}
+
+	drawSmall(currentMat){
+
+		//Within inventory.
+
+		//currentMat = mult(currentMat, rotateX(45));
+		//currentMat = mult(currentMat, rotateY(45+90));
+		currentMat = mult(currentMat, rotateZ(35));
+
+		currentMat = mult(currentMat, rotateX(90));
+		currentMat = mult(currentMat, rotateZ(-35));
+		currentMat = mult(currentMat, rotateY(-35));
+
+		currentMat = mult(currentMat, translate(1,0,0));
+		currentMat = mult(translate(0.0125,0.1225,0),currentMat);
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(currentMat));
+		gl.drawArrays(gl.TRIANGLES,this.constructor.bucketStart,this.constructor.bucketNumber);
+		this.drawWaterInBucket(currentMat);
+	}
+
+	drawTransparent(currentMat){
+		let scale = 0.87;
+
+		
+		//currentMat = mult(currentMat, translate(0,-0.9,0.2));
+		currentMat = mult(currentMat, rotateZ(35));
+
+		currentMat = mult(currentMat, rotateX(90));
+		currentMat = mult(currentMat, rotateZ(-90));
+		//currentMat = mult(currentMat, rotateY(-35));
+		currentMat = mult(currentMat, scale4(scale,scale,0.6));
+		currentMat = mult(currentMat, translate(-0.1,0.24,0.3));
+		//currentMat = mult(currentMat, translate(1,0,0));
+		//currentMat = mult(translate(0.0125,0.1225,0),currentMat);
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(currentMat));
+		gl.drawArrays(gl.TRIANGLES,this.constructor.bucketStart,this.constructor.bucketNumber);
+		this.drawWaterInBucket(currentMat);
+	}
+	onLClick(){
+		/*
+			This can reduce unitsOfWater to below 0.
+
+			Take the min of 1, this.unitsOfWater.
+		*/
+
+		if(this.unitsOfWater > 0 && upOne == -2){
+			let toAdd = Math.min(1,1);
+			this.unitsOfWater--;
+			world.addWater( Math.round((coorSys[0]+player.posX)-9), Math.round((coorSys[1]+player.posY)-4.5), upOne, null );
+			
+		}
+	}
+}
+
+
+class WoodenBucket extends Bucket{
+	constructor(X=null,Y=null,Z=null){
+		super(4);
+		
+		this.name='Wooden Bucket';
+		this.desc='A wooden bucket to hold water.';
+
+		this.objectNumber=75;
+	}
+
+	/*
+		Should check the level.
+	*/
+
+	onHold(){
+		//blockCursor=false;
+	}
+	onRelease(){
+		//blockCursor=true;
+	}
 } 
 
 var bowVectorVertices=0;
@@ -436,6 +605,252 @@ function item_push_verts(v1,v2,v3,c){
 		normals.push(vec3(0,0,0));
 		texCoords.push(vec2(2,2));
 	}
+}
+
+function build_bucket_water(){
+	let c = vec4(0.2,0.2,0.8,1);
+
+	let zMin = -0.5;
+	let zMax = -0.4;
+
+
+
+	//For top bar
+	let t1 = vec3(-.2, .2, zMin);
+	let t2 = vec3(.2, .4, zMax);
+	buildPrism(t1,t2,c);
+
+	//For bottom bar
+	let b1 = vec3(-.2, -.4, zMin);
+	let b2 = vec3(.2, -.2, zMax);
+	buildPrism(b1,b2,c);
+
+	//For left bar
+	let l1 = vec3(-.4, -.2, zMin);
+	let l2 = vec3(.3, .2, zMax);
+	buildPrism(l1,l2,c);
+
+	//For right bar
+	let r1 = vec3(.3, -.2, zMin);
+	let r2 = vec3(.4, .2, zMax);
+	buildPrism(r1,r2,c);
+
+
+	//Lower corners
+
+	//Top Left
+	let c1 = vec3(-.3,.2,zMin);
+	let c2 = vec3(-.2,.3,zMax);
+	buildPrism(c1,c2,c);
+
+	//Bottom Left
+	c1 = vec3(-.3,-.3,zMin);
+	c2 = vec3(-.2,-.2,zMax);
+	buildPrism(c1,c2,c);
+
+	//Top Right
+	c1 = vec3(.2,.2,zMin);
+	c2 = vec3(.3,.3,zMax);
+	buildPrism(c1,c2,c);
+
+	//Bottom Right
+	c1 = vec3(.2,-.3,zMin);
+	c2 = vec3(.3,-.2,zMax);
+	buildPrism(c1,c2,c);
+	
+}
+
+function build_bucket(c = vec4(0.5,0.5,0.5,1)){
+
+	let secondColor = vec4(c[0]-0.01, c[1]-0.01, c[2]-0.01, 1);//c;//vec4(c[0]-0.1, c[1]-0.1, c[2]-0.1, 1);
+
+	let sC = secondColor;
+	let ins = vec4(0.05,0.05,0.05,1);
+
+	let topColor = vec4(c[0]-0.05, c[1]-0.05, c[2]-0.05, 1);
+	
+	// Top down.
+	var zMax = 0.5;
+	var zMin = -0.5;
+	
+	//For top bar
+	let t1 = vec3(-.2, .4, zMin);
+	let t2 = vec3(.2, .5, zMax);
+	buildPrism(t1,t2,topColor,c,ins);
+
+	//For bottom bar
+	let b1 = vec3(-.2, -.5, zMin);
+	let b2 = vec3(.2, -.4, zMax);
+	buildPrism(b1,b2,topColor,c,c,ins);
+
+	//For left bar
+	let l1 = vec3(-.5, -.2, zMin);
+	let l2 = vec3(-.4, .2, zMax);
+	buildPrism(l1,l2,topColor,c,c,c,c,ins);
+
+	//For right bar
+	let r1 = vec3(.4, -.2, zMin);
+	let r2 = vec3(.5, .2, zMax);
+	buildPrism(r1,r2,topColor,c,c,c,ins);
+
+	/*
+		Now build all 8 corners
+	*/
+	let c1,c2;
+
+	//Top left 1
+	c1 = vec3(-.4,.2,zMin);
+	c2 = vec3(-.3,.3,zMax);
+	buildPrism(c1,c2,topColor,sC,ins,sC,sC,ins);
+
+	//Top left 2
+	c1 = vec3(-.3,.3,zMin);
+	c2 = vec3(-.2,.4,zMax);
+	buildPrism(c1,c2,topColor,sC,ins,sC,sC,ins);
+
+
+	//Top right 1
+	c1 = vec3(.3,.2,zMin);
+	c2 = vec3(.4,.3,zMax);
+	buildPrism(c1,c2,topColor,sC,ins,sC,ins,sC);
+
+	//Top right 2
+	c1 = vec3(.2,.3,zMin);
+	c2 = vec3(.3,.4,zMax);
+	buildPrism(c1,c2,topColor,sC,ins,sC,ins,sC);
+
+
+	//Bottom left 1
+	c1 = vec3(-.4,-.3,zMin);
+	c2 = vec3(-.3,-.2,zMax);
+	buildPrism(c1,c2,topColor,sC,sC,ins,sC,ins);
+
+	//Bottom left 2
+	c1 = vec3(-.3,-.4,zMin);
+	c2 = vec3(-.2,-.3,zMax);
+	buildPrism(c1,c2,topColor,sC,sC,ins,sC,ins);
+
+
+	//Bottom right 1
+	c1 = vec3(.3,-.3,zMin);
+	c2 = vec3(.4,-.2,zMax);
+	buildPrism(c1,c2,topColor,sC,sC,ins,ins,sC);
+
+	//Bottom right 2
+	c1 = vec3(.2,-.4,zMin);
+	c2 = vec3(.3,-.3,zMax);
+	buildPrism(c1,c2,topColor,sC,sC,ins,ins,sC);
+
+
+	/*
+		Lower portion.
+	*/
+	zMin = zMax;
+	zMax = zMax + 0.1;
+
+	//For top bar
+	t1 = vec3(-.2, .3, zMin);
+	t2 = vec3(.2, .4, zMax);
+	buildPrism(t1,t2,secondColor);
+
+	//For bottom bar
+	b1 = vec3(-.2, -.4, zMin);
+	b2 = vec3(.2, -.3, zMax);
+	buildPrism(b1,b2,secondColor);
+
+	//For left bar
+	l1 = vec3(-.4, -.2, zMin);
+	l2 = vec3(-.3, .2, zMax);
+	buildPrism(l1,l2,secondColor);
+
+	//For right bar
+	r1 = vec3(.3, -.2, zMin);
+	r2 = vec3(.4, .2, zMax);
+	buildPrism(r1,r2,secondColor);
+
+
+	//Lower corners
+
+	//Top Left
+	c1 = vec3(-.3,.2,zMin);
+	c2 = vec3(-.2,.3,zMax);
+	buildPrism(c1,c2,secondColor);
+
+	//Bottom Left
+	c1 = vec3(-.3,-.3,zMin);
+	c2 = vec3(-.2,-.2,zMax);
+	buildPrism(c1,c2,secondColor);
+
+	//Top Right
+	c1 = vec3(.2,.2,zMin);
+	c2 = vec3(.3,.3,zMax);
+	buildPrism(c1,c2,secondColor);
+
+	//Bottom Right
+	c1 = vec3(.2,-.3,zMin);
+	c2 = vec3(.3,-.2,zMax);
+	buildPrism(c1,c2,secondColor);
+
+	/*
+		Bottom of bucket.
+	*/
+	zMin = zMax;
+	zMax = zMax + 0.1;
+
+	//Top edge
+	c1 = vec3(-.2,.2,zMin);
+	c2 = vec3(.2,.3,zMax);
+	buildPrism(c1,c2,secondColor);
+
+	//Bottom edge
+	c1 = vec3(-.2,-.3,zMin);
+	c2 = vec3(.2,-.2,zMax);
+	buildPrism(c1,c2,secondColor);
+
+	//Large middle portion
+	c1 = vec3(-.3,-.2,zMin);
+	c2 = vec3(.3,.2,zMax);
+	buildPrism(c1,c2,secondColor);
+
+	/*
+		Now finally, do the handle.
+	*/
+	zMax = -0.3;
+	zMin = -0.9;
+	//Left handle
+	c1 = vec3(-.6,-.05,zMin);
+	c2 = vec3(-.5,.05,zMax);
+	buildPrism(c1,c2,vec4(0.1,0.1,0.1,1));
+
+	//Right handle
+	c1 = vec3(.5,-.05,zMin);
+	c2 = vec3(.6,.05,zMax);
+	buildPrism(c1,c2,vec4(0.1,0.1,0.1,1));
+
+	//Small cubes above handle
+	zMax = -0.9;
+	zMin = -1;
+	c1 = vec3(-.5,-.05,zMin);
+	c2 = vec3(-.4,.05,zMax);
+	buildPrism(c1,c2,vec4(0.1,0.1,0.1,1));
+	c1 = vec3(.4,-.05,zMin);
+	c2 = vec3(.5,.05,zMax);
+	buildPrism(c1,c2,vec4(0.1,0.1,0.1,1));
+
+	//Middle Bar
+	zMax = -1;
+	zMin = -1.1;
+	c1 = vec3(-.4,-.05,zMin);
+	c2 = vec3(.4,.05,zMax);
+	buildPrism(c1,c2,vec4(0.1,0.1,0.1,1));
+
+	//Wooden handle
+	zMax = -0.95;
+	zMin = -1.15;
+	c1 = vec3(-.275,-.095,zMin);
+	c2 = vec3(.275,.095,zMax);
+	buildPrism(c1,c2,hexToRgbA('#513504'));
+
 }
 
 var axeVerts=0;

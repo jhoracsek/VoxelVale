@@ -1,288 +1,203 @@
 
 
 
-Some stuff todo
 
 
 
 
+Outline two approaches for water.
 
+	Finite (Going with this one)
 
-Skipped:
-		20. Try recipes with normal lines or something?		(Skip)
-		27. Bow cursor.										(Skip)
-			27.a) Make it feel nicer to move.				(Skip)
-		28. Adjust mouse sensitivity.						(Skip)
-		32. Sprinting? Over player head. Green.				(Skip)
-		36. Cannot close window with cmd w while in game	(Skip)
-		39. No way to see how many objects returned from cr.(Skip)
-		42. Ghosts as a mob.								(Skip)
-			42.a) Would be super easy to implement.			(Skip)
-		46. Tweak player animations.						(Skip)
-			46.a) Revert walking.							(Skip)
-			46.b) Maybe stop animation when action stops.	(Skip)
-		47. Tweak inventory lighting a little.				(Skip)
-		49. Check door texture and others on top monitor.	(Skip)
+	Networks only need to be updated on world changes.
+	So you can add a flag for blocks being placed or removed.
+	If any of the adjacent blocks are water then you can determine the network
+	and run its update.
 
-
-Update notes. (Alpha 0.1.0)
-Features:
-	Added copper and stone swords.
-	Added copper bricks.
-	Added grid mode, accessed by pressing 'G'.
-	Toolbar is now saved.
-
-Changes:
-	Increased arrow cooldown.
-
-Fixes:	
-	Overlapping notification text.
-	Enemy hitboxes adjusted.
-	Held object no longer remains the same on load.
-	Bow shooting animation.
-	Expanded arrow hitbox.
-	Enemies can no longer walk over holes in the ground.
-	Loot box no longer attaches to stone.
-	Recipes for copper pickaxe and axe are less glitchy.
-	Fixed paused music glitch.
-	Enemies no longer spawn before the game starts.
-	Turning enemies off now despawns all current enemies.
-
-Website changes:
-	Added Google authentication.
-
-
-What to film (No music):
-	Start with logo on blurred background.
-	
-	Using sword on enemies.
-	Crafting sword (copper)
-	Using copper sword on enemies.
-	Crafting copper block.
-	Placing copper block.
-	Simple build using copper blocks.
-
-	Showcase grid mode.
-		(add user who suggested it.)
-
-	Show shooting.
-
-	Add fixes/changes (blurred background).
-
-	Patreon member shoutout.
-
-Hey guys, it's Jay.
-
-Starts in your inventory by default.
+	(Trickier when placing water, might need to update for a few frames.)
 
 
 
+	Water to do.
+		Split network on block placed.								(X)
+			Fix the level thing.									(X)
+			Fix the other three cases.								(X)
+		
+		Actually kill the network when it's not alive.				(X)
+		Fix network updating.										()
+			Should probably only start updating on action.			()
+
+		Move wooden bucket down slightly in inventory.				()
+
+		Save/load :/												()
+
+		Implement bucket picking up water.							()
+		Figure out litres stuff.									()
+		Figure out bucket/capacity.									()
+		Finish the bucket drawing water.							()
+		Implement the bucket fullness meter.						()
+		Ensure network splits on bucket pickup.						()
 
 
-Update Alpha 0.1.0
-	1. Fix notifications being too small							(X)
-		1.a) Added variable font size.								(X)
-	2. Turn enemies off actually despawns them.						(X)
-	3. Attack enemies with tools.									(X)
-		3.a) Start by making a new melee item.						(X)
-		3.b) Define a hit box.										(X)
-		3.c) Only while swinging down								(X)
-		3.d) Tweak timer a little.									(X)
-		3.e) Custom cursor (similar to bow.)						(X)
-		3.f) Design sword.											(X)
-		3.g) Rotate angle of sword in hand.							(X)
-		3.h) Make enemy hitbox bigger. 								(X)
-		3.i) Revert mining thing with angle!						(X)
-	4. Sword in toolbar.											(X)
-	5. Enemies still squish into each other.						(X)
-	6. Held item issue with loading.								(X)
-	7. Make sword an abstract object.								(X)
-		7.a) Particles when hit.									(X)
-		7.b) Tone down the number of particles.						(X)
-	8. Add recipe for copper sword.									(X)
-		8.a) Tweak appearance of recipe.							(X)
-	9. Add copper sword.											(X)
-	10. Adjust damage of both swords.								(X)
-		10.a) Stone.												(X)
-		10.b) Copper.												(X)
-	11. Fix arrow cooldown/animation.								(X)
-	12. Arrow collisions are again broken.							(X)
-		12.a) I changed the collision to remove z-range.			(X)
-		12.b) Also change z-range of zombies to -10, 10.			(X)
-		12.c) Additionally, give arrows two collisions.				(X)
-		12.d) Confirm with doors.									(X)
-		12.e) The collisions with blocks are pretty good now :)		(X)
-	13. Add Copper brick.											(X)
-		13.a) Add recipe.											(X)
-	
-	14. New function to multiply colors.							(X)
-	15. Fix recipes.												(X)
+Add campaign for website***
 
-	14. Zombie can walk over holes.									(X)
-	14. Fix DropBox attaching to stone.								(X)
-	15. Scale to 1080p for recording.								(X)
-	21. Grid mode. Thick wireframe.									(X)
-		21.a) Snap to grid.											(X)
-	16. Patreon banner.												()
-	17. Not an update but figure out early access thing.			()
-	18. Can't do local storage. Eventually put on steam.			()
-	19. Ores underground?											()
-	20. Stone below stone (this is a better idea.)					()
-		20.a) Can even make stone spill out the side.				()
-	
-	22. Google authentication is really important.					()
+Idea for toolbar
+	Can keep hold/drop buttons as they were before,
+	but move them so they are like where the move and moveall buttons
+	are.
 
-	21. Moving on up! Name for moving up update.					()
-
-	
-	Fix player movement						()
-	
-	Do the bad ceiling blocks				()
+	When you select the item, you get [1,2,3,4] to manually select
+	the toolbar position.
 
 
-	REALLY WEIRD PLAYER MOVEMENT BUG. (When holding
-	sword at least?)
+Buckets should be craftable...
 
-Update Alpha 0.2.0 | Weight a minute!
-	1. Chests 														(X)
-		1.a) Add block.												(X)
-		1.b) Make interactable.										(X)
-		1.c) Make a basic layout for testing.						(X)
-		1.d) Idea for layout.										(X)
-		1.e) Implement layout.										(X)
-		1.f) Implement drawContents (just open chest).				(X)
-		1.g) Implement storing for blocks.							(X)
-		1.h) Add switching between tabs.							(X)
-		1.g) Make open/close.										(X)
-		1.h) Design texture.										(X)
-		1.i) Implement texturing.									(X)
-		1.j) Implement saving/loading.								(X)
-		1.k) Fix the scrollOffset when things removed.				(X)
-		1.l) Honestly same thing in inventory.						(X)
-		1.k) Fix the position at which it refreshes (not ev. fram.) (X)
-			I don't even care about this... (No please fix this!)
-			Fixed it a little. It's fine.
-		1.l) Fix chest displaying recipes.							(X)
-		1.l) Fix chest text too long recipes.						(X)
-		1.l) Add capacity.											(X)
-		1.l) All items go to inventory when broken.					(X)
-		1.l) Recipe. 												(X)
+Maybe if it rains the level of water networks increase?
 
-	Tool bar looks weird when you place stuff again...				(X)
-	WHAT TO NAME THE PLAYER WEIGHT????								(X)
-	Fix the tool thing save with chest.								()
-		Now workbench is saved.
-	3. Player weight.												(X)
-		3.a) Fix arm/leg angle speed.								(X)
-	4. Sprinting.													(X)
-		4.a) Do the particles :)									(X)
-		4.b) Check the sound.										()
-
-	5. 
+So if you place a block over water, you should remove it from the network.
+This will automatically increase the level which is nice...
+but this make also lead to disconnected networks.
 
 
-Update Alpha 0.3.0 | Can you hear me?
+Bosses can be like BOTW, there are set locations when the map is generated.
+If you enter their radius it begins the fight.
+They could start off sleeping?
 
-I kind of like 'drawContents' without the background.
-Include object properties like damage and stuff in the inventory.
-Start commenting on other videos man carrying thign.
+ADD MICHAEL SCOTT!
 
-Online Update | Better Together!
+Also villagers. 
+
+A shopkeep that spawns somewhere randomly would be great!
+
+Mob ideas.
+Need to add chests.
+
+Make the sign in thing more friendly?
+Also maybe make it so that mobile users can play? (Would be hard as fuck tbh.)
+
+Could just like partition screen so game is played in the middle
+
+(Should add that thing where when you place blocks it places one above... like maybe draw an arrow.)
+
+
+
+Update Alpha 0.3.0 | Control this
+	1. Add the up block thing, e.g., placing blocks above.			()
+	2. Add extra toolbar slot.										()
+	3. Add the updated toolbar number idea.							()
+	4. Also add for blocks.											()
+	5. Add ability to move things in inventory.						()
+		5.a) With little arrow icons.								()
+	6. Fix the inventory ordering bug.								()
+		6.a) E.g., on pickup/drop.									()
+
+
+Update Alpha 0.3.0 | Water you doing?
+	1. Water
+		1.a) Saving and loading water networks...					()
+	2. Sand
+	3. Iron.
+	4. Glass.
+	5. Bottles.
+	6. Draw distance with holes should be fixed.
+
 
 Update Alpha 0.4.0 | Pass me a brew.
-	1.l) Fix inventory ordering thing.								()
-		Sometimes when you drop the order is preserved...
-		Like drop and pick back up.
-	2. Make copper ore randomly drop 2 sometimes.					()
-	14. Athelas														()
-			14.a) Flesh this idea out.									()
-			14.b) Zombies no longer drop potions.						()
-	5. Iron. (Make it mythical)										()
-		Mining iron requires copper
-		Red cursor
-		Make iron blue.
-	5. More sounds.													()
-	5. Another few blocks.											()
-	5. Maybe expand toolbar.										()
-	5. Sprinting.													()
-	5. Update arrow recipe same as tools.
-		5. Also you can just tint the blue instead of making two	()
-		5. Objects, it might look nicer.							()
+	1. Athelas														()
+		1.a) Flesh this idea out.									()
+		1.b) Zombies no longer drop potions.						()
+	2. Iron. (Or some mythical equivalent)							()
+		2.a) Mining iron requires copper							()
+		2.b) Red cursor												()
+		2.c) Make iron blue.										()
+	3. Brewing Stand.												()
+		3.a) Requires iron to craft.								()
+		3.b) Use ingredients from enemies.							()
+	4. Zombies now drop potion ingredient.							()
+		4.a) Player can eat it for a small increase in health.		()
+	5. Fix inventory ordering.										()
+		5.a) Order is saved when item is fully dropped.				()
+	6. Make copper and iron ore randomly drop 2 sometimes.			()
+	7. Update arrow recipe same as tools.							()
+		7.a) Also you can just tint the blue instead of making two	()
+		7.b) Objects, it might look nicer.							()
 
 
-Let there be (better?) light!
+Update Alpha 0.3.1 | Can you hear me?
+	1. More sounds.													()
 
-Maybe another minor update before this.
 
-Check phone for ideas.
-
-Also add the umm little areas with drop boxes.
-
-reddit.
+POTENTIAL FUTURE UPDATE IDEAS:
 
 Update Alpha 1.0.0
-	5. Day night cycle.
-	5. Torches or lighting.
-	5. Forge/Anvil.													()
+	1. Day night cycle.
+	2. Torches or lighting.
+	3. Forge/Anvil.													()
 
 
 Update Alpha 1.1.0
-	5. Ghost enemy.
+	1. Ghost enemy.
 	
 Update Alpha 1.2.0
-	5. Enemy path finding.											()
-
-
-Sheep (animals), armour, water.
-
-Package updates and work ahead!
-
-GPU and clear space. Screen recording.
-
-
-
-Add pinned post on patreon describing what the deal is. Tuesday releases bi-weekly (every two weeks).
-Poll should sword be their own inventory slot?
+	1. Enemy path finding.											()
 
 
 
 
-Idea. Hit boxes always square. Can have many...
+Unorganized things todo:
+	Sheep (animals), armour, water.
+	Make recipes consistent (i.e., all with lines).
+	Improve movement of bow cursor.
+	Adjustable mouse sensisitivity.
+	Cannot close window with cmd w.
+	See objects returned when crafting.
+	Ghosts as mobs that interact with light.
+		They avoid lights, but can move through walls.
+	Tweak player walking animations.
+		Maybe revert to the old style.
+		Maybe stop animations when action stops.
+	Tweak inventory lighting.
+	Local version, maybe on steam (can do local storage).
+
+	Improving stone generation / ores.
+		Can have two layers of stone and ores underground.
+		Can kind of make stone spill out of the side.
+
+	Should try to figure out ceiling transparency.
+
+	Potential update names.
+		Moving on up! (If you ever decided to add verticle movement.)
+		Sound Update | Can you hear me?
+		Online Update | Better Together!
+		Lighting Update | Let there be (better?) light!
+		Multiplayer | Better Together or It takes two... or three.
+
+	Try 'drawContents' without the background.
+	Include object properties like damage and stuff in the inventory.
+	Similarly, give objects specific weight.
+
+	Can add to pass me a brew update.
+	Green potions with mysterious effects (dropped from zombies).
+	Zombie heart/eye for brewing.
+	Brewing stand.
+
+	Can add little structures with dropboxes or chests.
+
+	Make reddit account for promotion.
+	Make itch.io account for promotion.
+	Start commenting on other videos man carrying thing.
+
+	Poll should sword be their own inventory slot?
+
+	Make ores mythical.
+
+	Hitboxes can be layered. Cubic but many.
+	Maybe expand toolbar?
 
 
-Add to about, still needs to be optimized.
+Crap ideas:
 
-
-For simplicity, you can stop enemies when they're hit and collide with a block,
-but at that point just make it so they can move through blocks for a few frames to
-avoid getting stuck.
-
-redesign all hit boxes with new hitbox class.
-
-
-
-I kind of have an idea for improving rendering. You could just store objectNumbers per portion.
-you do lose some instance info for grass blocks. But when you render you could just call a static
-draw function which you get by using the objectNumber on an array like when saving.
-
-Could also have a tandem array that defines instance variables. (Just an idea, don't worry about it now.)
+I kind of have an idea for improving rendering. You could just store objectNumbers per portion. You do lose some instance info for grass blocks. But when you render you could just call a static draw function which you get by using the objectNumber on an array like when saving. Could also have a tandem array that defines instance variables. (Just an idea, don't worry about it now.)
 
 			
-
-
-	Notes:
-		Iron Pick, Iron Axe.
-		Dungeons will definitely not be saved for the first update.
-		Day/Night?
-		The light on the character?
-		Ores (mythical and stuff)
-		Door crafting
-		
-
-Which fonts:
-
-	8-bit Arcase Out for logo maybe?
-	BelanidiSerif-Regular.otf (Not terrible)
-	CutePixel.ttf (okay)
-	DigitalDisco-Thin.ttf (okay+)
 	

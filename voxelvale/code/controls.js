@@ -419,7 +419,9 @@ canvas.addEventListener("mousedown", function(event){
 				return;
 			//player.heldObject.onLClick();
 			if(!inventory && !inFunction){
+
 				player.heldObject.onLClick();
+				
 				// Needs to be fixed!!!
 				if(fixedView){
 					switch(player.heldObject.type){
@@ -455,6 +457,7 @@ canvas.addEventListener("mousedown", function(event){
 
 						case 'TOOL':
 							//This is handled in "check_player_action()" in "player.js".
+
 						break;
 						}
 					}

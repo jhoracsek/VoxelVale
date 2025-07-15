@@ -237,6 +237,7 @@ class BlockWall extends zObject{
 		this.drawFront = true;
 
 		this.sound = 'STONE';
+		this.isFluid = false;
 	}
 	drop(){
 		return this.copy();

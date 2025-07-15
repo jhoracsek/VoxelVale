@@ -86,6 +86,7 @@ class BlockWallNew extends zObjectNew{
 	static sound = 'STONE'; get sound() {return this.constructor.sound;}
 	static isInteractable = false; get isInteractable() {return this.constructor.isInteractable;}
 	static correctTextureOrientation = false;
+	static isFluid = false; get isFluid() {return this.constructor.isFluid;}
 
 	static sendData(){
 		if(!this.correctTextureOrientation){
@@ -486,7 +487,7 @@ class GrassBlock extends BlockWallNew{
 */
 
 function initialize_simpleBlocks(){
-	simpleBlocks = [GrassBlock, WeirdBlock, BrickBlock, StoneFloorBlock, DungeonWall, BorderWall,CopperBrick,Chest];
+	simpleBlocks = [GrassBlock, WeirdBlock, BrickBlock, StoneFloorBlock, DungeonWall, BorderWall,CopperBrick, Chest, Water];
 }
 
 class WeirdBlock extends BlockWallNew{

@@ -567,6 +567,9 @@ function draw_scroll_list(){
 		set_mv_ui(mv);
 		draw_c_text(textX,start+difference*(3-i)+0.65,tabList[i+scrollOffset].name);
 		draw_c_text_small(textX+0.05,start+difference*(3-i)+0.45,tabList[i+scrollOffset].desc);
+		if(tabList[i+scrollOffset].typeOfObj=='ITEM' && tabList[i+scrollOffset].type=='TOOL' && tabList[i+scrollOffset].toolType=='BUCKET'){
+			draw_c_text_small(textX+0.05,start-0.2+difference*(3-i)+0.45,tabList[i+scrollOffset].desc2);	
+		}
 		draw_c_text_med(textX+4.65,start+0.12+difference*(3-i),('Quantity:'));
 		draw_c_text_med(textX+5.56,start+0.12+difference*(3-i),(player.inventory.getQuantity(tabList[i+scrollOffset])));
 		if(selectedTab == 'REC'){
@@ -628,7 +631,15 @@ function draw_display_item(object){
 			xSpin = 0;
 		}
 		//if(object.typeOfObj=='ITEM' || object.typeOfObj=='NON_ACTIONABLE_ITEM'){
-		if(object.typeOfObj=='ITEM' || (object.typeOfObj=='REC' && object.object.type=='TOOL')){ //(object.typeOfObj=='REC' && object.object.type=='TOOL')
+		if(object.typeOfObj=='ITEM' && object.toolType == 'BUCKET'){
+			instanceMat = mult(instanceMat, translate(0.1,-1.05,0));
+			instanceMat = mult(instanceMat, scale4(1.25,1.25,0.01));
+			instanceMat = mult(instanceMat,rotateZ(45));
+			instanceMat = mult(instanceMat,rotateY(xSpin));
+			instanceMat = mult(instanceMat,rotateX(15));
+			xSpin+=2;
+		}
+		else if(object.typeOfObj=='ITEM' || (object.typeOfObj=='REC' && object.object.type=='TOOL')){ //(object.typeOfObj=='REC' && object.object.type=='TOOL')
 			instanceMat = mult(instanceMat, translate(1.22,-1.05,0));
 			instanceMat = mult(instanceMat, scale4(1.25,1.25,0.01));
 			instanceMat = mult(instanceMat,rotateZ(45));
@@ -1145,8 +1156,14 @@ function draw_toolbar_items(){
 			if(i >= NUM_TOOLBAR_TOOLS){
 				object.drawSmall(toolBarObjs[i]);
 			}else{
-				gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(toolBarObjs[i]));
-				gl.drawArrays(gl.TRIANGLES,object.index,object.numberOfVerts);
+				//This is where tools are drawn!
+				if(object.toolType == 'BUCKET'){
+					set_light_full();
+					object.drawToolbar(toolBarObjs[i]);
+				}else{
+					gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(toolBarObjs[i]));
+					gl.drawArrays(gl.TRIANGLES,object.index,object.numberOfVerts);
+				}
 			}
 		}
 	}

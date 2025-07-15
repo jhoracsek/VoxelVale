@@ -13,6 +13,7 @@ terser \
 	code/blockwall.js \
 	code/xyzblock.js \
 	code/dropbox.js \
+	code/chest.js \
 	code/scenes.js \
 	code/dungeons.js \
 	code/collision.js \
@@ -23,9 +24,11 @@ terser \
 	code/popup.js \
 	code/UI.js \
 	code/healthbar.js \
+	code/staminabar.js \
 	code/uifunctions.js \
 	code/inventory.js \
 	code/craftingmenu.js \
+	code/chestmenu.js \
 	code/helpers.js \
 	code/item.js \
 	code/wireframe.js \

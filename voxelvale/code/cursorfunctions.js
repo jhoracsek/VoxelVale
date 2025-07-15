@@ -149,6 +149,10 @@ function updateCursorColour(){
     	selectedBlock = world.getBlockAt(Math.round(xCoor),Math.round(yCoor),upOne);
     }
 
+    //var cursorCoords = String(Math.round((coorSys[0]+player.posX)-9))+" "+String(Math.round((coorSys[1]+player.posY)-4.5))+" "+String(upOne);
+    //var playerCoords = String(player.posX) + " " + String(player.posY) + " " + String(player.posZ);
+    //text_log("Cursor Coords: "+cursorCoords + " Player Coords: "+playerCoords  )
+
     /*
 		Handle the case where the selected block is too close to the player.
 		I think placing/destroying above the player is fine, but not within the player, or below the player.
@@ -156,10 +160,6 @@ function updateCursorColour(){
 		So blocks that are at the same height as the player are those at z = -3, and z = -4 (I think).
 		The block directly beneath the player is at z = -2 (again, I think).
     */
-    //var cursorCoords = String(Math.round((coorSys[0]+player.posX)-9))+" "+String(Math.round((coorSys[1]+player.posY)-4.5))+" "+String(upOne);
-    //var playerCoords = String(player.posX) + " " + String(player.posY) + " " + String(player.posZ);
-    //text_log("Cursor Coords: "+cursorCoords + " Player Coords: "+playerCoords  )
-
     if(Math.abs((player.posX-0.5) - xCoor) <= 0.75 && Math.abs( (player.posY-0.5) - yCoor) <= 0.75){
     	if(heldItem.typeOfObj == 'ITEM' && upOne == -2){
     		cursorGreen = false;
@@ -173,7 +173,11 @@ function updateCursorColour(){
     }
 	
 
-	if(selectedBlock == null){
+
+    /*
+		
+    */
+	if(selectedBlock == null || selectedBlock.isFluid){
 		if(heldItem.typeOfObj == 'BLOCK'){
 			if(heldItem.isTall){
 				var aboveSelectedBlock = world.getBlockAt(Math.round(xCoor),Math.round(yCoor),upOne-1);
@@ -192,13 +196,16 @@ function updateCursorColour(){
 			}
 		}else if(heldItem.typeOfObj == 'ITEM'){
 			cursorGreen = false;
+			if(heldItem.type == 'TOOL' && heldItem.toolType == 'BUCKET' && upOne == -2)
+				cursorGreen = true;
+
 		}
 		return;
 	}
 
 
-	if(heldItem.typeOfObj == 'BLOCK'){
 
+	if(heldItem.typeOfObj == 'BLOCK'){
 		if(selectedBlock == null)
 			cursorGreen=true;
 	}else if(heldItem.typeOfObj == 'ITEM'){
@@ -208,12 +215,15 @@ function updateCursorColour(){
 					if(selectedBlock.tob=='WOOD'){
 						cursorGreen=true;
 					}
-				break;
+					break;
 				case 'PICK_AXE':
 					if(selectedBlock.tob=='STONE'){
 						cursorGreen=true;
 					}
-				break;
+					break;
+				case 'BUCKET':
+
+					break;
 			}
 		}
 	}

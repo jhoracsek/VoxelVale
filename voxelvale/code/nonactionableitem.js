@@ -354,4 +354,4 @@ class HealthPotion extends NonActionableItem {
 
 
 
-const ITEM_OBJNUMS = [WoodAxe, StonePickaxe, WoodenBow, Copper, CopperBar, ArrowItem, CopperPickaxe, CopperAxe, HealthPotion, StoneSword, CopperSword];
+const ITEM_OBJNUMS = [WoodAxe, StonePickaxe, WoodenBow, Copper, CopperBar, ArrowItem, CopperPickaxe, CopperAxe, HealthPotion, StoneSword, CopperSword, WoodenBucket];

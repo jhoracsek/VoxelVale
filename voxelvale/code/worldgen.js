@@ -29,6 +29,7 @@ class WorldPortion{
 			would access like spaceOccupied[1][i - this.posX][j - this.posY].
 		*/
 
+		this.fluids=[];
 		this.spaceOccupied = [[],[]];
 		if(X!=null && Empty==false)
 			this.makePortion();
@@ -56,6 +57,15 @@ class WorldPortion{
 		this.spaceOccupied[PZ + 4][PX - this.posX][PY - this.posY] = val;
 	}
 
+	getFluid(PX,PY){
+		return this.fluids[PX-this.posX][PY-this.posY];
+	}
+
+	setFluid(PX,PY, val=null){
+		this.fluids[PX-this.posX][PY-this.posY] = val;
+		return;
+	}
+
 	push(block){
 		//Check within cluster
 		let px = block.posX;
@@ -74,24 +84,30 @@ class WorldPortion{
 		for(var i = 0; i < PORTION_SIZE; i++){
 			var occ1 = [];
 			var occ2 = [];
+			var flu = [];
 			for(var j = 0; j < PORTION_SIZE; j++){
 				occ1.push(false);
 				occ2.push(false);
+				flu.push(null);
 			}
 			this.spaceOccupied[0].push(occ1);
 			this.spaceOccupied[1].push(occ2);
+			this.fluids.push(flu);
 		}
 	}
 	makePortion(){
 		for(var i = 0; i < PORTION_SIZE; i++){
 			var occ1 = [];
 			var occ2 = [];
+			var flu = [];
 			for(var j = 0; j < PORTION_SIZE; j++){
 				occ1.push(false);
 				occ2.push(false);
+				flu.push(null);
 			}
 			this.spaceOccupied[0].push(occ1);
 			this.spaceOccupied[1].push(occ2);
+			this.fluids.push(flu);
 		}
 
 		//lastPos[0] and lastPos[1] is the starting point. So make sure nothing is generated in that block.
@@ -290,17 +306,88 @@ class WorldPortion{
 		}
 
 	}
+	refreshWater(pX,pY,pZ,level,parent){
+		var occupied = false;
+		for(var i = 0; i < this.portion.length; i++){
+			if(pX == this.portion[i].posX && pY == this.portion[i].posY && pZ == this.portion[i].posZ){
+
+				//If this is true, a water block already exists here.
+				if(this.portion[i].isFluid){
+					
+					/*
+						Now our non-source water is interacting with another water block.
+						We don't want to add another water block, but we want to increase the level.
+					*/
+					this.portion[i].increaseLevel(level);
+
+					/*
+					//If we share the same source do nothing.
+					if(this.portion[i].source.compareSource(block.source)){
+						this.portion[i].increaseLevel(level);
+						return false;
+					}else{
+						this.portion[i].increaseLevel(level);
+						return false;
+					}
+					*/
+				}
+				// No block here. Must add a new water block.
+				else{
+					occupied = true;
+					break;
+				}
+			}
+		}
+
+		// The space was not occupied with a water block, so we must add one.
+		if(!occupied){
+			let block = new Water(pX,pY,pZ,level,parent);
+			this.push(block);
+
+			/*
+				This is where you remove the dirt block.
+				This is necessary, because the dirt block has a collision box to prevent the player
+				from stepping over an empty hole.
+			*/
+			if(block.posZ == -2){
+				this.removeBlock(this.getBlockAt(block.posX,block.posY,-1));
+			}
+			return true;
+		}
+		return false;
+	}
 	addBlock(block){
+		//Add special provision for if it's water!
 		//You could make this more efficient by making it a 2D array!
 		var occupied = false;
 		for(var i = 0; i < this.portion.length; i++){
-			if(block.posX == this.portion[i].posX && block.posY == this.portion[i].posY && block.posZ == this.portion[i].posZ)
-				occupied = true;
+			if(block.posX == this.portion[i].posX && block.posY == this.portion[i].posY && block.posZ == this.portion[i].posZ){
+				if(this.portion[i].isFluid){
+					/*
+						(1) Remove this block from network its network.
+						(2) Reclace this.portion[i] with the new block.
+					*/
+					let network = this.portion[i].network;
+					network.removeWaterBlock(this.portion[i]);
+					this.portion[i] = block;
+					if(block.posZ == -2){
+						this.removeBlock(this.getBlockAt(block.posX,block.posY,-1));
+					}
+					return true;
+				}else{
+					occupied = true;
+					return true;
+				}
+			}
+
+				
 		}
 
 		for(var i = 0; i < this.portionCeiling.length; i++){
-			if(block.posX == this.portionCeiling[i].posX && block.posY == this.portionCeiling[i].posY && block.posZ == this.portionCeiling[i].posZ)
+			if(block.posX == this.portionCeiling[i].posX && block.posY == this.portionCeiling[i].posY && block.posZ == this.portionCeiling[i].posZ){
 				occupied = true;
+				return true;
+			}
 		}
 		if(!occupied){
 			this.push(block);
@@ -315,6 +402,86 @@ class WorldPortion{
 			return true;
 		}
 		return false;
+	}
+
+	addWater(pX, pY, pZ, network){
+		//constructor(X,Y,Z, level=1, startNetwork = true, network = null)
+		/*
+			If startNetwork = true, it will just make a new network in the constructor.
+			Properties: Water.level, Water.network.
+		*/
+		var occupied = false;
+
+		for(var i = 0; i < this.portion.length; i++){
+			if(pX == this.portion[i].posX && pY == this.portion[i].posY && pZ == this.portion[i].posZ)
+				if(this.portion[i].isFluid){
+					let existingNetwork = this.portion[i].network;
+
+					if(network == null){
+						/*
+							This would occur if the player is adding water
+							from their bucket. If this is the case we just increase the level
+							of the existing network: 'existingNetwork'.
+						*/
+						// INCREASE LEVEL.
+						//Should increase based off of the level of the bucket.
+						existingNetwork.level += 1;
+						return null;
+					}else if(network.id == existingNetwork.id){
+						/*
+							Block already exists and is part of the same network.
+							Do nothing here.
+						*/
+						return null;
+					}else{
+						/*
+							Block exists, but as part of a seperate network.
+							We should return false. We don't need to add a new
+							block to this portion. What we do need to do
+							is merge the networks.
+						*/
+						//console.log('We should be merging!')
+						//console.log('OG:', network.id)
+						//console.log('Here:', existingNetwork.id)
+						existingNetwork.mergeNetwork(network);
+						return null;
+					}
+					
+					
+				} else {
+					occupied = true;
+				}
+		}
+
+
+		/*
+			In this case we just need to add a new water block with
+			a new network.
+
+			THIS SHOULD ONLY HAPPEN IF THE NETWORK IS NULL
+		*/
+		if(!occupied){
+			let block;
+			if(network == null){
+				block = new Water(pX, pY, pZ, 1, true, null);
+				this.push(block);
+				this.setFluid(pX,pY,block);
+			}else{
+				block = new Water(pX, pY, pZ, 1, false, network);
+				this.push(block);
+				this.setFluid(pX,pY,block);
+			}
+			/*
+				With water we actually want to keep the dirt block.
+			*/
+			/*
+			if(block.posZ == -2){
+				this.removeBlock(this.getBlockAt(block.posX,block.posY,-1));
+			}
+			*/
+			return block;
+		}
+		return null;
 	}
 
 	getPortionArray(){
@@ -392,6 +559,26 @@ class World{
 		else{
 
 			return this.portions[locX][locY].isSpaceOccupied(PX,PY,PZ);
+		}
+	}
+
+	getFluid(PX, PY){
+		var locX = Math.floor(PX/PORTION_SIZE);
+		var locY = Math.floor(PY/PORTION_SIZE);
+		if(locX<0||locY<0||locX>this.size||locY>this.size)
+			return null;
+		else{
+			return this.portions[locX][locY].getFluid(PX,PY);
+		}
+	}
+	// HERE
+	setFluid(PX, PY, block){
+		var locX = Math.floor(PX/PORTION_SIZE);
+		var locY = Math.floor(PY/PORTION_SIZE);
+		if(locX<0||locY<0||locX>this.size||locY>this.size)
+			return false;
+		else{
+			return this.portions[locX][locY].setFluid(PX,PY,block);
 		}
 	}
 
@@ -473,6 +660,36 @@ class World{
 		var PY = block.posY;
 		var PZ = block.posZ;
 		this.updateChunk(PX,PY,PZ);
+		return true;
+	}
+
+
+	/*
+		Should take just the coordinates.
+
+		If successful: returns the block that was added.
+
+		Otherwise: Returns null
+	*/
+	addWater(pX, pY, pZ, network = null){
+		var locX = Math.floor(pX/PORTION_SIZE);
+		var locY = Math.floor(pY/PORTION_SIZE);
+		var ret = this.portions[locX][locY].addWater(pX,pY,pZ,network);
+		//Update
+		if(ret == null)
+			return null;
+		this.updateChunk(pX,pY,pZ);
+		return ret;
+	}
+
+	refreshWater(pX, pY, pZ, level, parent){
+		var locX = Math.floor(pX/PORTION_SIZE);
+		var locY = Math.floor(pY/PORTION_SIZE);
+		var ret = this.portions[locX][locY].refreshWater(pX,pY,pZ,level,parent);
+		//Update
+		if(ret == false)
+			return false;
+		this.updateChunk(pX, pY, pZ);
 		return true;
 	}
 

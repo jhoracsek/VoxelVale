@@ -109,6 +109,7 @@ var pQueue;
 var inFunction=false;
 var projectileArray;
 var enemyArray;
+var waterNetworkArray;
 
 //AKA Universal Acceleration Cutoff Threshold;
 var UACT;
@@ -498,6 +499,7 @@ window.onload = function init(){
 	pQueue = new Queue();
 	projectileArray = new ProperArray();
 	enemyArray = new ProperArray();
+	waterNetworkArray = [];
 
 	var axe = new WoodAxe();
 	player.addToInventory(axe);
@@ -513,12 +515,14 @@ window.onload = function init(){
 	var bow = new WoodenBow();	
 	player.addToInventory(bow);
 
-	toolBarList.push(sword);
+	if(!DEV_TOOLS)
+		toolBarList.push(sword);
 	//toolBarList.push(bow);
 
 	var workbench = new WorkBench();
 	player.addToInventory(workbench);
-	toolBarList.push(workbench);
+	if(!DEV_TOOLS)
+		toolBarList.push(workbench);
 
 	player.addToInventory(new WoodBlockRecipe())
 	player.addToInventory(new DoorRecipe())
@@ -548,15 +552,26 @@ window.onload = function init(){
 		player.addToInventory(new CopperBrick());
 		chest = new Chest()
 		player.addToInventory(chest);
-		player.addToInventory(new WoodBlock())
-		player.addToInventory(new WoodBlock())
-		player.addToInventory(new WoodBlock())
-		player.addToInventory(new GrassBlock())
-		player.addToInventory(new WoodLog())
+		player.addToInventory(new WoodBlock());
+		player.addToInventory(new WoodBlock());
+		player.addToInventory(new WoodBlock());
+		player.addToInventory(new WoodBlock());
+		player.addToInventory(new WoodBlock());
+		player.addToInventory(new WoodBlock());
+		player.addToInventory(new WoodBlock());
+		player.addToInventory(new WoodBlock());
+		player.addToInventory(new GrassBlock());
+		player.addToInventory(new WoodLog());
+
+		let woodenBucket = new WoodenBucket();
+		player.addToInventory(woodenBucket);
+		toolBarList.push(woodenBucket);
+		let water = new Water();
+		player.addToInventory(water)
 		
 
-		toolBarList.push(chest);
-		toolBarList.push(null);
+		toolBarList.push(workbench);
+		toolBarList.push(new WoodBlock());
 		toolBarList.push(null);
 
 	}else{
@@ -723,6 +738,8 @@ function send_block(){
 
 	StoneSword.sendData();
 	CopperSword.sendData();
+
+	WoodenBucket.sendData();
 
 	bowStart = vertices.length;
 	sendBow = new WoodenBow();
@@ -1205,10 +1222,17 @@ function render_data(){
 		for(var i=0;i<tbd.length;i++)
 			enemyArray.removeElement(tbd[i]);
 	}
+	let fluids = [];
 	for(var i = 0; i < blocks.length; i++){
 		
 		if(add_block_to_draw_list(blocks[i],drawDistanceX, drawDistanceY)){
-			blocks[i].draw();
+			if(!blocks[i].isFluid){
+				blocks[i].draw();
+			}else{
+				fluids.push(blocks[i]);
+				continue;
+			}
+			
 			if(add_block_to_list(blocks[i])){
 				var directions = colDirection(player,blocks[i]);
 
@@ -1289,7 +1313,12 @@ function render_data(){
 			}
 		}
 	}
-	//console.log('Collisions:', colUp, colDown, colLeft,colRight)
+	/*
+		Now draw fluids
+	*/
+	for(var i = 0; i < fluids.length; i++){
+		fluids[i].draw();
+	}
 
 	var transparentBlocksNeg6 = [];
 	var transparentBlocksNeg5 = [];
@@ -1329,7 +1358,8 @@ function render_data(){
 	//I could just add them to an array (above) and not have to recompute them
 	for(var i = 0; i < blocks.length; i++){
 		if(add_block_to_draw_list(blocks[i],drawDistanceX, drawDistanceY)){
-			blocks[i].drawShadows();
+			if(!blocks[i].isFluid)
+				blocks[i].drawShadows();
 		}
 	}
 	for(var i = 0; i < ceilingBlocks.length; i++){
@@ -1521,8 +1551,10 @@ function render_data(){
 	*/
 	gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(identityMatrix));
 	//
+	if(!PICTURE_MODE){
 		draw_tool_bar();
 		draw_toolbar_items();
+	}
 	if(!inventory && !inFunction){
 		if(fixedView)
 			draw_map();
@@ -1549,7 +1581,8 @@ function render_data(){
 
     // Maybe bottom right?
     let pinch = 0.1;
-    draw_healthbar(0.5+pinch, pixToCanY(615+12), 5.3-pinch, pixToCanY(623+9), Math.max(player.health,0), player.maxHealth);
+    if(!PICTURE_MODE)
+    	draw_healthbar(0.5+pinch, pixToCanY(615+12), 5.3-pinch, pixToCanY(623+9), Math.max(player.health,0), player.maxHealth);
     
 
     // Should draw enemies health bars.
@@ -1578,7 +1611,7 @@ function render_data(){
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+1.5+offset, "Press on the window to begin playing!");
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+1+offset, "Use 'WASD' to move.")
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+0.5+offset, "Press 'space' to sprint.")
-		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+offset, "Press '~'' to open inventory.");
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1]+offset, "Press '~' to open inventory.");
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-0.5+offset, "Left click to use tools and place blocks.");
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-1+offset, "Right click to interact with blocks.");
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-1.5+offset, "Scroll or use 'Q' and 'E' to adjust cursor.");
@@ -1594,7 +1627,7 @@ function render_data(){
 */
 var logicCounter = 0;
 function updateLogic(){
-	logicCounter = (logicCounter + 1)%60;
+	
 	/*
 		Spawning undead enemies.
 	*/
@@ -1612,7 +1645,45 @@ function updateLogic(){
 	//}
 
 
+	/*
+		Update water network!
+	*/
 
+	//waterNetworkArray
+	/*
+		SHOULD ONLY UPDATE IF YOU ARE SIGNIFICANTLY CLOSE.
+		(Better solution see delete)
+	*/
+	if(logicCounter%10 == 0){
+		let numAlive = 0;
+		let deadNetworkIndices = [];
+		for(let i = 0; i < waterNetworkArray.length; i++){
+			if(waterNetworkArray[i].isAlive){
+				if(waterNetworkArray[i].requiresUpdate)
+					waterNetworkArray[i].update();
+				
+				numAlive++;
+			}else{
+				waterNetworkArray[i].kill();
+				deadNetworkIndices.push(i);
+			}
+		}
+
+		/*
+			Clean up dead networks.
+			dead = [0, 5, 9]
+		*/
+		for(let i = deadNetworkIndices.length-1; i >= 0; i--){
+			waterNetworkArray[deadNetworkIndices[i]] = waterNetworkArray[waterNetworkArray.length-1];
+			waterNetworkArray.pop();
+		}
+
+		//console.log('Number of active water networks:', numAlive);
+		//console.log('Array size:', waterNetworkArray.length);
+	}
+
+
+	logicCounter = (logicCounter + 1)%60;
 }
 
 const NO_ITEM_HELD = 0;

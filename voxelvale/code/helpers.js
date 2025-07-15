@@ -121,3 +121,13 @@ function overlay(a,b){
 
 
 
+function getEnemySpawn(){
+	if(SPAWN_ENEMIES){
+		return "Turn enemies off.";
+	}else{
+		return "Turn enemies on.";
+	}
+}
+
+
+
