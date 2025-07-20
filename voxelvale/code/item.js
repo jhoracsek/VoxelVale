@@ -287,7 +287,7 @@ class Bucket extends Item{
 		this.weaponType = 'NONE';
 		this.unitsOfWater = 4;
 
-		this.desc2 = this.unitsOfWater.toString()+'Poop butt fart.'
+		this.desc2 = '';
 	}
 
 
@@ -401,11 +401,15 @@ class Bucket extends Item{
 			Take the min of 1, this.unitsOfWater.
 		*/
 
-		if(this.unitsOfWater > 0 && upOne == -2){
-			let toAdd = Math.min(1,1);
-			this.unitsOfWater--;
-			world.addWater( Math.round((coorSys[0]+player.posX)-9), Math.round((coorSys[1]+player.posY)-4.5), upOne, null );
-			
+		if(fastMode){
+			world.addWater( Math.round((coorSys[0]+player.posX)-9), Math.round((coorSys[1]+player.posY)-4.5), upOne, null, 1)
+		}
+		else if((selectedBlock == null || selectedBlock.isFluid) && this.unitsOfWater > 0 && upOne == -2){
+			let toAdd = Math.min(this.unitsOfWater,1);
+			if(toAdd > 0.000001){
+				this.unitsOfWater-=toAdd;
+				world.addWater( Math.round((coorSys[0]+player.posX)-9), Math.round((coorSys[1]+player.posY)-4.5), upOne, null, toAdd);
+			}
 		}
 	}
 }

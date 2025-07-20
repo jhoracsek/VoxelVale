@@ -23,6 +23,8 @@ CopperStone			16
 CopperBrick			17
 Chest				18
 Water				19
+LuniteStone			20
+DaytumStone			21
 
 
 WoodAxe				64
@@ -30,13 +32,25 @@ StonePickaxe		65
 WoodenBow			66
 Copper 				67
 CopperBar			68
-ArrorItem			69
+ArrowItem			69
 CopperPickaxe		70
 CopperAxe 			71
 HealthPotion		72
 StoneSword			73
 CopperSword 		74
 WoodenBucket		75
+Latkin				76
+Illsaw 				77
+Platinum 			78
+Lunite 				79
+Daytum 				80
+LatkinBar			81
+IllsawBar 			82
+PlatinumBar 		83
+LuniteBar 			84
+DaytumBar			85
+
+
 
 
 WorkBenchRecipe		128
@@ -71,6 +85,7 @@ Steps for adding 'old' blocks:
 3) Add to the list above.
 4) Add to 'BLOCK_OBJNUMS' in "saveload.js".
 5) Add in 'send_block()' in main.js.
+(If not accounted for in send_data() do the following two steps)
 6) Save starting vertices as 'NAMEOFBLOCK_START'.
 7) Change index in block class to 'NAMEOFBLOCK_START'.
 
@@ -81,7 +96,7 @@ Steps for adding recipes:
 4) Add to 'RECIPE_OBJNUMS' in "recipes.js".
 
 Steps for adding non-actionable items:
-1) Add class to "items.js"
+1) Add class to "non-actionable.js"
 2) Set objectNumber to the next available number.
 3) Add to the list above.
 4) Add to 'nonActionableItems' array in "nonactionableitems.js".

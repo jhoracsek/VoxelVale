@@ -7,6 +7,7 @@ const GEN_DUNGEONS = false;
 var SPAWN_ENEMIES = false;
 const MAX_ENEMIES_IN_WORLD = 5;
 const PICTURE_MODE = false;
+const GEN_OLD_STYLE_WORLD = false;
 
 /*
 	Set to 1.5 for 1080p

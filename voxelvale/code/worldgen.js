@@ -28,14 +28,20 @@ class WorldPortion{
 			spaceOccupied[0][i - this.posX][j - this.posY]. Similarly, for a point (i,j,-3) you
 			would access like spaceOccupied[1][i - this.posX][j - this.posY].
 		*/
-
+		this.canGenerateGlobalStructures = true;
 		this.fluids=[];
 		this.spaceOccupied = [[],[]];
-		if(X!=null && Empty==false)
-			this.makePortion();
+		if(X!=null && Empty==false){
+			if(GEN_OLD_STYLE_WORLD){
+				this.makePortion();
+			}else{
+				this.generatePortion();
+			}
+		}
 
 		if(X!=null && Empty==true)
 			this.makeEmptyPortion();
+
 		
 	}
 
@@ -57,8 +63,17 @@ class WorldPortion{
 		this.spaceOccupied[PZ + 4][PX - this.posX][PY - this.posY] = val;
 	}
 
-	getFluid(PX,PY){
-		return this.fluids[PX-this.posX][PY-this.posY];
+	getFluid(PX,PY,specifyNetworkId=-1){
+		if(specifyNetworkId == -1)
+			return this.fluids[PX-this.posX][PY-this.posY];
+		else{
+			let fluid = this.fluids[PX-this.posX][PY-this.posY];
+			if(fluid!=null && fluid.network.id == specifyNetworkId){
+				return fluid;
+			}else{
+				return null;
+			}
+		}
 	}
 
 	setFluid(PX,PY, val=null){
@@ -95,6 +110,84 @@ class WorldPortion{
 			this.fluids.push(flu);
 		}
 	}
+	generatePortion(){
+		for(var i = 0; i < PORTION_SIZE; i++){
+			var occ1 = [];
+			var occ2 = [];
+			var flu = [];
+			for(var j = 0; j < PORTION_SIZE; j++){
+				occ1.push(false);
+				occ2.push(false);
+				flu.push(null);
+			}
+			this.spaceOccupied[0].push(occ1);
+			this.spaceOccupied[1].push(occ2);
+			this.fluids.push(flu);
+		}
+
+		let startingPositionX = lastPos[0];
+		let startingPositionY = lastPos[1];
+
+		if( (startingPositionX < this.outerBoundX) && (startingPositionX > this.posX)){
+			if(( startingPositionY > this.posY) && (startingPositionY < this.outerBoundY) ){
+				this.canGenerateGlobalStructures = false
+				for(var i = this.posX; i < this.outerBoundX; i++){
+					for(var j = this.posY; j < this.outerBoundY; j++){
+						this.push(new GrassBlock(i,j,-2));
+					}
+				}
+				return;
+			}
+			
+		}
+
+		/*
+			Generate border
+			We do this first to avoid anyoverlap
+		*/
+		for(var i = this.posX; i < this.outerBoundX; i++){
+			for(var j = this.posY; j < this.outerBoundY; j++){
+				if(i==0 || j==0){
+					this.push(new BorderWall(i,j,-3));
+				}
+
+				if(i > PORTION_SIZE*WORLD_SIZE && i == this.outerBoundX-1)
+					this.push(new BorderWall(i,j,-3));
+
+				if(j > PORTION_SIZE*WORLD_SIZE && j == this.outerBoundY-1)
+					this.push(new BorderWall(i,j,-3));
+
+			}
+		}
+	}
+
+	generateGrass(){
+		//Make temp 2D grid.
+		let tempGrid = [];
+		for(let i = 0; i < PORTION_SIZE; i++){
+			let temp = [];
+			for(let j = 0; j < PORTION_SIZE; j++){
+				temp.push(false);
+			}
+			tempGrid.push(temp);
+		}
+
+		for(let i = 0; i < this.portion.length; i++){
+			if(this.portion[i].posZ == -2){
+				let pX = this.portion[i].posX-this.posX;
+				let pY = this.portion[i].posY-this.posY;
+
+				tempGrid[pX][pY] = true;
+			}
+		}
+
+		for(var i = this.posX; i < this.outerBoundX; i++){
+			for(var j = this.posY; j < this.outerBoundY; j++){
+				if(!tempGrid[i-this.posX][j-this.posY])
+					this.push(new GrassBlock(i,j,-2));
+			}
+		}
+	}
 	makePortion(){
 		for(var i = 0; i < PORTION_SIZE; i++){
 			var occ1 = [];
@@ -126,7 +219,7 @@ class WorldPortion{
 			
 		}
 
-			/*
+		/*
 			Generate border
 			We do this first to avoid anyoverlap
 		*/
@@ -360,6 +453,7 @@ class WorldPortion{
 		//Add special provision for if it's water!
 		//You could make this more efficient by making it a 2D array!
 		var occupied = false;
+
 		for(var i = 0; i < this.portion.length; i++){
 			if(block.posX == this.portion[i].posX && block.posY == this.portion[i].posY && block.posZ == this.portion[i].posZ){
 				if(this.portion[i].isFluid){
@@ -404,13 +498,19 @@ class WorldPortion{
 		return false;
 	}
 
-	addWater(pX, pY, pZ, network){
+	addWater(pX, pY, pZ, network, level=1){
 		//constructor(X,Y,Z, level=1, startNetwork = true, network = null)
 		/*
 			If startNetwork = true, it will just make a new network in the constructor.
 			Properties: Water.level, Water.network.
 		*/
 		var occupied = false;
+		if(network!=null)
+		network.updateCooldown = 20;
+
+
+		//Can just use the fluid array. No need for all this jazz.
+
 
 		for(var i = 0; i < this.portion.length; i++){
 			if(pX == this.portion[i].posX && pY == this.portion[i].posY && pZ == this.portion[i].posZ)
@@ -425,7 +525,7 @@ class WorldPortion{
 						*/
 						// INCREASE LEVEL.
 						//Should increase based off of the level of the bucket.
-						existingNetwork.level += 1;
+						existingNetwork.level += level;
 						return null;
 					}else if(network.id == existingNetwork.id){
 						/*
@@ -440,9 +540,6 @@ class WorldPortion{
 							block to this portion. What we do need to do
 							is merge the networks.
 						*/
-						//console.log('We should be merging!')
-						//console.log('OG:', network.id)
-						//console.log('Here:', existingNetwork.id)
 						existingNetwork.mergeNetwork(network);
 						return null;
 					}
@@ -458,16 +555,21 @@ class WorldPortion{
 			In this case we just need to add a new water block with
 			a new network.
 
-			THIS SHOULD ONLY HAPPEN IF THE NETWORK IS NULL
+			When the user is placing the block, the network should be
+			null, however, when water blocks are 'expanding', they will
+			need to be attached to a network.
 		*/
 		if(!occupied){
 			let block;
+			onLowLevelChange();
+			
 			if(network == null){
-				block = new Water(pX, pY, pZ, 1, true, null);
+				block = new Water(pX, pY, pZ, level, true, null);
 				this.push(block);
 				this.setFluid(pX,pY,block);
 			}else{
 				block = new Water(pX, pY, pZ, 1, false, network);
+				
 				this.push(block);
 				this.setFluid(pX,pY,block);
 			}
@@ -520,6 +622,78 @@ class World{
 				this.portions[i][j].updatePortion();
 		}
 	}
+	generateGlobalStructures(){
+
+		/*
+			Trees
+		*/
+		let numTrees = AVG_NUM_TREES + (randomInt(TREE_VARIANCE+1)-Math.round(TREE_VARIANCE/2));
+		
+		for(let i = 0; i < numTrees; i++){
+			// Define x and y as some random coordinates on the map.
+			let coordinateToGen = generate_random_world_coordinate()
+			let x = coordinateToGen[0];
+			let y = coordinateToGen[1];
+			var retArray = gen_tree(x,y);
+
+			for(var z = 0; z < retArray.length; z++){
+				let toAdd = retArray[z];
+				let portionNum = this.getPortionNum(toAdd.posX,toAdd.posY);
+				//Make sure it's in a portion that can generate global structures.
+				if(this.portions[portionNum[0]][portionNum[1]].canGenerateGlobalStructures){
+					this.addBlock(toAdd);
+				}else{
+					break;
+				}
+			}
+		}
+
+		/*
+			Stone clusters
+		*/
+		let numClusters = AVG_NUM_STONE_CLUSTERS + (randomInt(STONE_CLUSTERS_VARIANCE+1)-Math.round(STONE_CLUSTERS_VARIANCE/2));
+
+
+
+		for(let i = 0; i < numClusters; i++){
+			// Define x and y as some random coordinates on the map.
+			let coordinateToGen = generate_random_world_coordinate()
+			let x = coordinateToGen[0];
+			let y = coordinateToGen[1];
+
+			//If the retArray is empty, it probably violated some condition. So just reset i 
+			//and regenerate it.
+			var retArray = generate_global_stone_cluster(x,y);
+			if(retArray.length==0){
+				i--;
+				continue;
+			}
+
+			//If x and y lie in a portion where canGenerateGlobalStructures = false, skip
+			let portionNum = this.getPortionNum(x,y);
+			if(!this.portions[portionNum[0]][portionNum[1]].canGenerateGlobalStructures){
+				i--;
+				continue;
+			}
+			for(var z = 0; z < retArray.length; z++){
+				let toAdd = retArray[z];
+				let portionNum = this.getPortionNum(toAdd.posX,toAdd.posY);
+				//Make sure it's in a portion that can generate global structures.
+				if(this.portions[portionNum[0]][portionNum[1]].canGenerateGlobalStructures){
+					this.addBlock(toAdd);
+				}
+			}
+		}
+	}
+
+	generateGrass(){
+		for(var i = 0; i <= this.size; i++){
+			for(var j = 0; j <= this.size; j++)
+				this.portions[i][j].generateGrass();
+		}
+	}
+
+
 	addPortion(portion){
 		this.portions[portion.posX][portion.posY] = portion;
 	}
@@ -562,13 +736,13 @@ class World{
 		}
 	}
 
-	getFluid(PX, PY){
+	getFluid(PX, PY, specNetID=-1){
 		var locX = Math.floor(PX/PORTION_SIZE);
 		var locY = Math.floor(PY/PORTION_SIZE);
 		if(locX<0||locY<0||locX>this.size||locY>this.size)
 			return null;
 		else{
-			return this.portions[locX][locY].getFluid(PX,PY);
+			return this.portions[locX][locY].getFluid(PX,PY,specNetID);
 		}
 	}
 	// HERE
@@ -632,6 +806,9 @@ class World{
 		var PX = block.posX;
 		var PY = block.posY;
 		var PZ = block.posZ;
+		if(block.posZ == -2){
+			onLowLevelChange();
+		}
 		this.portions[locX][locY].removeBlock(block);
 		//Update
 		this.updateChunk(PX,PY,PZ);
@@ -642,6 +819,9 @@ class World{
 		var locX = Math.floor(PX/PORTION_SIZE);
 		var locY = Math.floor(PY/PORTION_SIZE);
 		let block = this.portions[locX][locY].getBlockAt(PX,PY,PZ);
+		if(PZ == -2){
+			onLowLevelChange();
+		}
 		if(block != null){
 			this.portions[locX][locY].removeBlock(block);
 			this.updateChunk(PX,PY,PZ);
@@ -653,6 +833,8 @@ class World{
 		var locX = Math.floor(block.posX/PORTION_SIZE);
 		var locY = Math.floor(block.posY/PORTION_SIZE);
 		var ret = this.portions[locX][locY].addBlock(block);
+		if(block.posZ == -2)
+			onLowLevelChange();
 		//Update
 		if(ret == false)
 			return false;
@@ -671,13 +853,16 @@ class World{
 
 		Otherwise: Returns null
 	*/
-	addWater(pX, pY, pZ, network = null){
+	addWater(pX, pY, pZ, network = null, level = 1){
 		var locX = Math.floor(pX/PORTION_SIZE);
 		var locY = Math.floor(pY/PORTION_SIZE);
-		var ret = this.portions[locX][locY].addWater(pX,pY,pZ,network);
+
+		var ret = this.portions[locX][locY].addWater(pX,pY,pZ,network,level);
 		//Update
 		if(ret == null)
 			return null;
+		if(pZ == -2)
+			onLowLevelChange();
 		this.updateChunk(pX,pY,pZ);
 		return ret;
 	}
@@ -685,10 +870,13 @@ class World{
 	refreshWater(pX, pY, pZ, level, parent){
 		var locX = Math.floor(pX/PORTION_SIZE);
 		var locY = Math.floor(pY/PORTION_SIZE);
+		
 		var ret = this.portions[locX][locY].refreshWater(pX,pY,pZ,level,parent);
 		//Update
 		if(ret == false)
 			return false;
+		if(pZ == -2)
+			onLowLevelChange();
 		this.updateChunk(pX, pY, pZ);
 		return true;
 	}
@@ -773,6 +961,10 @@ function make_world(){
 	//world = new World(50);
 	world = new World(WORLD_SIZE);
 	world.fillAllDefault();
+	if(!GEN_OLD_STYLE_WORLD){
+		world.generateGlobalStructures();
+		world.generateGrass();
+	}
 }
 
 function init_world(){
@@ -903,4 +1095,10 @@ function removeBlockGlobal(Block){
 	}else{
 		world.removeBlock(Block);
 	}
+}
+
+let lowLevelChange = false;
+function onLowLevelChange(){
+	lowLevelChange = true;
+	//console.log('Low level change.')
 }

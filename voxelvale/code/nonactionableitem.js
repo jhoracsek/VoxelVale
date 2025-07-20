@@ -39,7 +39,7 @@ class NonActionableItem {
 
 
 function initializeNonActionableItems(){
-	nonActionableItems = [Copper, CopperBar, ArrowItem, HealthPotion];
+	nonActionableItems = [Copper, CopperBar, ArrowItem, HealthPotion, Latkin, Illsaw, Platinum, Lunite, Daytum, LatkinBar, IllsawBar, PlatinumBar, LuniteBar, DaytumBar];
 }
 
 
@@ -56,19 +56,18 @@ let ore6 = mult(translate(-0.05,-0.05,-0.05),scale4(0.55,0.73,0.37,1));
 let ore7 = mult(translate(0.05,0.05,-0.02),scale4(0.9,0.6,0.41,1));
 let ore8 = mult(translate(-0.1,0.3,-0.02),scale4(0.3,0.4,0.41,1));
 let ore9 = mult(translate(0.1,0.1,0.12),scale4(0.8,0.2,0.65,1));
-class Copper extends NonActionableItem {
-	static objectNumber = 67;
-	static name = 'Copper';
-	static desc = 'Copper ore.';
+
+class InventoryOre extends NonActionableItem{
+	static objectNumber = -1;
+	static colorOne = hexToRgbA('#ed9f61'); get colorOne() {return this.constructor.colorOne;}
+	static colorTwo = hexToRgbA('#7fb6a3'); get colorTwo() {return this.constructor.colorTwo;}
+	static colorThr = hexToRgbA('#918f9c'); get colorThr() {return this.constructor.colorThr;}
 
 	static sendData(){
-		//Three cubes
-		build_colored_cuboid(hexToRgbA('#ed9f61'));
-		build_colored_cuboid(hexToRgbA('#7fb6a3'));
-		build_colored_cuboid(hexToRgbA('#918f9c'));
-
+		build_colored_cuboid(this.colorOne);
+		build_colored_cuboid(this.colorTwo);
+		build_colored_cuboid(this.colorThr);
 	}
-	constructor(){super();}
 
 	drawCopperColor(){
 		gl.drawArrays(gl.TRIANGLES,this.index,36);
@@ -103,26 +102,159 @@ class Copper extends NonActionableItem {
 		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(mult(currentMat,ore9)));
 		this.drawCopperColor();
 	}
+}
+
+class InventoryBar extends NonActionableItem{
+	static objectNumber = -1;
+	static colorOne = hexToRgbA('#e58158'); get colorOne() {return this.constructor.colorOne;}
+	static colorTwo = hexToRgbA('#ac966b'); get colorTwo() {return this.constructor.colorTwo;}
+	
+	static sendData(){
+		build_colored_bar(this.colorOne,this.colorTwo);
+	}
+}
 
 
 
+class Copper extends InventoryOre {
+	static objectNumber = 67;
+	static name = 'Copper';
+	static desc = 'Copper ore.';
+
+	static colorOne = hexToRgbA('#ed9f61');
+	static colorTwo = hexToRgbA('#7fb6a3');
+	static colorThr = hexToRgbA('#918f9c');
+
+	constructor(){super();}
+}
+
+class Latkin extends InventoryOre {
+	static objectNumber = 76;
+	static name = 'Latkin';
+	static desc = 'Latkin ore.';
+
+	static colorOne = hexToRgbA('#bcb7b7');
+	static colorTwo = hexToRgbA('#92774c');
+	static colorThr = hexToRgbA('#32322b');
+
+	constructor(){super();}
+}
+
+class Illsaw extends InventoryOre {
+	static objectNumber = 77;
+	static name = 'Illsaw';
+	static desc = 'Illsaw ore.';
+
+	static colorOne = hexToRgbA('#d9fefc');
+	static colorTwo = hexToRgbA('#7b9da3');
+	static colorThr = hexToRgbA('#7c7a78');
+
+	constructor(){super();}
+}
+
+class Platinum extends InventoryOre {
+	static objectNumber = 78;
+	static name = 'Platinum';
+	static desc = 'Platinum ore.';
+
+	static colorOne = hexToRgbA('#f4f0ed');
+	static colorTwo = hexToRgbA('#b8b6b7');
+	static colorThr = hexToRgbA('#8e8e8e');
+
+	constructor(){super();}
+}
+
+class Lunite extends InventoryOre {
+	static objectNumber = 79;
+	static name = 'Lunite';
+	static desc = 'Lunite ore.';
+
+	static colorOne = hexToRgbA('#e4d862');
+	static colorTwo = hexToRgbA('#bbad24');
+	static colorThr = hexToRgbA('#615b27');
+
+	constructor(){super();}
+}
+
+class Daytum extends InventoryOre {
+	static objectNumber = 80;
+	static name = 'Daytum';
+	static desc = 'Daytum ore.';
+
+	static colorOne = hexToRgbA('#ef61f1');
+	static colorTwo = hexToRgbA('#cb28d7');
+	static colorThr = hexToRgbA('#8e3f79');
+
+	constructor(){super();}
 }
 
 
 
 
-class CopperBar extends NonActionableItem{
+class CopperBar extends InventoryBar{
 	static objectNumber = 68;
 	static name = 'Copper Bar';
 	static desc = 'Copper bar.';
 
-	static sendData(){
-		//Three cubes
-		build_colored_bar(hexToRgbA('#e58158'),hexToRgbA('#ac966b') );
+	static colorOne = hexToRgbA('#e58158');
+	static colorTwo = hexToRgbA('#ac966b');
 
-	}
 	constructor(){super();}
+}
 
+class LatkinBar extends InventoryBar{
+	static objectNumber = 81;
+	static name = 'Latkin Bar';
+	static desc = 'Latkin bar.';
+
+	static colorOne = hexToRgbA('#bcb7b7');
+	static colorTwo = hexToRgbA('#92774c');
+
+	constructor(){super();}
+}
+
+class IllsawBar extends InventoryBar{
+	static objectNumber = 82;
+	static name = 'Illsaw Bar';
+	static desc = 'Illsaw bar.';
+
+	static colorOne = hexToRgbA('#d9fefc');
+	static colorTwo = hexToRgbA('#7b9da3');
+
+	constructor(){super();}
+}
+
+class PlatinumBar extends InventoryBar{
+	static objectNumber = 83;
+	static name = 'Platinum Bar';
+	static desc = 'Platinum bar.';
+
+	static colorOne = hexToRgbA('#f4f0ed');
+	static colorTwo = hexToRgbA('#b8b6b7');
+
+	constructor(){super();}
+}
+
+class LuniteBar extends InventoryBar{
+	static objectNumber = 84;
+	static name = 'Lunite Bar';
+	static desc = 'Lunite bar.';
+
+	static colorOne = hexToRgbA('#e4d862');
+	static colorTwo = hexToRgbA('#bbad24');
+
+	constructor(){super();}
+}
+
+class DaytumBar extends InventoryBar{
+	static objectNumber = 85;
+	static name = 'Daytum Bar';
+	static desc = 'Daytum bar.';
+
+	static colorOne = hexToRgbA('#ef61f1');
+	static colorTwo = hexToRgbA('#cb28d7');
+
+	constructor(){super();}
 }
 
 
@@ -354,4 +486,4 @@ class HealthPotion extends NonActionableItem {
 
 
 
-const ITEM_OBJNUMS = [WoodAxe, StonePickaxe, WoodenBow, Copper, CopperBar, ArrowItem, CopperPickaxe, CopperAxe, HealthPotion, StoneSword, CopperSword, WoodenBucket];
+const ITEM_OBJNUMS = [WoodAxe, StonePickaxe, WoodenBow, Copper, CopperBar, ArrowItem, CopperPickaxe, CopperAxe, HealthPotion, StoneSword, CopperSword, WoodenBucket, Latkin, Illsaw, Platinum, Lunite, Daytum, LatkinBar, IllsawBar, PlatinumBar, LuniteBar, DaytumBar];

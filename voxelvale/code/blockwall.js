@@ -542,6 +542,9 @@ class BorderWall extends BlockWallNew{
 	constructor(X=null,Y=null,Z=null,ground=false){
 		super(X,Y,Z,ground);
 	}
+	//onClick(){
+	//	console.log('xPos:', this.posX, 'yPos:', this.posY);
+	//}
 }
 
 class CopperBrick extends BlockWallNew{

@@ -206,27 +206,45 @@ class WoodBranch extends BlockWall {
 }
 
 class StoneBlock extends BlockWall{
+
+	static lowerStoneStart = 0;
+	static lowerStoneNum = 0;
+
+	static verticeStart = 0;
+	static verticeNumber = 0;
+
 	constructor(X=null,Y=null,Z=null){
 		super(X,Y,Z,25,false);
 		this.index = stoneBlockStart;
 		this.numberOfVerts = 36;
 		this.name = 'Stone';
-		this.secondIndex = this.index;
+		this.secondIndex = this.constructor.verticeStart;
 		this.orient='NONE';
 		this.objectNumber=5;
 		this.tob='STONE';
 		this.desc = 'A stone block.'
+
+		this.aboveDirt = false;
+		if(this.posZ == -2)
+			this.aboveDirt = true;
 		//this.switchOrientation();
 	}
 	sendData(){
-		//Probably a more efficient way to do this 
+		//Probably a more efficient way to do this
+		this.constructor.verticeStart = vertices.length;
 		draw_stone_single();		//INDEX <- stoneBlockStart;
 		draw_stone_middle();		//INDEX <- stoneBlockStart+36;
 		draw_stone_single_edge();	//INDEX <- stoneBlockStart+36*2;
 		draw_stone_corner_edge();	//INDEX <- stoneBlockStart+36*3;
 		draw_stone_triple_edge();	//INDEX <- stoneBlockStart+36*4;
+
+		//For level z = -2.
+		this.constructor.lowerStoneStart = vertices.length;
+		build_block(17,0,0);
+		this.constructor.lowerStoneNum = vertices.length - this.constructor.lowerStoneStart;
 	}
 	switchOrientation(){
+		if(this.aboveDirt) return;
 		this.instanceMat = translate(this.posX,this.posY,this.posZ);
 		//this.instanceMat = mult(this.instanceMat,translate(0,0,0.5));
 
@@ -347,30 +365,108 @@ class StoneBlock extends BlockWall{
 		if(hitBox){
 			gl.drawArrays(gl.LINES,numberOfByte[0],numberOfByte[1]);
 		}
-		gl.drawArrays(gl.TRIANGLES,this.index,this.numberOfVerts);
-
+		if(!this.aboveDirt){
+			gl.drawArrays(gl.TRIANGLES,this.index,this.numberOfVerts);
+		}else{
+			//set_mv(mult(this.instanceMat,mult(scale4(1,1,1.1),translate(0,0,-0.05))));
+			gl.drawArrays(gl.TRIANGLES,this.constructor.lowerStoneStart, this.constructor.lowerStoneNum);
+		}
 	}
 }
 
 class CopperStone extends StoneBlock{
+
 	constructor(X=null,Y=null,Z=null){
 		super(X,Y,Z,25,false);
-		this.index = copperStart;
+		this.index = this.constructor.verticeStart;
 		this.secondIndex = this.index;
 		this.numberOfVerts = 36;
 		this.name = 'Copper Ore';
-		this.secondIndex;
 		this.orient='NONE';
 		this.objectNumber=16;
 		this.tob='STONE';
 		this.desc = 'A copper ore block.'
 	}
 	sendData(){
-		draw_stone_single(25);		//INDEX <- stoneBlockStart;
-		draw_stone_middle(25);		//INDEX <- stoneBlockStart+36;
-		draw_stone_single_edge(25);	//INDEX <- stoneBlockStart+36*2;
-		draw_stone_corner_edge(25);	//INDEX <- stoneBlockStart+36*3;
-		draw_stone_triple_edge(25);	//INDEX <- stoneBlockStart+36*4;
+		let tex = 25;
+		this.constructor.verticeStart = vertices.length;
+		draw_stone_single(tex);		//INDEX <- stoneBlockStart;
+		draw_stone_middle(tex);		//INDEX <- stoneBlockStart+36;
+		draw_stone_single_edge(tex);	//INDEX <- stoneBlockStart+36*2;
+		draw_stone_corner_edge(tex);	//INDEX <- stoneBlockStart+36*3;
+		draw_stone_triple_edge(tex);	//INDEX <- stoneBlockStart+36*4;
+
+		//For level z = -2.
+		this.constructor.lowerStoneStart = vertices.length;
+		build_block(tex,0,0);
+		this.constructor.lowerStoneNum = vertices.length - this.constructor.lowerStoneStart;
+
+	}
+	drop(){
+		return [new StoneBlock(), new Copper()];
+	}
+}
+
+class LuniteStone extends StoneBlock{
+	constructor(X=null,Y=null,Z=null){
+		super(X,Y,Z,25,false);
+		this.index = this.constructor.verticeStart;
+		this.secondIndex = this.index;
+		this.numberOfVerts = 36;
+		this.name = 'Lunite Ore';
+		this.secondIndex;
+		this.orient='NONE';
+		this.objectNumber=20;
+		this.tob='STONE';
+		this.desc = 'A lunite ore block.'
+	}
+	sendData(){
+		let tex = 26;
+		this.constructor.verticeStart = vertices.length;
+		draw_stone_single(tex);		//INDEX <- stoneBlockStart;
+		draw_stone_middle(tex);		//INDEX <- stoneBlockStart+36;
+		draw_stone_single_edge(tex);	//INDEX <- stoneBlockStart+36*2;
+		draw_stone_corner_edge(tex);	//INDEX <- stoneBlockStart+36*3;
+		draw_stone_triple_edge(tex);	//INDEX <- stoneBlockStart+36*4;
+
+		//For level z = -2.
+		this.constructor.lowerStoneStart = vertices.length;
+		build_block(tex,0,0);
+		this.constructor.lowerStoneNum = vertices.length - this.constructor.lowerStoneStart;
+
+	}
+	drop(){
+		return [new StoneBlock(), new Copper()];
+	}
+}
+
+class DaytumStone extends StoneBlock{
+	constructor(X=null,Y=null,Z=null){
+		super(X,Y,Z,25,false);
+		this.index = this.constructor.verticeStart;
+		this.secondIndex = this.index;
+		this.numberOfVerts = 36;
+		this.name = 'Daytum Ore';
+		this.secondIndex;
+		this.orient='NONE';
+		this.objectNumber=21;
+		this.tob='STONE';
+		this.desc = 'A daytum ore block.'
+	}
+	sendData(){
+		let tex = 27;
+		this.constructor.verticeStart = vertices.length;
+		draw_stone_single(tex);		//INDEX <- stoneBlockStart;
+		draw_stone_middle(tex);		//INDEX <- stoneBlockStart+36;
+		draw_stone_single_edge(tex);	//INDEX <- stoneBlockStart+36*2;
+		draw_stone_corner_edge(tex);	//INDEX <- stoneBlockStart+36*3;
+		draw_stone_triple_edge(tex);	//INDEX <- stoneBlockStart+36*4;
+
+		//For level z = -2.
+		this.constructor.lowerStoneStart = vertices.length;
+		build_block(tex,0,0);
+		this.constructor.lowerStoneNum = vertices.length - this.constructor.lowerStoneStart;
+
 	}
 	drop(){
 		return [new StoneBlock(), new Copper()];

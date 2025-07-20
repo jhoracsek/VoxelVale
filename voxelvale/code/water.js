@@ -6,6 +6,11 @@ function compare_candidate(c1, c2){
 	return false;
 }
 
+
+/*
+	If c_i is unique in array returns true
+	in ret[i].
+*/
 function unique_candidates_in_array(c1, c2, c3, c4, arr){
 	let ret = [false,false,false,false];
 	for(let j = 0; j < arr.length; j++){
@@ -47,19 +52,22 @@ class WaterNetwork {
 		//Simple hacky method for comparing networks.
 		this.id = newWaterNetworkID;
 		newWaterNetworkID++;
+
+		this.updateCooldown = 20;
 	}
 
 	/*
 		Sets this.edgeCandidates without duplicates.
-
 		Can probably optimize this with the fluid world array.
 	*/
 	setCandidates(){
 		this.edgeCandidates = [];
 		
-
-
 		for(let i = 0; i < this.network.length; i++){
+			//if(!this.network[i].isEdge) continue;
+
+			this.network[i].isEdge = false;
+			
 			let pX = this.network[i].posX;
 			let pY = this.network[i].posY;
 			let pZ = this.network[i].posZ;
@@ -71,18 +79,34 @@ class WaterNetwork {
 
 			let toAdd = unique_candidates_in_array(c1,c2,c3,c4,this.edgeCandidates);
 
-
-
 			if(!toAdd[0]) this.edgeCandidates.push(c1);
 			if(!toAdd[1]) this.edgeCandidates.push(c2);
 			if(!toAdd[2]) this.edgeCandidates.push(c3);
 			if(!toAdd[3]) this.edgeCandidates.push(c4);
+
+
+			//if(!toAdd[0] && (world.getFluid(pX-1,pY)==null || world.getFluid(pX-1,pY).network.id != this.id)) this.edgeCandidates.push(c1);
+			//if(!toAdd[1] && (world.getFluid(pX+1,pY)==null || world.getFluid(pX+1,pY).network.id != this.id)) this.edgeCandidates.push(c2);
+			//if(!toAdd[2] && (world.getFluid(pX,pY+1)==null || world.getFluid(pX,pY+1).network.id != this.id)) this.edgeCandidates.push(c3);
+			//if(!toAdd[3] && (world.getFluid(pX,pY-1)==null || world.getFluid(pX,pY-1).network.id != this.id)) this.edgeCandidates.push(c4);
 		}
 	}
 
 
 
 	update(){
+
+		if(lowLevelChange){
+			this.updateCooldown = 20;
+		}
+
+		//if(this.updateCooldown <= 0){
+		//	return;
+		//}
+
+		if(this.updateCooldown > 0)
+			this.updateCooldown--;
+		//console.log('Im updating!')
 		//Sets the level for each water block in the network
 		for(let i = 0; i < this.network.length; i++){
 			this.network[i].setLevel(this.level/this.network.length);
@@ -92,7 +116,6 @@ class WaterNetwork {
 		if(this.level/this.network.length >= 0.1){
 			this.setCandidates();
 			keepUpdating = false
-			//this.blocksToExpand = [];
 			for(let i = 0; i < this.edgeCandidates.length; i++){
 				let can = this.edgeCandidates[i];
 				let pX = can.posX;
@@ -102,7 +125,6 @@ class WaterNetwork {
 				let waterToAdd = world.addWater(pX,pY,pZ,this);
 				
 				if(waterToAdd != null){
-					//this.blocksToExpand.push(waterToAdd);
 					if(!this.replaceDuplicate(waterToAdd)){
 						this.network.push(waterToAdd);
 						this.networkSize++;
@@ -120,7 +142,6 @@ class WaterNetwork {
 		}
 
 		//this.requiresUpdate = keepUpdating;
-		//console.log('Should I keep updating?', keepUpdating);
 		//Sets the level for each water block in the network
 		for(let i = 0; i < this.network.length; i++){
 			this.network[i].setLevel(this.level/this.network.length);
@@ -156,19 +177,24 @@ class WaterNetwork {
 		for(let i = 0; i < this.network.length; i++){
 			if(this.network[i].posX == pX+1 && this.network[i].posY == pY){
 				numAdj++;
+				this.network[i].isEdge = true;
 			}
 			if(this.network[i].posX == pX-1 && this.network[i].posY == pY){
 				numAdj++;
+				this.network[i].isEdge = true;
 			}
 			if(this.network[i].posX == pX && this.network[i].posY == pY+1){
 				numAdj++;
+				this.network[i].isEdge = true;
 			}
 			if(this.network[i].posX == pX && this.network[i].posY == pY-1){
 				numAdj++;
+				this.network[i].isEdge = true;
 			}
 
 			if(this.network[i].posX == pX && this.network[i].posY == pY){
 				indexToRemove = i;
+				this.network[i].isEdge = true;
 			}
 		}
 		if(indexToRemove == -1) return;
@@ -233,13 +259,9 @@ class WaterNetwork {
 			//Situation (1)
 			this.level = this.level-maxAmount;
 			bucket.unitsOfWater += maxAmount;
-			console.log('Here:',bucket.unitsOfWater);
 
 		}else{
 			//Situation (2)
-			console.log('Situation 2 has occured.')
-			console.log(this.level-maxAmount);
-
 			let toRemove = this.level/this.network.length
 
 			this.level -= toRemove;
@@ -258,6 +280,7 @@ class WaterNetwork {
 		*/	
 		for(let i = 0; i < this.network.length; i++){
 			this.network[i].visited = false;
+			this.network[i].isEdge = true;
 		}
 
 		/*
@@ -290,10 +313,12 @@ class WaterNetwork {
 			/*
 				Add four adj.
 			*/
-			let leftWater = world.getFluid(cur.posX-1,cur.posY);
-			let rightWater = world.getFluid(cur.posX+1,cur.posY);
-			let aboveWater = world.getFluid(cur.posX,cur.posY+1);
-			let belowWater = world.getFluid(cur.posX,cur.posY-1);
+			console.log(this.id)
+			// I think you also need to make sure it's part of the right network!
+			let leftWater = world.getFluid(cur.posX-1,cur.posY,this.id);
+			let rightWater = world.getFluid(cur.posX+1,cur.posY,this.id);
+			let aboveWater = world.getFluid(cur.posX,cur.posY+1,this.id);
+			let belowWater = world.getFluid(cur.posX,cur.posY-1,this.id);
 
 			if(leftWater != null)
 				waterQueue.push(leftWater);
@@ -350,10 +375,10 @@ class WaterNetwork {
 			/*
 				Add four adj.
 			*/
-			let leftWater = world.getFluid(cur.posX-1,cur.posY);
-			let rightWater = world.getFluid(cur.posX+1,cur.posY);
-			let aboveWater = world.getFluid(cur.posX,cur.posY+1);
-			let belowWater = world.getFluid(cur.posX,cur.posY-1);
+			let leftWater = world.getFluid(cur.posX-1,cur.posY,this.id);
+			let rightWater = world.getFluid(cur.posX+1,cur.posY,this.id);
+			let aboveWater = world.getFluid(cur.posX,cur.posY+1,this.id);
+			let belowWater = world.getFluid(cur.posX,cur.posY-1,this.id);
 
 			if(leftWater != null)
 				waterQueue.push(leftWater);
@@ -405,10 +430,10 @@ class WaterNetwork {
 			/*
 				Add four adj.
 			*/
-			let leftWater = world.getFluid(cur.posX-1,cur.posY);
-			let rightWater = world.getFluid(cur.posX+1,cur.posY);
-			let aboveWater = world.getFluid(cur.posX,cur.posY+1);
-			let belowWater = world.getFluid(cur.posX,cur.posY-1);
+			let leftWater = world.getFluid(cur.posX-1,cur.posY,this.id);
+			let rightWater = world.getFluid(cur.posX+1,cur.posY,this.id);
+			let aboveWater = world.getFluid(cur.posX,cur.posY+1,this.id);
+			let belowWater = world.getFluid(cur.posX,cur.posY-1,this.id);
 
 			if(leftWater != null)
 				waterQueue.push(leftWater);
@@ -460,10 +485,10 @@ class WaterNetwork {
 			/*
 				Add four adj.
 			*/
-			let leftWater = world.getFluid(cur.posX-1,cur.posY);
-			let rightWater = world.getFluid(cur.posX+1,cur.posY);
-			let aboveWater = world.getFluid(cur.posX,cur.posY+1);
-			let belowWater = world.getFluid(cur.posX,cur.posY-1);
+			let leftWater = world.getFluid(cur.posX-1,cur.posY,this.id);
+			let rightWater = world.getFluid(cur.posX+1,cur.posY,this.id);
+			let aboveWater = world.getFluid(cur.posX,cur.posY+1,this.id);
+			let belowWater = world.getFluid(cur.posX,cur.posY-1,this.id);
 
 			if(leftWater != null)
 				waterQueue.push(leftWater);
@@ -511,10 +536,14 @@ class WaterNetwork {
 		//Set all the other blocks to refrence this network.
 		//Add them all to this network array.
 		//ALSO NEED TO remove it from the network array. (do last...)
+		this.updateCooldown = 20;
 		this.level += other.level;
-
+		for(let i = 0; i < this.network.length; i++){
+			this.network[i].isEdge = true;
+		}
 		for(let i = 0; i < other.network.length; i++){
 			let blockToAdd = other.network[i];
+			blockToAdd.isEdge = true;
 			blockToAdd.network = this;
 			this.network.push(blockToAdd);
 			this.networkSize++;
@@ -568,13 +597,16 @@ class Water extends BlockWallNew{
 
 	constructor(X=null,Y=null,Z=null,level=1, startNetwork = true, network = null){
 		super(X,Y,Z,false);
+		
 		this.visited = false;
+		this.isEdge = true;
+
 		this.isAlive = true;
 		this.level = level;
 		this.network = network;
 		//What if we need to add it to an existing network?
 		if(X!=null && startNetwork){
-			let net = new WaterNetwork(this);
+			let net = new WaterNetwork(this,level);
 			waterNetworkArray.push(net);
 			this.network = net;
 		}
@@ -592,19 +624,12 @@ class Water extends BlockWallNew{
 
 	draw(){
 		//let scaleMat = mult(translate(0,0,1),mult(scale4(1,1,this.level+0.025),translate(0,0,-1)));
-		let scaleMat = mult(translate(0,0,1),mult(scale4(1,1,this.level),translate(0,0,-1)));
+		let scaleMat = mult(translate(0,0,1),mult(scale4(1,1,Math.max(this.level,0.1)),translate(0,0,-1)));
 		set_mv(mult(this.instanceMat,scaleMat));
 		if(hitBox){
 			gl.drawArrays(gl.LINES,numberOfByte[0],numberOfByte[1]);
 		}
 
-
-		//gl.drawArrays(gl.TRIANGLES,this.constructor.sourceStart+6,this.constructor.sourceNumber-6);
-		gl.drawArrays(gl.TRIANGLES,this.constructor.sourceStart+24,6);
-
-		//Now draw additional sides.
-
-		//Use spaceoccupied instead? Can't do that... 
 		//Front
 		if(world.getFluid(this.posX, this.posY-1) == null)
 			gl.drawArrays(gl.TRIANGLES,this.constructor.sourceStart+12,6);
@@ -620,6 +645,18 @@ class Water extends BlockWallNew{
 		if(world.getFluid(this.posX, this.posY+1) == null)
 			gl.drawArrays(gl.TRIANGLES,this.constructor.sourceStart+18,6);
 			
+	}
+
+	drawTopFace(){
+		//let scaleMat = mult(translate(0,0,1),mult(scale4(1,1,this.level+0.025),translate(0,0,-1)));
+		let scaleMat = mult(translate(0,0,1),mult(scale4(1,1,Math.max(this.level,0.1)),translate(0,0,-1)));
+		set_mv(mult(this.instanceMat,scaleMat));
+		if(hitBox){
+			gl.drawArrays(gl.LINES,numberOfByte[0],numberOfByte[1]);
+		}
+
+		gl.drawArrays(gl.TRIANGLES,this.constructor.sourceStart+24,6);
+
 	}
 
 	onClick(){
@@ -642,6 +679,8 @@ class Water extends BlockWallNew{
 			let amountToPick = Math.min(1, player.heldObject.capacity-player.heldObject.unitsOfWater);
 
 			water.network.onScoop(water, amountToPick, player.heldObject);
+		}else{
+			console.log('Network size:', this.network.network.length, '\nMy level:', this.level);
 		}
 	}
 

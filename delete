@@ -2,44 +2,150 @@
 
 
 
+Water to do.
+	Fix network updating.										()
+		Should start updating on action.						()
+		Implement 'startUpdate' function (see below).			()
+
+	Optimize checkAdj.											()
+		Use world.getFluid().									()
+		Only need to check edges!								()
+
+	Move wooden bucket down slightly in inventory.				()
+
+	Save/load 													()
+
+	When you hold and cursor is green it expands. 				()
+
+Networks only need to be updated on world changes.
+So you can add a flag for blocks being placed or removed.
+If any of the adjacent blocks are water then you can determine the network
+and run its update.
+
+For the WaterNetworks 'startUpdate' function this is how I think it should work.
+	- When a block at z = -2 is interacted with, check it and all it's adjacent blocks.
+	- If any are a fluid, then run block.network.startUpdate().
+	- On startUpdate(), the networks counter gets set to say like 30?
+	- It will then only update for 30 frames.
 
 
 
-Outline two approaches for water.
 
-	Finite (Going with this one)
-
-	Networks only need to be updated on world changes.
-	So you can add a flag for blocks being placed or removed.
-	If any of the adjacent blocks are water then you can determine the network
-	and run its update.
-
-	(Trickier when placing water, might need to update for a few frames.)
-
+Update Alpha 0.3.0 | S'm'ores (Some more ores)
+	1. Mess around with ore generation.								()
+		1.a) Ground floor are a different block.					()
+		1.b) Make sure stone at z=-2 is a normal block.				()
+		1.c) Outline 'veins' and how generation works.				()
+		1.d) Generate copper as 'veins'.							()
+	2. Flesh out idea for two new ores.								()
+	3. Maybe add leaves?
 
 
-	Water to do.
-		Split network on block placed.								(X)
-			Fix the level thing.									(X)
-			Fix the other three cases.								(X)
+Ore generation:
+	Question: What happens when you generate over multiple portions?
+	Answer: Don't worry about it, I'm changing how worlds will generate structures.
+
+
+
+Maybe change how structures are generated?
+
+I would like to make them global features.
 		
-		Actually kill the network when it's not alive.				(X)
-		Fix network updating.										()
-			Should probably only start updating on action.			()
+If certain things are generated as a portion structure (e.g., houses, dungeons)
+then the portion is marked in such a way that no global feature can be generated
+that touches that portion. This should also apply to the starting portion.
 
-		Move wooden bucket down slightly in inventory.				()
+Some todo:
+	Find out where to generate global structures.		()
+	Turn off generation of stone and trees.				()
+		Can do this with a flag. GEN_OLD_STYLE_WORLD.	()
 
-		Save/load :/												()
-
-		Implement bucket picking up water.							()
-		Figure out litres stuff.									()
-		Figure out bucket/capacity.									()
-		Finish the bucket drawing water.							()
-		Implement the bucket fullness meter.						()
-		Ensure network splits on bucket pickup.						()
+	Should lay groundwork for water generation.			()
 
 
-Add campaign for website***
+
+
+
+
+So first the 'world' object is created with size WORLD_SIZE.
+
+Then 'world.fillAllDefault()' is called which creates the portions of the world.
+
+By default new WorldPortions are generated with the probability of having structures baked in.
+
+'makePortion()' generates all the structures.
+	Stone.
+	Trees.
+	Border.
+
+Need to handle all of these.
+
+Approach. Change to 'generateNewPortion' Which is essentially 'makeNewPortion'
+	-Handles borders
+	-Generate structures.
+	-Then go over each world portion and run,
+	-Fill rest with grass.
+
+
+
+Notes:
+	If 'canGenerateGlobalStructures' is false for the portion,
+	we are not allowed to generate any global structures on the portion.
+
+	generateGlobalStructures handles global structures in the world.
+
+	WORLD_SIZE = 25.
+
+	Border exists from: 
+		Bottom left: 	(0,0)
+		Top right:		(259,259)
+
+	So in general global structures must start in the range:
+		(0,0) to (WORLD_SIZE*PORTION_SIZE+PORTION_SIZE-1, WORLD_SIZE*PORTION_SIZE+PORTION_SIZE-1)
+		or
+		(0,0) to (WORLD_SIZE*10+9, WORLD_SIZE*10+9)
+
+		But push in by 1 on each side because the border. So:
+		(1,1) to (WORLD_SIZE*10+8, WORLD_SIZE*10+8)
+
+
+	Global structures are generated in 'make_world()' in 'worldgen.js'
+
+
+
+
+
+
+Todo:
+	- Generate border.					(X)
+	- Generate starting portion.		(X)
+	- generateGlobalStructures
+
+
+Stone cluster generation.
+	- Start with top layer.
+	- Then add a border of weird blocks (for now) under top layer.
+
+
+How stone generation works.
+	- 
+
+
+
+
+Can make a mechanics video about world generation?
+	- You can showcase it by turning off the grass.
+	- I.e., prevent the grass from generating.
+	- Can even get footage today.
+
+
+
+
+
+
+
+Make the game require signup to play.
+	Explain this is to track user engagement.
 
 Idea for toolbar
 	Can keep hold/drop buttons as they were before,
@@ -80,6 +186,30 @@ Could just like partition screen so game is played in the middle
 (Should add that thing where when you place blocks it places one above... like maybe draw an arrow.)
 
 
+Update Alpha 0.3.0 | Smores
+	1. Stone generation greatly modified.
+	2. Tree generation changed/fixed slightly.
+	3. New ores.
+		Copper, Latkin (tin) , Illsaw (silver), Platinum, Lunite, Daytum
+
+		
+		3.a) Lunite
+		3.b) Daytum
+		3.c) 
+
+Update Alpha | Leaf me alone.
+	Add leaves and shrubs or whatever for potions
+	Then do pass me a brew.
+
+Update Alpha 0.4.0 | Shopkeep and New Enemy
+	What do do for the new enemy?
+	Enemies now drop gold.
+
+Update Alpha 0.5.0 | Alloys.
+	You should be able to make alloys by combining metals.
+	Station.
+
+Update Alpha 0.6.0 | Pass me a brew.
 
 Update Alpha 0.3.0 | Control this
 	1. Add the up block thing, e.g., placing blocks above.			()
@@ -193,6 +323,8 @@ Unorganized things todo:
 
 	Hitboxes can be layered. Cubic but many.
 	Maybe expand toolbar?
+
+	Run ad campaign for the website itself.
 
 
 Crap ideas:

@@ -568,7 +568,14 @@ window.onload = function init(){
 		toolBarList.push(woodenBucket);
 		let water = new Water();
 		player.addToInventory(water)
-		
+
+
+		//Latkin, Illsaw, Platinum, Lunite, Daytum
+		player.addToInventory(new LatkinBar());
+		player.addToInventory(new IllsawBar());
+		player.addToInventory(new PlatinumBar());
+		player.addToInventory(new LuniteBar());
+		player.addToInventory(new DaytumBar());
 
 		toolBarList.push(workbench);
 		toolBarList.push(new WoodBlock());
@@ -705,6 +712,8 @@ function send_block(){
 
 	copperStart = vertices.length;
 	(new CopperStone()).sendData();
+	(new LuniteStone()).sendData();
+	(new DaytumStone()).sendData();
 
 	doorStart = vertices.length;
 	sendDoor = new Door();
@@ -1079,6 +1088,8 @@ function render_data(){
 		shiftFixedView();
 	}
 
+	//lowLevelChange = false;
+
 	if(projectileCooldown > 0){
 		projectileCooldown--;
 	}
@@ -1315,10 +1326,27 @@ function render_data(){
 	}
 	/*
 		Now draw fluids
+		Maybe do the stencil thing and seperate top and side blocks?
 	*/
+	gl.enable(gl.STENCIL_TEST);
+	gl.stencilMask(0xFF);
+	gl.stencilFunc(gl.EQUAL, 0, 0xFF);
+	gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+	//gl.uniform1i(isCeilingLoc, true);
+
+
+
+	
+	for(var i = 0; i < fluids.length; i++){
+		fluids[i].drawTopFace();
+	}
 	for(var i = 0; i < fluids.length; i++){
 		fluids[i].draw();
 	}
+
+	gl.uniform1i(isCeilingLoc, false);
+	gl.disable(gl.STENCIL_TEST);
+
 
 	var transparentBlocksNeg6 = [];
 	var transparentBlocksNeg5 = [];
@@ -1618,7 +1646,8 @@ function render_data(){
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-2+offset, "Press 'G' to toggle grid mode.");
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-4, "VoxelVale "+GAME_VERSION, '11');
 	}
-
+	//console.log(lowLevelChange)
+	updateEndLogic();
 }
 
 
@@ -1645,6 +1674,13 @@ function updateLogic(){
 	//}
 
 
+
+
+	logicCounter = (logicCounter + 1)%60;
+}
+
+function updateEndLogic(){
+
 	/*
 		Update water network!
 	*/
@@ -1659,8 +1695,12 @@ function updateLogic(){
 		let deadNetworkIndices = [];
 		for(let i = 0; i < waterNetworkArray.length; i++){
 			if(waterNetworkArray[i].isAlive){
-				if(waterNetworkArray[i].requiresUpdate)
+				if(waterNetworkArray[i].requiresUpdate){
+					//if(lowLevelChange)
+					//	waterNetworkArray[i].updateCooldown = 20;	
 					waterNetworkArray[i].update();
+
+				}
 				
 				numAlive++;
 			}else{
@@ -1677,13 +1717,10 @@ function updateLogic(){
 			waterNetworkArray[deadNetworkIndices[i]] = waterNetworkArray[waterNetworkArray.length-1];
 			waterNetworkArray.pop();
 		}
-
+		lowLevelChange = false;
 		//console.log('Number of active water networks:', numAlive);
 		//console.log('Array size:', waterNetworkArray.length);
 	}
-
-
-	logicCounter = (logicCounter + 1)%60;
 }
 
 const NO_ITEM_HELD = 0;
