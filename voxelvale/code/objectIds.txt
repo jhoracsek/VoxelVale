@@ -25,6 +25,9 @@ Chest				18
 Water				19
 LuniteStone			20
 DaytumStone			21
+LatkinStone			22
+IllsawStone 		23
+PlatinumStone		24
 
 
 WoodAxe				64
@@ -49,9 +52,21 @@ IllsawBar 			82
 PlatinumBar 		83
 LuniteBar 			84
 DaytumBar			85
-
-
-
+LatkinPickaxe		86
+IllsawPickaxe		87
+PlatinumPickaxe		88
+LunitePickaxe		89
+DaytumPickaxe		90
+LatkinSword 		91
+IllsawSword 		92
+PlatinumSword 		93
+LuniteSword 		94
+DaytumSword 		95
+LatkinAxe 			96
+IllsawAxe 			97
+PlatinumAxe 		98
+LuniteAxe 			99
+DaytumAxe 			100
 
 WorkBenchRecipe		128
 WoodBlockRecipe		129
@@ -64,6 +79,26 @@ CopperAxeRecipe		135
 CopperSwordRecipe	136
 CopperBrickRecipe	137
 ChestRecipe			138
+LatkinPickRecipe	139
+IllsawPickRecipe	140
+PlatinumPickRecipe	141
+LunitePickRecipe	142
+DaytumPickRecipe	143
+LatkinAxeRecipe		144
+IllsawAxeRecipe		145
+PlatinumAxeRecipe	146
+LuniteAxeRecipe		147
+DaytumAxeRecipe		148
+LatkinSwordRecipe	149
+IllsawSwordRecipe	150
+PlatinumSwordRecipe	151
+LuniteSwordRecipe	152
+DaytumSwordRecipe	153
+LatkinBarRecipe		154
+IllsawBarRecipe		155
+PlatinumBarRecipe	156
+LuniteBarRecipe		157
+DaytumBarRecipe		158
 
 
 
@@ -93,7 +128,7 @@ Steps for adding recipes:
 1) Add class to "recipes.js".
 2) Set objectNumber to the next available number.
 3) Add to the list above.
-4) Add to 'RECIPE_OBJNUMS' in "recipes.js".
+4) Add to 'RECIPE_OBJNUMS' in "saveload.js".
 
 Steps for adding non-actionable items:
 1) Add class to "non-actionable.js"

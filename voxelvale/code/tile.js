@@ -48,6 +48,10 @@ function build_block(Texture, oX=0.0065, oY=0.0065, Texture2 = Texture, Texture3
 	set_texture(Texture3,oX,oY);
 }
 
+
+
+
+
 function build_colored_cuboid(color){
 	for(let i = 0; i < 36; i++)
 		texCoords.push(vec2(2.0,2.0));
@@ -99,30 +103,72 @@ function bar_face(a,b,c,d,flipNorm=false,colors=[]){
 }
 
 
+/*
+	isBlue=false){
+
+	var colourHandle=vec4(0.9,0.6,0.15,1);
+	var secondColor=vec4(0.8,0.5,0.1,1)
+	
+	if(isBlue){
+		colourHandle = mult_colors(colourHandle,recipeColor);
+		secondColor = mult_colors(secondColor,recipeColor);
+	}
+*/
+
+
+
 //Do TWO COLORS :) Gradient from top copper green bottom.
-function build_colored_bar(color2, color=color2){
+function build_colored_bar(color2, color=color2, isBlue=false){
 	for(let i = 0; i < 36; i++)
 		texCoords.push(vec2(2.0,2.0));
 
+	if(isBlue){
+		color = mult_colors(color,recipeColor);
+		color2 = mult_colors(color2,recipeColor);
+	}
+
 	let vPBarColors = [color, color, color2, color2, color, color, color2, color2]
-	//Bottom 
-	bar_face( 1, 0, 3, 2, false, vPBarColors);
-	
-	//Right (Pinch this face in.)
-	bar_face( 2, 3, 7, 6 ,true, vPBarColors);
-	
-	//Front 
-	bar_face( 3, 0, 4, 7,true, vPBarColors);
 
-	//Back 
-	bar_face( 6, 5, 1, 2,true, vPBarColors);
-	
-	//Top 
-	bar_face( 4, 5, 6, 7,true, vPBarColors);
+	if(!isBlue){
+		//Bottom 
+		bar_face( 1, 0, 3, 2, false, vPBarColors);
+		
+		//Right (Pinch this face in.)
+		bar_face( 2, 3, 7, 6 ,true, vPBarColors);
+		
+		//Front 
+		bar_face( 3, 0, 4, 7,true, vPBarColors);
 
-	//Left (Only makes sense that you're the bottom.)
-	bar_face( 5, 4, 0, 1,true, vPBarColors);
+		//Back 
+		bar_face( 6, 5, 1, 2,true, vPBarColors);
+		
+		//Top 
+		bar_face( 4, 5, 6, 7,true, vPBarColors);
 
+		//Left (Only makes sense that you're the bottom.)
+		bar_face( 5, 4, 0, 1,true, vPBarColors);
+	}else{
+
+		//Top 
+		bar_face( 4, 5, 6, 7,true, vPBarColors);
+		
+		
+		
+		//Right (Pinch this face in.)
+		bar_face( 2, 3, 7, 6 ,true, vPBarColors);
+		
+		//Front 
+		bar_face( 3, 0, 4, 7,true, vPBarColors);
+
+		//Back 
+		bar_face( 6, 5, 1, 2,true, vPBarColors);
+		
+		//Bottom 
+		bar_face( 1, 0, 3, 2, false, vPBarColors);
+
+		//Left (Only makes sense that you're the bottom.)
+		bar_face( 5, 4, 0, 1,true, vPBarColors);
+	}
 }
 
 //Wood(0), Weird(1), Grass(2), Tile(3),...

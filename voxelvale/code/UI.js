@@ -657,10 +657,22 @@ function draw_display_item(object){
 			xSpin+=2;
 		}
 		else{
-			instanceMat = mult(instanceMat, scale4(-1.5,1.5,-0.01));
-			instanceMat = mult(instanceMat,rotateX(xSpin));
-			instanceMat = mult(instanceMat,rotateZ(xSpin));
-			xSpin++;
+			if(object.typeOfObj == 'REC' && object.typeOfRec == 'BAR'){
+				
+				//instanceMat = mult(instanceMat, translate(0,0,-0.1));
+
+				instanceMat = mult(instanceMat, scale4(1.5,1.5,0.1));
+				instanceMat = mult(instanceMat, rotateY(180));
+				instanceMat = mult(instanceMat,rotateX(xSpin));
+				instanceMat = mult(instanceMat,rotateZ(xSpin));
+				xSpin++;
+			}
+			else{
+				instanceMat = mult(instanceMat, scale4(-1.5,1.5,-0.01));
+				instanceMat = mult(instanceMat,rotateX(xSpin));
+				instanceMat = mult(instanceMat,rotateZ(xSpin));
+				xSpin++;
+			}
 		}
 	}else{
 		instanceMat = mult(instanceMat, translate(-0.05,-0.75,0));
@@ -672,6 +684,7 @@ function draw_display_item(object){
 	//gl.drawArrays(gl.TRIANGLES,object.index,object.numberOfVerts);
 	if(fixedView)
 		object.drawSmall(mult(viewMatrixUI, instanceMat));
+	// Here
 	else
 		object.drawSmall(mult(modelViewMatrix, instanceMat));
 }

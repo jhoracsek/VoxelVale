@@ -432,6 +432,14 @@ class GrassBlock extends BlockWallNew{
 		this.instanceMat = mult(this.instanceMat,translate(-0.5,-0.5,0));
 	}
 
+	/*
+		For testing
+	*/
+	onClick(){
+		if(DEV_TOOLS)
+			console.log(Math.floor(this.posX/PORTION_SIZE),Math.floor(this.posY/PORTION_SIZE));
+	}
+
 	draw(){
 
 		if(!this.isCeiling){
@@ -497,6 +505,11 @@ class WeirdBlock extends BlockWallNew{
 	static texture = 43;
 	constructor(X=null,Y=null,Z=null,ground=false){
 		super(X,Y,Z,ground);
+	}
+
+	onClick(){
+		if(DEV_TOOLS)
+			console.log(Math.floor(this.posX/PORTION_SIZE),Math.floor(this.posY/PORTION_SIZE));
 	}
 }
 

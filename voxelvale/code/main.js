@@ -399,7 +399,7 @@ window.onload = function init(){
 	worldMade=false;
 	UACT = 0.001;
 	//Assuming 50 X 50lastPos=[255,255]; WORLD_SIZE/2
-	lastPos=[(WORLD_SIZE/2)*10,(WORLD_SIZE/2)*10];
+	lastPos=[(WORLD_SIZE/2)*10+5,(WORLD_SIZE/2)*10+5];
 	
 
 	//This is our projection onto the z = -0.201 plane from the perspective of the light defined by the coordinate lPosition. 
@@ -533,7 +533,7 @@ window.onload = function init(){
 
 
 	if(DEV_TOOLS){
-		for(let i = 0; i < 50; i++)
+		for(let i = 0; i < 30; i++)
 			player.addToInventory(new ArrowItem());
 	}else{
 		for(let i = 0; i < 10; i++)
@@ -546,10 +546,7 @@ window.onload = function init(){
 		Add objects to inventory for testing here.
 	*/
 	if(DEV_TOOLS){
-		player.addToInventory(new CopperPickRecipe());
-		player.addToInventory(new CopperAxeRecipe());
-		player.addToInventory(new CopperSwordRecipe());
-		player.addToInventory(new CopperBrick());
+		/*
 		chest = new Chest()
 		player.addToInventory(chest);
 		player.addToInventory(new WoodBlock());
@@ -562,23 +559,102 @@ window.onload = function init(){
 		player.addToInventory(new WoodBlock());
 		player.addToInventory(new GrassBlock());
 		player.addToInventory(new WoodLog());
+		*/
+		
+		/*
+		player.addToInventory(new CopperPickaxe());
+		player.addToInventory(new LatkinPickaxe());
+		player.addToInventory(new IllsawPickaxe());
+		player.addToInventory(new PlatinumPickaxe());
+		player.addToInventory(new LunitePickaxe());
+		player.addToInventory(new DaytumPickaxe());
+		*/
+		/*
+		player.addToInventory(new CopperSword());
+		player.addToInventory(new LatkinSword());
+		player.addToInventory(new IllsawSword());
+		player.addToInventory(new PlatinumSword());
+		player.addToInventory(new LuniteSword());
+		player.addToInventory(new DaytumSword());
+		
 
-		let woodenBucket = new WoodenBucket();
-		player.addToInventory(woodenBucket);
-		toolBarList.push(woodenBucket);
-		let water = new Water();
-		player.addToInventory(water)
+		player.addToInventory(new CopperAxe());
+		player.addToInventory(new LatkinAxe());
+		player.addToInventory(new IllsawAxe());
+		player.addToInventory(new PlatinumAxe());
+		player.addToInventory(new LuniteAxe());
+		player.addToInventory(new DaytumAxe());
+	
+
+		player.addToInventory(new CopperStone());
+		player.addToInventory(new LatkinStone());
+		player.addToInventory(new IllsawStone());
+		player.addToInventory(new PlatinumStone());
+		player.addToInventory(new LuniteStone());
+		player.addToInventory(new DaytumStone());
+		*/
+		player.addToInventory(new Latkin());
+	
+		player.addToInventory(new CopperBarRecipe());
+		player.addToInventory(new LatkinBarRecipe());
+		player.addToInventory(new IllsawBarRecipe());
+		player.addToInventory(new PlatinumBarRecipe());
+		player.addToInventory(new LuniteBarRecipe());
+		player.addToInventory(new DaytumBarRecipe());
+
+
+		player.addToInventory(new CopperPickRecipe());
+		player.addToInventory(new LatkinPickRecipe());
+		player.addToInventory(new IllsawPickRecipe());
+		player.addToInventory(new PlatinumPickRecipe());
+		player.addToInventory(new LunitePickRecipe());
+		player.addToInventory(new DaytumPickRecipe());
+
+
+
+		player.addToInventory(new CopperAxeRecipe());
+		player.addToInventory(new LatkinAxeRecipe());
+		player.addToInventory(new IllsawAxeRecipe());
+		player.addToInventory(new PlatinumAxeRecipe());
+		player.addToInventory(new LuniteAxeRecipe());
+		player.addToInventory(new DaytumAxeRecipe());
+
+
+		player.addToInventory(new CopperSwordRecipe());
+		player.addToInventory(new LatkinSwordRecipe());
+		player.addToInventory(new IllsawSwordRecipe());
+		player.addToInventory(new PlatinumSwordRecipe());
+		player.addToInventory(new LuniteSwordRecipe());
+		player.addToInventory(new DaytumSwordRecipe());
+
+		
+
+
+		player.addToInventory(new CopperBarRecipe());
+		player.addToInventory(new CopperPickRecipe());
+		player.addToInventory(new CopperAxeRecipe());
+		player.addToInventory(new CopperSwordRecipe());
+
+		//player.addToInventory(new DaytumSword());
+		//let woodenBucket = new WoodenBucket();
+		//player.addToInventory(woodenBucket);
+		//toolBarList.push(woodenBucket);
+		//let water = new Water();
+		//player.addToInventory(water)
 
 
 		//Latkin, Illsaw, Platinum, Lunite, Daytum
+		/*
 		player.addToInventory(new LatkinBar());
 		player.addToInventory(new IllsawBar());
 		player.addToInventory(new PlatinumBar());
 		player.addToInventory(new LuniteBar());
 		player.addToInventory(new DaytumBar());
-
+		*/
+		toolBarList.push(sword);
 		toolBarList.push(workbench);
-		toolBarList.push(new WoodBlock());
+		//toolBarList.push(new WoodBlock());
+		toolBarList.push(null);
 		toolBarList.push(null);
 
 	}else{
@@ -715,6 +791,10 @@ function send_block(){
 	(new LuniteStone()).sendData();
 	(new DaytumStone()).sendData();
 
+	(new LatkinStone()).sendData();
+	(new IllsawStone()).sendData();
+	(new PlatinumStone()).sendData();
+
 	doorStart = vertices.length;
 	sendDoor = new Door();
 	sendDoor.sendData();
@@ -731,22 +811,68 @@ function send_block(){
 	sendPickaxe = new StonePickaxe();
 	sendPickaxe.sendData();
 
-	CopperPickaxe.index = vertices.length;
+	//Pickaxes
 	(new CopperPickaxe()).sendData();
-	CopperPickaxe.numberOfVerts = vertices.length - CopperPickaxe.index;
+	(new LatkinPickaxe()).sendData();
+	(new IllsawPickaxe()).sendData();
+	(new PlatinumPickaxe()).sendData();
+	(new LunitePickaxe()).sendData();
+	(new DaytumPickaxe()).sendData();
 
+
+	/*
+		Recipes for tools / bars.
+	*/
+	//Bar recipes
+	CopperBarRecipe.sendData();
+	LatkinBarRecipe.sendData();
+	IllsawBarRecipe.sendData();
+	PlatinumBarRecipe.sendData();
+	LuniteBarRecipe.sendData();
+	DaytumBarRecipe.sendData();
+
+	//Pick recipes
 	CopperPickRecipe.sendData();
+	LatkinPickRecipe.sendData();
+	IllsawPickRecipe.sendData();
+	PlatinumPickRecipe.sendData();
+	LunitePickRecipe.sendData();
+	DaytumPickRecipe.sendData();
 
-	CopperAxe.index = vertices.length;
-	(new CopperAxe()).sendData();
-	CopperAxe.numberOfVerts = vertices.length - CopperAxe.index;
-
+	//Axe recipes
 	CopperAxeRecipe.sendData();
+	LatkinAxeRecipe.sendData();
+	IllsawAxeRecipe.sendData();
+	PlatinumAxeRecipe.sendData();
+	LuniteAxeRecipe.sendData();
+	DaytumAxeRecipe.sendData();
 
+	//Sword recipes
 	CopperSwordRecipe.sendData();
+	LatkinSwordRecipe.sendData();
+	IllsawSwordRecipe.sendData();
+	PlatinumSwordRecipe.sendData();
+	LuniteSwordRecipe.sendData();
+	DaytumSwordRecipe.sendData();
 
+
+	//Swords
 	StoneSword.sendData();
 	CopperSword.sendData();
+	LatkinSword.sendData();
+	IllsawSword.sendData();
+	PlatinumSword.sendData();
+	LuniteSword.sendData();
+	DaytumSword.sendData();
+
+	//Axes
+	CopperAxe.sendData();
+
+	LatkinAxe.sendData();
+	IllsawAxe.sendData();
+	PlatinumAxe.sendData();
+	LuniteAxe.sendData();
+	DaytumAxe.sendData();
 
 	WoodenBucket.sendData();
 
@@ -1116,7 +1242,7 @@ function render_data(){
 	*/
 	if(!fixedView){
 		drawDistanceX = 20;//Math.round(20*(slider.value/10));
-		drawDistanceY = 10;//Math.round(10*(slider.value/10));
+		drawDistanceY = 12;//Math.round(10*(slider.value/10));
 		modelViewMatrix = viewMatrix;
 
 	}else{

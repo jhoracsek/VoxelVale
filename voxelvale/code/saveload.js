@@ -230,7 +230,7 @@ function getWorldObj(){
 	return [xPositions, yPositions, zPositions,objectNumbers, blockInstanceInformationString, invObjectNumbers, [player.posX, player.posY], player.health, toolbarIDs];
 }
 
-function loadWorldIntoGame(loadedWorld){
+function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loadedWorldNum, loadedWorld){
 	disableNotifications = true;
 	/*
 		World
@@ -243,10 +243,10 @@ function loadWorldIntoGame(loadedWorld){
 	world = new World(WORLD_SIZE);
 	world.fillAllEmpty();
 
-	let posXs = JSON.parse(loadedWorld.xPos);
-	let posYs = JSON.parse(loadedWorld.yPos);
-	let posZs = JSON.parse(loadedWorld.zPos);
-	let objNums = JSON.parse(loadedWorld.objectNumbers);
+	let posXs = JSON.parse(loadedWorldX.xPos);
+	let posYs = JSON.parse(loadedWorldY.yPos);
+	let posZs = JSON.parse(loadedWorldZ.zPos);
+	let objNums = JSON.parse(loadedWorldNum.objectNumbers);
 	let blockInstanceInformation = JSON.parse(loadedWorld.blockInstanceInfo);
 
 	for(let i = 0; i < objNums.length; i++){
@@ -404,7 +404,8 @@ function loadWorldIntoGame(loadedWorld){
 /*
 	Need to clean this up.
 */
-const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door,BorderWall,CopperStone,CopperBrick,Chest, Water, LuniteStone,DaytumStone];
+const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door,BorderWall,CopperStone,CopperBrick,Chest, Water, LuniteStone,DaytumStone,LatkinStone,IllsawStone,PlatinumStone];
+const RECIPE_OBJNUMS = [WorkBenchRecipe,WoodBlockRecipe,DoorRecipe,BrickBlockRecipe,CopperBarRecipe, ArrowRecipe, CopperPickRecipe,CopperAxeRecipe,CopperSwordRecipe,CopperBrickRecipe,ChestRecipe,LatkinPickRecipe,IllsawPickRecipe,PlatinumPickRecipe,LunitePickRecipe,DaytumPickRecipe,LatkinAxeRecipe,IllsawAxeRecipe,PlatinumAxeRecipe,LuniteAxeRecipe,DaytumAxeRecipe,LatkinSwordRecipe,IllsawSwordRecipe,PlatinumSwordRecipe,LuniteSwordRecipe,DaytumSwordRecipe,LatkinBarRecipe,IllsawBarRecipe,PlatinumBarRecipe,LuniteBarRecipe,DaytumBarRecipe];
 
 
 

@@ -2,6 +2,10 @@
 
 
 
+Inventory lighting issue (for transparent)
+	Maybe comes from squishing objects too much.
+	Try to adjust this.
+
 Water to do.
 	Fix network updating.										()
 		Should start updating on action.						()
@@ -31,6 +35,8 @@ For the WaterNetworks 'startUpdate' function this is how I think it should work.
 
 
 
+
+
 Update Alpha 0.3.0 | S'm'ores (Some more ores)
 	1. Mess around with ore generation.								()
 		1.a) Ground floor are a different block.					()
@@ -39,6 +45,7 @@ Update Alpha 0.3.0 | S'm'ores (Some more ores)
 		1.d) Generate copper as 'veins'.							()
 	2. Flesh out idea for two new ores.								()
 	3. Maybe add leaves?
+	Copper bar recipe updated!
 
 
 Ore generation:
@@ -189,6 +196,9 @@ Could just like partition screen so game is played in the middle
 Update Alpha 0.3.0 | Smores
 	1. Stone generation greatly modified.
 	2. Tree generation changed/fixed slightly.
+	3. World size increased.
+		3.a) Fix bug where place/break outside boundary.
+		3.b) Expanded from 26 X 26 portions to 45 X 45 portions.
 	3. New ores.
 		Copper, Latkin (tin) , Illsaw (silver), Platinum, Lunite, Daytum
 
@@ -196,6 +206,21 @@ Update Alpha 0.3.0 | Smores
 		3.a) Lunite
 		3.b) Daytum
 		3.c) 
+
+
+
+
+Need to fix notification queue when mining ores! (Not super important/ low priority!)
+
+
+Maybe make dungeons just like a fixed number of them. Like how the shop will be generated.
+
+Shop should be contained within the inner two layers.
+
+Make difficulty scale as you get further away from center.
+	Should also mark center.
+
+
 
 Update Alpha | Leaf me alone.
 	Add leaves and shrubs or whatever for potions

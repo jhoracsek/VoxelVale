@@ -54,7 +54,8 @@ let ore4 = mult(translate(0.6,0.3,0.3),scale4(0.25,0.23,0.27,1));
 let ore5 = mult(translate(-0.01,-0.01,-0.1),scale4(0.25,0.23,0.27,1));
 let ore6 = mult(translate(-0.05,-0.05,-0.05),scale4(0.55,0.73,0.37,1));
 let ore7 = mult(translate(0.05,0.05,-0.02),scale4(0.9,0.6,0.41,1));
-let ore8 = mult(translate(-0.1,0.3,-0.02),scale4(0.3,0.4,0.41,1));
+let ore8 = mult(translate(-0.05,0.25,-0.01),scale4(0.25,0.45,0.42,1));//this
+//let ore8 = mult(translate(-0.1,0.3,-0.02),scale4(0.3,0.4,0.41,1));//this
 let ore9 = mult(translate(0.1,0.1,0.12),scale4(0.8,0.2,0.65,1));
 
 class InventoryOre extends NonActionableItem{
@@ -80,7 +81,7 @@ class InventoryOre extends NonActionableItem{
 	}
 
 	drawSmall(currentMat){
-		set_light();
+		//set_light();
 		currentMat = mult(currentMat,translate(0,0.25,0.2));
 
 		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(mult(currentMat,ore1)));
@@ -97,7 +98,7 @@ class InventoryOre extends NonActionableItem{
 		this.drawGreyColor();
 		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(mult(currentMat,ore7)));
 		this.drawGreenColor();
-		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(mult(currentMat,ore8)));
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(mult(currentMat,ore8))); // This
 		this.drawCopperColor();
 		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(mult(currentMat,ore9)));
 		this.drawCopperColor();
@@ -486,4 +487,4 @@ class HealthPotion extends NonActionableItem {
 
 
 
-const ITEM_OBJNUMS = [WoodAxe, StonePickaxe, WoodenBow, Copper, CopperBar, ArrowItem, CopperPickaxe, CopperAxe, HealthPotion, StoneSword, CopperSword, WoodenBucket, Latkin, Illsaw, Platinum, Lunite, Daytum, LatkinBar, IllsawBar, PlatinumBar, LuniteBar, DaytumBar];
+const ITEM_OBJNUMS = [WoodAxe, StonePickaxe, WoodenBow, Copper, CopperBar, ArrowItem, CopperPickaxe, CopperAxe, HealthPotion, StoneSword, CopperSword, WoodenBucket, Latkin, Illsaw, Platinum, Lunite, Daytum, LatkinBar, IllsawBar, PlatinumBar, LuniteBar, DaytumBar, LatkinPickaxe, IllsawPickaxe, PlatinumPickaxe, LunitePickaxe, DaytumPickaxe,LatkinSword, IllsawSword, PlatinumSword, LuniteSword, DaytumSword, LatkinAxe, IllsawAxe, PlatinumAxe, LuniteAxe,DaytumAxe];

@@ -224,29 +224,139 @@ class Undead extends Humanoid{
 			CopperAxeRecipe
 		*/
 		let r;
+
+		//Drops brick recipe.
 		r = Math.random();
-		if(r < 0.2){
-			enemy_drop(worldObj, new BrickBlockRecipe(), this.posX, this.posY);
+		if(r < 0.1){
+			let dice_roll = roll_n_sided_die(2);
+			switch(dice_roll){
+				case 0:
+					enemy_drop(worldObj, new BrickBlockRecipe(), this.posX, this.posY);
+					break;
+				case 1:
+					enemy_drop(worldObj, new CopperBrickRecipe(), this.posX, this.posY);
+					break;
+			}
 		}
+
+		//Drops copper stuff for convience recipe.
 		r = Math.random();
-		if(r < 0.2){
-			enemy_drop(worldObj, new CopperBarRecipe(), this.posX, this.posY);
+		if(r < 0.4){
+			let dice_roll = roll_n_sided_die(2);
+			switch(dice_roll){
+				case 0:
+					enemy_drop(worldObj, new CopperBarRecipe(), this.posX, this.posY);
+					break;
+				case 1:
+					enemy_drop(worldObj, new CopperPickRecipe(), this.posX, this.posY);
+					break;
+			}
 		}
+
+
+		//Drops bar recipe.
 		r = Math.random();
-		if(r < 0.15){
-			enemy_drop(worldObj, new CopperPickRecipe(), this.posX, this.posY);
+		if(r < 0.3){
+			let dice_roll = roll_n_sided_die(6);
+			switch(dice_roll){
+				case 0:
+					enemy_drop(worldObj, new CopperBarRecipe(), this.posX, this.posY);
+					break;
+				case 1:
+					enemy_drop(worldObj, new LatkinBarRecipe(), this.posX, this.posY);
+					break;
+				case 2:
+					enemy_drop(worldObj, new IllsawBarRecipe(), this.posX, this.posY);
+					break;
+				case 3:
+					enemy_drop(worldObj, new PlatinumBarRecipe(), this.posX, this.posY);
+					break;
+				case 4:
+					enemy_drop(worldObj, new LuniteBarRecipe(), this.posX, this.posY);
+					break;
+				case 5:
+					enemy_drop(worldObj, new DaytumBarRecipe(), this.posX, this.posY);
+					break;
+			}
 		}
+
+		//Drops pick recipe.
 		r = Math.random();
-		if(r < 0.15){
-			enemy_drop(worldObj, new CopperAxeRecipe(), this.posX, this.posY);
+		if(r < 0.25){
+			let dice_roll = roll_n_sided_die(6);
+			switch(dice_roll){
+				case 0:
+					enemy_drop(worldObj, new CopperPickRecipe(), this.posX, this.posY);
+					break;
+				case 1:
+					enemy_drop(worldObj, new LatkinPickRecipe(), this.posX, this.posY);
+					break;
+				case 2:
+					enemy_drop(worldObj, new IllsawPickRecipe(), this.posX, this.posY);
+					break;
+				case 3:
+					enemy_drop(worldObj, new PlatinumPickRecipe(), this.posX, this.posY);
+					break;
+				case 4:
+					enemy_drop(worldObj, new LunitePickRecipe(), this.posX, this.posY);
+					break;
+				case 5:
+					enemy_drop(worldObj, new DaytumPickRecipe(), this.posX, this.posY);
+					break;
+			}
 		}
+
+		//Drops axe recipe.
 		r = Math.random();
-		if(r < 0.15){
-			enemy_drop(worldObj, new CopperSwordRecipe(), this.posX, this.posY);
+		if(r < 0.20){
+			let dice_roll = roll_n_sided_die(6);
+			switch(dice_roll){
+				case 0:
+					enemy_drop(worldObj, new CopperAxeRecipe(), this.posX, this.posY);
+					break;
+				case 1:
+					enemy_drop(worldObj, new LatkinAxeRecipe(), this.posX, this.posY);
+					break;
+				case 2:
+					enemy_drop(worldObj, new IllsawAxeRecipe(), this.posX, this.posY);
+					break;
+				case 3:
+					enemy_drop(worldObj, new PlatinumAxeRecipe(), this.posX, this.posY);
+					break;
+				case 4:
+					enemy_drop(worldObj, new LuniteAxeRecipe(), this.posX, this.posY);
+					break;
+				case 5:
+					enemy_drop(worldObj, new DaytumAxeRecipe(), this.posX, this.posY);
+					break;
+			}
 		}
+
+		//Drops sword recipe.
 		r = Math.random();
-		if(r < 0.15){
-			enemy_drop(worldObj, new CopperBrickRecipe(), this.posX, this.posY);
+		if(r < 0.20){
+			let dice_roll = roll_n_sided_die(6);
+
+			switch(dice_roll){
+				case 0:
+					enemy_drop(worldObj, new CopperSwordRecipe(), this.posX, this.posY);
+					break;
+				case 1:
+					enemy_drop(worldObj, new LatkinSwordRecipe(), this.posX, this.posY);
+					break
+				case 2:
+					enemy_drop(worldObj, new IllsawSwordRecipe(), this.posX, this.posY);
+					break;
+				case 3:					
+					enemy_drop(worldObj, new PlatinumSwordRecipe(), this.posX, this.posY);
+					break;
+				case 4:
+					enemy_drop(worldObj, new LuniteSwordRecipe(), this.posX, this.posY);
+					break;
+				case 5:
+					enemy_drop(worldObj, new DaytumSwordRecipe(), this.posX, this.posY);
+					break;
+			}
 		}
 
 	}

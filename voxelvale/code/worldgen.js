@@ -5,7 +5,9 @@ var PORTION_SIZE = 10;
 var POSX;
 var POSY;
 var world;
-const WORLD_SIZE = 25;
+
+//Old: WORLD_SIZE = 25;
+const WORLD_SIZE = 44;
 
 //WORLD PORTION HAS AN X CHANCE TO BE A DUNGEON
 class WorldPortion{
@@ -128,12 +130,17 @@ class WorldPortion{
 		let startingPositionX = lastPos[0];
 		let startingPositionY = lastPos[1];
 
-		if( (startingPositionX < this.outerBoundX) && (startingPositionX > this.posX)){
-			if(( startingPositionY > this.posY) && (startingPositionY < this.outerBoundY) ){
-				this.canGenerateGlobalStructures = false
+
+
+		if( (startingPositionX <= this.outerBoundX) && (startingPositionX >= this.posX)){
+			if(( startingPositionY >= this.posY) && (startingPositionY <= this.outerBoundY) ){
+	
+				this.canGenerateGlobalStructures = false;
+
 				for(var i = this.posX; i < this.outerBoundX; i++){
 					for(var j = this.posY; j < this.outerBoundY; j++){
 						this.push(new GrassBlock(i,j,-2));
+
 					}
 				}
 				return;
@@ -161,7 +168,7 @@ class WorldPortion{
 		}
 	}
 
-	generateGrass(){
+	generateGrass(testMode=true){
 		//Make temp 2D grid.
 		let tempGrid = [];
 		for(let i = 0; i < PORTION_SIZE; i++){
@@ -183,8 +190,46 @@ class WorldPortion{
 
 		for(var i = this.posX; i < this.outerBoundX; i++){
 			for(var j = this.posY; j < this.outerBoundY; j++){
-				if(!tempGrid[i-this.posX][j-this.posY])
-					this.push(new GrassBlock(i,j,-2));
+				if(!tempGrid[i-this.posX][j-this.posY]){
+					
+
+
+					if(DEV_TOOLS && GEN_SHOP){
+						let test_num = get_portion_distance_from_start(i,j);
+
+						if(test_num == 3){
+							this.push(new GrassBlock(i,j,-2));
+						}else{
+							this.push(new GrassBlock(i,j,-2));
+						}
+					}else{
+						if(testMode)
+							this.push(new GrassBlock(i,j,-2));
+						else
+							this.push(new GrassBlock(i,j,-2));
+					}
+					/*
+					//For testing:
+					let test_num = get_portion_distance_from_start(i,j);
+					switch(test_num){
+						case 0:
+							this.push(new GrassBlock(i,j,-2));	
+							break;
+						case 1:
+							this.push(new WoodBlock(i,j,-2));
+							break;
+						case 2:
+							this.push(new WeirdBlock(i,j,-2));
+							break;
+						case 3:
+							this.push(new TestBlock(i,j,-2));
+							break;
+						case 4:
+							this.push(new GrassBlock(i,j,-2));
+							break;
+					}
+					*/
+				}
 			}
 		}
 	}
@@ -624,29 +669,77 @@ class World{
 	}
 	generateGlobalStructures(){
 
-		/*
-			Trees
-		*/
-		let numTrees = AVG_NUM_TREES + (randomInt(TREE_VARIANCE+1)-Math.round(TREE_VARIANCE/2));
-		
-		for(let i = 0; i < numTrees; i++){
-			// Define x and y as some random coordinates on the map.
-			let coordinateToGen = generate_random_world_coordinate()
-			let x = coordinateToGen[0];
-			let y = coordinateToGen[1];
-			var retArray = gen_tree(x,y);
+		if(GEN_SHOP){
 
-			for(var z = 0; z < retArray.length; z++){
-				let toAdd = retArray[z];
-				let portionNum = this.getPortionNum(toAdd.posX,toAdd.posY);
-				//Make sure it's in a portion that can generate global structures.
-				if(this.portions[portionNum[0]][portionNum[1]].canGenerateGlobalStructures){
-					this.addBlock(toAdd);
-				}else{
-					break;
+			let value = 0;
+			let x;
+			let y;
+
+			while(value != 3){
+				let coordinateToGen = generate_random_world_coordinate();
+				x = coordinateToGen[0];
+				y = coordinateToGen[1];
+				value=get_portion_distance_from_start(x,y)
+			}
+			//Get portion from x and y.
+			var locX = Math.floor(x/PORTION_SIZE);
+			var locY = Math.floor(y/PORTION_SIZE);
+
+			console.log('Portion shop generated at:', locX, locY)
+			this.portions[locX][locY].canGenerateGlobalStructures = false;
+
+
+
+			var retArray = gen_shop(locX*PORTION_SIZE,locY*PORTION_SIZE+2);
+			for(var z=0;z<retArray.length;z++)
+				this.addBlock(retArray[z]);
+
+			//Start by just generating one block on the portion in the air.
+		}
+
+		if(GEN_DUNGEON){
+			let value = 0;
+			let x;
+			let y;
+
+			while(value != 3){
+				let coordinateToGen = generate_random_world_coordinate();
+				x = coordinateToGen[0];
+				y = coordinateToGen[1];
+				value=get_portion_distance_from_start(x,y)
+			}
+			//Get portion from x and y.
+			var locX = Math.floor(x/PORTION_SIZE);
+			var locY = Math.floor(y/PORTION_SIZE);
+
+			console.log('Portion shop generated at:', locX, locY)
+			this.portions[locX][locY].canGenerateGlobalStructures = false;
+
+
+
+			var retArray = gen_dungeon_BL(locX*PORTION_SIZE,locY*PORTION_SIZE+2);
+			for(var z=0;z<retArray.length;z++)
+				this.addBlock(retArray[z]);
+		}
+
+		/*
+		if(GEN_DUNGEONS && generate_by_probability(0.15)){
+			for(var i = this.posX; i < this.outerBoundX; i++){
+				for(var j = this.posY; j < this.outerBoundY; j++){
+					//Do wood if underneath dungeon.
+					if( (j-this.posY) <= 6 && (j-this.posY) > 1 && (i - this.posX) >0 && (i-this.posX) <8  ){
+						this.push(new WoodBlock(i,j,-2));
+					}else{
+						this.push(new GrassBlock(i,j,-2));
+					}
 				}
 			}
+			var retArray = gen_dungeon_BL(this.posX,this.posY+2);
+			for(var z=0;z<retArray.length;z++)
+				this.push(retArray[z]);
+			return;
 		}
+		*/
 
 		/*
 			Stone clusters
@@ -657,7 +750,7 @@ class World{
 
 		for(let i = 0; i < numClusters; i++){
 			// Define x and y as some random coordinates on the map.
-			let coordinateToGen = generate_random_world_coordinate()
+			let coordinateToGen = generate_random_world_coordinate();
 			let x = coordinateToGen[0];
 			let y = coordinateToGen[1];
 
@@ -684,12 +777,60 @@ class World{
 				}
 			}
 		}
+
+		/*
+			Trees
+		*/
+		let numTrees = AVG_NUM_TREES + (randomInt(TREE_VARIANCE+1)-Math.round(TREE_VARIANCE/2));
+		
+		for(let i = 0; i < numTrees; i++){
+			// Define x and y as some random coordinates on the map.
+			let coordinateToGen = generate_random_world_coordinate()
+			let x = coordinateToGen[0];
+			let y = coordinateToGen[1];
+			var retArray = gen_tree(x,y);
+
+			if(this.getBlockAt(x,y,-2) != null){
+				continue;
+			}
+
+			if(is_valid_world_coordinate(x-1,y)){
+				if(this.getBlockAt(x-1,y,-3) != null)
+					continue;
+			}
+
+			if(is_valid_world_coordinate(x+1,y)){
+				if(this.getBlockAt(x+1,y,-3) != null)
+					continue;
+			}
+
+			if(is_valid_world_coordinate(x,y-1)){
+				if(this.getBlockAt(x,y-1,-3) != null)
+					continue;
+			}
+
+			if(is_valid_world_coordinate(x,y+1)){
+				if(this.getBlockAt(x,y+1,-3) != null)
+					continue;
+			}
+
+			for(var z = 0; z < retArray.length; z++){
+				let toAdd = retArray[z];
+				let portionNum = this.getPortionNum(toAdd.posX,toAdd.posY);
+				//Make sure it's in a portion that can generate global structures.
+				if(this.portions[portionNum[0]][portionNum[1]].canGenerateGlobalStructures){
+					this.addBlock(toAdd);
+				}else{
+					break;
+				}
+			}
+		}
 	}
 
 	generateGrass(){
 		for(var i = 0; i <= this.size; i++){
 			for(var j = 0; j <= this.size; j++)
-				this.portions[i][j].generateGrass();
+				this.portions[i][j].generateGrass(Boolean(i%2));
 		}
 	}
 
@@ -716,8 +857,9 @@ class World{
 		var locY = Math.floor(PY/PORTION_SIZE);
 		if(locX<0||locY<0||locX>this.size||locY>this.size)
 			return null;
-		else
+		else{
 			return this.portions[locX][locY].getBlockAt(Math.floor(PX),Math.floor(PY),Math.floor(PZ));
+		}
 	}
 
 	/*
@@ -745,7 +887,7 @@ class World{
 			return this.portions[locX][locY].getFluid(PX,PY,specNetID);
 		}
 	}
-	// HERE
+	
 	setFluid(PX, PY, block){
 		var locX = Math.floor(PX/PORTION_SIZE);
 		var locY = Math.floor(PY/PORTION_SIZE);
@@ -809,6 +951,10 @@ class World{
 		if(block.posZ == -2){
 			onLowLevelChange();
 		}
+
+		if(!this.checkPortionValid(locX,locY))
+			return;
+
 		this.portions[locX][locY].removeBlock(block);
 		//Update
 		this.updateChunk(PX,PY,PZ);
@@ -818,6 +964,10 @@ class World{
 	removeBlockByPos(PX,PY,PZ){
 		var locX = Math.floor(PX/PORTION_SIZE);
 		var locY = Math.floor(PY/PORTION_SIZE);
+
+		if(!this.checkPortionValid(locX,locY))
+			return;
+
 		let block = this.portions[locX][locY].getBlockAt(PX,PY,PZ);
 		if(PZ == -2){
 			onLowLevelChange();
@@ -832,6 +982,10 @@ class World{
 	addBlock(block){
 		var locX = Math.floor(block.posX/PORTION_SIZE);
 		var locY = Math.floor(block.posY/PORTION_SIZE);
+
+		// Check!
+		if(!this.checkPortionValid(locX,locY))
+			return false;
 		var ret = this.portions[locX][locY].addBlock(block);
 		if(block.posZ == -2)
 			onLowLevelChange();
@@ -857,6 +1011,9 @@ class World{
 		var locX = Math.floor(pX/PORTION_SIZE);
 		var locY = Math.floor(pY/PORTION_SIZE);
 
+		// Check!
+		if(!this.checkPortionValid(locX,locY))
+			return null;
 		var ret = this.portions[locX][locY].addWater(pX,pY,pZ,network,level);
 		//Update
 		if(ret == null)
@@ -870,7 +1027,10 @@ class World{
 	refreshWater(pX, pY, pZ, level, parent){
 		var locX = Math.floor(pX/PORTION_SIZE);
 		var locY = Math.floor(pY/PORTION_SIZE);
-		
+
+		// Check!
+		if(!this.checkPortionValid(locX,locY))
+			return false;
 		var ret = this.portions[locX][locY].refreshWater(pX,pY,pZ,level,parent);
 		//Update
 		if(ret == false)
@@ -930,6 +1090,12 @@ class World{
     	let objNum = block.objectNumber;
     	if(objNum == 9 || objNum == 13) return false;
     	return true;
+    }
+
+    checkPortionValid(locX, locY){
+    	if(locX >= 0 && locX <= this.size && locY >= 0 && locY <= this.size)
+    		return true;
+    	return false;
     }
 
 }

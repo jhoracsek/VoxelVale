@@ -122,16 +122,30 @@
             return;
         }
 
-        const ref = doc(collection(database, "users", user.uid, "worlds"), "main");
+        const xPosRef = doc(collection(database, "users", user.uid, "worlds"), "xPositions");
+        const yPosRef = doc(collection(database, "users", user.uid, "worlds"), "yPositions");
+        const zPosRef = doc(collection(database, "users", user.uid, "worlds"), "zPositions");
+
+        const objNumRef = doc(collection(database, "users", user.uid, "worlds"), "objectNumbers");
+
+        const ref = doc(collection(database, "users", user.uid, "worlds"), "aux");
 
         let info = getWorldObj();
 
         try {
+            await setDoc(xPosRef, {
+                xPos: info[0]
+            });
+            await setDoc(yPosRef, {
+                yPos: info[1]
+            });
+            await setDoc(zPosRef, {
+                zPos: info[2]
+            });
+            await setDoc(objNumRef, {
+                objectNumbers: info[3]
+            });
             await setDoc(ref, {
-                xPos: info[0],
-                yPos: info[1],
-                zPos: info[2],
-                objectNumbers: info[3],
                 blockInstanceInfo: info[4],
                 invObjNums: info[5],
                 position: info[6],
@@ -156,11 +170,33 @@
             alert("You must be logged in to load your world!");
             return;
         }
-        const ref = doc(collection(database, "users", user.uid, "worlds"), "main");
+
+        const xPosRef = doc(collection(database, "users", user.uid, "worlds"), "xPositions");
+        const yPosRef = doc(collection(database, "users", user.uid, "worlds"), "yPositions");
+        const zPosRef = doc(collection(database, "users", user.uid, "worlds"), "zPositions");
+
+        const objNumRef = doc(collection(database, "users", user.uid, "worlds"), "objectNumbers");
+
+        const ref = doc(collection(database, "users", user.uid, "worlds"), "aux");
+
+        let loadedWorldX = null;
+        let loadedWorldY = null;
+        let loadedWorldZ = null;
+        let loadedWorldNum = null;
         let loadedWorld = null;
+
         try {
+            const snapshotX = await getDoc(xPosRef);
+            const snapshotY = await getDoc(yPosRef);
+            const snapshotZ = await getDoc(zPosRef);
+            const snapshotObjNum = await getDoc(objNumRef);
             const snapshot = await getDoc(ref);
+
             if (snapshot.exists()) {
+                loadedWorldX = snapshotX.data();
+                loadedWorldY = snapshotY.data();
+                loadedWorldZ = snapshotZ.data();
+                loadedWorldNum = snapshotObjNum.data();
                 loadedWorld = snapshot.data();
                 
             } else {
@@ -170,7 +206,7 @@
             console.error("Load error:", err.message);
         }
         if(loadedWorld!=null){
-            loadWorldIntoGame(loadedWorld);
+            loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loadedWorldNum, loadedWorld);
             //console.log('Done!');
         }
     }

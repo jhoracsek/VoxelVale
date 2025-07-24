@@ -53,6 +53,7 @@ function getEligibleRecipes(){
 class Recipe{
 	static objectNumber = -1; get objectNumber() {return this.constructor.objectNumber;}
 	static typeOfObj = 'REC'; get typeOfObj() {return this.constructor.typeOfObj;}
+	static typeOfRec = 'NONE'; get typeOfRec() {return this.constructor.typeOfRec;}
 	static craftingStation = REQUIRES_NO_CRAFTING_STATION; get craftingStation() {return this.constructor.craftingStation;}
 	constructor(Obj=null, recipe, numReturned){
 		this.name=Obj.name + ' Recipe';
@@ -199,6 +200,54 @@ class BrickBlockRecipe extends Recipe{
 	}
 }
 
+
+class BarRecipeAbstract extends Recipe{
+	static objectNumber = -1;
+	static craftingStation = REQUIRES_WORKBENCH;
+
+	static indexWireframe = 0; get indexWireframe() {return this.constructor.indexWireframe;}
+	static numWireframeVerts = 0; get numWireframeVerts() {return this.constructor.numWireframeVerts;}
+
+	static index = 0; get index() {return this.constructor.index;}
+	static numberOfVerts = 0; get numberOfVerts() {return this.constructor.numberOfVerts;}
+
+	static colorOne = hexToRgbA('#bcb7b7');
+	static colorTwo = hexToRgbA('#92774c');
+
+	static typeOfRec = 'BAR';
+
+	static sendData(){
+		this.indexWireframe = vertices.length;
+		build_bar_wireframe();
+		this.numWireframeVerts = vertices.length - this.indexWireframe;
+
+		this.index = vertices.length;
+		build_colored_bar(this.colorOne, this.colorTwo, true);
+		this.numberOfVerts = vertices.length - this.index;
+	}
+
+	constructor(Obj, recipe, numRet){
+		super(Obj, recipe, numRet);
+		this.desc='ABSTRACT TYPE.';
+	}
+	drawSmallObject(currentMat,scale=0.95){
+
+		gl.uniform1i(cursorBlockLoc, true);
+		let mat = mult(translate(0,2.5,0),mult(scale4(scale,1,scale,1), translate(0,-2.5,0)));
+		this.object.drawSmall(mult(currentMat,mat));
+		gl.uniform1i(cursorBlockLoc, false);
+	}
+
+	drawSmall(currentMat){
+		//set_light_full();
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(currentMat));
+		gl.drawArrays(gl.LINES,this.indexWireframe,this.numWireframeVerts);
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(currentMat));
+		gl.drawArrays(gl.TRIANGLES,this.index,this.numberOfVerts);
+	}
+}
+
+/*
 class CopperBarRecipe extends Recipe{
 	static objectNumber = 132;
 	static craftingStation = REQUIRES_WORKBENCH;
@@ -217,6 +266,80 @@ class CopperBarRecipe extends Recipe{
 		gl.drawArrays(gl.TRIANGLES,cursorBytes[5][0],cursorBytes[5][1]);
 	}
 }
+*/
+
+/*
+	Bar recipes.
+*/
+class CopperBarRecipe extends BarRecipeAbstract{
+	static objectNumber = 132;
+	static colorOne = hexToRgbA('#ed9f61');
+	static colorTwo = hexToRgbA('#7fb6a3');
+
+	constructor(){
+		super(new CopperBar(), [[new Copper(),2]],1);
+		this.desc='Recipe for a copper bar.';
+	}
+}
+
+class LatkinBarRecipe extends BarRecipeAbstract{
+	static objectNumber = 154;
+	static colorOne = hexToRgbA('#bcb7b7');
+	static colorTwo = hexToRgbA('#92774c');
+
+	constructor(){
+		super(new LatkinBar(), [[new Latkin(),2]],1);
+		this.desc='Recipe for a latkin bar.';
+	}
+}
+
+class IllsawBarRecipe extends BarRecipeAbstract{
+	static objectNumber = 155;
+	static colorOne = hexToRgbA('#d9fefc');
+	static colorTwo = hexToRgbA('#7b9da3');
+
+	constructor(){
+		super(new IllsawBar(), [[new Illsaw(),2]],1);
+		this.desc='Recipe for an illsaw bar.';
+	}
+}
+
+class PlatinumBarRecipe extends BarRecipeAbstract{
+	static objectNumber = 156;
+	static colorOne = hexToRgbA('#f4f0ed');
+	static colorTwo = hexToRgbA('#b8b6b7');
+
+	constructor(){
+		super(new PlatinumBar(), [[new Platinum(),2]],1);
+		this.desc='Recipe for a platinum bar.';
+	}
+}
+
+class LuniteBarRecipe extends BarRecipeAbstract{
+	static objectNumber = 157;
+	static colorOne = hexToRgbA('#e4d862');
+	static colorTwo = hexToRgbA('#bbad24');
+
+	constructor(){
+		super(new LuniteBar(), [[new Lunite(),2]],1);
+		this.desc='Recipe for a lunite bar.';
+	}
+}
+
+class DaytumBarRecipe extends BarRecipeAbstract{
+	static objectNumber = 158;
+	static colorOne = hexToRgbA('#ef61f1');
+	static colorTwo = hexToRgbA('#cb28d7');
+
+	constructor(){
+		super(new DaytumBar(), [[new Daytum(),2]],1);
+		this.desc='Recipe for a daytum bar.';
+	}
+}
+
+/*
+	Bar recipes end.
+*/
 
 class ArrowRecipe extends Recipe{
 	static objectNumber = 133;
@@ -438,9 +561,6 @@ class ChestRecipe extends Recipe{
 	
 }
 
-
-
-const RECIPE_OBJNUMS = [WorkBenchRecipe,WoodBlockRecipe,DoorRecipe,BrickBlockRecipe,CopperBarRecipe, ArrowRecipe, CopperPickRecipe,CopperAxeRecipe,CopperSwordRecipe,CopperBrickRecipe,ChestRecipe];
 
 
 

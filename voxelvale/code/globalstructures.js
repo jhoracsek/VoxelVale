@@ -7,12 +7,13 @@
 	calculate it so that the per-portion average is
 	the same regardless of how large the world is.
 */
-const AVG_NUM_TREES = 600;
+//const AVG_NUM_TREES = 600;
+
+const AVG_NUM_TREES = 1100;
 const TREE_VARIANCE = 50;
 
 
-const AVG_NUM_STONE_CLUSTERS = 200;
-//const AVG_NUM_STONE_CLUSTERS = 400;
+const AVG_NUM_STONE_CLUSTERS = 290;
 const STONE_CLUSTERS_VARIANCE = 10;
 
 const STONE_CLUSTER_MAX_WIDTH = 10;
@@ -362,6 +363,45 @@ function generate_global_stone_cluster_unoptimized(X,Y){
 }
 
 
+/*
+	Should return either 0,1,2,3,4.
+
+	Assumes WORLD_SIZE is 44.
+*/
+function get_portion_distance_from_start(X,Y){
+	var locX = Math.floor(X/PORTION_SIZE);
+	var locY = Math.floor(Y/PORTION_SIZE);
+
+	//locX and locY range from 0 to 44 inclusive.
+	let x = -1;
+	let y = -1;
+
+	if(locX <= 4 || locX >= 40)
+		x = 4;
+	else if(locX <=9 || locX >= 35)
+		x = 3;
+	else if(locX <= 14 || locX >= 30)
+		x = 2;
+	else if(locX <= 19 || locX >= 25)
+		x = 1;
+	else
+		x = 0;
+
+	if(locY <= 4 || locY >= 40)
+		y = 4;
+	else if(locY <=9 || locY >= 35)
+		y = 3;
+	else if(locY <= 14 || locY >= 30)
+		y = 2;
+	else if(locY <= 19 || locY >= 25)
+		y = 1;
+	else
+		y = 0;
+
+	return Math.max(x, y);
+}
+
+
 function generate_global_stone_cluster(X,Y){
 	var blocksToReturn = [];
 
@@ -523,17 +563,86 @@ function generate_global_stone_cluster(X,Y){
 				Up, down, left, or right, based on a four sided dice flip. (Make a method for this :) )
 	*/
 
-	//First decide if we should have an ore
+	/*
+		Probability is affected by the distance of the starting block of the stone cluster
+		to the starting position of the player. (I.e., the middle of the map.)
 
-	//COPPER_ORE = 0.25;
-	//LUNITE_ORE = 0.125;
-	//DAYTUM_ORE = 0.0625
-	//NO_ORE = 1-(COPPER_ORE+LUNITE_ORE+DAYTUM_ORE);
+		This value ranges from 0 (closest) to 4 (furthest).
+	*/
+
+	let distance = get_portion_distance_from_start(X,Y);
 
 	let ore_gen = Math.random();
-	let ORE;
+	let ORE = null;
 	let ore_len = 0;
 
+
+	switch(distance){
+		case 0:
+			if(ore_gen < 0.5){
+				ORE = CopperStone;
+				ore_len = 6 + roll_n_sided_die(4);
+			}
+			break;
+		case 1:
+			if(ore_gen < 0.25){
+				ORE = CopperStone;
+				ore_len = 6 + roll_n_sided_die(4);
+			}else if(ore_gen < 0.5){
+				ORE = LatkinStone;
+				ore_len = 6 + roll_n_sided_die(4);
+			}
+			break;
+		case 2:
+			if(ore_gen < 0.2){
+				ORE = CopperStone;
+				ore_len = 6 + roll_n_sided_die(4);
+			}else if(ore_gen < 0.4){
+				ORE = LatkinStone;
+				ore_len = 6 + roll_n_sided_die(4);
+			}else if(ore_gen < 0.6){
+				ORE = IllsawStone;
+				ore_len = 6 + roll_n_sided_die(4);
+			}else if(ore_gen < 0.7){
+				ORE = PlatinumStone;
+				ore_len = 4 + roll_n_sided_die(3);
+			}
+			break;
+		case 3:
+			if(ore_gen < 0.2){
+				ORE = LatkinStone;
+				ore_len = 6 + roll_n_sided_die(4);
+			}else if(ore_gen < 0.5){
+				ORE = IllsawStone;
+				ore_len = 6 + roll_n_sided_die(4);
+			}else if(ore_gen < 0.725){
+				ORE = PlatinumStone;
+				ore_len = 6 + roll_n_sided_die(4);
+			}else if(ore_gen < 0.85){
+				ORE = LuniteStone;
+				ore_len = 4 + roll_n_sided_die(3);
+			}
+
+			break;
+		case 4:
+			if(ore_gen < 0.25){
+				ORE = PlatinumStone;
+				ore_len = 6 + roll_n_sided_die(4);
+			}else if(ore_gen < 0.45){
+				ORE = LuniteStone;
+				ore_len = 6 + roll_n_sided_die(4);
+			}else if(ore_gen < 0.7){
+				ORE = DaytumStone;
+				ore_len = 6 + roll_n_sided_die(4);
+			}
+			break;
+	}
+
+	if(ORE == null){
+		return blocksToReturn;
+	}
+
+	/*
 	if(ore_gen < COPPER_ORE){
 		//Copper
 		ORE = CopperStone;
@@ -550,9 +659,9 @@ function generate_global_stone_cluster(X,Y){
 		//No ore
 		return blocksToReturn;
 	}
+	*/
 
 
-	//structureMap[pX - smallestPX + 2][pY-1 - smallestPY + 2] = true;
 	
 	/*
 		Pick random block in 'blocksToReturn'
@@ -629,4 +738,41 @@ function generate_global_stone_cluster(X,Y){
 	//blocksToReturn[0] = new CopperStone(blocksToReturn[0].posX, blocksToReturn[0].posY, blocksToReturn[0].posZ);
 
 	return blocksToReturn;
+}
+
+
+function gen_shop(X,Y){
+	var retList=[]
+	retList.push(new WeirdBlock(X+4,Y,-6));
+	retList.push(new WeirdBlock(X+5,Y,-6));
+	retList.push(new WeirdBlock(X+3,Y,-6));
+	for(var j=-3;j>-6;j--){
+		retList.push(new WeirdBlock(X,Y+1,j));
+		retList.push(new WeirdBlock(X+1,Y,j));
+		retList.push(new WeirdBlock(X+2,Y,j));
+		retList.push(new WeirdBlock(X+3,Y,j));
+
+		retList.push(new WeirdBlock(X+5,Y,j));
+		retList.push(new WeirdBlock(X+6,Y,j));
+		retList.push(new WeirdBlock(X+7,Y,j));
+		for(var i=1;i<PORTION_SIZE-5;i++){
+			retList.push(new WeirdBlock(X+8,Y+i,j));
+			retList.push(new WeirdBlock(X,Y+i,j));
+		}
+		for(var i=1;i<PORTION_SIZE-2;i++){
+			retList.push(new WeirdBlock(X+i,Y+PORTION_SIZE-5,j));
+		}
+	}
+	for(var i=1;i<PORTION_SIZE-2;i++){
+		for(var j=1;j<=PORTION_SIZE-6;j++)
+			retList.push(new WeirdBlock(X+i,Y+j,-6));
+	}
+
+	for(var i=1;i<PORTION_SIZE-2;i++){
+		for(var j=0;j<=PORTION_SIZE-6;j++)
+			retList.push(new WoodBlock(X+i,Y+j,-2));
+	}
+
+
+	return retList;
 }

@@ -129,6 +129,43 @@ function build_pickaxe_wireframe(){
 }
 
 
+/*
+var vPBars = [
+	vec3( 0+squish, 0-elongate, 1-squeeze),  			//0
+    vec3( 0+squish, 1+elongate, 1-squeeze),  			//1
+    vec3( 1-squish, 1-pinch+elongate, 1-pinch-squeeze),  //2 
+    vec3( 1-squish, 0+pinch-elongate, 1-pinch-squeeze),  //3 
+
+    vec3( 0+squish, 0-elongate, 0+squeeze),  			//4
+    vec3( 0+squish, 1+elongate, 0+squeeze),  			//5
+    vec3( 1-squish, 1-pinch+elongate, 0+pinch+squeeze),  //6 
+    vec3( 1-squish, 0+pinch-elongate, 0+pinch+squeeze)   //7 
+];
+
+*/
+function build_bar_wireframe(){
+
+	wireframe_line(vPBars[0], vPBars[1]);
+	wireframe_line(vPBars[1], vPBars[2]);
+	wireframe_line(vPBars[2], vPBars[3]);
+	wireframe_line(vPBars[3], vPBars[0]);
+
+	wireframe_line(vPBars[4], vPBars[5]);
+	wireframe_line(vPBars[5], vPBars[6]);
+	wireframe_line(vPBars[6], vPBars[7]);
+	wireframe_line(vPBars[7], vPBars[4]);
+
+	wireframe_line(vPBars[0], vPBars[4]);
+	wireframe_line(vPBars[2], vPBars[6]);
+	wireframe_line(vPBars[3], vPBars[7]);
+
+	//Glitching line...
+	//Maybe issue with negative?
+	//console.log(vPBars);
+	wireframe_line(vPBars[1], vPBars[5]);
+}
+
+
 
 function build_sword_wireframe(){
 
