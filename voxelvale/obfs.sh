@@ -14,6 +14,7 @@ terser \
 	code/xyzblock.js \
 	code/dropbox.js \
 	code/chest.js \
+	code/water.js \
 	code/scenes.js \
 	code/dungeons.js \
 	code/collision.js \
@@ -31,11 +32,14 @@ terser \
 	code/chestmenu.js \
 	code/helpers.js \
 	code/item.js \
+	code/tools.js \
 	code/wireframe.js \
 	code/nonactionableitem.js \
 	code/recipes.js \
+	code/recipestools.js \
 	code/projectiles.js \
 	code/structures.js \
+	code/globalstructures.js \
 	code/buildingfunctions.js \
 	code/specialblocks.js \
 	code/interactiveblocks.js \

@@ -38,67 +38,54 @@ For the WaterNetworks 'startUpdate' function this is how I think it should work.
 
 
 Update Alpha 0.3.0 | S'm'ores (Some more ores)
-	1. Mess around with ore generation.								()
-		1.a) Ground floor are a different block.					()
-		1.b) Make sure stone at z=-2 is a normal block.				()
-		1.c) Outline 'veins' and how generation works.				()
-		1.d) Generate copper as 'veins'.							()
-	2. Flesh out idea for two new ores.								()
-	3. Maybe add leaves?
 	Copper bar recipe updated!
 
 
-Ore generation:
-	Question: What happens when you generate over multiple portions?
-	Answer: Don't worry about it, I'm changing how worlds will generate structures.
+Update Alpha 0.3.0 | Smores
+	1. Stone generation greatly modified.
+	2. Tree generation changed/fixed slightly.
+		2.a) No longer spawn beside other blocks.
+	3. World size increased.
+		3.a) Fix bug where place/break outside boundary.
+		3.b) Expanded from 26 X 26 portions to 45 X 45 portions.
+	4. New ores, bars, and tools
+		Copper, Latkin (tin) , Illsaw (silver), Platinum, Lunite, Daytum
+	5. Enemy drops updated.
+
+Bugfixes:
+	Bar recipe appearance updated.
+	Weird glitchy thing with the ground level/water (draw distance).
+	(Slightly increased vertical draw distance.)
 
 
 
-Maybe change how structures are generated?
+Features:
+	Added new ores with corresponding tool sets.
+	These include Latkin, Illsaw, Platinum, Lunite, and Daytum.
 
-I would like to make them global features.
-		
-If certain things are generated as a portion structure (e.g., houses, dungeons)
-then the portion is marked in such a way that no global feature can be generated
-that touches that portion. This should also apply to the starting portion.
+Changes:
+	World size increased from 250 x 250 to 450 x 450.
+	Increased the probability of a zombie dropping a recipe.
+	Stone clusters are now on average larger and span 2 layers.
+	Ore veins are now on average larger and are more likely to occur.
+	Updated appearance of bar recipes.
+	Trees can no longer be generated adjacent to other blocks.
 
-Some todo:
-	Find out where to generate global structures.		()
-	Turn off generation of stone and trees.				()
-		Can do this with a flag. GEN_OLD_STYLE_WORLD.	()
-
-	Should lay groundwork for water generation.			()
-
-
-
+Fixes:
+	Fixed bug where interacting outside of world boundaries caused crash.
+	Increased verticle draw distance.
 
 
 
-So first the 'world' object is created with size WORLD_SIZE.
+Should lay groundwork for water generation.			()
 
-Then 'world.fillAllDefault()' is called which creates the portions of the world.
 
-By default new WorldPortions are generated with the probability of having structures baked in.
 
-'makePortion()' generates all the structures.
-	Stone.
-	Trees.
-	Border.
-
-Need to handle all of these.
-
-Approach. Change to 'generateNewPortion' Which is essentially 'makeNewPortion'
-	-Handles borders
-	-Generate structures.
-	-Then go over each world portion and run,
-	-Fill rest with grass.
+Bow no! (Update for bows.)
 
 
 
 Notes:
-	If 'canGenerateGlobalStructures' is false for the portion,
-	we are not allowed to generate any global structures on the portion.
-
 	generateGlobalStructures handles global structures in the world.
 
 	WORLD_SIZE = 25.
@@ -115,28 +102,7 @@ Notes:
 		But push in by 1 on each side because the border. So:
 		(1,1) to (WORLD_SIZE*10+8, WORLD_SIZE*10+8)
 
-
 	Global structures are generated in 'make_world()' in 'worldgen.js'
-
-
-
-
-
-
-Todo:
-	- Generate border.					(X)
-	- Generate starting portion.		(X)
-	- generateGlobalStructures
-
-
-Stone cluster generation.
-	- Start with top layer.
-	- Then add a border of weird blocks (for now) under top layer.
-
-
-How stone generation works.
-	- 
-
 
 
 
@@ -144,12 +110,6 @@ Can make a mechanics video about world generation?
 	- You can showcase it by turning off the grass.
 	- I.e., prevent the grass from generating.
 	- Can even get footage today.
-
-
-
-
-
-
 
 Make the game require signup to play.
 	Explain this is to track user engagement.
@@ -162,15 +122,9 @@ Idea for toolbar
 	When you select the item, you get [1,2,3,4] to manually select
 	the toolbar position.
 
-
-Buckets should be craftable...
+Buckets should be craftable.
 
 Maybe if it rains the level of water networks increase?
-
-So if you place a block over water, you should remove it from the network.
-This will automatically increase the level which is nice...
-but this make also lead to disconnected networks.
-
 
 Bosses can be like BOTW, there are set locations when the map is generated.
 If you enter their radius it begins the fight.
@@ -178,12 +132,11 @@ They could start off sleeping?
 
 ADD MICHAEL SCOTT!
 
-Also villagers. 
+Also villagers/towns/villages. 
 
 A shopkeep that spawns somewhere randomly would be great!
 
 Mob ideas.
-Need to add chests.
 
 Make the sign in thing more friendly?
 Also maybe make it so that mobile users can play? (Would be hard as fuck tbh.)
@@ -193,19 +146,7 @@ Could just like partition screen so game is played in the middle
 (Should add that thing where when you place blocks it places one above... like maybe draw an arrow.)
 
 
-Update Alpha 0.3.0 | Smores
-	1. Stone generation greatly modified.
-	2. Tree generation changed/fixed slightly.
-	3. World size increased.
-		3.a) Fix bug where place/break outside boundary.
-		3.b) Expanded from 26 X 26 portions to 45 X 45 portions.
-	3. New ores.
-		Copper, Latkin (tin) , Illsaw (silver), Platinum, Lunite, Daytum
 
-		
-		3.a) Lunite
-		3.b) Daytum
-		3.c) 
 
 
 
