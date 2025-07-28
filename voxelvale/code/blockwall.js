@@ -495,7 +495,7 @@ class GrassBlock extends BlockWallNew{
 */
 
 function initialize_simpleBlocks(){
-	simpleBlocks = [GrassBlock, WeirdBlock, BrickBlock, StoneFloorBlock, DungeonWall, BorderWall,CopperBrick, Chest, Water];
+	simpleBlocks = [GrassBlock, WeirdBlock, BrickBlock, StoneFloorBlock, DungeonWall, BorderWall,CopperBrick, Chest, Water, CrackedStone];
 }
 
 class WeirdBlock extends BlockWallNew{
@@ -507,9 +507,11 @@ class WeirdBlock extends BlockWallNew{
 		super(X,Y,Z,ground);
 	}
 
+
+
 	onClick(){
 		if(DEV_TOOLS)
-			console.log(Math.floor(this.posX/PORTION_SIZE),Math.floor(this.posY/PORTION_SIZE));
+			toggleInventory(IN_SHOP,this);
 	}
 }
 
@@ -525,6 +527,8 @@ class BrickBlock extends BlockWallNew{
 	}
 }
 
+
+//Compacted dirt.
 class StoneFloorBlock extends FlipBlock{
 //class StoneFloorBlock extends BlockWallNew{
 	static name = 'Stone Floor';
@@ -558,6 +562,7 @@ class BorderWall extends BlockWallNew{
 	//onClick(){
 	//	console.log('xPos:', this.posX, 'yPos:', this.posY);
 	//}
+
 }
 
 class CopperBrick extends BlockWallNew{
@@ -565,6 +570,18 @@ class CopperBrick extends BlockWallNew{
 	static objectNumber=17;
 	static desc = 'A copper brick block.'
 	static texture = 52;
+	static tob='STONE';
+	static correctTextureOrientation = true;
+	constructor(X=null,Y=null,Z=null,ground=false){
+		super(X,Y,Z,ground);
+	}
+}
+
+class CrackedStone extends BlockWallNew{
+	static name = 'Cracked Stone';
+	static objectNumber=25;
+	static desc = 'A cracked stone block.'
+	static texture = 34;
 	static tob='STONE';
 	static correctTextureOrientation = true;
 	constructor(X=null,Y=null,Z=null,ground=false){

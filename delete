@@ -35,46 +35,72 @@ For the WaterNetworks 'startUpdate' function this is how I think it should work.
 
 
 
+Work on shops.
+	Need to add randomly generated shop 					(X)
+	Update the appearance.									(X)
+		Build test.											(X)
+		Blocks.												(X)
+		Size.												(X)
+		Door.												(NA)
+		Inside.												(X)
+
+	Add block as 'dummy' shop keep.							(X)
+	Start with block opening chest inv.						(X)
+	Then start adding new UI.								(X)
+		Try to make this very general for future use.		(X)
+		i.e., for forges/brewing stands.					(X)
+
+	Need to figure out how payment works.					()
+	Buying/selling/coins.									()
+
+	Add 'coins' to inventory.								()
+	Method for obtaining coins? 							()
+		Killing enemies.									()
+		In drop box or just receive when killed.			()
+		If coins have no weight then just receive I think.	()
+		(Like xp)
 
 
-Update Alpha 0.3.0 | S'm'ores (Some more ores)
-	Copper bar recipe updated!
+	NEED TO FIX THE ARROW BUTTONS FOR POTENTIALLY ALL INVENTORY OBJECTS.
+
+	MAKE SURE SILVER AND GOLD ARE SAVED!
+
+	Should objects reset?
+	Maybe include a timer if they do?
+	Maybe not all objects reset? Like some are persistent?
+	(Also how does this affect save/load?)
+
+	Basically make UI same as chest, but moving and buying
+	displaces coins. This is a good starting point I think!
+
+	Make sure that the entire inventory is just one thing
+	no tabs (on the shops side, not on the players!)
 
 
-Update Alpha 0.3.0 | Smores
-	1. Stone generation greatly modified.
-	2. Tree generation changed/fixed slightly.
-		2.a) No longer spawn beside other blocks.
-	3. World size increased.
-		3.a) Fix bug where place/break outside boundary.
-		3.b) Expanded from 26 X 26 portions to 45 X 45 portions.
-	4. New ores, bars, and tools
-		Copper, Latkin (tin) , Illsaw (silver), Platinum, Lunite, Daytum
-	5. Enemy drops updated.
+	Not relevant to shops, but just do a little work on the itch io thing.
+	Ask chatgpt about the thing like how I can add the game without the account.
 
-Bugfixes:
-	Bar recipe appearance updated.
-	Weird glitchy thing with the ground level/water (draw distance).
-	(Slightly increased vertical draw distance.)
+make potion system like zelda.
+
+Update Alpha 0.4.0 | Shopkeeps
+	1. Add shop
+	2. Fix the notification thing.
+		2.a) Maybe make them disappear faster.
+		2.b) Need to test, do two seperated notifications ever merge?
+		2.c) If not, should this even happen?
+		2.d) Or should you just make them die really quickly.
+	3. Fix the thing where upone makes the ceiling opaque if you're not on a block.
+
+	4. Fixed the lighting thing on the leftside of zombies/players.	(X)
 
 
 
-Features:
-	Added new ores with corresponding tool sets.
-	These include Latkin, Illsaw, Platinum, Lunite, and Daytum.
+Can add a little iron brim around the bucket.
 
-Changes:
-	World size increased from 250 x 250 to 450 x 450.
-	Increased the probability of a zombie dropping a recipe.
-	Stone clusters are now on average larger and span 2 layers.
-	Ore veins are now on average larger and are more likely to occur.
-	Updated appearance of bar recipes.
-	Trees can no longer be generated adjacent to other blocks.
 
-Fixes:
-	Fixed bug where interacting outside of world boundaries caused crash.
-	Increased verticle draw distance.
 
+Would be nice if you could like... Make some documentation for making enemies while you're making the
+shop keep.
 
 
 Should lay groundwork for water generation.			()
@@ -104,12 +130,11 @@ Notes:
 
 	Global structures are generated in 'make_world()' in 'worldgen.js'
 
-
-
 Can make a mechanics video about world generation?
 	- You can showcase it by turning off the grass.
 	- I.e., prevent the grass from generating.
 	- Can even get footage today.
+	- Should do this when all structures are in place.
 
 Make the game require signup to play.
 	Explain this is to track user engagement.
@@ -145,23 +170,12 @@ Could just like partition screen so game is played in the middle
 
 (Should add that thing where when you place blocks it places one above... like maybe draw an arrow.)
 
-
-
-
-
-
-
 Need to fix notification queue when mining ores! (Not super important/ low priority!)
-
 
 Maybe make dungeons just like a fixed number of them. Like how the shop will be generated.
 
-Shop should be contained within the inner two layers.
-
 Make difficulty scale as you get further away from center.
 	Should also mark center.
-
-
 
 Update Alpha | Leaf me alone.
 	Add leaves and shrubs or whatever for potions
@@ -186,7 +200,6 @@ Update Alpha 0.3.0 | Control this
 		5.a) With little arrow icons.								()
 	6. Fix the inventory ordering bug.								()
 		6.a) E.g., on pickup/drop.									()
-
 
 Update Alpha 0.3.0 | Water you doing?
 	1. Water

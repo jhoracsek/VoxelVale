@@ -1,0 +1,68 @@
+
+
+
+
+
+For enemies, I guess use the Enemy class.
+We should also have something for more dynamic enemies that have limbs and whatnot.
+
+
+
+** Note on drawing humanoid entities.
+
+	Some new modelling/building functions can be found in 'townfolkbuildingfunctions.js'.
+
+	There was kind of an issue with the left side of the head, so I redid it.
+	Find the diagram in my notebook.
+
+	Eventually, you should completely redo this, there seems to be more issues.
+	(Of course you can just use the left x-face as a template and multiply the vertices
+	to the correct position before pushing. )
+
+	Most of the other vertices look okay, but for the weird top of head lighting,
+	you can always add more triangles to the top of the head.
+
+
+
+
+
+**Traversing for entities with multiple appendages. 
+
+	In order to draw an entity that has multiple limbs, you need to ensure
+	the class has a few attributes.
+		1) 	It needs an array to hold mv matrices: modelViewStack = [];
+		2)	It needs some function to create/update nodes for each appendage.
+			say 'update_node(id, x,y,z)'.
+			This should be called whenever there is an update to a particular
+			appendage (e.g., movement or an animation.)
+		3) 	It needs an array to hold information about / nodes for 
+			each portion of the model: model = [];
+		4)	It needs a function to traverse and draw all the appendages
+			of the model: traverse(id). (This will be the function
+			called when you wish to draw the entity.)
+
+
+	** Nodes
+
+		Within 'player.js' there is a function:
+
+		function create_node(transform, render, sibling, child){
+			var node = {
+				transform: transform,
+				render: render,
+				sibling: sibling,
+				child: child,
+			};
+			return node;
+		}
+
+
+
+
+	Question: What does traverse do? What does 'id' represent?
+
+	Answer: traverse is a recursive function that.
+
+
+
+

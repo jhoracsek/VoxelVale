@@ -15,6 +15,7 @@ var inventorySlots=[];
 const IN_NONE = 0;
 const IN_WORKBENCH = 1;
 const IN_CHEST = 2;
+const IN_SHOP = 3;
 
 //currentCraftingStation
 let currentStation = IN_NONE;
@@ -142,9 +143,10 @@ function draw_triangle(x,y,d,c=UI_COLOURS[WHITE]){
 }
 
 function toggleInventory(curMenu = IN_NONE, curInvBlock = null){
-
+	
 	/*
-		Should reset other stuff here too!
+		Just in case, reset all the scroll list
+		to the top.
 	*/
 	//Crafting menu
 	itemToCraft = -1;
@@ -157,16 +159,43 @@ function toggleInventory(curMenu = IN_NONE, curInvBlock = null){
 	//Chest Menu
 	leftScrollOffset = 0;
 	rightScrollOffset =0 ;
+
+
+
+
+	/*
+		To run on open.
+	*/
 	if(curMenu == IN_WORKBENCH){
 		currentStation = curMenu;	
 		currentMenu='CRAFTING';
-	}else if(curMenu == IN_CHEST){
+	}
+
+	else if(curMenu == IN_CHEST){
 		currentInventoryBlock = curInvBlock;
 		currentStation = IN_CHEST;
 		currentMenu = 'CHEST';
 		refreshList = true;
+	}
 
-	}else{
+	else if(curMenu == IN_SHOP){
+		currentInventoryBlock = curInvBlock;
+		currentStation = IN_SHOP;
+		currentMenu = 'SHOP';
+		refreshList = true;	
+	}
+
+
+	/*
+		When inventory is toggled through
+		pressing '~'.
+
+		Resets currentMenu on when
+		you stop acting on a block.
+
+		Run on close.
+	*/
+	else{
 		currentStation = IN_NONE;
 		if(currentMenu == 'CHEST')
 			currentInventoryBlock.isOpen = false;
@@ -175,6 +204,8 @@ function toggleInventory(curMenu = IN_NONE, curInvBlock = null){
 	
 	if(!inventory)
 		tab_lists();
+
+
 	if(fQueue.isEmpty()==false){
 		inFunction=false;
 		fQueue.dequeue();
@@ -185,6 +216,7 @@ function toggleInventory(curMenu = IN_NONE, curInvBlock = null){
 	}
 
 	inventory=!inventory;
+
 	if(inventory){
 		//currentMenu = 'INVENTORY';
 		xCoor=8;
@@ -522,10 +554,24 @@ function enemy_drop(worldObj,object, PX, PY){
 var selectedItemIndex = -1;
 function draw_scroll_list(){
 
+
+	//Draw carry weight.
 	draw_c_text_med(2.25,2.15,('Carry Weight:'));//draw_c_text_med_right
 	draw_c_text_med_right(3.85,2.15,player.weight);
 	draw_c_text_med(3.85,2.15,'/100');
 
+	let goldStart = 7.22;
+
+	//Draw gold and silver (silver and goooooold)
+	draw_c_text_med(goldStart,2.15,('Gold:'));
+	draw_c_text_med_right(goldStart+0.8,2.15,player.gold);
+	draw_c_text_med_right(goldStart+0.8,2.15,player.gold);
+
+	let silverStart = 8.26;
+	draw_c_text_med(silverStart,2.15,('Silver:'));
+
+	draw_c_text_med_right(silverStart+1,2.15,player.silver);
+	draw_c_text_med_right(silverStart+1,2.15,player.silver);
 
 
 	click_in_bounds(2.1,  7.375,  3.425 ,7,function(){selectedTab = 'BLOCK';active=-1;scrollOffset=0; activeTab =0;});
@@ -876,6 +922,11 @@ function draw_inventory(){
 		case 'CHEST':
 			heldIndex = craftingButtonID;
 			draw_chest_menu();
+			break;
+
+		case 'SHOP':
+			//heldIndex = craftingButtonID;
+			draw_shop_menu()
 			break;
 
 		case 'CRAFTING':

@@ -381,6 +381,40 @@ class Player extends Humanoid{
 		
 		this.maxWeight = 100;
 
+		this.gold = 0;
+		this.silver = 0;
+
+	}
+
+	increaseGold(amount=1){
+		this.gold = Math.min(999,this.gold+amount);
+	}
+
+	decreaseGold(amount=1){
+		this.gold = Math.max(0,this.gold-amount);
+	}
+
+	increaseSilver(amount = 1){
+		//Check to see if silver is > 100.
+		//If so increase the gold.
+		this.silver += amount;
+		while(this.silver >= 100){
+			this.decreaseSilver(100);
+			this.increaseGold();
+		}
+	}
+
+	decreaseSilver(amount = 1){
+		//Same idea as above, but in
+		//reverse.
+		this.silver -= amount;
+		while(this.silver < 0){
+			this.decreaseGold(1);
+			this.increaseSilver(100)
+		}
+
+
+
 	}
 
 	get weight(){return this.inventory.itemCount;}
@@ -1487,7 +1521,7 @@ function head2(c = vec4(1.0,0.7,0.50,1)){
 	draw_z_face(faceVerts,soften,c);
 	draw_z_face(backVerts,soften,c);
 
-	draw_x_face(leftVerts,soften,c);
+	draw_x_face_fixed(leftVerts,soften,c);
 	draw_x_face(rightVerts,soften,c);
 
 	draw_y_face(topVerts,soften,c);
@@ -1637,6 +1671,70 @@ function build_eye(c=vec4(0,0,0,1)){
 	cube([-1,-1,-1,-1,-1,-1],c);
 }
 
+function build_head_acc(c=vec4(0,0,0,1)){
+
+	/*
+		Fix build_prism function for normals.
+
+		Make sure the functions takes the max of both coordinates.
+
+		Use the cube function then transform it.
+	*/
+
+	// Little tiny nose :)
+	let t1 = vec3(-.1, -.25, -0.675);
+	let t2 = vec3(.1, .1, -0.5);
+	prism(t1,t2,c);
+
+	// Left eye brow.
+	t1 = vec3(-0.4, 0.25, -0.6);
+	t2 = vec3(-0.1, 0.35, -0.5);
+	prism(t1,t2,c);
+
+	// Right eye brow.
+	t1 = vec3(0.1, 0.25, -0.6);
+	t2 = vec3(0.4, 0.35, -0.5);
+	prism(t1,t2,c);
+
+
+	// Beard main portion
+	t1 = vec3(-0.51, -0.51, -0.51);
+	t2 = vec3(0.51,-0.15,0.1);
+	prism(t1,t2,vec4(0.5,0.5,0.5,1));
+
+	// Beard top left.
+	t1 = vec3(-0.3, 0, -0.51);
+	t2 = vec3(-0.51,-0.15,0.1);
+	prism(t1,t2,vec4(0.5,0.5,0.5,1));
+
+	// Beard top right.
+	t1 = vec3(0.3, 0, -0.51);
+	t2 = vec3(0.51,-0.15,0.1);
+	prism(t1,t2,vec4(0.5,0.5,0.5,1));
+
+	
+	/*
+		Hat.
+	*/
+
+
+	// Brim
+	t1 = vec3(-0.6, 0.5, -0.6);
+	t2 = vec3(0.6,0.35,0.6);
+	prism(t1,t2,vec4(0.5,0.5,0.5,1));
+
+	// Top
+	t1 = vec3(-0.51, 0.7, -0.51);
+	t2 = vec3(0.51,0.5,0.51);
+	prism(t1,t2,vec4(0.5,0.5,0.5,1));
+
+
+	// Ribbon.
+	//t1 = vec3(-0.6, 0.7, -0.6);
+	//t2 = vec3(0.6,0.5,0.6);
+	//buildPrism(t1,t2,vec4(0.5,0.5,0.5,1));
+
+}
 
 function cube(textureArray, c=vec4(1.0,1.0,1.0,1.0)) {
     quad( 1, 0, 3, 2, c );

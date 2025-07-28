@@ -741,37 +741,156 @@ function generate_global_stone_cluster(X,Y){
 }
 
 
+
+/*
+	Generates on a single portion.
+
+	From 	
+			(0,0) bottom left, 
+	to
+			(9,9) top right.
+
+				
+		Layer -2
+		All the ground blocks.
+
+		Layer -3
+
+		left X Y be the top left
+
+		
+	
+
+*/
 function gen_shop(X,Y){
-	var retList=[]
-	retList.push(new WeirdBlock(X+4,Y,-6));
-	retList.push(new WeirdBlock(X+5,Y,-6));
-	retList.push(new WeirdBlock(X+3,Y,-6));
-	for(var j=-3;j>-6;j--){
-		retList.push(new WeirdBlock(X,Y+1,j));
-		retList.push(new WeirdBlock(X+1,Y,j));
-		retList.push(new WeirdBlock(X+2,Y,j));
-		retList.push(new WeirdBlock(X+3,Y,j));
 
-		retList.push(new WeirdBlock(X+5,Y,j));
-		retList.push(new WeirdBlock(X+6,Y,j));
-		retList.push(new WeirdBlock(X+7,Y,j));
-		for(var i=1;i<PORTION_SIZE-5;i++){
-			retList.push(new WeirdBlock(X+8,Y+i,j));
-			retList.push(new WeirdBlock(X,Y+i,j));
+	let borderClass = StoneBlock;
+	let edgeClass = WoodLog;
+	let mainClass = WoodBlock;
+	let floorClass = StoneFloorBlock;
+
+
+	
+	let toadd = []
+
+	/*
+		Bottom layer (-3)
+	/*
+
+	/*
+		Stone border
+	*/
+	// Bottom left corner
+	toadd.push({block:borderClass, posX:1, posY:2, posZ:-3});
+	toadd.push({block:borderClass, posX:1, posY:1, posZ:-3});
+	toadd.push({block:borderClass, posX:2, posY:1, posZ:-3});
+	toadd.push({block:borderClass, posX:2, posY:0, posZ:-3});
+
+	//Left border
+	for(let j = 2; j < 9; j++)
+		toadd.push({block:borderClass, posX:0, posY:j, posZ:-3});
+	//Back border
+	for(let i = 1; i < 8; i++)
+		toadd.push({block:borderClass, posX:i, posY:9, posZ:-3});
+	//Right border
+	for(let j = 2; j < 9; j++)
+		toadd.push({block:borderClass, posX:8, posY:j, posZ:-3});
+
+	// Bottom right corner
+	toadd.push({block:borderClass, posX:7, posY:2, posZ:-3});
+	toadd.push({block:borderClass, posX:7, posY:1, posZ:-3});
+	toadd.push({block:borderClass, posX:6, posY:1, posZ:-3});
+	toadd.push({block:borderClass, posX:6, posY:0, posZ:-3});
+
+
+
+
+	/*
+		Blocks that will span from -3 to -5
+	*/
+	for(let k = -3; k > -6; k--){
+		//Bottom left
+		toadd.push({block:mainClass, posX:3, posY:2, posZ:k});
+		toadd.push({block:mainClass, posX:2, posY:3, posZ:k});
+		//Bottom right
+		toadd.push({block:mainClass, posX:5, posY:2, posZ:k});
+		toadd.push({block:mainClass, posX:6, posY:3, posZ:k});
+
+		// Left and right wall
+		for(let j = 4; j < 8; j++){
+			toadd.push({block:mainClass, posX:1, posY:j, posZ:k});
+			toadd.push({block:mainClass, posX:7, posY:j, posZ:k});
 		}
-		for(var i=1;i<PORTION_SIZE-2;i++){
-			retList.push(new WeirdBlock(X+i,Y+PORTION_SIZE-5,j));
+		// Back wall
+		for(let i = 2; i < 7; i++){
+			toadd.push({block:mainClass, posX:i, posY:8, posZ:k});
 		}
-	}
-	for(var i=1;i<PORTION_SIZE-2;i++){
-		for(var j=1;j<=PORTION_SIZE-6;j++)
-			retList.push(new WeirdBlock(X+i,Y+j,-6));
+
+		// Wood logs
+		toadd.push({block:edgeClass, posX:1, posY:3, posZ:k});
+		toadd.push({block:edgeClass, posX:2, posY:2, posZ:k});
+		toadd.push({block:edgeClass, posX:6, posY:2, posZ:k});
+		toadd.push({block:edgeClass, posX:7, posY:3, posZ:k});
+
+		toadd.push({block:edgeClass, posX:1, posY:8, posZ:k});
+		toadd.push({block:edgeClass, posX:7, posY:8, posZ:k});
 	}
 
-	for(var i=1;i<PORTION_SIZE-2;i++){
-		for(var j=0;j<=PORTION_SIZE-6;j++)
-			retList.push(new WoodBlock(X+i,Y+j,-2));
+	//Above entry block.
+	toadd.push({block:mainClass, posX:4, posY:2, posZ:-5});
+
+	/*
+		Ceiling.
+	*/
+	for(let i = 2; i < 7; i++){
+		for(let j = 4; j < 8; j++){
+			toadd.push({block:mainClass, posX:i, posY:j, posZ:-6});		
+		}
 	}
+
+	for(let i = 3; i < 6; i++){
+		toadd.push({block:mainClass, posX:i, posY:3, posZ:-6});
+	}
+
+	/*
+		Shop keepers table
+	*/
+	for(let i = 3; i < 6; i++){
+		toadd.push({block:mainClass, posX:i, posY:6, posZ:-3});
+	}
+	toadd.push({block:mainClass, posX:3, posY:7, posZ:-3});
+	toadd.push({block:mainClass, posX:5, posY:7, posZ:-3});
+
+	toadd.push({block:mainClass, posX:3, posY:7, posZ:-4});
+	toadd.push({block:mainClass, posX:5, posY:7, posZ:-4});
+
+	/*
+		Floor
+	*/
+	for(let i = 2; i < 7; i++){
+		for(let j = 4; j < 8; j++){
+			toadd.push({block:floorClass, posX:i, posY:j, posZ:-2});		
+		}
+	}
+	for(let i = 3; i < 6; i++){
+		for(let j = 0; j < 4; j++){
+			toadd.push({block:floorClass, posX:i, posY:j, posZ:-2});
+		}
+	}
+
+
+	var retList=[];
+	for(let i = 0; i < toadd.length; i++){
+		let intel = toadd[i];
+
+		let blockClass = intel.block;
+		let pX = intel.posX + X;
+		let pY = intel.posY + Y;
+		let pZ = intel.posZ;
+
+		retList.push(new blockClass(pX,pY,pZ));
+	}
+	return retList;
 
 
 	return retList;

@@ -220,7 +220,10 @@ function add_crafting_interface_elements(){
 	craftingElements.push(rightBoxUpper);
 	craftingElements.push(rightBoxLower);
 
-	ChestEntry.sendData()
+	ChestEntry.sendData();
+	//This is where we should add InventoryEntry Data.
+
+	set_available_shop_items();
 }
 
 

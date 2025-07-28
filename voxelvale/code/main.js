@@ -109,6 +109,7 @@ var pQueue;
 var inFunction=false;
 var projectileArray;
 var enemyArray;
+var townFolkArray;
 var waterNetworkArray;
 
 //AKA Universal Acceleration Cutoff Threshold;
@@ -499,6 +500,7 @@ window.onload = function init(){
 	pQueue = new Queue();
 	projectileArray = new ProperArray();
 	enemyArray = new ProperArray();
+	townFolkArray = new ProperArray();
 	waterNetworkArray = [];
 
 	var axe = new WoodAxe();
@@ -546,9 +548,10 @@ window.onload = function init(){
 		Add objects to inventory for testing here.
 	*/
 	if(DEV_TOOLS){
-		/*
+		
 		chest = new Chest()
 		player.addToInventory(chest);
+		/*
 		player.addToInventory(new WoodBlock());
 		player.addToInventory(new WoodBlock());
 		player.addToInventory(new WoodBlock());
@@ -635,6 +638,10 @@ window.onload = function init(){
 		player.addToInventory(new CopperAxeRecipe());
 		player.addToInventory(new CopperSwordRecipe());
 
+		let testShop = new WeirdBlock();
+
+		player.addToInventory(testShop);
+
 		//player.addToInventory(new DaytumSword());
 		//let woodenBucket = new WoodenBucket();
 		//player.addToInventory(woodenBucket);
@@ -654,7 +661,7 @@ window.onload = function init(){
 		toolBarList.push(sword);
 		toolBarList.push(workbench);
 		//toolBarList.push(new WoodBlock());
-		toolBarList.push(null);
+		toolBarList.push(testShop);
 		toolBarList.push(null);
 
 	}else{
@@ -1019,6 +1026,9 @@ function send_data_to_GPU(){
 	undeadHitboxSize = vertices.length - undeadHitboxStart;
 
 
+	TownFolk.sendData();
+
+
 	ArrowBlockHitBox.sendData();
 
 
@@ -1194,7 +1204,6 @@ function render_data(){
 		Update body background position
 	*/
 
-
 	frameCount = (frameCount+1)%60;
 	if(scrollCooldown > 0){
 		scrollCooldown--;
@@ -1359,6 +1368,13 @@ function render_data(){
 		for(var i=0;i<tbd.length;i++)
 			enemyArray.removeElement(tbd[i]);
 	}
+
+	if(townFolkArray.isEmpty()==false){
+		for(var i=0;i<townFolkArray.getLength();i++){
+			townFolkArray.accessElement(i).draw();
+		}
+	}
+
 	let fluids = [];
 	for(var i = 0; i < blocks.length; i++){
 		

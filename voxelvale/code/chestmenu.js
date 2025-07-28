@@ -68,20 +68,8 @@ let chestListInventory = [];
 let chestListChest = [];
 function draw_chest_inventory_list(){
 
-	
 
-
-
-
-	click_in_bounds(2.1,  7.375,  3.425 ,7,function(){selectedTab = 'BLOCK';active=-1;leftScrollOffset=0; rightScrollOffset=0; activeTab =0;refreshList=true;});
-	click_in_bounds(3.6,  7.375,  4.9   ,7,function(){selectedTab = 'TOOL';active=-1;leftScrollOffset=0; rightScrollOffset=0; activeTab = 1;refreshList=true;});
-	click_in_bounds(5.075,7.375,  6.375   ,7,function(){selectedTab = 'ITEM';active=-1;leftScrollOffset=0; rightScrollOffset=0; activeTab = 2;refreshList=true;});
-	click_in_bounds(6.55,7.375,  7.85   ,7,function(){selectedTab = 'REC';active=-1;leftScrollOffset=0; rightScrollOffset=0; activeTab = 3;refreshList=true;});
-
-	//Number of objects carried.
-	draw_c_text_med(2.25,2.15,('Carry Weight:'));//draw_c_text_med_right
-	draw_c_text_med_right(3.85,2.15,player.weight);
-	draw_c_text_med(3.85,2.15,'/100');
+	tabListClick();
 
 
 	draw_c_text_med(2.25+6,2.15,('Chest Quantity:'));//draw_c_text_med_right
@@ -451,7 +439,6 @@ function get_scroll_bar_left_length(){
 	}
 }
 
-var leftScrollOffset = 0;
 
 function draw_scroll_bar_chest_left(){
 	var yOffset = 4.5;//5.56+4.5;
@@ -497,7 +484,6 @@ function get_scroll_bar_right_length(){
 	}
 }
 
-var rightScrollOffset = 0;
 
 function draw_scroll_bar_chest_right(){
 	var yOffset = 4.5;

@@ -1,0 +1,206 @@
+
+
+
+
+In UI.js there are some constant values.
+These values represent which crafting station or inventory you're 
+going to toggle. When adding a new UI element (e.g., a crafting station)
+start by defining a new constant here. Say IN_NEWBLOCK.
+
+If you're UI element is a block, define:
+	onClick(){
+		toggleInventory(IN_NEWBLOCK, this);
+	}
+
+You also need to define a draw function for you menu. You can add this
+in 'draw_inventory()' in 'UI.js'. You should have a consistent
+name for your menu, e.g., 'NEWBLOCK'. 
+
+
+Aside: Some information. --------------------------
+
+What does 'currentMenu' represent?
+
+'currentMenu' represents the active menu. This does not persist after
+the inventory is closed. So for instance if you're using a chest
+and you exit the inventory, currentMenu will be set to 'INVENTORY'.
+
+
+What does 'inventory' represent?
+
+'inventory' is a flag that is true when the user is in any
+inventory (e.g., crafting menu, player inventory, chest). It's set
+through the function 'toggleInventory()' in 'UI.js'.
+
+
+What does 'currentStation' represent?
+
+'currentStation' serves a few purposes. For instance, if your
+block is a crafting station, this can be used to set what recipes
+are available to craft. Additionally, it can be used to change certain
+UI elements. For example, if you are in a chest, instead of the bottom
+bar displaying 'Crafting' it now displays 'Chest'. This value is set
+to the same constant you defined initially. See example below.
+
+
+What is 'fQueue'?
+
+You can ignore this. It's an artifact of an old way of
+opening inventory objects.
+
+--------------------------------------------------
+
+
+To add behaviour on opening your interactive block, add under
+the 'To run on open.' comment (in toggleInventory) as an else if. E.g.,
+else if(curMenu == IN_NEWBLOCK){
+	...
+	currentStation = IN_NEWBLOCK;
+	currentMenu = 'NEWBLOCK';
+	...
+}
+
+To add behaviour when closing your interactive, add under
+'Run on close.' (in toggleInventory). E.g.,
+else{
+	
+	...
+
+	if(currentMenu == 'NEWBLOCK'){
+		//Do closing functions if neccessary.
+	}
+	currentMenu = 'INVENTORY';
+}
+
+
+To add the draw function, add to 'draw_inventory()' in 'UI.js'.
+E.g.,
+case 'NEWBLOCK':
+	draw_newblock_menu();
+	break;
+
+
+
+***Chain of action for inventory blocks (assuming we are not in an inventory already.)
+
+
+	Right click a block which runs:
+
+	(1) block.onClick();
+
+	This will run
+
+	(2) toggleInventory(IN_NEWBLOCK, this);
+
+	toggleInventory sets 'inventory' to true,
+	and sets currentMenu = 'NEWBLOCK' and currentStation = IN_NEWBLOCK.
+
+	In 'render_data()' we have this snippet:
+	if(inventory)
+		draw_inventory();
+	So since toggleInventory sets 'inventory' to true, we now start
+	drawing the inventory from 'draw_inventory()' in 'UI.js'.
+
+	(3) draw_inventory() in 'UI.js' now loops/runs each frame.
+
+	(4) Under case 'NEWBLOCK' all inventory drawing will be handled.
+
+
+
+***Generalizing the chest entry class | InventoryListEntry.
+
+How does it work?
+
+In your new UI class--say 'newblockmenu.js'--you use will use one or two 
+existing arrays: 'contentListLeft' and 'contentListRight' (depending on
+whether you want lists on the left and right side e.g., chests, shop). 
+If you don't need to display the players inventory, or any type of list
+don't worry about this section.
+
+'contentListLeft' and 'contentListRight' will contain 'InventoryListEntry' 
+objects.
+
+Next, define a function: 'build_newblock_lists' which should first clear, then
+populate both 'contentListLeft' and 'contentListRight' with InventoryListEntry objects.
+Typically, the left list will be the players current inventory, so the portion
+of the function that builds the left list should look like:
+
+let blockListInventory = [];
+switch(selectedTab){
+	case 'BLOCK':
+		blockListInventory = player.getBlockList();
+		break;
+	case 'TOOL':
+		blockListInventory = player.getItemList();
+		break;
+	case 'ITEM':
+		blockListInventory = player.getNonActionableItemList();
+		break;
+	case 'REC':
+		blockListInventory = player.getRecipeList();
+		break;
+}
+contentListLeft = [];
+for(let i = 0; i < blockListInventory.length; i++){
+	contentListLeft.push(new InventoryListEntry(blockListInventory[i]));
+}
+
+If you are displaying the players inventory, the above code will 
+populate 'contentListLeft' with the players inventory contents on the currently
+selected tab.
+
+As a side note, if you're displaying the players inventory, you need to
+ensure that the 'tab' key functions correctly. You can update this manually
+in 'controls.js'. The same thing goes for scrolling functionality.
+
+Now in your 'draw_newblock_menu' function, you should have a function: 
+'draw_newblock_lists()' which will go through both 'contentListLeft' and
+'contentListRight' and draw all the entries. For testing (or if you're lazy)
+you can call 'build_newblock_lists' here. Otherwise, you should determine
+when the lists need to be updated and call 'build_newblock_lists' accordingly.
+
+
+
+
+*** 'draw_newblock_lists()' Function
+
+Make sure to first include tabListClick(). This makes sure that all the tabs
+behave correctly when you click them (and also displays your carry weight).
+
+For the scroll offsets, all inventories 'should' use leftScrollOffset and 
+rightScrollOffset. *The player inventory and crafting menu do not but 
+should eventually be updated*.
+
+As a reference, please look at 'draw_shop_lists()'.
+
+
+
+*** Scroll bars | Drawing them, setting their size, etc.
+
+Fairly easy so long as you used 'leftScrollOffset' and 'rightScrollOffset,
+alongside, 'contentListLeft' and 'contentListRight'. It should just appear
+in two places: 'draw_newblock_list()', and in 'controls.js'. Look at 
+'shopmenu.js' for reference.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -218,3 +218,106 @@ function build_grid_mode_wireframe(length=1, c1=vec4(1,0,0,1)){
 	mat = mult(translate(0,offset,length), mat);
 	build_line(thickness, mat, length,c1);
 }
+
+
+
+/*
+	var vertexPoints = [
+		vec3( -0.5, -0.5,  0.5),
+	    vec3( -0.5,  0.5,  0.5),
+	    vec3(  0.5,  0.5,  0.5),
+	    vec3(  0.5, -0.5,  0.5),
+	    vec3( -0.5, -0.5, -0.5),
+	    vec3( -0.5,  0.5, -0.5),
+	    vec3(  0.5,  0.5, -0.5),
+	    vec3(  0.5, -0.5, -0.5)
+	];
+*/
+
+/*
+	New prism function based off old cube.
+
+	Should be fine with normals.
+*/
+function prism(point1, point2, c=vec4(1.0,1.0,1.0,1.0)) {
+    /*
+		Make sure our points go from small to large.
+    */
+    var p1 = vec3(Math.min(point1[0], point2[0]), Math.min(point1[1], point2[1]), Math.min(point1[2], point2[2]));
+    var p2 = vec3(Math.max(point1[0], point2[0]), Math.max(point1[1], point2[1]), Math.max(point1[2], point2[2]));
+
+    /*
+		Now define matrix to transform vertexPoints.
+
+		How this works:
+			Smallest point of vertexPoints: 	(-0.5,-0.5,-0.5)
+			Largest point of vertexPoints: 		( 0.5, 0.5, 0.5)
+
+		Say that p1[0] = x_1 and p2[0] = x_2. We want to transform
+		-0.5 to x_1 and 0.5 to x_2. So we start by translating by
+		0.5 to get [0, 1]. Then scale by (x_2-x_1) to get
+		[0, x_2-x_1], then translate by x_1 to get [x_1, x_2].
+
+		(This is why it's important that p1 <= p2.)
+    */
+    let transformationMatrix = translate(0.5,0.5,0.5);
+    transformationMatrix = mult(scale4(p2[0]-p1[0], p2[1]-p1[1], p2[2]-p1[2], 1), transformationMatrix);
+    transformationMatrix = mult(translate(p1[0],p1[1],p1[2]), transformationMatrix);
+
+
+	// Back.
+    prism_face( 1, 0, 3, 2, c, transformationMatrix);
+    set_humanoid_texture();
+    
+    // Right.
+    prism_face( 2, 3, 7, 6, c, transformationMatrix );
+    set_humanoid_texture();
+
+    // Bottom.
+    prism_face( 3, 0, 4, 7, c, transformationMatrix );
+    set_humanoid_texture();
+
+    // Top.
+    prism_face( 6, 5, 1, 2, c, transformationMatrix );
+    set_humanoid_texture();
+    
+    // Front.
+    prism_face( 4, 5, 6, 7, c, transformationMatrix );
+    set_humanoid_texture();
+
+   	// Left.
+    prism_face( 5, 4, 0, 1, c, transformationMatrix );
+	set_humanoid_texture();
+}
+
+
+function prism_face(a,b,c,d,color=vec4(1.0,1.0,1.0,1.0), matrix) {
+
+
+	let vpA = vec4(vertexPoints[a],1);
+	let vpB = vec4(vertexPoints[b],1);
+	let vpC = vec4(vertexPoints[c],1);
+	let vpD = vec4(vertexPoints[d],1);
+
+	vpA = mult(matrix, vpA);
+	vpB = mult(matrix, vpB);
+	vpC = mult(matrix, vpC);
+	vpD = mult(matrix, vpD);
+
+
+
+    body_push(vec3(vpA), vec3(vpB), vec3(vpC), color);
+    body_push(vec3(vpA), vec3(vpC), vec3(vpD), color);
+
+    //body_push(vertexPoints[a], vertexPoints[b], vertexPoints[c],color);
+    //body_push(vertexPoints[a], vertexPoints[c], vertexPoints[d], color);
+}
+
+
+
+
+
+
+
+
+

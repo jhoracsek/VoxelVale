@@ -569,7 +569,7 @@ class Undead extends Humanoid{
 			var thisModelViewMatrix = mult(modelViewMatrix, instanceMat);
 			var modelViewShadow = mult(sMatrixForEnemy, thisModelViewMatrix);
 			gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(modelViewShadow));
-			gl.drawArrays(gl.TRIANGLES,Undead.eyeStart,Undead.eyeNumber);
+			gl.drawArrays(gl.TRIANGLES,Undead.shoulderStart,Undead.shoulderStart);
 		}else{
 			gl.drawArrays(gl.TRIANGLES,Undead.shoulderStart,Undead.shoulderNumber);
 		}

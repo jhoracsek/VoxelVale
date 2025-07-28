@@ -476,6 +476,13 @@ function draw_interface_chest(){
 	reset_pv();
 }
 
+/*
+	Used by shop.
+*/
+function draw_double_sided_interface(){
+	draw_interface_chest();
+}
+
 function draw_context_line(x1,y1,x2,y2, c='#FFFFFF'){
 	//var yCoor1 = canvas.height - (y1*(canvas.height/9));
     var xCoor1 = x1*(canvas.width/16);

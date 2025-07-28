@@ -143,7 +143,7 @@ function getKeyDown(key){
 		//Stop tab from zipping around the page.
 		key.preventDefault();
 
-		if(inventory && (currentMenu == 'INVENTORY' || currentMenu == 'CHEST')){
+		if(inventory && (currentMenu == 'INVENTORY' || currentMenu == 'CHEST' || currentMenu == 'SHOP')){
 			activeTab = (activeTab+1)%4;
 			switch(activeTab){
 				case 0:
@@ -192,10 +192,14 @@ function getKeyDown(key){
 
 			
 			//Spawn Zombie
+			/*
 			var enemy = new Undead(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),-3.25);
 			enemy.initialize_enemy();
 			enemyArray.push(enemy);
-			
+			*/
+
+			var shopkeep = new ShopKeeper(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5));
+			townFolkArray.push(shopkeep);
 
 			//spawnEnemy();
 
@@ -478,6 +482,9 @@ canvas.addEventListener("mousedown", function(event){
 					selectedBlock.onClick();
 				}
 			}
+			for(let i = 0; i < townFolkArray.getLength(); i++){
+				townFolkArray.accessElement(i).fireClick();
+			}
 			break;
 
 	}
@@ -539,6 +546,29 @@ canvas.addEventListener("wheel",function(event){
 			}
 			if(event.deltaY < 0){
 				right_scroll_list_up();
+			}
+		}
+
+		scrollCooldown = 2;
+	}else if(inventory && currentMenu == 'SHOP'){
+		let overLeft = false;
+		click_in_bounds(2,2,8,7,function(){},function(){overLeft=true});
+		if(scrollCooldown <= 0 && overLeft){
+			if(event.deltaY > 0){
+				move_left_scroll_list_down();
+			}
+			if(event.deltaY < 0){
+				move_left_scroll_list_up();
+			}
+		}
+		let overRight = false;
+		click_in_bounds(8,2,14,7,function(){},function(){overRight=true});
+		if(scrollCooldown <= 0 && overRight){
+			if(event.deltaY > 0){
+				move_right_scroll_list_down();
+			}
+			if(event.deltaY < 0){
+				move_right_scroll_list_up();
 			}
 		}
 

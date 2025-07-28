@@ -28,6 +28,7 @@ DaytumStone			21
 LatkinStone			22
 IllsawStone 		23
 PlatinumStone		24
+CrackedStone		25
 
 
 WoodAxe				64

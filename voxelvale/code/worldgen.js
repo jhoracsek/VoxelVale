@@ -690,7 +690,7 @@ class World{
 
 
 
-			var retArray = gen_shop(locX*PORTION_SIZE,locY*PORTION_SIZE+2);
+			var retArray = gen_shop(locX*PORTION_SIZE,locY*PORTION_SIZE);
 			for(var z=0;z<retArray.length;z++)
 				this.addBlock(retArray[z]);
 
