@@ -178,6 +178,11 @@ function get_specific_block_offset(number){
 
 //Abstract upon which all blocks and items are based. So, methods essential to both of them, essentially most
 //to do with inventory management and crafting should be added here.
+
+/*
+	the zObject is from some conflict with some background I was using...
+	it's fine now and can be changed back!
+*/
 class zObject{
 	constructor(){
 		/* These should all be static*/
@@ -185,7 +190,12 @@ class zObject{
 		this.name='none';
 		this.numReturned=1;
 		this.actionType='SWING';
+		this.sellPrice = 1;
+		
 	}
+
+	get buyPrice(){return Math.round(this.sellPrice*(3/2));}
+
 	isCraftable(){
 		var neededObjects=this.getRecipe();
 		if(neededObjects==null)
@@ -565,6 +575,9 @@ class SpecialBlock{
 		this.numberOfVerts = 36;
 		this.type = 'SPECIAL_BLOCK';
 		this.objectNumber = -1;
+
+		this.sellPrice = 1;
+		this.buyPrice = 1;
 	}
 	update(){return;}
 	returnPos(){
@@ -603,7 +616,8 @@ class NullifierBlock{
 		this.posZ = Z;
 		this.type = 'NULL_BLOCK';
 
-		//console.log('I am created for some reason?')
+		this.sellPrice = 1;
+		this.buyPrice = 1;
 	}
 }
 
@@ -617,6 +631,9 @@ class WoodBlock extends BlockWall{
 		this.desc = 'A wood block.'
 		this.tob='WOOD';
 		this.sound = 'WOOD';
+
+
+		this.sellPrice = 2;
 	}
 	getRecipe(){
 		return [

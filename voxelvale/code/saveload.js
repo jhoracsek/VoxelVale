@@ -227,10 +227,29 @@ function getWorldObj(){
 			toolbarIDs.push(-1);
 	}
 
-	return [xPositions, yPositions, zPositions,objectNumbers, blockInstanceInformationString, invObjectNumbers, [player.posX, player.posY], player.health, toolbarIDs];
+	/*
+		TownFolk stuff.
+
+		Need to save:
+		 	info[11] | numFolk: number of towns folks (integer),
+            info[12] | folkNumberOrder: id of towns folk that correspond to positions (e.g., [0,1,0]),
+            info[13] | folkPositions: positions of townsfolk corresponding to the above order (e.g., [pX_1,pY_1, pX_2, pY_2, pX_3, pY_3])
+	*/
+	let numFolk = townFolkArray.getLength();
+	let folkNumberOrder = [];
+	let folkPositions = [];
+	for(let i = 0; i < numFolk; i++){
+		let folk = townFolkArray.accessElement(i);
+		folkNumberOrder.push(folk.townFolkNumber);
+
+		folkPositions.push(folk.posX);
+		folkPositions.push(folk.posY);
+	}
+
+	return [xPositions, yPositions, zPositions,objectNumbers, blockInstanceInformationString, invObjectNumbers, [player.posX, player.posY], player.health, toolbarIDs, player.gold, player.silver, numFolk, folkNumberOrder, folkPositions];
 }
 
-function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loadedWorldNum, loadedWorld){
+function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loadedWorldNum, loadedWorld, loadedWorldTFI){
 	disableNotifications = true;
 	/*
 		World
@@ -385,6 +404,47 @@ function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loadedWorld
 			player.addToInventory(new RECIPE_OBJNUMS[inventoryContents[i]-128]());
 		}
 	}
+	/*
+		TownFolk.
+
+		Need to load:
+		 	numFolk: number of towns folks (integer),
+            folkNumberOrder: id of towns folk that correspond to positions (e.g., [0,1,0]),
+            folkPositions: positions of townsfolk corresponding to the above order (e.g., [pX_1,pY_1, pX_2, pY_2, pX_3, pY_3])
+	*/
+		//let numFolk = townFolkArray.getLength();
+		//let folkNumberOrder = [];
+		//let folkPositions = [];
+	
+	//Clear townfolkarray
+	townFolkArray = new ProperArray();
+
+	//loadedWorldTFI.numFolk, folkNumberOrder, folkPositions
+	let numFolk = loadedWorldTFI.numFolk;
+	let folkNumberOrder = loadedWorldTFI.folkNumberOrder;
+	let folkPositions = loadedWorldTFI.folkPositions;
+
+	for(let i = 0; i < numFolk; i++){
+		// Load different things based on what type of folk we consider.
+		switch(folkNumberOrder[i]){
+			// Shopkeeper
+			case 0:
+				townFolkArray.push(new ShopKeeper(folkPositions[2*i],folkPositions[2*i+1]));
+				break;
+
+		}
+
+
+	}
+
+
+	
+
+	//var shopkeep = new ShopKeeper(Math.round(X+4),Math.round(Y+7));
+	//townFolkArray.push(shopkeep);
+
+
+
 	//Clear tool bar
 
 	// Reset player coordinates.
@@ -392,11 +452,15 @@ function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loadedWorld
 	player.posX = playerPosition[0];
 	player.posY = playerPosition[1];
 	player.health = loadedWorld.health;
+	player.gold = loadedWorld.gold;
+	player.silver = loadedWorld.silver;
 	activeToolBarItem = 0;
 	player.heldObject = null;
 	//toolBarList = loaded.toolbar;
 	disableNotifications = false;
 	enemyArray = new ProperArray();
+
+
 }
 
 
@@ -405,7 +469,7 @@ function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loadedWorld
 	Need to clean this up.
 */
 const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door,BorderWall,CopperStone,CopperBrick,Chest, Water, LuniteStone,DaytumStone,LatkinStone,IllsawStone,PlatinumStone,CrackedStone];
-const RECIPE_OBJNUMS = [WorkBenchRecipe,WoodBlockRecipe,DoorRecipe,BrickBlockRecipe,CopperBarRecipe, ArrowRecipe, CopperPickRecipe,CopperAxeRecipe,CopperSwordRecipe,CopperBrickRecipe,ChestRecipe,LatkinPickRecipe,IllsawPickRecipe,PlatinumPickRecipe,LunitePickRecipe,DaytumPickRecipe,LatkinAxeRecipe,IllsawAxeRecipe,PlatinumAxeRecipe,LuniteAxeRecipe,DaytumAxeRecipe,LatkinSwordRecipe,IllsawSwordRecipe,PlatinumSwordRecipe,LuniteSwordRecipe,DaytumSwordRecipe,LatkinBarRecipe,IllsawBarRecipe,PlatinumBarRecipe,LuniteBarRecipe,DaytumBarRecipe];
+const RECIPE_OBJNUMS = [WorkBenchRecipe,WoodBlockRecipe,DoorRecipe,BrickBlockRecipe,CopperBarRecipe, ArrowRecipe, CopperPickRecipe,CopperAxeRecipe,CopperSwordRecipe,CopperBrickRecipe,ChestRecipe,LatkinPickRecipe,IllsawPickRecipe,PlatinumPickRecipe,LunitePickRecipe,DaytumPickRecipe,LatkinAxeRecipe,IllsawAxeRecipe,PlatinumAxeRecipe,LuniteAxeRecipe,DaytumAxeRecipe,LatkinSwordRecipe,IllsawSwordRecipe,PlatinumSwordRecipe,LuniteSwordRecipe,DaytumSwordRecipe,LatkinBarRecipe,IllsawBarRecipe,PlatinumBarRecipe,LuniteBarRecipe,DaytumBarRecipe,WoodenBowRecipe];
 
 
 

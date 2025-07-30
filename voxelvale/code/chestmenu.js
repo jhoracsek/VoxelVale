@@ -71,6 +71,8 @@ function draw_chest_inventory_list(){
 
 	tabListClick();
 
+	arrowButtonsDouble(left_scroll_list_up,left_scroll_list_down,right_scroll_list_up,right_scroll_list_down);
+
 
 	draw_c_text_med(2.25+6,2.15,('Chest Quantity:'));//draw_c_text_med_right
 	draw_c_text_med_right(4.05+6,2.15,currentInventoryBlock.numberOfObjects);

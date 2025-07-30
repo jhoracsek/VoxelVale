@@ -64,9 +64,12 @@ class WoodenBow extends Weapon{
 		this.name='Wooden Bow';
 		this.desc='A wooden bow.';
 		this.actionType='SHOOT';
+		this.type='TOOL';
 		this.objectNumber=66;	
 
 		this.cooldown = 10;
+
+		this.sellPrice = 14;
 	}
 	onLClick(){
 		if(projectileCooldown <= 0){
@@ -111,6 +114,8 @@ class Bucket extends Item{
 		this.unitsOfWater = 4;
 
 		this.desc2 = '';
+
+		this.sellPrice = 50;
 	}
 
 
@@ -927,6 +932,7 @@ function build_bow(){
 	var v2=vec3(0.7,1.25,0);
 	var v3=vec3(0.7,1.25,0);
 
+	// Why the fuck is this a quadrilateral? I guess I forgot the definition? 
 	bowVerts+=buildArbQuadrilateral(v1,v2,v3,v4,colourAxe);
 	v1=vec3(0.15,2.35,-0.05);
 	v4=vec3(0.15,2.45,-0.05);

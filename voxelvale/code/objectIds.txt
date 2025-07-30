@@ -100,6 +100,7 @@ IllsawBarRecipe		155
 PlatinumBarRecipe	156
 LuniteBarRecipe		157
 DaytumBarRecipe		158
+WoodenBowRecipe 	159
 
 
 

@@ -861,8 +861,8 @@ function gen_shop(X,Y){
 	toadd.push({block:mainClass, posX:3, posY:7, posZ:-3});
 	toadd.push({block:mainClass, posX:5, posY:7, posZ:-3});
 
-	toadd.push({block:mainClass, posX:3, posY:7, posZ:-4});
-	toadd.push({block:mainClass, posX:5, posY:7, posZ:-4});
+	//toadd.push({block:mainClass, posX:3, posY:7, posZ:-4});
+	//toadd.push({block:mainClass, posX:5, posY:7, posZ:-4});
 
 	/*
 		Floor
@@ -890,7 +890,10 @@ function gen_shop(X,Y){
 
 		retList.push(new blockClass(pX,pY,pZ));
 	}
-	return retList;
+
+	var shopkeep = new ShopKeeper(Math.round(X+4),Math.round(Y+7));
+	townFolkArray.push(shopkeep);
+
 
 
 	return retList;

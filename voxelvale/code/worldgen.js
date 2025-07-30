@@ -685,6 +685,8 @@ class World{
 			var locX = Math.floor(x/PORTION_SIZE);
 			var locY = Math.floor(y/PORTION_SIZE);
 
+			//locX = 22; locY = 22;
+
 			console.log('Portion shop generated at:', locX, locY)
 			this.portions[locX][locY].canGenerateGlobalStructures = false;
 

@@ -192,7 +192,7 @@ class Door extends BlockWall{
 		this.tob='WOOD';
 		this.rotateOpen = 0;
 		this.isInteractable = true;
-
+		this.sellPrice = 16;
 		// Based on the position relative to player.
 		this.relativeAngle = 0;
 
@@ -644,6 +644,8 @@ class WorkBench extends InteractiveBlock{
 
 		this.minDisplayWidth = 1.4;
 		this.displayWidth = this.minDisplayWidth;
+
+		this.sellPrice = 20;
 	}
 	draw(){
 		set_mv(this.instanceMat);

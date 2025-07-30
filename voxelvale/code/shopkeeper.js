@@ -28,13 +28,26 @@
 
 class ShopKeeper extends TownFolk{
 
+	static townFolkNumber = 0;
 
 	//Not making x/y position static because maybe in future updates it will move around.
 	constructor(pX,pY){
 		super(pX,pY);
 	}
 
+	onClick(){
+		toggleInventory(IN_SHOP,this);
+	}
+
 	draw(){
+		
+		let dX=player.posX-this.posX-0.5;
+		let dY=player.posY-this.posY-0.5;
+
+		if(dX*dX + dY*dY > 220){
+			return;
+		}
+
 		this.update();
 		var instanceMat = translate(this.posX,this.posY,this.posZ);
 		var transformMat = mult(modelViewMatrix, instanceMat);
@@ -44,8 +57,7 @@ class ShopKeeper extends TownFolk{
 
 		this.traverse(this.bodyId);
 		
-		let dX=player.posX-this.posX-0.5;
-		let dY=player.posY-this.posY-0.5;
+
 		 
 		if(dX == 0)
 			dX = 0.00001;

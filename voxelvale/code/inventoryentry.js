@@ -31,12 +31,18 @@ class InventoryListEntry{
 		//	this.quantity = currentInventoryBlock.getQuantity(this.obj);
 		//}
 
-		//Move one, move all.
-		//var dropObjButton = new InterfaceButton(12,2.1, 13.25,2.4,DARK_GREY,on_click_drop,"Drop",'14',draw_drop_condition);
-		//interfaceBackgrounds.push(dropObjButton);
+		this.leftButtons = [];
+		this.leftButtonFunctions = [];
+		this.leftButtonsDrawConditions = [];
 
-		this.buttons = [new InterfaceCanvasButton(12,2.1, 12.75,2.3,null,"Move one",'10',function(){return true;}, '#555','#333'), 
-						new InterfaceCanvasButton(12,2.1, 12.75,2.3,null,"Move all",'10',function(){return true;}, '#555','#333')]
+		this.rightButtons = [];
+		this.rightButtonFunctions = [];
+		this.rightButtonsDrawConditions = [];
+
+		this.textToDraw = [];
+
+		this.drawQuantity = true;
+
 	}
 
 	//Should update this. Using chest entries for now is fine.
@@ -53,9 +59,23 @@ class InventoryListEntry{
 		chest_entry_hover();
 	}
 
-	/*
-		Need to implement click and hover.
-	*/
+	addLeftButton(text, func, cond){
+		this.leftButtons.push(new InterfaceCanvasButton(12,2.1, 12.75,2.3,null,text,'10',function(){return true;}, '#555','#333'));
+		this.leftButtonFunctions.push(func);
+		this.leftButtonsDrawConditions.push(cond);
+	}
+
+	addRightButton(text, func, cond){
+		this.rightButtons.push(new InterfaceCanvasButton(12,2.1, 12.75,2.3,null,text,'10',function(){return true;}, '#555','#333'));
+		this.rightButtonFunctions.push(func);
+		this.rightButtonsDrawConditions.push(cond);
+	}
+
+	addText(drawFunc){
+		this.textToDraw.push(drawFunc);
+	}
+
+
 	draw(i){
 		// Draw on left.
 		if(!this.onRight){
@@ -71,8 +91,10 @@ class InventoryListEntry{
 			draw_c_text(textX,start+difference*(3-i)+0.65,this.obj.name);
 			draw_c_text_small(textX+0.05,start+difference*(3-i)+0.45,this.obj.desc);
 
-			draw_c_text_med(textX+4.65-1.5,start+0.12+difference*(3-i),('Quantity:'));
-			draw_c_text_med(textX+5.56-1.5,start+0.12+difference*(3-i),(player.inventory.getQuantity(this.obj)));
+			if(this.drawQuantity){
+				draw_c_text_med(textX+4.65-1.5,start+0.12+difference*(3-i),('Quantity:'));
+				draw_c_text_med(textX+5.56-1.5,start+0.12+difference*(3-i),(player.inventory.getQuantity(this.obj)));
+			}
 			if(this.isHovered)
 				gl.drawArrays(gl.TRIANGLES,ChestEntry.hoverIndex,ChestEntry.numberOfVerts);
 			else
@@ -80,17 +102,22 @@ class InventoryListEntry{
 
 			draw_list_obj(this.obj,mv);
 
-			// Move one
-			this.buttons[0].setXPos(textX+0.3+2.5+1 );
-			this.buttons[0].setYPos(start+0.75+difference*(3-i) );
-			//if(currentInventoryBlock.numberOfObjects < currentInventoryBlock.maxCapacity && this.buttons[0].draw())
-			//	this.moveOneToChest();
+			if(this.leftButtons.length != 0){
+				this.leftButtons[0].setXPos(textX+0.3+2.5+1 );
+				this.leftButtons[0].setYPos(start+0.75+difference*(3-i)-0.24 );
+
+				if(this.leftButtonsDrawConditions[0](this) && this.leftButtons[0].draw()){
+					this.leftButtonFunctions[0](this);
+				}
+			}
+
+			if(this.textToDraw.length != 0){
+				this.textToDraw[0](this,i);
+			}
 
 			// Move all
-			this.buttons[1].setXPos(textX+0.3+2.5+1 );
-			this.buttons[1].setYPos(start+0.75+difference*(3-i)-0.3 );
-			//if(currentInventoryBlock.numberOfObjects < currentInventoryBlock.maxCapacity && this.buttons[1].draw())
-			//	this.moveAllToChest();
+			//this.buttons[1].setXPos(textX+0.3+2.5+1 );
+			//this.buttons[1].setYPos(start+0.75+difference*(3-i)-0.3 );
 
 		}
 		// Draw on right.
@@ -107,8 +134,10 @@ class InventoryListEntry{
 			draw_c_text(textX+6,start+difference*(3-i)+0.65,this.obj.name);
 			draw_c_text_small(textX+0.05+6,start+difference*(3-i)+0.45,this.obj.desc);
 
-			draw_c_text_med(textX+4.65-1.5+6,start+0.12+difference*(3-i),('Quantity:'));
-			//draw_c_text_med(textX+5.56-1.5+6,start+0.12+difference*(3-i),(currentInventoryBlock.getQuantity(this.obj)));
+			if(this.drawQuantity){
+				draw_c_text_med(textX+4.65-1.5+6,start+0.12+difference*(3-i),('Quantity:'));
+				//draw_c_text_med(textX+5.56-1.5+6,start+0.12+difference*(3-i),(currentInventoryBlock.getQuantity(this.obj)));
+			}
 			if(this.isHovered)
 				gl.drawArrays(gl.TRIANGLES,ChestEntry.hoverIndex,ChestEntry.numberOfVerts);
 			else
@@ -116,17 +145,23 @@ class InventoryListEntry{
 			
 			draw_list_obj(this.obj,mv);
 
-			// Move one
-			this.buttons[0].setXPos(textX+0.3+2.5+1 +6);
-			this.buttons[0].setYPos(start+0.75+difference*(3-i) );
-			//if(this.buttons[0].draw())
-			//	this.moveOneToInventory();
+
+			if(this.rightButtons.length != 0){
+				this.rightButtons[0].setXPos(textX+0.3+2.5+1 +6);
+				this.rightButtons[0].setYPos(start+0.75+difference*(3-i)-0.24);
+
+				if(this.rightButtonsDrawConditions[0](this) && this.rightButtons[0].draw()){
+					this.rightButtonFunctions[0](this);
+				}
+			}
+			if(this.textToDraw.length != 0){
+				this.textToDraw[0](this,i);
+			}
 
 			// Move all
-			this.buttons[1].setXPos(textX+0.3+2.5+1+6 );
-			this.buttons[1].setYPos(start+0.75+difference*(3-i)-0.3 );
-			//if(this.buttons[1].draw())
-			//	this.moveAllToInventory();
+			//this.buttons[1].setXPos(textX+0.3+2.5+1+6 );
+			//this.buttons[1].setYPos(start+0.75+difference*(3-i)-0.3 );
+
 		}
 	}
 }
@@ -141,6 +176,16 @@ function tabListClick(){
 	draw_c_text_med(2.25,2.15,('Carry Weight:'));//draw_c_text_med_right
 	draw_c_text_med_right(3.85,2.15,player.weight);
 	draw_c_text_med(3.85,2.15,'/100');
+}
+
+function arrowButtonsDouble(func1, func2, func3, func4){
+
+	let shift = 1.5;
+	click_in_bounds(9.2125-shift,6.675,9.485-shift,6.9875,func1);
+	click_in_bounds(9.2125-shift,2.25,9.485-shift,2.01,func2);
+
+	click_in_bounds(9.2125-shift+6,6.675,9.485-shift+6,6.9875,func3);
+	click_in_bounds(9.2125-shift+6,2.25,9.485-shift+6,2.01,func4);
 }
 
 

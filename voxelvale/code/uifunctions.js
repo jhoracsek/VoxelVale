@@ -628,6 +628,22 @@ function draw_centered_text(x1,y1,text1,size='18'){
 
 }
 
+function draw_centered_text_with_opacity(x1,y1,text1,opacity,size='18'){
+	let tempStyle = context.fillStyle;
+	context.font = (size*canvas_multiplier).toString()+"px "+FONT;
+	context.textAlign = "center";
+	var xCoor1 = x1*(canvas.width/16);
+    var yCoor1 = canvas.height - (y1*(canvas.height/9));
+
+
+    context.textBaseline = "middle";
+    context.fillStyle = "rgba(200,200,200,"+opacity.toString()+ ")";
+    context.fillText(text1,xCoor1,yCoor1);
+    context.textAlign = "left";
+    context.textBaseline = "alphabetic";
+    context.fillStyle = tempStyle;
+}
+
 function measure_text(text1,size='18'){
 	let length = 0;
 	context.font = (size*canvas_multiplier).toString()+"px "+FONT;

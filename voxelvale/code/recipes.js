@@ -55,6 +55,11 @@ class Recipe{
 	static typeOfObj = 'REC'; get typeOfObj() {return this.constructor.typeOfObj;}
 	static typeOfRec = 'NONE'; get typeOfRec() {return this.constructor.typeOfRec;}
 	static craftingStation = REQUIRES_NO_CRAFTING_STATION; get craftingStation() {return this.constructor.craftingStation;}
+
+	//Price in silver.
+	static sellPrice = 1; get sellPrice() {return this.constructor.sellPrice;}
+	get buyPrice() {return Math.round(this.sellPrice*(3/2));}
+	
 	constructor(Obj=null, recipe, numReturned){
 		this.name=Obj.name + ' Recipe';
 		this.desc=Obj.desc;
@@ -117,6 +122,8 @@ class Recipe{
 
 class WorkBenchRecipe extends Recipe{
 	static objectNumber = 128;
+
+	static sellPrice = 20;
 	constructor(){
 		super(new WorkBench(), [[new StoneBlock(),4], [new WoodLog(),4] ],1);
 		this.desc='Recipe for a workbench.';
@@ -153,6 +160,8 @@ class WorkBenchRecipe extends Recipe{
 
 class WoodBlockRecipe extends Recipe{
 	static objectNumber = 129;
+
+	static sellPrice = 20;
 	constructor(){
 		super(new WoodBlock(), [[new WoodLog(),1]],2);
 		this.desc='Recipe for a wood block.';
@@ -162,6 +171,8 @@ class WoodBlockRecipe extends Recipe{
 class DoorRecipe extends Recipe{
 	static objectNumber = 130;
 	static craftingStation = REQUIRES_WORKBENCH;
+
+	static sellPrice = 20;
 	constructor(){
 		super(new Door(), [[new WoodBlock(),8]],1);
 		this.desc='Recipe for a wooden door.';
@@ -194,6 +205,8 @@ class DoorRecipe extends Recipe{
 class BrickBlockRecipe extends Recipe{
 	static objectNumber = 131;
 	static craftingStation = REQUIRES_WORKBENCH;
+
+	static sellPrice = 20;
 	constructor(){
 		super(new BrickBlock(), [[new StoneBlock(),2]],1);
 		this.desc='Recipe for a brick block.';
@@ -276,6 +289,8 @@ class CopperBarRecipe extends BarRecipeAbstract{
 	static colorOne = hexToRgbA('#ed9f61');
 	static colorTwo = hexToRgbA('#7fb6a3');
 
+	static sellPrice = 16;
+
 	constructor(){
 		super(new CopperBar(), [[new Copper(),2]],1);
 		this.desc='Recipe for a copper bar.';
@@ -286,6 +301,8 @@ class LatkinBarRecipe extends BarRecipeAbstract{
 	static objectNumber = 154;
 	static colorOne = hexToRgbA('#bcb7b7');
 	static colorTwo = hexToRgbA('#92774c');
+
+	static sellPrice = 32;
 
 	constructor(){
 		super(new LatkinBar(), [[new Latkin(),2]],1);
@@ -298,6 +315,8 @@ class IllsawBarRecipe extends BarRecipeAbstract{
 	static colorOne = hexToRgbA('#d9fefc');
 	static colorTwo = hexToRgbA('#7b9da3');
 
+	static sellPrice = 64;
+
 	constructor(){
 		super(new IllsawBar(), [[new Illsaw(),2]],1);
 		this.desc='Recipe for an illsaw bar.';
@@ -308,6 +327,8 @@ class PlatinumBarRecipe extends BarRecipeAbstract{
 	static objectNumber = 156;
 	static colorOne = hexToRgbA('#f4f0ed');
 	static colorTwo = hexToRgbA('#b8b6b7');
+
+	static sellPrice = 128;
 
 	constructor(){
 		super(new PlatinumBar(), [[new Platinum(),2]],1);
@@ -320,6 +341,8 @@ class LuniteBarRecipe extends BarRecipeAbstract{
 	static colorOne = hexToRgbA('#e4d862');
 	static colorTwo = hexToRgbA('#bbad24');
 
+	static sellPrice = 256;
+
 	constructor(){
 		super(new LuniteBar(), [[new Lunite(),2]],1);
 		this.desc='Recipe for a lunite bar.';
@@ -330,6 +353,8 @@ class DaytumBarRecipe extends BarRecipeAbstract{
 	static objectNumber = 158;
 	static colorOne = hexToRgbA('#ef61f1');
 	static colorTwo = hexToRgbA('#cb28d7');
+
+	static sellPrice = 512;
 
 	constructor(){
 		super(new DaytumBar(), [[new Daytum(),2]],1);
@@ -344,6 +369,8 @@ class DaytumBarRecipe extends BarRecipeAbstract{
 class ArrowRecipe extends Recipe{
 	static objectNumber = 133;
 	static craftingStation = REQUIRES_WORKBENCH;
+
+	static sellPrice = 20;
 	constructor(){
 		super(new ArrowItem(), [[new StoneBlock(),1],[new WoodBlock(), 1]],1);
 		this.desc='Recipe for an arrow.';
@@ -388,6 +415,8 @@ class CopperPickRecipe extends Recipe{
 
 	static index = 0; get index() {return this.constructor.index;}
 	static numberOfVerts = 0; get numberOfVerts() {return this.constructor.numberOfVerts;}
+
+	static sellPrice = 64;
 
 	static sendData(){
 		CopperPickRecipe.indexWireframe = vertices.length;
@@ -439,6 +468,7 @@ class CopperAxeRecipe extends Recipe{
 	static index = 0; get index() {return this.constructor.index;}
 	static numberOfVerts = 0; get numberOfVerts() {return this.constructor.numberOfVerts;}
 	
+	static sellPrice = 64;
 
 	static sendData(){
 		CopperAxeRecipe.indexWireframe = vertices.length;
@@ -486,6 +516,7 @@ class CopperSwordRecipe extends Recipe{
 	static index = 0; get index() {return this.constructor.index;}
 	static numberOfVerts = 0; get numberOfVerts() {return this.constructor.numberOfVerts;}
 	
+	static sellPrice = 64;
 
 	static sendData(){
 		CopperSwordRecipe.indexWireframe = vertices.length;
@@ -526,6 +557,9 @@ class CopperSwordRecipe extends Recipe{
 class CopperBrickRecipe extends Recipe{
 	static objectNumber = 137;
 	static craftingStation = REQUIRES_WORKBENCH;
+
+	static sellPrice = 100;
+
 	constructor(){
 		super(new CopperBrick(), [[new CopperBar(),3]],2);
 		this.desc='Recipe for a copper brick block.';
@@ -535,6 +569,9 @@ class CopperBrickRecipe extends Recipe{
 class ChestRecipe extends Recipe{
 	static objectNumber = 138;
 	static craftingStation = REQUIRES_WORKBENCH;
+
+	static sellPrice = 20;
+
 	constructor(){
 		super(new Chest(), [[new WoodBlock(),12]],1);
 		this.desc='Recipe for a workbench.';
@@ -559,6 +596,70 @@ class ChestRecipe extends Recipe{
 		return;
 	}
 	
+}
+
+
+
+/*
+	Make abstract class for this.	()
+
+	Then move to recipestools.js 	()
+*/
+
+
+class BowRecipeAbstract extends Recipe{
+	static objectNumber = -1;
+	static craftingStation = REQUIRES_WORKBENCH;
+
+	static indexWireframe = 0; get indexWireframe() {return this.constructor.indexWireframe;}
+	static numWireframeVerts = 0; get numWireframeVerts() {return this.constructor.numWireframeVerts;}
+
+	static index = 0; get index() {return this.constructor.index;}
+	static numberOfVerts = 0; get numberOfVerts() {return this.constructor.numberOfVerts;}
+
+	static color = hexToRgbA('#FF0000');
+	
+	static sendData(){
+		this.indexWireframe = vertices.length;
+		build_bow_wireframe();
+		this.numWireframeVerts = vertices.length - this.indexWireframe;
+
+		this.index = vertices.length;
+		build_bow_blue(this.color);
+		this.numberOfVerts = vertices.length - this.index;
+	}
+
+	constructor(Obj, recipe, numRet){
+		super(Obj, recipe, numRet);
+		this.desc='ABSTRACT TYPE.';
+	}
+
+	drawSmallObject(currentMat,scale=0.95){
+		gl.uniform1i(cursorBlockLoc, true);
+		let mat = mult(translate(0,2.5,0),mult(scale4(scale,1,scale,1), translate(0,-2.5,0)));
+		this.object.drawSmall(mult(currentMat,mat));
+		gl.uniform1i(cursorBlockLoc, false);
+	}
+
+	drawSmall(currentMat){
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(currentMat));
+		gl.drawArrays(gl.LINES,this.indexWireframe,this.numWireframeVerts);
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(currentMat));
+		gl.drawArrays(gl.TRIANGLES,this.index,this.numberOfVerts);
+	}
+}
+
+class WoodenBowRecipe extends BowRecipeAbstract{
+	static objectNumber = 159;
+
+	static color = vec4(0.9,0.6,0.15,1);
+
+	static sellPrice = 100;
+	constructor(){
+		super(new WoodenBow(), [[new StoneBlock(),2],[new WoodBlock(), 6]],1);
+		this.desc='Recipe for a bow.';
+	}
+
 }
 
 

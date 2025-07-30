@@ -110,6 +110,7 @@ var inFunction=false;
 var projectileArray;
 var enemyArray;
 var townFolkArray;
+var drawDeathArray;
 var waterNetworkArray;
 
 //AKA Universal Acceleration Cutoff Threshold;
@@ -457,6 +458,9 @@ window.onload = function init(){
 	normals=[];
 	colours=[];
 	texCoords=[];
+	townFolkArray = new ProperArray();
+
+	drawDeathArray = new ProperArray();
 
 	player = new Player(10,10,-6);
 
@@ -500,7 +504,7 @@ window.onload = function init(){
 	pQueue = new Queue();
 	projectileArray = new ProperArray();
 	enemyArray = new ProperArray();
-	townFolkArray = new ProperArray();
+	
 	waterNetworkArray = [];
 
 	var axe = new WoodAxe();
@@ -551,7 +555,8 @@ window.onload = function init(){
 		
 		chest = new Chest()
 		player.addToInventory(chest);
-		/*
+		player.addToInventory(new DaytumPickaxe());
+		
 		player.addToInventory(new WoodBlock());
 		player.addToInventory(new WoodBlock());
 		player.addToInventory(new WoodBlock());
@@ -562,7 +567,7 @@ window.onload = function init(){
 		player.addToInventory(new WoodBlock());
 		player.addToInventory(new GrassBlock());
 		player.addToInventory(new WoodLog());
-		*/
+		
 		
 		/*
 		player.addToInventory(new CopperPickaxe());
@@ -597,6 +602,8 @@ window.onload = function init(){
 		player.addToInventory(new DaytumStone());
 		*/
 		player.addToInventory(new Latkin());
+
+		player.addToInventory(new WoodenBowRecipe());
 	
 		player.addToInventory(new CopperBarRecipe());
 		player.addToInventory(new LatkinBarRecipe());
@@ -863,6 +870,10 @@ function send_block(){
 	DaytumSwordRecipe.sendData();
 
 
+	//Bow recipes
+	WoodenBowRecipe.sendData();
+
+
 	//Swords
 	StoneSword.sendData();
 	CopperSword.sendData();
@@ -881,6 +892,10 @@ function send_block(){
 	LuniteAxe.sendData();
 	DaytumAxe.sendData();
 
+
+
+
+	//Buckets
 	WoodenBucket.sendData();
 
 	bowStart = vertices.length;
@@ -1361,12 +1376,41 @@ function render_data(){
 		for(var i=0;i<enemyArray.getLength();i++){
 			if(enemyArray.accessElement(i).deathMarker==true){
 				tbd.push(i);
+				if(enemyArray.accessElement(i).drawDeathTimer){
+					let animation = new Animation(1,false);
+					function anim(val){return val-0.04;}
+					function stop(val){if(val <= 0) return true; return false;}
+					animation.addPhase(anim,stop);
+					animation.startAnimation();
+					drawDeathArray.push([enemyArray.accessElement(i).posX,enemyArray.accessElement(i).posY, animation,enemyArray.accessElement(i).silverDropped ]);
+
+				}
 			}else{
 				enemyArray.accessElement(i).draw();
 			}
 		}
 		for(var i=0;i<tbd.length;i++)
 			enemyArray.removeElement(tbd[i]);
+	}
+
+	if(drawDeathArray.isEmpty()==false){
+		for(let i = 0; i < drawDeathArray.getLength(); i++){
+			if(drawDeathArray.accessElement(i)[2].currentPhase != -1){
+				let opac = drawDeathArray.accessElement(i)[2].getOutput()
+				if(!(inventory|| inFunction)){
+					let drawHeight = 0.25;
+					let c = vec4(0,drawHeight,0,1);
+					let zVal = -6+1.25;//opacity add here
+					c = mult(translate( drawDeathArray.accessElement(i)[0], drawDeathArray.accessElement(i)[1],zVal), c);
+					c = mult(modelViewMatrix, c);
+					c = mult(projectionMatrix, c);
+
+					c = [(c[0]/c[3]+1)*8,(c[1]/c[3]+1)*4.5-opac*0.1];
+					
+					draw_centered_text_with_opacity(c[0], c[1], "+"+drawDeathArray.accessElement(i)[3].toString()+" Silver", opac,'11');
+				}
+			}
+		}
 	}
 
 	if(townFolkArray.isEmpty()==false){

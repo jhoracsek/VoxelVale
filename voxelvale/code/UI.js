@@ -560,14 +560,15 @@ function draw_scroll_list(){
 	draw_c_text_med_right(3.85,2.15,player.weight);
 	draw_c_text_med(3.85,2.15,'/100');
 
-	let goldStart = 7.22;
+	//let goldStart = 7.22;
+	let goldStart = 7;
 
 	//Draw gold and silver (silver and goooooold)
 	draw_c_text_med(goldStart,2.15,('Gold:'));
 	draw_c_text_med_right(goldStart+0.8,2.15,player.gold);
 	draw_c_text_med_right(goldStart+0.8,2.15,player.gold);
 
-	let silverStart = 8.26;
+	let silverStart = goldStart + 1.04;
 	draw_c_text_med(silverStart,2.15,('Silver:'));
 
 	draw_c_text_med_right(silverStart+1,2.15,player.silver);
@@ -836,6 +837,16 @@ function draw_c_text_med_colored(x1,y1,text1,c){
     context.fillStyle = "white";
 }
 
+function draw_c_text_colored(x1,y1,text1,c,size=13){
+	context.font = (size*canvas_multiplier).toString()+"px "+FONT;
+	context.fillStyle = c;
+	var xCoor1 = x1*(canvas.width/16);
+    var yCoor1 = canvas.height - (y1*(canvas.height/9));
+    context.fillText(text1,xCoor1,yCoor1);
+    context.fillStyle = "white";
+}
+
+
 function draw_c_text_med_stroke(x1,y1,text1){
 	context.font = (13*canvas_multiplier).toString()+"px "+FONT;
 	var xCoor1 = x1*(canvas.width/16);
@@ -925,7 +936,7 @@ function draw_inventory(){
 			break;
 
 		case 'SHOP':
-			//heldIndex = craftingButtonID;
+			heldIndex = craftingButtonID;
 			draw_shop_menu()
 			break;
 

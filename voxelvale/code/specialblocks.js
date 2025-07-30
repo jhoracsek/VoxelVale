@@ -79,6 +79,7 @@ class WoodLog extends BlockWall{
 		this.sound = 'WOOD';
 		this.desc = 'A wood log.'
 		this.particleColor = vec3(0.337, 0.208, 0.094);
+		this.sellPrice = 4;
 	}
 	sendData(){
 		draw_wood_log();

@@ -239,7 +239,7 @@ function build_grid_mode_wireframe(length=1, c1=vec4(1,0,0,1)){
 
 	Should be fine with normals.
 */
-function prism(point1, point2, c=vec4(1.0,1.0,1.0,1.0)) {
+function prism(point1, point2, c=vec4(1.0,1.0,1.0,1.0), noNorms = false) {
     /*
 		Make sure our points go from small to large.
     */
@@ -266,32 +266,32 @@ function prism(point1, point2, c=vec4(1.0,1.0,1.0,1.0)) {
 
 
 	// Back.
-    prism_face( 1, 0, 3, 2, c, transformationMatrix);
+    prism_face( 1, 0, 3, 2, c, transformationMatrix, noNorms);
     set_humanoid_texture();
     
     // Right.
-    prism_face( 2, 3, 7, 6, c, transformationMatrix );
+    prism_face( 2, 3, 7, 6, c, transformationMatrix, noNorms);
     set_humanoid_texture();
 
     // Bottom.
-    prism_face( 3, 0, 4, 7, c, transformationMatrix );
+    prism_face( 3, 0, 4, 7, c, transformationMatrix, noNorms );
     set_humanoid_texture();
 
     // Top.
-    prism_face( 6, 5, 1, 2, c, transformationMatrix );
+    prism_face( 6, 5, 1, 2, c, transformationMatrix, noNorms );
     set_humanoid_texture();
     
     // Front.
-    prism_face( 4, 5, 6, 7, c, transformationMatrix );
+    prism_face( 4, 5, 6, 7, c, transformationMatrix, noNorms );
     set_humanoid_texture();
 
    	// Left.
-    prism_face( 5, 4, 0, 1, c, transformationMatrix );
+    prism_face( 5, 4, 0, 1, c, transformationMatrix, noNorms );
 	set_humanoid_texture();
 }
 
 
-function prism_face(a,b,c,d,color=vec4(1.0,1.0,1.0,1.0), matrix) {
+function prism_face(a,b,c,d,color=vec4(1.0,1.0,1.0,1.0), matrix ,noNorms = false) {
 
 
 	let vpA = vec4(vertexPoints[a],1);
@@ -306,8 +306,8 @@ function prism_face(a,b,c,d,color=vec4(1.0,1.0,1.0,1.0), matrix) {
 
 
 
-    body_push(vec3(vpA), vec3(vpB), vec3(vpC), color);
-    body_push(vec3(vpA), vec3(vpC), vec3(vpD), color);
+    body_push(vec3(vpA), vec3(vpB), vec3(vpC), color, noNorms);
+    body_push(vec3(vpA), vec3(vpC), vec3(vpD), color, noNorms);
 
     //body_push(vertexPoints[a], vertexPoints[b], vertexPoints[c],color);
     //body_push(vertexPoints[a], vertexPoints[c], vertexPoints[d], color);

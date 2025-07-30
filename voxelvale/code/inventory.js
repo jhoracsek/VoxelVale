@@ -89,8 +89,28 @@ function loadWorldButton(){
 */
 let inventoryButtonID, craftingButtonID;
 function primary_text_button(){return 'Inventory';}
-function secondary_text_button(){if(currentStation == IN_CHEST) return "Chest"; return "Crafting"}
-function secondary_button_function(){if(currentStation == IN_CHEST){currentMenu = 'CHEST';} else {currentMenu = 'CRAFTING';} }
+
+function secondary_text_button(){
+	if(currentStation == IN_CHEST){ 
+		return "Chest"; 
+	} 
+	else if(currentStation == IN_SHOP) {
+		return "Shop";
+	}
+	return "Crafting";
+}
+
+function secondary_button_function(){
+	if(currentStation == IN_CHEST){
+		currentMenu = 'CHEST';
+	} else if(currentStation == IN_SHOP){
+		currentMenu = 'SHOP';
+	}
+	else {
+		currentMenu = 'CRAFTING';
+	} 
+
+}
 
 function add_interface_bottom_bar(){
 	let squish = 0.125

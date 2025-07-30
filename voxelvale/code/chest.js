@@ -238,6 +238,7 @@ class Chest extends OpeningBlock{
 	static texture = 9;
 	static displayWidth = 1.1; get displayWidth() {return this.constructor.displayWidth;}
 	static capacity = 10; get capacity() {return this.constructor.capacity;}
+	static sellPrice = 24;
 	constructor(X=null, Y=null, Z=null){
 		super(X,Y,Z);
 		//this.orientation = 0;

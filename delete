@@ -33,7 +33,9 @@ For the WaterNetworks 'startUpdate' function this is how I think it should work.
 	- It will then only update for 30 frames.
 
 
+Should fix quantity display over all inventories.
 
+I really like the metal alloy idea.
 
 Work on shops.
 	Need to add randomly generated shop 					(X)
@@ -90,8 +92,41 @@ Update Alpha 0.4.0 | Shopkeeps
 		2.c) If not, should this even happen?
 		2.d) Or should you just make them die really quickly.
 	3. Fix the thing where upone makes the ceiling opaque if you're not on a block.
-
+		(Move to next update.)
 	4. Fixed the lighting thing on the leftside of zombies/players.	(X)
+	5. Fixed zombie shadows.
+
+
+Change log | Alpha 0.4.0 | Shop and listen.
+	
+	Features:
+		- Added a shop that will randomly spawn on the map.
+		- Added a shopkeeper that will sell you recipes and buy objects from you.
+		- Added gold and silver as a currency for the shop.
+		- Zombies now drop silver.
+		- Added recipe for wooden bows.
+
+	Changes:
+		- Zombies now only drop health potions, and recipes for copper bars, pickaxes
+		axe, swords and latkin bars and pickaxes.
+		- Probability that zombie drops a health potion reduced to 50%.
+
+	Fixes:
+		- Fixed arrow buttons not working in chests.
+		- Fixed zombie shadows not displaying shoulders.
+		- Fixed rendering glitch on the left side of zombies and players.
+		- Adjusted notification system. Now previously obtained objects
+		will have their quanitity increased, regardless of where they appear
+		in the list of notifications.
+		- Players resting arm and leg angle positions are no 0 when idle
+		(previously when the users stopped walking, these angles may have been
+		slightly offset).
+		- Particles are no longer displayed when the player sprints but doesn't
+		move.
+
+
+
+
 
 
 

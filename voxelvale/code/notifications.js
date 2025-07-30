@@ -22,6 +22,15 @@ function draw_notification_box(x1,y1,x2,y2,a=1,text='none',number=1,size='10'){
 	return;
 }
 
+/*
+	As of Jul 29 2025, I'm changing this.
+
+	Why? Because when you say mine ores, you get a sequence of notifications like
+	'Copper', 'Stone', 'Copper', 'Stone', ... and it quickly fills up the screen.
+
+	You don't need to maintain a queue here. Just go through the five most recent 
+	then if you see the thing just add it.
+*/
 class NotificationQueue{
 	constructor(){
 		this.notificationQueue = new Queue();
@@ -30,26 +39,42 @@ class NotificationQueue{
 	//Would enforce usage of Notification class if I could, but javascript. So just be careful
 	//to only use Notification objects.
 	addNotification(notification){
-		if(this.isEmpty()==false && this.notificationQueue.cheekyPeek().name == notification.name)
-			this.notificationQueue.cheekyPeek().addQuantity();
-		else
+		if(this.isEmpty()==false){ 
+			let addedNotification = false;
+			let notificationsToDraw = this.notificationQueue.peek5();
+			for(let i = 0; i < notificationsToDraw.length; i++){
+				if(notificationsToDraw[i].name == notification.name){
+					notificationsToDraw[i].addQuantity();
+					addedNotification = true;
+				}
+			}
+
+			if(!addedNotification){
+				this.notificationQueue.enqueue(notification);
+			}
+		}
+		else{
 			this.notificationQueue.enqueue(notification);
+		}
 		return;
 	}
 	//Updates notifications and draws them onto the text-canvas.
 	updateNotifications(){
-		//if(this.timer>=60)this.timer=0;
 		if(this.isEmpty()){return;}
+		
 		if(this.notificationQueue.peek().isDestroyed())
 			this.notificationQueue.dequeue();
+		
 		if(this.isEmpty()){return;}
+		
 		this.notificationQueue.peek().update();
+		
 		var notificationsToDraw = this.notificationQueue.peek5();
+		
 		for(var i=0;i<notificationsToDraw.length;i++){
-			this.notificationQueue.peek5()[i].draw(-i*0.7);
-			//notificationsToDraw[i].draw(-i*0.7);
+			//this.notificationQueue.peek5()[i].draw(-i*0.7);
+			notificationsToDraw[i].draw(-i*0.7);
 		}
-		//this.timer++;
 	}
 	isEmpty(){
 		if(this.notificationQueue.isEmpty())

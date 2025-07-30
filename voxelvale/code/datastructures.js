@@ -56,6 +56,7 @@ class Queue{
 }
 
 //This is inefficient, just a temporary fix.
+// Add ability to remove.
 class ProperArray extends Queue{
 	constructor(){
 		super();

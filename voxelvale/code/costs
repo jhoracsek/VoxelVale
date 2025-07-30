@@ -1,0 +1,116 @@
+
+
+
+Class				sellPrice			Added
+
+WoodBlock			2 					X
+WeirdBlock			1 					X
+GrassBlock			1 					X
+WoodLog				4 					X
+WoodBranch			1 					X
+StoneBlock			1 					X
+WorkBench			20 					X
+TestBlock			1 					X
+DirtBlock			1 					X
+DropBox				1 					X
+BrickBlock			2 					X
+StoneFloorBlock		1 					X
+DungeonWall			1 					X
+TeleBlock			1 					X
+Door				16 					X
+BorderWall			1 					X
+CopperStone			1 					X
+CopperBrick			7 					X
+Chest				24 					X
+Water				1 					X
+LuniteStone			1 					X
+DaytumStone			1 					X
+LatkinStone			1 					X
+IllsawStone 		1 					X
+PlatinumStone		1 					X
+CrackedStone		1 					X
+
+
+WoodAxe				5 					X
+StonePickaxe		5 					X
+WoodenBow			30 					X
+Copper 				10 					X
+CopperBar			5 					X
+ArrowItem			3 					X
+CopperPickaxe		34 					X
+CopperAxe 			34 					X
+HealthPotion		20 					X
+StoneSword			10 					X
+CopperSword 		34 					X
+WoodenBucket		50 					X
+Latkin				20 					X
+Illsaw 				40 					X
+Platinum 			80 					X
+Lunite 				160 				X	
+Daytum 				320 				X	
+LatkinBar			10 					X
+IllsawBar 			20 					X
+PlatinumBar 		40 					X
+LuniteBar 			80 					X
+DaytumBar			160 				X	
+LatkinPickaxe		64 					X
+IllsawPickaxe		124 				X	
+PlatinumPickaxe		244 				X	
+LunitePickaxe		484 				X	
+DaytumPickaxe		964 				X	
+LatkinSword 		64 					X
+IllsawSword 		124 				X	
+PlatinumSword 		244 				X	
+LuniteSword 		484 				X	
+DaytumSword 		964 				X	
+LatkinAxe 			64 					X
+IllsawAxe 			124 				X	
+PlatinumAxe 		244 				X	
+LuniteAxe 			484 				X	
+DaytumAxe 			964 				X	
+
+WorkBenchRecipe		20 					X
+WoodBlockRecipe		20					X
+DoorRecipe			20					X
+BrickBlockRecipe	20					X
+CopperBarRecipe		16					X
+ArrowRecipe			20					X
+CopperPickRecipe	64					X
+CopperAxeRecipe		64					X
+CopperSwordRecipe	64					X
+CopperBrickRecipe	20 					X					
+ChestRecipe			20					X
+LatkinPickRecipe	128					X
+IllsawPickRecipe	256					X
+PlatinumPickRecipe	512					X
+LunitePickRecipe	1024				X	
+DaytumPickRecipe	2048				X	
+LatkinAxeRecipe		128					X
+IllsawAxeRecipe		256					X
+PlatinumAxeRecipe	512					X
+LuniteAxeRecipe		1024				X	
+DaytumAxeRecipe		2048				X	
+LatkinSwordRecipe	128					X
+IllsawSwordRecipe	256					X
+PlatinumSwordRecipe	512					X
+LuniteSwordRecipe	1024				X	
+DaytumSwordRecipe	2048				X	
+LatkinBarRecipe		32					X
+IllsawBarRecipe		64					X
+PlatinumBarRecipe	128					X
+LuniteBarRecipe		256					X
+DaytumBarRecipe		512					X
+
+
+ShiftBlock			1					X
+DungeonCeiling		1					X
+CursorBlock			1					X
+
+
+
+
+
+
+
+
+

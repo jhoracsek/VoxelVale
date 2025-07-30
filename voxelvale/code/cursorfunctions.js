@@ -179,6 +179,7 @@ function updateCursorColour(){
     */
 	if(selectedBlock == null || selectedBlock.isFluid){
 		if(heldItem.typeOfObj == 'BLOCK'){
+
 			if(heldItem.isTall){
 				var aboveSelectedBlock = world.getBlockAt(Math.round(xCoor),Math.round(yCoor),upOne-1);
 				if(aboveSelectedBlock == null && upOne == -3){
@@ -193,6 +194,20 @@ function updateCursorColour(){
 			}
 			else{
 				cursorGreen = true;
+			}
+			//Check to make sure you can't trap townsfolk
+			for(let i = 0; i < townFolkArray.getLength(); i++){
+
+				if(upOne == -3 || upOne == -4){
+
+					let x = Math.round(xCoor)
+					let y = Math.round(yCoor)
+					let folk = townFolkArray.accessElement(i);
+
+					if(folk.posX == x && folk.posY == y){
+						cursorGreen = false;
+					}
+				}
 			}
 		}else if(heldItem.typeOfObj == 'ITEM'){
 			cursorGreen = false;

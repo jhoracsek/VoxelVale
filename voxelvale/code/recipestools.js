@@ -143,6 +143,8 @@ class LatkinPickRecipe extends PickRecipeAbstract{
 	static objectNumber = 139;
 	static color = hexToRgbA('#bcb7b7');
 
+	static sellPrice = 128;
+
 	constructor(){
 		super(new LatkinPickaxe(), [[new LatkinBar(),6], [new WoodBlock(), 2]] ,1);
 		this.desc='Recipe for a latkin pickaxe.';
@@ -152,6 +154,8 @@ class LatkinPickRecipe extends PickRecipeAbstract{
 class IllsawPickRecipe extends PickRecipeAbstract{
 	static objectNumber = 140;
 	static color = hexToRgbA('#d9fefc');
+
+	static sellPrice = 256;
 
 	constructor(){
 		super(new IllsawPickaxe(), [[new IllsawBar(),6], [new WoodBlock(), 2]] ,1);
@@ -163,6 +167,8 @@ class PlatinumPickRecipe extends PickRecipeAbstract{
 	static objectNumber = 141;
 	static color = hexToRgbA('#f4f0ed');
 
+	static sellPrice = 512;
+
 	constructor(){
 		super(new PlatinumPickaxe(), [[new PlatinumBar(),6], [new WoodBlock(), 2]] ,1);
 		this.desc='Recipe for a platinum pickaxe.';
@@ -173,6 +179,8 @@ class LunitePickRecipe extends PickRecipeAbstract{
 	static objectNumber = 142;
 	static color = hexToRgbA('#e4d862');
 
+	static sellPrice = 1024;
+
 	constructor(){
 		super(new LunitePickaxe(), [[new LuniteBar(),6], [new WoodBlock(), 2]] ,1);
 		this.desc='Recipe for a lunite pickaxe.';
@@ -182,6 +190,8 @@ class LunitePickRecipe extends PickRecipeAbstract{
 class DaytumPickRecipe extends PickRecipeAbstract{
 	static objectNumber = 143;
 	static color = hexToRgbA('#ef61f1');
+
+	static sellPrice = 2048;
 
 	constructor(){
 		super(new DaytumPickaxe(), [[new DaytumBar(),6], [new WoodBlock(), 2]] ,1);
@@ -200,6 +210,8 @@ class LatkinAxeRecipe extends AxeRecipeAbstract{
 	static objectNumber = 144;
 	static color = hexToRgbA('#bcb7b7');
 
+	static sellPrice = 128;
+
 	constructor(){
 		super(new LatkinAxe(), [[new LatkinBar(),6], [new WoodBlock(), 2]] ,1);
 		this.desc='Recipe for a latkin axe.';
@@ -208,6 +220,8 @@ class LatkinAxeRecipe extends AxeRecipeAbstract{
 class IllsawAxeRecipe extends AxeRecipeAbstract{
 	static objectNumber = 145;
 	static color = hexToRgbA('#d9fefc');
+
+	static sellPrice = 256;
 
 	constructor(){
 		super(new IllsawAxe(), [[new IllsawBar(),6], [new WoodBlock(), 2]] ,1);
@@ -218,6 +232,8 @@ class PlatinumAxeRecipe extends AxeRecipeAbstract{
 	static objectNumber = 146;
 	static color = hexToRgbA('#f4f0ed');
 
+	static sellPrice = 512;
+
 	constructor(){
 		super(new PlatinumAxe(), [[new PlatinumBar(),6], [new WoodBlock(), 2]] ,1);
 		this.desc='Recipe for a platinum axe.';
@@ -226,6 +242,8 @@ class PlatinumAxeRecipe extends AxeRecipeAbstract{
 class LuniteAxeRecipe extends AxeRecipeAbstract{
 	static objectNumber = 147;
 	static color = hexToRgbA('#e4d862');
+
+	static sellPrice = 1024;
 
 	constructor(){
 		super(new LuniteAxe(), [[new LuniteBar(),6], [new WoodBlock(), 2]] ,1);
@@ -236,6 +254,8 @@ class LuniteAxeRecipe extends AxeRecipeAbstract{
 class DaytumAxeRecipe extends AxeRecipeAbstract{
 	static objectNumber = 148;
 	static color = hexToRgbA('#ef61f1');
+
+	static sellPrice = 2048;
 
 	constructor(){
 		super(new DaytumAxe(), [[new DaytumBar(),6], [new WoodBlock(), 2]] ,1);
@@ -253,6 +273,8 @@ class LatkinSwordRecipe extends SwordRecipeAbstract{
 	static objectNumber = 149;
 	static color = hexToRgbA('#bcb7b7');
 
+	static sellPrice = 128;
+
 	constructor(){
 		super(new LatkinSword(), [[new LatkinBar(),6], [new WoodBlock(), 2]] ,1);
 		this.desc='Recipe for a latkin sword.';
@@ -262,6 +284,8 @@ class LatkinSwordRecipe extends SwordRecipeAbstract{
 class IllsawSwordRecipe extends SwordRecipeAbstract{
 	static objectNumber = 150;
 	static color = hexToRgbA('#d9fefc');
+
+	static sellPrice = 256;
 
 	constructor(){
 		super(new IllsawSword(), [[new IllsawBar(),6], [new WoodBlock(), 2]] ,1);
@@ -273,6 +297,8 @@ class PlatinumSwordRecipe extends SwordRecipeAbstract{
 	static objectNumber = 151;
 	static color = hexToRgbA('#f4f0ed');
 
+	static sellPrice = 512;
+
 	constructor(){
 		super(new PlatinumSword(), [[new PlatinumBar(),6], [new WoodBlock(), 2]] ,1);
 		this.desc='Recipe for a platinum sword.';
@@ -283,6 +309,8 @@ class LuniteSwordRecipe extends SwordRecipeAbstract{
 	static objectNumber = 152;
 	static color = hexToRgbA('#e4d862');
 
+	static sellPrice = 1024;
+
 	constructor(){
 		super(new LuniteSword(), [[new LuniteBar(),6], [new WoodBlock(), 2]] ,1);
 		this.desc='Recipe for a lunite sword.';
@@ -292,6 +320,8 @@ class LuniteSwordRecipe extends SwordRecipeAbstract{
 class DaytumSwordRecipe extends SwordRecipeAbstract{
 	static objectNumber = 153;
 	static color = hexToRgbA('#ef61f1');
+
+	static sellPrice = 2048;
 
 	constructor(){
 		super(new DaytumSword(), [[new DaytumBar(),6], [new WoodBlock(), 2]] ,1);

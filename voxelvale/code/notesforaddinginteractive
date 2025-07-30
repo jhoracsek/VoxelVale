@@ -186,6 +186,31 @@ in two places: 'draw_newblock_list()', and in 'controls.js'. Look at
 
 
 
+*** Customizing InventoryListEntry.
+
+Sometimes inventory lists should have buttons. For instance,
+consider chests which have 'move one', 'move all'.
+
+Buttons are added either through 'addLeftButton' or 'addRightButton'.
+
+The arguments here are (text, func, cond). 'text' is the text that is
+displayed on the argument. 'func' is what runs once the button is clicked.
+'cond' is the condition for the button to be drawn.
+
+A note about 'func':
+	When passing func you should make sure the function is of the form
+	function foobar(inventoryListEntry){
+		...
+	}
+	Because by default the InventoryListEntry will pass itself to the
+	function.
+
+A note about 'cond':
+	'cond' behaves the same as above. It should only ever
+	return true or false.
+
+
+
 
 
 

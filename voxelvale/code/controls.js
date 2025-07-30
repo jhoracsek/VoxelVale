@@ -159,8 +159,14 @@ function getKeyDown(key){
 					selectedTab = 'REC';active=-1;scrollOffset=0;
 					break;
 			}
-			if(currentMenu == 'CHEST')
+			if(currentMenu == 'CHEST'){
 				refreshList=true;
+				leftScrollOffset = 0;
+				rightScrollOffset = 0;
+			}
+			if(currentMenu == 'SHOP'){
+				leftScrollOffset = 0;
+			}
 		}
 
 		if(!inventory){
@@ -192,14 +198,14 @@ function getKeyDown(key){
 
 			
 			//Spawn Zombie
-			/*
+			
 			var enemy = new Undead(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5),-3.25);
 			enemy.initialize_enemy();
 			enemyArray.push(enemy);
-			*/
+			
 
-			var shopkeep = new ShopKeeper(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5));
-			townFolkArray.push(shopkeep);
+			//var shopkeep = new ShopKeeper(Math.round((coorSys[0]+player.posX)-9),Math.round((coorSys[1]+player.posY)-4.5));
+			//townFolkArray.push(shopkeep);
 
 			//spawnEnemy();
 

@@ -312,6 +312,52 @@ function build_axe_wireframe(){
 }
 
 
+
+function build_bow_wireframe(){
+	
+
+	//wireframe_prism(vec3(...), vec3(...))
+
+	//wireframe_line(vec3(...), vec3(...))
+
+	
+	
+	var v1=vec3(0.15,2.45,0.05);
+	var v4=vec3(0.15,2.35,0.05);
+	var v2=vec3(0.7,1.25,0);
+	var v3=vec3(0.7,1.25,0);
+
+	//wireframe_line(v1,v2);
+
+	buildArbQuadrilateral(v1,v2,v3,v4,vec4(1,1,1,1));
+	
+	v1=vec3(0.15,2.35,-0.05);
+	v4=vec3(0.15,2.45,-0.05);
+	buildArbQuadrilateral(v1,v2,v3,v4,vec4(1,1,1,1));
+
+	//Now just flip the above thing.
+	var v1=vec3(0.15,-2.45+2.5,0.05);
+	var v4=vec3(0.15,-2.35+2.5,0.05);
+	var v2=vec3(0.7,-1.25+2.5,0);
+	var v3=vec3(0.7,-1.25+2.5,0);
+
+	buildArbQuadrilateral(v1,v2,v3,v4,vec4(1,1,1,1));
+	v1=vec3(0.15,-2.35+2.5,-0.05);
+	v4=vec3(0.15,-2.45+2.5,-0.05);
+	buildArbQuadrilateral(v1,v2,v3,v4,vec4(1,1,1,1));
+
+	//String prism
+	wireframe_prism(vec3(-0.018,2.5,-0.018),vec3(0.018, 0, 0.018));
+	
+	//Top and bottom prisms
+	wireframe_prism(vec3(0.15, 2.45, -0.05), vec3(-0.1, 2.35, 0.05));
+	wireframe_prism(vec3(0.15, -2.45+2.5, -0.05),vec3(-0.1, -2.35+2.5, 0.05));
+	
+	//Middle prism
+	wireframe_prism(vec3(0.7-0.02-0.03, 1.25-0.13, -0.025),vec3(0.7+0.02-0.03, 1.25+0.13, 0.025));
+}
+
+
 function build_axe_blue(cB = vec4(0.5,0.5,0.5,1)){
 
 	var colourHandle=vec4(0.9,0.6,0.15,1);
@@ -407,3 +453,63 @@ function build_pickaxe_blue(cB = vec4(0.5,0.5,0.5,1)){
 	pushvs(v1,v3,v2,colourBlade);
 	return;
 }
+
+function build_bow_blue(c=vec4(0.9,0.6,0.15,1)){
+
+
+	let colourHandle = mult_colors(c,recipeColor);
+	let colourString = mult_colors(vec4(0.3,0.3,0.3,1),recipeColor);
+	let colourTip = mult_colors(vec4(0.1,0.1,0.1,1),recipeColor)
+
+	buildRectangularPrism(-0.018,2.5,-0.018,0.018,0,0.018,colourString);
+	var v1=vec3(0.15,2.45,0.05);
+	var v4=vec3(0.15,2.35,0.05);
+	var v2=vec3(0.7,1.25,0);
+	var v3=vec3(0.7,1.25,0);
+	buildArbQuadrilateral(v1,v2,v3,v4,colourHandle);
+	v1=vec3(0.15,2.35,-0.05);
+	v4=vec3(0.15,2.45,-0.05);
+	buildArbQuadrilateral(v1,v2,v3,v4,colourHandle);
+	v1=vec3(0.7,1.25,0);
+	v2=vec3(0.15,2.45,-0.05);
+	v3=vec3(0.15,2.45,0.05);
+	pushvs(v1,v2,v3,colourHandle);
+	v1=vec3(0.7,1.25,0);
+	v2=vec3(0.15,2.35,-0.05);
+	v3=vec3(0.15,2.35,0.05);
+	pushvs(v1,v2,v3,colourHandle);
+	buildRectangularPrism(0.15, 2.45, -0.05, -0.1, 2.35, 0.05,colourHandle);
+
+	//Now just flip the above thing.
+	var v1=vec3(0.15,-2.45+2.5,0.05);
+	var v4=vec3(0.15,-2.35+2.5,0.05);
+	var v2=vec3(0.7,-1.25+2.5,0);
+	var v3=vec3(0.7,-1.25+2.5,0);
+
+	buildArbQuadrilateral(v1,v2,v3,v4,colourHandle);
+	v1=vec3(0.15,-2.35+2.5,-0.05);
+	v4=vec3(0.15,-2.45+2.5,-0.05);
+	buildArbQuadrilateral(v1,v2,v3,v4,colourHandle);
+
+	v1=vec3(0.7,-1.25+2.5,0);
+	v2=vec3(0.15,-2.45+2.5,-0.05);
+	v3=vec3(0.15,-2.45+2.5,0.05);
+	pushvs(v1,v2,v3,colourHandle);
+	v1=vec3(0.7,-1.25+2.5,0);
+	v2=vec3(0.15,-2.35+2.5,-0.05);
+	v3=vec3(0.15,-2.35+2.5,0.05);
+	pushvs(v1,v2,v3,colourHandle);
+	buildRectangularPrism(0.15, -2.45+2.5, -0.05,-0.1,-2.35+2.5, 0.05,colourHandle);
+	buildRectangularPrism(0.7-0.02-0.03, 1.25-0.13, -0.025,0.7+0.02-0.03, 1.25+0.13, 0.025,colourTip);
+	return;
+}
+
+
+
+
+
+
+
+
+
+

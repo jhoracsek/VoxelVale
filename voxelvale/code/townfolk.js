@@ -15,6 +15,9 @@
 		drawContents();			
 */
 class TownFolk{
+
+	static townFolkNumber = -1; get townFolkNumber(){return this.constructor.townFolkNumber;}
+
 	constructor(pX,pY,pZ=-3){
 		this.posX = pX;
 		this.posY = pY;
@@ -28,7 +31,30 @@ class TownFolk{
 		this.angleFacing = 0;
 		this.legAngle = 0;
 
-		this.idleArms = 0;
+		this.idleArmAnimation = new Animation(0, true);
+
+		function armPhase1(val){
+			return val+0.06;
+		}
+		function armCond1(val){
+			if(val > 5)
+				return true;
+			return false;
+		}
+
+		function armPhase2(val){
+			return val-0.06;
+		}
+		function armCond2(val){
+			if(val <= 0)
+				return true;
+			return false;
+		}
+
+		this.idleArmAnimation.addPhase(armPhase1, armCond1);
+		this.idleArmAnimation.addPhase(armPhase2, armCond2);
+		this.idleArmAnimation.startAnimation();
+		this.idleArms = this.idleArmAnimation.getOutput();
 		this.idleHead = 0;
 
 		this.initialize(this.posX,this.posY,this.posZ);
@@ -66,23 +92,23 @@ class TownFolk{
 	static sendData(){
 		flipPlayerNorms = true;
 		this.headStart = vertices.length;
-		build_human_head(hexToRgbA('#569756'));
+		build_human_head(hexToRgbA('#9b7448'));
 		this.headNumber = vertices.length-this.headStart ;
 
 		this.shoulderStart = vertices.length;//headVerts
-		build_shoulder(hexToRgbA('#4c1e1e'));
+		build_shoulder(hexToRgbA('#473d34'));
 		this.shoulderNumber =  vertices.length - this.shoulderStart;
 
 		this.torsoStart = vertices.length;
-		build_torso(hexToRgbA('#4c1e1e'));
+		build_torso(hexToRgbA('#473d34'));
 		this.torsoNumber = vertices.length -  this.torsoStart; 
 
 		this.legStart = vertices.length;
-		build_leg(hexToRgbA('#151a29'));
+		build_leg(hexToRgbA('#291305'));
 		this.legNumber = vertices.length - this.legStart;
 
 		this.eyeStart = vertices.length;
-		build_eye(hexToRgbA('#670808'));
+		build_eye(hexToRgbA('#080808'));
 		this.eyeNumber = vertices.length - this.eyeStart;
 
 
@@ -266,17 +292,21 @@ class TownFolk{
 				this.model[this.bodyId] = create_node(m, this.constructor.body, null, this.headId);
 				break;
 			case headId:
-				m = translate(0,1.5,0,0);
+
+				m = rotateX(this.idleArms);
+				m = mult(translate(0,1.5,0,0),m);
 				this.model[this.headId] = create_node(m, this.constructor.head, this.leftArmId, this.leftEyeId);
 				break;
 			case leftArmId:
-				m = rotateX(0);
+				m = rotateX(this.idleArms/2);
+				m = mult(rotateZ(-this.idleArms),m);
 				m = mult(translate(-0.75,1.125,0,0),m);
 				this.model[this.leftArmId] = create_node(m, this.constructor.left_arm, this.rightArmId, this.leftShoulderId);
 				break;
 			case rightArmId:
-				m = rotateX(this.idleArms);
-				m = rotateZ(this.idleArms);
+				m = rotateX(this.idleArms/2);
+				m = mult(rotateZ(this.idleArms),m);
+
 				m = mult(translate(0.75,1.125,0,0),m);
 				this.model[this.rightArmId] = create_node(m, this.constructor.right_arm, this.leftLegId, this.rightShoulderId);
 				break;
@@ -327,16 +357,13 @@ class TownFolk{
 			this.onHover();
 		}
 
-		if(this.idleArms < 10){
-			this.idleArms += 1;
-		}else{
-			this.idleArms -= 1;
-		}
+		this.idleArms = this.idleArmAnimation.getOutput();
+
 
 
 		this.update_node(this.rightArmId);
 		this.update_node(this.leftArmId);
-
+		this.update_node(this.headId);
 		
 	}
 
@@ -350,13 +377,13 @@ class TownFolk{
 	}
 
 	onClick(){
-		console.log('poop ass')
+		
 	}
 
 	drawContents(){
 		if(inventory|| inFunction) return;
 		
-		let drawWidth = 0.4;
+		let drawWidth = 0.35;
 		let drawHeight = 0.25;
 		let c = vec4(-drawWidth-0.125,drawHeight,0,1);
 		let c2 = vec4(drawWidth+0.125,drawHeight+0.1,0,1);
@@ -375,11 +402,11 @@ class TownFolk{
 		c = [(c[0]/c[3]+1)*8,(c[1]/c[3]+1)*4.5];
 		c2 = [(c2[0]/c2[3]+1)*8,(c2[1]/c2[3]+1)*4.5];
 
-		this.displayWidth = 1;
+		this.displayWidth = 0.7;
 		//draw_healthbar(c[0], c[1], c2[0], c2[1], 1, 1,40,1)	
 		//draw_filled_box(c[0]-this.displayWidth/2,c[1],c[0]+this.displayWidth/2,c[1]+(1.35)*0.17);
 		draw_filled_box(c[0],c[1],c2[0],c[1]+(1.35)*0.17);
-		draw_centered_text((c[0]+c2[0])/2,c[1]+0.1,"Close door.",'12');
+		draw_centered_text((c[0]+c2[0])/2,c[1]+0.1,"Shop.",'12');
 	}
 
 	onHover(){

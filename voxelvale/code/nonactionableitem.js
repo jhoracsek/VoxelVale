@@ -22,6 +22,9 @@ class NonActionableItem {
 	static isConsumable = false; get isConsumable() {return this.constructor.isConsumable;}
 	static sendData(){}
 
+	static sellPrice = 1; get sellPrice() {return this.constructor.sellPrice;}
+	get buyPrice() {return Math.round(this.sellPrice*(3/2));}
+
 	constructor(){}
 	update(){}
 	updateWhenHeld(){}
@@ -126,6 +129,8 @@ class Copper extends InventoryOre {
 	static colorTwo = hexToRgbA('#7fb6a3');
 	static colorThr = hexToRgbA('#918f9c');
 
+	static sellPrice = 10;
+
 	constructor(){super();}
 }
 
@@ -137,6 +142,8 @@ class Latkin extends InventoryOre {
 	static colorOne = hexToRgbA('#bcb7b7');
 	static colorTwo = hexToRgbA('#92774c');
 	static colorThr = hexToRgbA('#32322b');
+
+	static sellPrice = 20;
 
 	constructor(){super();}
 }
@@ -150,6 +157,8 @@ class Illsaw extends InventoryOre {
 	static colorTwo = hexToRgbA('#7b9da3');
 	static colorThr = hexToRgbA('#7c7a78');
 
+	static sellPrice = 40;
+
 	constructor(){super();}
 }
 
@@ -161,6 +170,8 @@ class Platinum extends InventoryOre {
 	static colorOne = hexToRgbA('#f4f0ed');
 	static colorTwo = hexToRgbA('#b8b6b7');
 	static colorThr = hexToRgbA('#8e8e8e');
+
+	static sellPrice = 80;
 
 	constructor(){super();}
 }
@@ -174,6 +185,8 @@ class Lunite extends InventoryOre {
 	static colorTwo = hexToRgbA('#bbad24');
 	static colorThr = hexToRgbA('#615b27');
 
+	static sellPrice = 160;
+
 	constructor(){super();}
 }
 
@@ -185,6 +198,8 @@ class Daytum extends InventoryOre {
 	static colorOne = hexToRgbA('#ef61f1');
 	static colorTwo = hexToRgbA('#cb28d7');
 	static colorThr = hexToRgbA('#8e3f79');
+
+	static sellPrice = 320;
 
 	constructor(){super();}
 }
@@ -200,6 +215,8 @@ class CopperBar extends InventoryBar{
 	static colorOne = hexToRgbA('#e58158');
 	static colorTwo = hexToRgbA('#ac966b');
 
+	static sellPrice = 5;
+
 	constructor(){super();}
 }
 
@@ -210,6 +227,8 @@ class LatkinBar extends InventoryBar{
 
 	static colorOne = hexToRgbA('#bcb7b7');
 	static colorTwo = hexToRgbA('#92774c');
+
+	static sellPrice = 10;
 
 	constructor(){super();}
 }
@@ -222,6 +241,8 @@ class IllsawBar extends InventoryBar{
 	static colorOne = hexToRgbA('#d9fefc');
 	static colorTwo = hexToRgbA('#7b9da3');
 
+	static sellPrice = 20;
+
 	constructor(){super();}
 }
 
@@ -232,6 +253,8 @@ class PlatinumBar extends InventoryBar{
 
 	static colorOne = hexToRgbA('#f4f0ed');
 	static colorTwo = hexToRgbA('#b8b6b7');
+
+	static sellPrice = 40;
 
 	constructor(){super();}
 }
@@ -244,6 +267,8 @@ class LuniteBar extends InventoryBar{
 	static colorOne = hexToRgbA('#e4d862');
 	static colorTwo = hexToRgbA('#bbad24');
 
+	static sellPrice = 80;
+
 	constructor(){super();}
 }
 
@@ -255,6 +280,8 @@ class DaytumBar extends InventoryBar{
 	static colorOne = hexToRgbA('#ef61f1');
 	static colorTwo = hexToRgbA('#cb28d7');
 
+	static sellPrice = 160;
+
 	constructor(){super();}
 }
 
@@ -265,6 +292,8 @@ class ArrowItem extends NonActionableItem {
 	static objectNumber = 69;
 	static name = 'Arrow';
 	static desc = 'An arrow.';
+
+	static sellPrice = 3;
 
 	static sendData(){build_arrow();}
 
@@ -306,6 +335,8 @@ class HealthPotion extends NonActionableItem {
 
 	static corkStart = 0;
 	static corkNumber = 0;
+
+	static sellPrice = 20;
 
 	static sendData(){
 

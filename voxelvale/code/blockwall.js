@@ -10,6 +10,9 @@ class zObjectNew{
 	static index = 0; get index() {return this.constructor.index;}
 	static numberOfVerts = 36; get numberOfVerts() {return this.constructor.numberOfVerts;}
 
+	//Price in silver.buyPrice
+	static sellPrice = 1; get sellPrice() {return this.constructor.sellPrice;}
+	get buyPrice() {return Math.round(this.sellPrice*(3/2));}
 
 	static sendData(){}
 	
@@ -522,6 +525,7 @@ class BrickBlock extends BlockWallNew{
 	static texture = 12;
 	static tob='STONE';
 	static correctTextureOrientation = true;
+	static sellPrice = 2;
 	constructor(X=null,Y=null,Z=null,ground=false){
 		super(X,Y,Z,ground);
 	}
@@ -572,6 +576,7 @@ class CopperBrick extends BlockWallNew{
 	static texture = 52;
 	static tob='STONE';
 	static correctTextureOrientation = true;
+	static sellPrice = 7;
 	constructor(X=null,Y=null,Z=null,ground=false){
 		super(X,Y,Z,ground);
 	}

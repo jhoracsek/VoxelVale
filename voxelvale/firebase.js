@@ -130,7 +130,11 @@
 
         const ref = doc(collection(database, "users", user.uid, "worlds"), "aux");
 
+        const townFolkInfo = doc(collection(database, "users", user.uid, "worlds"), "townFolkInfo");
+
         let info = getWorldObj();
+
+
 
         try {
             await setDoc(xPosRef, {
@@ -151,8 +155,15 @@
                 position: info[6],
                 health: info[7],
                 toolbar: info[8],
+                gold: info[9],
+                silver: info[10],
                 version: GAME_VERSION
                 //lastModified: new Date().toISOString()
+            });
+            await setDoc(townFolkInfo, {
+                numFolk: info[11],
+                folkNumberOrder: info[12],
+                folkPositions: info[13]
             });
             //console.log("World saved!");
             pQueue.empty();
@@ -179,11 +190,14 @@
 
         const ref = doc(collection(database, "users", user.uid, "worlds"), "aux");
 
+        const townFolkInfo = doc(collection(database, "users", user.uid, "worlds"), "townFolkInfo");
+
         let loadedWorldX = null;
         let loadedWorldY = null;
         let loadedWorldZ = null;
         let loadedWorldNum = null;
         let loadedWorld = null;
+        let loadedWorldTFI = null;
 
         try {
             const snapshotX = await getDoc(xPosRef);
@@ -191,6 +205,7 @@
             const snapshotZ = await getDoc(zPosRef);
             const snapshotObjNum = await getDoc(objNumRef);
             const snapshot = await getDoc(ref);
+            const snapshotTFI = await getDoc(townFolkInfo);
 
             if (snapshot.exists()) {
                 loadedWorldX = snapshotX.data();
@@ -198,6 +213,7 @@
                 loadedWorldZ = snapshotZ.data();
                 loadedWorldNum = snapshotObjNum.data();
                 loadedWorld = snapshot.data();
+                loadedWorldTFI = snapshotTFI.data();
                 
             } else {
                 alert("You haven't saved a world yet!");
@@ -206,7 +222,7 @@
             console.error("Load error:", err.message);
         }
         if(loadedWorld!=null){
-            loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loadedWorldNum, loadedWorld);
+            loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loadedWorldNum, loadedWorld, loadedWorldTFI);
             //console.log('Done!');
         }
     }

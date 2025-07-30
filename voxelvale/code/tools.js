@@ -35,6 +35,8 @@ class StonePickaxe extends Pickaxe{
 		this.name='Stone Pickaxe';
 		this.desc='A standard stone pickaxe for mining.';
 		this.objectNumber=65;
+
+		this.sellPrice = 5;
 	}
 }
 
@@ -48,6 +50,8 @@ class CopperPickaxe extends Pickaxe{
 		this.name='Copper Pickaxe';
 		this.desc='A copper pickaxe for mining.';
 		this.objectNumber=70;
+
+		this.sellPrice = 34;
 	}
 }
 
@@ -62,6 +66,8 @@ class LatkinPickaxe extends Pickaxe{
 		this.name='Latkin Pickaxe';
 		this.desc='A latkin pickaxe for mining.';
 		this.objectNumber=86;
+
+		this.sellPrice = 64;
 	}
 }
 
@@ -76,6 +82,8 @@ class IllsawPickaxe extends Pickaxe{
 		this.name='Illsaw Pickaxe';
 		this.desc='An illsaw pickaxe for mining.';
 		this.objectNumber=87;
+
+		this.sellPrice = 124;
 	}
 }
 
@@ -90,6 +98,8 @@ class PlatinumPickaxe extends Pickaxe{
 		this.name='Platinum Pickaxe';
 		this.desc='A platinum pickaxe for mining.';
 		this.objectNumber=88;
+
+		this.sellPrice = 244;
 	}
 }
 
@@ -104,6 +114,8 @@ class LunitePickaxe extends Pickaxe{
 		this.name='Lunite Pickaxe';
 		this.desc='A lunite pickaxe for mining.';
 		this.objectNumber=89;
+
+		this.sellPrice = 484;
 	}
 }
 
@@ -118,6 +130,8 @@ class DaytumPickaxe extends Pickaxe{
 		this.name='Daytum Pickaxe';
 		this.desc='A daytum pickaxe for mining.';
 		this.objectNumber=90;
+
+		this.sellPrice = 964;
 	}
 }
 
@@ -235,6 +249,8 @@ class StoneSword extends Sword{
 		this.name='Stone Sword';
 		this.desc='A stone sword for attacking enemies.';
 		this.objectNumber=73;
+
+		this.sellPrice = 5;
 	}
 }
 
@@ -245,6 +261,8 @@ class CopperSword extends Sword{
 		this.name='Copper Sword';
 		this.desc='A copper sword for attacking enemies.';
 		this.objectNumber=74;
+
+		this.sellPrice = 34;
 	}
 }
 
@@ -256,6 +274,8 @@ class LatkinSword extends Sword{
 		this.name='Latkin Sword';
 		this.desc='A latkin sword for attacking enemies.';
 		this.objectNumber=91;
+
+		this.sellPrice = 64;
 	}
 }
 
@@ -267,6 +287,8 @@ class IllsawSword extends Sword{
 		this.name='Illsaw Sword';
 		this.desc='An illsaw sword for attacking enemies.';
 		this.objectNumber=92;
+
+		this.sellPrice = 124;
 	}
 }
 
@@ -278,6 +300,8 @@ class PlatinumSword extends Sword{
 		this.name='Platinum Sword';
 		this.desc='A platinum sword for attacking enemies.';
 		this.objectNumber=93;
+
+		this.sellPrice = 244;
 	}
 }
 
@@ -289,6 +313,8 @@ class LuniteSword extends Sword{
 		this.name='Lunite Sword';
 		this.desc='A lunite sword for attacking enemies.';
 		this.objectNumber=94;
+
+		this.sellPrice = 484;
 	}
 }
 
@@ -300,6 +326,8 @@ class DaytumSword extends Sword{
 		this.name='Daytum Sword';
 		this.desc='A daytum sword for attacking enemies.';
 		this.objectNumber=95;
+
+		this.sellPrice = 964;
 	}
 }
 
@@ -338,6 +366,8 @@ class WoodAxe extends Tool{
 		this.name='Stone Axe';
 		this.desc='A standard stone axe for chopping wood.';
 		this.objectNumber=64;
+
+		this.sellPrice = 5;
 	}
 }
 
@@ -350,6 +380,8 @@ class CopperAxe extends AbstractAxe{
 		this.name='Copper Axe';
 		this.desc='A copper axe for chopping wood.';
 		this.objectNumber=71;
+
+		this.sellPrice = 34;
 	}
 }
 
@@ -362,6 +394,8 @@ class LatkinAxe extends AbstractAxe{
 		this.name='Latkin Axe';
 		this.desc='A latkin axe for chopping wood.';
 		this.objectNumber=96;
+
+		this.sellPrice = 64;
 	}
 }
 
@@ -374,6 +408,8 @@ class IllsawAxe extends AbstractAxe{
 		this.name='Illsaw Axe';
 		this.desc='An illsaw axe for chopping wood.';
 		this.objectNumber=97;
+
+		this.sellPrice = 124;
 	}
 }
 
@@ -386,6 +422,8 @@ class PlatinumAxe extends AbstractAxe{
 		this.name='Platinum Axe';
 		this.desc='A platinum axe for chopping wood.';
 		this.objectNumber=98;
+
+		this.sellPrice = 244;
 	}
 }
 
@@ -398,6 +436,8 @@ class LuniteAxe extends AbstractAxe{
 		this.name='Lunite Axe';
 		this.desc='A lunite axe for chopping wood.';
 		this.objectNumber=99;
+
+		this.sellPrice = 484;
 	}
 }
 
@@ -410,5 +450,7 @@ class DaytumAxe extends AbstractAxe{
 		this.name='Daytum Axe';
 		this.desc='A daytum axe for chopping wood.';
 		this.objectNumber=100;
+
+		this.sellPrice = 964;
 	}
 }

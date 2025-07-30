@@ -412,9 +412,10 @@ class Player extends Humanoid{
 			this.decreaseGold(1);
 			this.increaseSilver(100)
 		}
+	}
 
-
-
+	getTotalSilver(){
+		return this.gold*100 + this.silver;
 	}
 
 	get weight(){return this.inventory.itemCount;}
@@ -813,6 +814,7 @@ class Player extends Humanoid{
 			if(this.stamina <= 0){
 				this.sprintCooldown = 150;
 			}
+			if(!this.idle)
 			this.spawnSprintParticles();
 		} else {
 			this.speed = 0.05;
@@ -1305,8 +1307,11 @@ function player_moving(X,Y,Z){
 	initialize_node(leftLegId);
 	initialize_node(rightLegId);
 	//if(player.idle && armAngleRight==0 )
-	if(player.idle && (armAngleRight < 3 && armAngleRight>-3 ) )
+	if(player.idle && (armAngleRight < 3 && armAngleRight>-3 ) ){
+		armAngleRight = 0;
+		legAngle=0;
 		return;
+	}
 
 	let sprintMultiplier = 1.12;
 	let slowMultiplier = 0.5;
@@ -1387,7 +1392,7 @@ var cArray = [
 
 ];
 
-function body_push(v1, v2, v3, c=vec4(1,1,1,1)){
+function body_push(v1, v2, v3, c=vec4(1,1,1,1), noNorms=false){
 	vertices.push(v1);
 	vertices.push(v2);
 	vertices.push(v3);
@@ -1395,6 +1400,11 @@ function body_push(v1, v2, v3, c=vec4(1,1,1,1)){
 	colours.push(c);
 	colours.push(c);
 	colours.push(c);
+
+	if(noNorms){
+		for(var i =0; i < 3; i++)
+			normals.push(vec3(0,0,0));
+	}
 
 	if(flipPlayerNorms){
 		var cross1 = subtract(v3,v1); 
@@ -1681,36 +1691,41 @@ function build_head_acc(c=vec4(0,0,0,1)){
 		Use the cube function then transform it.
 	*/
 
+	let beardColor = vec4(.65,.6,.6,1);
+	//let hatColor = vec4(0.25,0.25,0.25,1);
+	let hatColor = hexToRgbA('#351707');
+
+
 	// Little tiny nose :)
 	let t1 = vec3(-.1, -.25, -0.675);
 	let t2 = vec3(.1, .1, -0.5);
-	prism(t1,t2,c);
+	prism(t1,t2,hexToRgbA('#966245'));
 
 	// Left eye brow.
 	t1 = vec3(-0.4, 0.25, -0.6);
 	t2 = vec3(-0.1, 0.35, -0.5);
-	prism(t1,t2,c);
+	prism(t1,t2,beardColor);
 
 	// Right eye brow.
 	t1 = vec3(0.1, 0.25, -0.6);
 	t2 = vec3(0.4, 0.35, -0.5);
-	prism(t1,t2,c);
+	prism(t1,t2,beardColor);
 
 
 	// Beard main portion
 	t1 = vec3(-0.51, -0.51, -0.51);
-	t2 = vec3(0.51,-0.15,0.1);
-	prism(t1,t2,vec4(0.5,0.5,0.5,1));
+	t2 = vec3(0.51,-0.2,0.1);
+	prism(t1,t2,beardColor);
 
 	// Beard top left.
 	t1 = vec3(-0.3, 0, -0.51);
-	t2 = vec3(-0.51,-0.15,0.1);
-	prism(t1,t2,vec4(0.5,0.5,0.5,1));
+	t2 = vec3(-0.51,-0.2,0.1);
+	prism(t1,t2,beardColor);
 
 	// Beard top right.
 	t1 = vec3(0.3, 0, -0.51);
-	t2 = vec3(0.51,-0.15,0.1);
-	prism(t1,t2,vec4(0.5,0.5,0.5,1));
+	t2 = vec3(0.51,-0.2,0.1);
+	prism(t1,t2,beardColor);
 
 	
 	/*
@@ -1721,19 +1736,21 @@ function build_head_acc(c=vec4(0,0,0,1)){
 	// Brim
 	t1 = vec3(-0.6, 0.5, -0.6);
 	t2 = vec3(0.6,0.35,0.6);
-	prism(t1,t2,vec4(0.5,0.5,0.5,1));
+	prism(t1,t2,hatColor);
 
 	// Top
 	t1 = vec3(-0.51, 0.7, -0.51);
 	t2 = vec3(0.51,0.5,0.51);
-	prism(t1,t2,vec4(0.5,0.5,0.5,1));
-
+	prism(t1,t2,hexToRgbA('#4b210a'));
+	//4b210a
 
 	// Ribbon.
-	//t1 = vec3(-0.6, 0.7, -0.6);
-	//t2 = vec3(0.6,0.5,0.6);
-	//buildPrism(t1,t2,vec4(0.5,0.5,0.5,1));
-
+	//t1 = vec3(-0.53, 0.55, -0.53);
+	t1 = vec3(-0.53, 0.6, -0.53);
+	t2 = vec3(0.53,0.5,0.53);
+	//prism(t1,t2,vec4(0.7,0.2,0.2,1));
+	prism(t1,t2,hexToRgbA('#777839'));
+	
 }
 
 function cube(textureArray, c=vec4(1.0,1.0,1.0,1.0)) {
