@@ -60,7 +60,7 @@ const dungeonMusicTracks=[];
 
 let currentTrack = Math.floor(Math.random() * backgroundMusicTracks.length);
 let backgroundMusic = new Audio();
-backgroundMusic.volume = 0.2;
+backgroundMusic.volume = start_volume;
 var currentTrackInfo = backgroundMusicTracksNames[currentTrack] + ' | ' + backgroundMusicTracksArtists[currentTrack];
 
 

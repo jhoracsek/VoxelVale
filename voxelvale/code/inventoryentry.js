@@ -166,12 +166,18 @@ class InventoryListEntry{
 	}
 }
 
-function tabListClick(){
-	click_in_bounds(2.1,  7.375,  3.425 ,7,function(){selectedTab = 'BLOCK';active=-1;leftScrollOffset=0; rightScrollOffset=0; activeTab =0;refreshList=true;});
-	click_in_bounds(3.6,  7.375,  4.9   ,7,function(){selectedTab = 'TOOL';active=-1;leftScrollOffset=0; rightScrollOffset=0; activeTab = 1;refreshList=true;});
-	click_in_bounds(5.075,7.375,  6.375   ,7,function(){selectedTab = 'ITEM';active=-1;leftScrollOffset=0; rightScrollOffset=0; activeTab = 2;refreshList=true;});
-	click_in_bounds(6.55,7.375,  7.85   ,7,function(){selectedTab = 'REC';active=-1;leftScrollOffset=0; rightScrollOffset=0; activeTab = 3;refreshList=true;});
-
+function tabListClick(inShop = false){
+	if(!inShop){
+		click_in_bounds(2.1,  7.375,  3.425 ,7,function(){selectedTab = 'BLOCK';active=-1;leftScrollOffset=0; rightScrollOffset=0; activeTab =0;refreshList=true;});
+		click_in_bounds(3.6,  7.375,  4.9   ,7,function(){selectedTab = 'TOOL';active=-1;leftScrollOffset=0; rightScrollOffset=0; activeTab = 1;refreshList=true;});
+		click_in_bounds(5.075,7.375,  6.375   ,7,function(){selectedTab = 'ITEM';active=-1;leftScrollOffset=0; rightScrollOffset=0; activeTab = 2;refreshList=true;});
+		click_in_bounds(6.55,7.375,  7.85   ,7,function(){selectedTab = 'REC';active=-1;leftScrollOffset=0; rightScrollOffset=0; activeTab = 3;refreshList=true;});
+	}else{
+		click_in_bounds(2.1,  7.375,  3.425 ,7,function(){selectedTab = 'BLOCK';active=-1;leftScrollOffset=0 ; activeTab =0;refreshList=true;});
+		click_in_bounds(3.6,  7.375,  4.9   ,7,function(){selectedTab = 'TOOL';active=-1;leftScrollOffset=0; activeTab = 1;refreshList=true;});
+		click_in_bounds(5.075,7.375,  6.375   ,7,function(){selectedTab = 'ITEM';active=-1;leftScrollOffset=0; activeTab = 2;refreshList=true;});
+		click_in_bounds(6.55,7.375,  7.85   ,7,function(){selectedTab = 'REC';active=-1;leftScrollOffset=0; activeTab = 3;refreshList=true;});
+	}
 	//Number of objects carried.
 	draw_c_text_med(2.25,2.15,('Carry Weight:'));//draw_c_text_med_right
 	draw_c_text_med_right(3.85,2.15,player.weight);

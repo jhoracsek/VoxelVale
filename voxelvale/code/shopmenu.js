@@ -119,11 +119,11 @@ function draw_shop_menu(){
 //contentListRight
 
 function draw_shop_list(){
-	tabListClick();
+	tabListClick(true);
 
 	arrowButtonsDouble(move_left_scroll_list_up,move_left_scroll_list_down,move_right_scroll_list_up,move_right_scroll_list_down);
 
-	
+
 	build_shop_list();
 	leftScrollOffset = Math.min(leftScrollOffset, get_scroll_bar_left_length_limit());
 	rightScrollOffset = Math.min(rightScrollOffset, get_scroll_bar_right_length_limit());

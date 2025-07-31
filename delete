@@ -100,29 +100,28 @@ Update Alpha 0.4.0 | Shopkeeps
 Change log | Alpha 0.4.0 | Shop and listen.
 	
 	Features:
-		- Added a shop that will randomly spawn on the map.
-		- Added a shopkeeper that will sell you recipes and buy objects from you.
+		- Added a randomly generated shop.
+		- Added a shopkeeper that can sell recipes and buy objects.
 		- Added gold and silver as a currency for the shop.
 		- Zombies now drop silver.
 		- Added recipe for wooden bows.
 
 	Changes:
-		- Zombies now only drop health potions, and recipes for copper bars, pickaxes
-		axe, swords and latkin bars and pickaxes.
-		- Probability that zombie drops a health potion reduced to 50%.
+		- Zombies now only drop health potions, recipes for copper bars, copper tools, 
+		latkin bars and latkin pickaxes.
+		- Probability of a zombie dropping a health potion reduced to 50%.
 
 	Fixes:
 		- Fixed arrow buttons not working in chests.
-		- Fixed zombie shadows not displaying shoulders.
+		- Fixed zombie shadows not displaying their shoulders.
 		- Fixed rendering glitch on the left side of zombies and players.
 		- Adjusted notification system. Now previously obtained objects
 		will have their quanitity increased, regardless of where they appear
 		in the list of notifications.
-		- Players resting arm and leg angle positions are no 0 when idle
+		- Players resting arm and leg angle positions are now 0 when idle
 		(previously when the users stopped walking, these angles may have been
 		slightly offset).
-		- Particles are no longer displayed when the player sprints but doesn't
-		move.
+		- Sprint particles are no longer displayed when the player is idle.
 
 
 

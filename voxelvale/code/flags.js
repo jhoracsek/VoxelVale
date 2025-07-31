@@ -2,9 +2,9 @@
 
 
 const GAME_VERSION = "Alpha 0.4.0"
-const DEV_TOOLS = true;
+const DEV_TOOLS = false;
 const GEN_DUNGEONS = false;
-var SPAWN_ENEMIES = false;
+var SPAWN_ENEMIES = true;
 const MAX_ENEMIES_IN_WORLD = 5;
 const PICTURE_MODE = false;
 const GEN_OLD_STYLE_WORLD = false;
@@ -22,6 +22,7 @@ const GEN_DUNGEON = false;
 	Set to 1 for 720p (default)
 */
 const canvas_multiplier = 1;
+const start_volume = 0.2;
 
 /*
 	The probability an enemy is spawned roughly every second.
