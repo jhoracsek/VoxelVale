@@ -2,7 +2,7 @@
 
 
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword,signInWithCustomToken, signOut, onAuthStateChanged, sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
     import { getFirestore, doc, setDoc, getDoc, collection } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
@@ -81,6 +81,9 @@
     }
 
     window.logOut = async function () {
+        loggedIn = false;
+        emailAccount = "null";
+        accountUID = "null";
         signOut(auth).then(() => {});
     }
 
@@ -88,14 +91,88 @@
          try {
             const result = await signInWithPopup(auth, provider);
             const user = result.user;
-            console.log("Signed in user:", user);
-            // Optional: redirect or show welcome message
+           // console.log("Signed in user:", user);
           } catch (error) {
             console.error("Error during Google sign-in:", error.message);
             alert("Google sign-in failed: " + error.message);
           }
-
     }
+
+    /*
+        Functions for popup windows.
+
+        Todo: Add signout.
+    */
+    window.loginViaPopup = async function(){
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('password').value;
+
+        if (!email || !pass) return alert("Please enter an email and password.");
+
+        try {
+            const result = await signInWithEmailAndPassword(auth, email, pass);
+            const user = result.user;
+            const idToken = await user.getIdToken();
+            sendLoginViaPost(user, idToken, false);
+        } catch (err) {
+            alert("Login failed: " + err.message);
+        }
+    };
+
+    window.signupViaPopup = async function () {
+      const email = document.getElementById("email").value;
+      const pass = document.getElementById("password").value;
+
+      if (!email || !pass) return alert("Please enter an email and password.");
+
+      try {
+        const result = await createUserWithEmailAndPassword(auth, email, pass);
+        const user = result.user;
+        const idToken = await user.getIdToken();
+        sendLoginViaPost(user, idToken, false);
+      } catch (err) {
+        alert("Signup failed: " + err.message);
+      }
+    };
+
+
+    
+    window.verifyGoogleCredentials = async function () {
+      try {
+        const credential = GoogleAuthProvider.credential(idToken);
+        const result = await signInWithCredential(auth, credential);
+      } catch (err) {
+        console.error("Cannot verify credentials", err.message);
+      }
+    };
+
+    window.verifyNormalCredentials = async function () {
+      try {
+        const customToken = await mintCustomToken(idToken);
+        if(!customToken) return;
+        const result = await signInWithCustomToken(auth, customToken);
+
+      } catch (err) {
+        console.error("Cannot verify credentials", err.message);
+      }
+    };
+
+    window.loginWithGoogleViaPopup = async function () {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const idToken = credential.idToken;
+        sendLoginViaPost(result.user, idToken, true);
+      } catch (err) {
+        alert("Login failed: " + err.message);
+      }
+    };
+
+    
+
+    /*
+        End popup functions.
+    */
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -104,51 +181,68 @@
             document.getElementById("loggedout").style.visibility = "hidden";
             document.getElementById("loggedin").style.visibility = "visible";
             document.getElementById("useremail").innerHTML = displayName;
+            loggedIn = true;
+            emailAccount = displayName;
+            sessionToken = user.token;
+            accountUID = user.uid;
             // You can now load or save data for this user!
         } else {
-            
             document.getElementById("loggedout").style.visibility = "visible";
             document.getElementById("loggedin").style.visibility = "hidden";
+            loggedIn = false;
+            emailAccount = "null";
+            sessionToken = "null";
+            accountUID = "null";
             //document.getElementById("username").innerHTML = "Not signed in.";
            // document.getElementById("authchange").innerHTML = '<ul style="padding-right:0px; padding-left:0px;"> <li  style="padding-right:10px; padding-right:10px;margin: 0px;"> <input type="email" id="email" placeholder="Email"></input></li> <li  style="padding-right:10px; padding-right:10px;margin: 0px; margin-right: 10px;"> <input type="password" id="password" placeholder="Password"></input></li><li  style="padding:5px;padding-right:10px;margin: 0px;"> Login</li><li  style="padding:5px;padding-right:10px;margin: 0px;"> Sign up</li></ul>'
         }
     });
 
+   
+
     window.saveWorld = async function(worldData) {
         //console.log('Saving...')
-        const user = auth.currentUser;
-        if (!user) {
+        //const user = auth.currentUser;
+        //if (!user) {
+        if(!loggedIn){
             alert("You must be logged in to save!");
             return;
         }
+        isSaving = true;
+        saveProgress = 0;
 
-        const xPosRef = doc(collection(database, "users", user.uid, "worlds"), "xPositions");
-        const yPosRef = doc(collection(database, "users", user.uid, "worlds"), "yPositions");
-        const zPosRef = doc(collection(database, "users", user.uid, "worlds"), "zPositions");
+        const xPosRef = doc(collection(database, "users", accountUID, "worlds"), "xPositions");
+        const yPosRef = doc(collection(database, "users", accountUID, "worlds"), "yPositions");
+        const zPosRef = doc(collection(database, "users", accountUID, "worlds"), "zPositions");
 
-        const objNumRef = doc(collection(database, "users", user.uid, "worlds"), "objectNumbers");
+        const objNumRef = doc(collection(database, "users", accountUID, "worlds"), "objectNumbers");
 
-        const ref = doc(collection(database, "users", user.uid, "worlds"), "aux");
+        const ref = doc(collection(database, "users", accountUID, "worlds"), "aux");
 
-        const townFolkInfo = doc(collection(database, "users", user.uid, "worlds"), "townFolkInfo");
+        const townFolkInfo = doc(collection(database, "users", accountUID, "worlds"), "townFolkInfo");
 
         let info = getWorldObj();
 
 
 
         try {
+
             await setDoc(xPosRef, {
                 xPos: info[0]
             });
+            saveProgress = 40;
             await setDoc(yPosRef, {
                 yPos: info[1]
             });
+            saveProgress = 60;
             await setDoc(zPosRef, {
                 zPos: info[2]
             });
+            saveProgress = 80;
             await setDoc(objNumRef, {
                 objectNumbers: info[3]
             });
+            saveProgress = 99;
             await setDoc(ref, {
                 blockInstanceInfo: info[4],
                 invObjNums: info[5],
@@ -173,6 +267,8 @@
             alert("There was an error saving your world!");
             console.error("Save error:", err.message);
         }
+        saveProgress = -1;
+        isSaving = false;
     }
 
     window.loadWorld = async function(){
@@ -181,6 +277,9 @@
             alert("You must be logged in to load your world!");
             return;
         }
+
+        isLoading = true;
+        loadProgress = 0;
 
         const xPosRef = doc(collection(database, "users", user.uid, "worlds"), "xPositions");
         const yPosRef = doc(collection(database, "users", user.uid, "worlds"), "yPositions");
@@ -206,6 +305,8 @@
             const snapshotObjNum = await getDoc(objNumRef);
             const snapshot = await getDoc(ref);
             const snapshotTFI = await getDoc(townFolkInfo);
+            loadProgress = 5;
+           
 
             if (snapshot.exists()) {
                 loadedWorldX = snapshotX.data();
@@ -214,15 +315,20 @@
                 loadedWorldNum = snapshotObjNum.data();
                 loadedWorld = snapshot.data();
                 loadedWorldTFI = snapshotTFI.data();
-                
             } else {
                 alert("You haven't saved a world yet!");
             }
+           
         } catch (err) {
             console.error("Load error:", err.message);
         }
+       
         if(loadedWorld!=null){
             loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loadedWorldNum, loadedWorld, loadedWorldTFI);
             //console.log('Done!');
         }
+        
+        pQueue.empty();
+        isLoading = false;
+        loadProgress = -1;
     }

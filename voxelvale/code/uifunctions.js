@@ -335,7 +335,7 @@ class InterfaceHeldButton extends InterfaceButton{
 
 	Either x1, y1, "text", textSize, isLeft
 	Or,
-	x1, y1, x2, y2, "text", textSize, isLeft
+	x1, y1, x2, y2, "text", textSize, isLeft, textFunction
 */
 class InterfaceText{
 	constructor(X1,Y1,arg2,arg3,arg4="null",arg5='18',arg6=false,arg7=null){

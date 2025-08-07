@@ -167,6 +167,16 @@ let bodycontainer;
 const FONT = "ROBOTO";
 
 
+/*
+	For testing/screenshots
+*/
+let unrotatedViewMatrix;
+
+let viewRotateX = 0;
+let viewRotateY = 0;
+let viewRotateZ = 0;
+
+
 //Thank you: w3schools.com/tags/canvas_getimagedata.asp
 function create_image_old(){
 	var c = document.getElementById("myCanvas");
@@ -422,7 +432,7 @@ window.onload = function init(){
 	if(!gl){
 		alert("Webl is not available")
 	}
-
+	waterNetworkArray = [];
 	//In controls.js, adds mouse functionality.
 
 
@@ -505,7 +515,7 @@ window.onload = function init(){
 	projectileArray = new ProperArray();
 	enemyArray = new ProperArray();
 	
-	waterNetworkArray = [];
+	
 
 	var axe = new WoodAxe();
 	player.addToInventory(axe);
@@ -557,6 +567,7 @@ window.onload = function init(){
 		player.addToInventory(chest);
 		player.addToInventory(new DaytumPickaxe());
 		
+		/*
 		player.addToInventory(new WoodBlock());
 		player.addToInventory(new WoodBlock());
 		player.addToInventory(new WoodBlock());
@@ -567,7 +578,7 @@ window.onload = function init(){
 		player.addToInventory(new WoodBlock());
 		player.addToInventory(new GrassBlock());
 		player.addToInventory(new WoodLog());
-		
+		*/
 		
 		/*
 		player.addToInventory(new CopperPickaxe());
@@ -601,6 +612,8 @@ window.onload = function init(){
 		player.addToInventory(new LuniteStone());
 		player.addToInventory(new DaytumStone());
 		*/
+
+		/*
 		player.addToInventory(new Latkin());
 
 		player.addToInventory(new WoodenBowRecipe());
@@ -644,19 +657,16 @@ window.onload = function init(){
 		player.addToInventory(new CopperPickRecipe());
 		player.addToInventory(new CopperAxeRecipe());
 		player.addToInventory(new CopperSwordRecipe());
-
+		
 		let testShop = new WeirdBlock();
 
 		player.addToInventory(testShop);
 
 		//player.addToInventory(new DaytumSword());
-		//let woodenBucket = new WoodenBucket();
-		//player.addToInventory(woodenBucket);
-		//toolBarList.push(woodenBucket);
 		//let water = new Water();
 		//player.addToInventory(water)
-
-
+		*/
+	
 		//Latkin, Illsaw, Platinum, Lunite, Daytum
 		/*
 		player.addToInventory(new LatkinBar());
@@ -665,10 +675,18 @@ window.onload = function init(){
 		player.addToInventory(new LuniteBar());
 		player.addToInventory(new DaytumBar());
 		*/
-		toolBarList.push(sword);
+
+		let woodenBucket = new WoodenBucket();
+		player.addToInventory(woodenBucket);
+		toolBarList.push(woodenBucket);
+		
+
+		//toolBarList.push(sword);
 		toolBarList.push(workbench);
 		//toolBarList.push(new WoodBlock());
-		toolBarList.push(testShop);
+		//let brewTable = new BrewingTable();
+		//player.addToInventory(brewTable);
+		//toolBarList.push(brewTable);
 		toolBarList.push(null);
 
 	}else{
@@ -703,6 +721,11 @@ window.onload = function init(){
 	viewMatrix = translate(1,1,0);
 	viewMatrix = mult(viewMatrix, scale4(0.125,(1/4.5),0.1));
 	viewMatrix = mult(viewMatrix,translate(-8,-4.5,0));
+
+
+	unrotatedViewMatrix = translate(1,1,0);
+	unrotatedViewMatrix = mult(unrotatedViewMatrix, scale4(0.125,(1/4.5),0.1));
+	unrotatedViewMatrix = mult(unrotatedViewMatrix,translate(-8,-4.5,0));
 
 	
 
@@ -1215,6 +1238,13 @@ var frameCount = 0;
 let bgX = 0;
 
 function render_data(){
+	if(DEV_TOOLS){
+		//For rotating camera.
+		viewMatrix = mult(unrotatedViewMatrix,rotateX(viewRotateX));
+		viewMatrix = mult(viewMatrix,rotateY(viewRotateY));
+		viewMatrix = mult(viewMatrix,rotateZ(viewRotateZ));
+	}
+
 	/*
 		Update body background position
 	*/

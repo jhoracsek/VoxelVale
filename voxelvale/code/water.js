@@ -606,6 +606,7 @@ class Water extends BlockWallNew{
 		this.network = network;
 		//What if we need to add it to an existing network?
 		if(X!=null && startNetwork){
+			
 			let net = new WaterNetwork(this,level);
 			waterNetworkArray.push(net);
 			this.network = net;

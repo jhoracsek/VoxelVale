@@ -249,7 +249,7 @@ function getWorldObj(){
 	return [xPositions, yPositions, zPositions,objectNumbers, blockInstanceInformationString, invObjectNumbers, [player.posX, player.posY], player.health, toolbarIDs, player.gold, player.silver, numFolk, folkNumberOrder, folkPositions];
 }
 
-function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loadedWorldNum, loadedWorld, loadedWorldTFI){
+async function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loadedWorldNum, loadedWorld, loadedWorldTFI){
 	disableNotifications = true;
 	/*
 		World
@@ -468,7 +468,7 @@ function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loadedWorld
 /*
 	Need to clean this up.
 */
-const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door,BorderWall,CopperStone,CopperBrick,Chest, Water, LuniteStone,DaytumStone,LatkinStone,IllsawStone,PlatinumStone,CrackedStone];
+const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door,BorderWall,CopperStone,CopperBrick,Chest, Water, LuniteStone,DaytumStone,LatkinStone,IllsawStone,PlatinumStone,CrackedStone, BrewingTable];
 const RECIPE_OBJNUMS = [WorkBenchRecipe,WoodBlockRecipe,DoorRecipe,BrickBlockRecipe,CopperBarRecipe, ArrowRecipe, CopperPickRecipe,CopperAxeRecipe,CopperSwordRecipe,CopperBrickRecipe,ChestRecipe,LatkinPickRecipe,IllsawPickRecipe,PlatinumPickRecipe,LunitePickRecipe,DaytumPickRecipe,LatkinAxeRecipe,IllsawAxeRecipe,PlatinumAxeRecipe,LuniteAxeRecipe,DaytumAxeRecipe,LatkinSwordRecipe,IllsawSwordRecipe,PlatinumSwordRecipe,LuniteSwordRecipe,DaytumSwordRecipe,LatkinBarRecipe,IllsawBarRecipe,PlatinumBarRecipe,LuniteBarRecipe,DaytumBarRecipe,WoodenBowRecipe];
 
 

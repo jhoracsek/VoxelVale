@@ -284,26 +284,34 @@ function getKeyDown(key){
 	//'ARROW_DOWN' Down
 	if(key.keyCode == 40){
 		key.preventDefault();
-		if(DEV_TOOLS)
+		if(DEV_TOOLS){
+			viewRotateX++;
 			controlledYSpin-=10;
+		}
 	}
 	//'ARROW_UP' Up
 	if(key.keyCode == 38){
 		key.preventDefault();
-		if(DEV_TOOLS)
+		if(DEV_TOOLS){
+			viewRotateX--;
 			controlledYSpin+=10;
+		}
 	}
 	//'ARROW_RIGHT' Right
 	if(key.keyCode == 39){
 		key.preventDefault();
-		if(DEV_TOOLS)
+		if(DEV_TOOLS){
+			viewRotateZ++;
 			controlledXSpin+=10;
+		}
 	}
 	//'ARROW_LEFT' Left
 	if(key.keyCode == 37){
 		key.preventDefault();
-		if(DEV_TOOLS)
+		if(DEV_TOOLS){
+			viewRotateZ--;
 			controlledXSpin-=10;
+		}
 	}
 
 }

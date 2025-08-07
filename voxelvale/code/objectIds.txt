@@ -29,6 +29,7 @@ LatkinStone			22
 IllsawStone 		23
 PlatinumStone		24
 CrackedStone		25
+BrewingTable		26
 
 
 WoodAxe				64

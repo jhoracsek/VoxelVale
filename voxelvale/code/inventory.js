@@ -13,6 +13,8 @@ const ACTIVE_BORDER_COLOR = 8;
 const CLEAR = 9;
 const TESTRED = 10;
 
+
+
 var UI_COLOURS = [
 	vec4(1,1,1,1),
 	vec4(0,0,0,1),
@@ -48,22 +50,123 @@ var bottomBarElements = [];
 
 	TRACE OVER CURSOR WITH BLACK LINES!!!
 */
+
+function openLoginPopup() {
+  const popup = window.open(
+    "https://voxelvale.net/login.html",
+    //For testing
+    //"http://127.0.0.1:3000/login.html",
+    "LoginPopup",
+    "width=500,height=600"
+  );
+}
+
+function openRegisterPopup() {
+  const popup = window.open(
+    "https://voxelvale.net/signup.html",
+    //For testing
+    //"http://127.0.0.1:3000/signup.html",
+    "SignupPopup",
+    "width=500,height=600"
+  );
+}
+
 const centerCoordinates = get_draw_center();
+
+function displayAccountInformation(){
+	let accountInfo = new Popup(6.5,2.25);
+
+
+	let push = 0.26;
+	let pushUp = 0.35;
+
+	accountInfo.addElement(new InterfaceCanvasButton(5.5+push,3.25+pushUp, 7.5+push,3.75+pushUp,function(){accountInfo.kill()},"Close"));
+	accountInfo.addElement(new InterfaceCanvasButton(5.5+2.5+push,3.25+pushUp, 7.5+2.5+push,3.75+pushUp,function(){logOut(); accountInfo.kill();},"Log Out"));
+
+	accountInfo.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.5, "Logged in as:", '18', false));
+	accountInfo.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.1, emailAccount, '18', false));
+
+
+	pQueue.enqueue(accountInfo);
+}
+
+
+let isSaving = false;
+let saveProgress = -1;
+
+function getSaveProgress(){
+	if(saveProgress < 0){
+		return "";
+	}else{
+		return "Progress: "+saveProgress.toString()+"%";
+	}
+}
 
 function saveWorldButton(){
 	let savePopup = new Popup(6.5,2.25);
 
 	let push = 0.26;
 	let pushUp = 0.35;
-	savePopup.addElement(new InterfaceCanvasButton(5.5+push,3.25+pushUp, 7.5+push,3.75+pushUp,function(){savePopup.kill()},"Close"));
-	savePopup.addElement(new InterfaceCanvasButton(5.5+2.5+push,3.25+pushUp, 7.5+2.5+push,3.75+pushUp,saveWorld,"Save"));
 
-	savePopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.5, "Save world to the cloud?", '18', false));
-	savePopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.1, "Note, this will overwrite your existing save!", '18', false));
+	if(!IN_ITCH){
+	
+		//const user = auth.currentUser;
 
+		if (!loggedIn) {
+        	// Not logged in.
+
+        	savePopup.addElement(new InterfaceCanvasButton(5,3.25+pushUp,6.834,3.75+pushUp,function(){savePopup.kill()},"Close"));
+
+        	savePopup.addElement(new InterfaceCanvasButton(7.084,3.25+pushUp,8.918,3.75+pushUp,function(){openLoginPopup(); savePopup.kill()},"Login"));
+
+        	savePopup.addElement(new InterfaceCanvasButton(9.168,3.25+pushUp, 11.001,3.75+pushUp,function(){openRegisterPopup(); savePopup.kill();},"Sign up"));
+
+        	savePopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.5, "You must be logged in to save your world.", '18', false));
+			savePopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.1, "Please log in or make an account.", '18', false));
+        }else{
+        	// Logged in
+
+        	//Make the close and save buttons dissappear when saving, and make a progress text appear. 
+
+        	//Have a flag.
+        	//constructor(X1,Y1,X2,Y2,func1=function(){},text="null",textSize='18', conditionToDraw=function(){return true;}, c1 = '#CCC', c2 = '#555')
+
+					savePopup.addElement(new InterfaceCanvasButton(5.5+push,3.25+pushUp, 7.5+push,3.75+pushUp,function(){savePopup.kill()},"Close",'18',function(){return !isSaving;}));
+					savePopup.addElement(new InterfaceCanvasButton(5.5+2.5+push,3.25+pushUp, 7.5+2.5+push,3.75+pushUp,saveWorld,"Save",'18',function(){return !isSaving;}));
+
+					//x1, y1, x2, y2, "text", textSize, isLeft, textFunction
+					savePopup.addElement(new InterfaceText(centerCoordinates[0]-0.5, 3.25+pushUp,centerCoordinates[0]+0.5, 3.75+pushUp, "", '18', false, getSaveProgress));
+
+					savePopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.5, "Save world to the cloud?", '18', false));
+					savePopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.1, "Note, this will overwrite your existing save!", '18', false));
+        }
+	
+
+
+	}else{
+		let slideLeft = 1.25;
+		let widen = 0.5;
+		savePopup.addElement(new InterfaceCanvasButton(5.5+push+slideLeft-widen,3.25+pushUp, 7.5+push+slideLeft+widen,3.75+pushUp,function(){savePopup.kill()},"Close"));
+
+		savePopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.5, "Please make an account on voxelvale.net if", '18', false));
+		savePopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.1, "you wish to save your world to the cloud!", '18', false));
+	}
 
 
 	pQueue.enqueue(savePopup);
+}
+
+
+let isLoading = false;
+let loadProgress = -1;
+
+function getLoadProgress(){
+
+	if(loadProgress < 0){
+		return "";
+	}else{
+		return "Loading world... This may take a minute.";//"Progress: "+loadProgress.toString()+"%";
+	}
 }
 
 function loadWorldButton(){
@@ -71,12 +174,32 @@ function loadWorldButton(){
 
 	let push = 0.26;
 	let pushUp = 0.35;
-	loadPopup.addElement(new InterfaceCanvasButton(5.5+push,3.25+pushUp, 7.5+push,3.75+pushUp,function(){loadPopup.kill()},"Close"));
-	loadPopup.addElement(new InterfaceCanvasButton(5.5+2.5+push,3.25+pushUp, 7.5+2.5+push,3.75+pushUp,loadWorld,"Load"));
+	if(!IN_ITCH){
+		if(!loggedIn){
+			loadPopup.addElement(new InterfaceCanvasButton(5,3.25+pushUp,6.834,3.75+pushUp,function(){loadPopup.kill()},"Close"));
+      loadPopup.addElement(new InterfaceCanvasButton(7.084,3.25+pushUp,8.918,3.75+pushUp,function(){openLoginPopup(); loadPopup.kill();},"Login"));
+      loadPopup.addElement(new InterfaceCanvasButton(9.168,3.25+pushUp, 11.001,3.75+pushUp,function(){openRegisterPopup(); loadPopup.kill();},"Sign up"));
 
-	loadPopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.5, "Load world from the cloud?", '18', false));
-	loadPopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.1, "Note, this will overwrite the current world!", '18', false));
+      loadPopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.5, "You must be logged in to load your world.", '18', false));
+			loadPopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.1, "Please log in or make an account.", '18', false));
 
+			
+		}else{
+			loadPopup.addElement(new InterfaceCanvasButton(5.5+push,3.25+pushUp, 7.5+push,3.75+pushUp,function(){loadPopup.kill()},"Close",'18',function(){return !isLoading;}));
+			loadPopup.addElement(new InterfaceCanvasButton(5.5+2.5+push,3.25+pushUp, 7.5+2.5+push,3.75+pushUp,loadWorld,"Load",'18',function(){return !isLoading}));
+			loadPopup.addElement(new InterfaceText(centerCoordinates[0]-0.5, 3.25+pushUp,centerCoordinates[0]+0.5, 3.75+pushUp, "", '18', false, getLoadProgress));
+			loadPopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.5, "Load world from the cloud?", '18', false));
+			loadPopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.1, "Note, this will overwrite the current world!", '18', false));
+		}
+	}else{
+
+		let slideLeft = 1.25;
+		let widen = 0.5;
+		loadPopup.addElement(new InterfaceCanvasButton(5.5+push+slideLeft-widen,3.25+pushUp, 7.5+push+slideLeft+widen,3.75+pushUp,function(){loadPopup.kill()},"Close"));
+
+		loadPopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.5, "Please make an account on voxelvale.net if", '18', false));
+		loadPopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.1, "you wish to load your world from the cloud!", '18', false));
+	}
 
 	pQueue.enqueue(loadPopup);
 }
@@ -133,10 +256,23 @@ function add_interface_bottom_bar(){
 	//Enemy toggle button
 	let eX = 14;
 	let eY = 0.25;
-	var enemyToggleButton = new InterfaceButton(eX, eY, eX+1.75, eY+0.5,DARK_GREY,function(){SPAWN_ENEMIES=!SPAWN_ENEMIES; killAllEnemies();},"",'12');//Turn enemies off
+	//var enemyToggleButton = new InterfaceButton(eX, eY, eX+1.75, eY+0.5,DARK_GREY,function(){SPAWN_ENEMIES=!SPAWN_ENEMIES; killAllEnemies();},"",'12');//Turn enemies off
+	var enemyToggleButton = new InterfaceCanvasButton(eX, eY, eX+1.75, eY+0.5,function(){SPAWN_ENEMIES=!SPAWN_ENEMIES; killAllEnemies();},"",'12');//Turn enemies off
 	bottomBarElements.push(enemyToggleButton);
 	var enemyButtonText = new InterfaceText(eX, eY, eX+1.75, eY+0.5,"Turn enemies off.",'12',false,getEnemySpawn);
 	bottomBarElements.push(enemyButtonText);
+
+
+	/*
+		Login/signup options
+	*/
+	//constructor(X1,Y1,X2,Y2,func1=function(){},text="null",textSize='18', conditionToDraw=function(){return true;}, c1 = '#CCC', c2 = '#555')
+	bottomBarElements.push(new InterfaceCanvasButton(eX+0.6-1, 8.5-eY+0.1, eX+0.6,8.5-eY+0.5,openLoginPopup,"Login", '12', function(){if(!loggedIn)return true; return false}));
+    bottomBarElements.push(new InterfaceCanvasButton(eX+0.75,8.5-eY+0.1, eX+1.75,8.5-eY+0.5,openRegisterPopup,"Sign up", '12', function(){if(!loggedIn)return true; return false}));
+
+    bottomBarElements.push(new InterfaceCanvasButton(eX,8.5-eY+0.1, eX+1.75,8.5-eY+0.5,displayAccountInformation,"Account Info", '12', function(){if(loggedIn)return true; return false}));
+
+    //Also add the popup thingy for information.
 
 	/*
 

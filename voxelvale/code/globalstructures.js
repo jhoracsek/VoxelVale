@@ -7,11 +7,15 @@
 	calculate it so that the per-portion average is
 	the same regardless of how large the world is.
 */
-//const AVG_NUM_TREES = 600;
 
 const AVG_NUM_TREES = 1100;
 const TREE_VARIANCE = 50;
 
+const AVG_NUM_POOLS = 120;
+const POOL_VARIANCE = 10;
+
+const POOL_MAX_WIDTH = 20;
+const POOL_MAX_HEIGHT = 20;
 
 const AVG_NUM_STONE_CLUSTERS = 290;
 const STONE_CLUSTERS_VARIANCE = 10;
@@ -897,4 +901,124 @@ function gen_shop(X,Y){
 
 
 	return retList;
+}
+
+
+
+
+function generate_global_water_pool(X,Y){
+	var blocksToReturn = [];
+	let bias = 0.4;
+	let structureMap = [];
+
+	for(let i = 0; i < POOL_MAX_HEIGHT; i++){
+		let temp = []
+		for(let j = 0; j < POOL_MAX_WIDTH; j++){
+			temp.push(false)
+		}
+		structureMap.push(temp);
+	}
+
+	let midX = Math.floor((POOL_MAX_WIDTH-1)/2);
+	let midY = Math.floor((POOL_MAX_HEIGHT-1)/2);
+
+	//Returns X,Y coordinates as indices in the structure map.
+	function get_world_coords(pX,pY){
+		return [pX+X-midX, pY+Y-midY];
+	}
+
+	//Distance from middle for calculating probability.
+	function probability_by_distance(pX,pY){
+		//Distance from midX and midY.
+		//Surrounding thing should just always generate. E.g, a little square.
+		let xDist = Math.abs(pX - midX);
+		let yDist = Math.abs(pY - midY);
+
+		let radDist = Math.max(xDist, yDist);
+		if(radDist <= 1)
+			return true;
+
+		else if(radDist <= 2){
+			return flip_biased_coin(0.5);
+		}
+
+		else if(radDist <= 3){
+			return flip_biased_coin(0.2);
+		}
+
+		return flip_biased_coin(0.1);
+	}
+
+	function is_false_struct_coordinate(pX,pY){
+		if(pX >= 0 && pX < POOL_MAX_WIDTH){
+			if(pY >= 0 && pY < POOL_MAX_HEIGHT){
+				//Set coord to true.
+				if(!structureMap[pX][pY]){
+					structureMap[pX][pY] = true;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/*
+		Generate according to structure map.
+	*/
+	var structurePositions = [];
+	var gen_queue = [{posX: midX, posY:midY}];
+	while(gen_queue.length > 0){
+		let cur = gen_queue.pop();
+		structurePositions.push(cur);
+
+		let pX = cur.posX;
+		let pY = cur.posY;
+
+
+		// Poopy doopy.
+		let sub_queue = [];
+
+		// Replace biased_coin by prob_by_dist!
+		if(probability_by_distance(pX+1,pY) && is_false_struct_coordinate(pX+1,pY))
+			sub_queue.push({posX:pX+1, posY:pY});
+
+		if(probability_by_distance(pX-1,pY) && is_false_struct_coordinate(pX-1,pY))
+			sub_queue.push({posX:pX-1, posY:pY});
+
+		if(probability_by_distance(pX,pY+1) && is_false_struct_coordinate(pX,pY+1))
+			sub_queue.push({posX:pX, posY:pY+1});
+
+		if(probability_by_distance(pX,pY-1) && is_false_struct_coordinate(pX,pY-1))
+			sub_queue.push({posX:pX, posY:pY-1});
+
+		//Should randomize order they are pushed to gen_queue.
+		if(sub_queue.length > 0)
+			shuffleArray(sub_queue);
+
+		for(let i = 0; i < sub_queue.length; i++)
+			gen_queue.push(sub_queue[i]);
+	
+
+	}
+
+	/*
+		Convert structure maps coords to world coords
+		at level z = -2. 
+
+		Check if the pushed blocs are valid world coordinates.
+
+		Use: get_world_coords
+	*/
+
+	for(let i = 0; i < structurePositions.length; i++){
+		let coords = get_world_coords(structurePositions[i].posX,structurePositions[i].posY )
+		if(is_valid_world_coordinate(coords[0],coords[1])){
+
+			blocksToReturn.push(new Water(coords[0], coords[1], -2));
+			blocksToReturn.push(new DirtBlock(coords[0], coords[1], -1));
+		}
+	}
+
+
+	return blocksToReturn;
 }

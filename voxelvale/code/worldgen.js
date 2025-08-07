@@ -687,7 +687,7 @@ class World{
 
 			//locX = 22; locY = 22;
 
-			console.log('Portion shop generated at:', locX, locY)
+			//console.log('Portion shop generated at:', locX, locY)
 			this.portions[locX][locY].canGenerateGlobalStructures = false;
 
 
@@ -725,30 +725,50 @@ class World{
 		}
 
 		/*
-		if(GEN_DUNGEONS && generate_by_probability(0.15)){
-			for(var i = this.posX; i < this.outerBoundX; i++){
-				for(var j = this.posY; j < this.outerBoundY; j++){
-					//Do wood if underneath dungeon.
-					if( (j-this.posY) <= 6 && (j-this.posY) > 1 && (i - this.posX) >0 && (i-this.posX) <8  ){
-						this.push(new WoodBlock(i,j,-2));
-					}else{
-						this.push(new GrassBlock(i,j,-2));
-					}
+			Pools of water
+		*/
+
+		//generate_global_water_pool
+		if(GEN_WATER){
+		let numPools = AVG_NUM_POOLS + (randomInt(POOL_VARIANCE+1)-Math.round(POOL_VARIANCE/2));
+
+		for(let i = 0; i < numPools; i++){
+			// Define x and y as some random coordinates on the map.
+			let coordinateToGen = generate_random_world_coordinate();
+			let x = coordinateToGen[0];
+			let y = coordinateToGen[1];
+
+			//If the retArray is empty, it probably violated some condition. So just reset i 
+			//and regenerate it.
+			var retArray = generate_global_water_pool(x,y);
+			if(retArray.length==0){
+				i--;
+				continue;
+			}
+
+			//If x and y lie in a portion where canGenerateGlobalStructures = false, skip
+			let portionNum = this.getPortionNum(x,y);
+			if(!this.portions[portionNum[0]][portionNum[1]].canGenerateGlobalStructures){
+				i--;
+				continue;
+			}
+
+			for(var z = 0; z < retArray.length; z++){
+				let toAdd = retArray[z];
+				let portionNum = this.getPortionNum(toAdd.posX,toAdd.posY);
+				//Make sure it's in a portion that can generate global structures.
+				if(this.portions[portionNum[0]][portionNum[1]].canGenerateGlobalStructures){
+					this.addBlock(toAdd);
 				}
 			}
-			var retArray = gen_dungeon_BL(this.posX,this.posY+2);
-			for(var z=0;z<retArray.length;z++)
-				this.push(retArray[z]);
-			return;
 		}
-		*/
-
+		}
 		/*
 			Stone clusters
+
+			Make sure they don't generate over water.
 		*/
 		let numClusters = AVG_NUM_STONE_CLUSTERS + (randomInt(STONE_CLUSTERS_VARIANCE+1)-Math.round(STONE_CLUSTERS_VARIANCE/2));
-
-
 
 		for(let i = 0; i < numClusters; i++){
 			// Define x and y as some random coordinates on the map.

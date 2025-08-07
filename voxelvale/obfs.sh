@@ -9,11 +9,13 @@ terser \
 	code/modelingtools.js \
 	code/main.js \
 	code/player.js \
+	code/townfolkbuildingfunctions.js \
 	code/tile.js \
 	code/blockwall.js \
 	code/xyzblock.js \
 	code/dropbox.js \
 	code/chest.js \
+	code/brewingtable.js \
 	code/water.js \
 	code/scenes.js \
 	code/dungeons.js \
@@ -21,6 +23,9 @@ terser \
 	code/collisions.js \
 	code/enemy.js \
 	code/enemyroller.js \
+	code/townfolk.js \
+	code/shopkeeper.js \
+	code/animations.js \
 	code/notifications.js \
 	code/popup.js \
 	code/UI.js \
@@ -28,8 +33,10 @@ terser \
 	code/staminabar.js \
 	code/uifunctions.js \
 	code/inventory.js \
+	code/inventoryentry.js \
 	code/craftingmenu.js \
 	code/chestmenu.js \
+	code/shopmenu.js \
 	code/helpers.js \
 	code/item.js \
 	code/tools.js \

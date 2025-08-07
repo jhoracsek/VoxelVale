@@ -2,9 +2,120 @@
 
 
 
+
+
+
+What I want to do today:
+	
+	Finish 0.4.1
+		Add the new save feature
+		Add an indication for saving like a progress thing.
+		Do the same indication for loading.
+		Fix loading times.
+
+	Update the banner
+		Make it larger (fill the empty space with more blocks)
+		Maybe redo the text (try letters on just right side)
+
+	Go comment more on the sockpuppet account.
+
+	Access some games on sockpuppet through dev logs.
+
+	Push the update
+		Make a devlog.
+
+	Use sock puppet to find the update through browsing dev logs.
+
+	Start the video.
+
+	You should also make like a pseudo trailer thing for the game.
+
+
+
+
+
+
+
+Update Alpha 0.5.0 (Water you waiting for).
+
+	Do the toolbar update.
+
+	Do water/buckets.
+
+	Maybe bridges.
+
+
+
+
+
+
+
+Update Alpha 0.6.0 (Pass me a brew.)
+
+	Add brewing stand.
+		Use buckets to fill with water.
+		Water should diminish as you make potions.
+			(Not like the forge will!)
+
+	Zombie drops.
+
+	Plants and what not.
+
+	Glass bottles too!
+
+	Add an alchemist!
+		(Village randomly generates a path and the building is generated on a new portion.)
+
+
+
+This is pass me a brew!
+
+
+Make a linear plan on paper.
+
+	Start with brewing stand.
+
+
+Fix Cover.
+
+Alpha 0.6.0 | Quality of Life.
+Make a starting menu.
+Fix loading.
+
+Update for Armour | That's Armoure
+
+
+
+
+
+
+Update 0.5.0 | Water you waiting for?
+	1. Add water.
+	2. Add buckets.
+	3. Save multiple worlds.
+	4. Add progress for saving.
+	5. Maybe add a starting menu?
+		Would be good for itch.
+	6. Add itch.io saving. (so buttons essentially).
+	7. Maybe do the toolbar thing.
+	(only some pools have sand maybe.)
+	8. Sand?
+	9. Cactus
+
+Film discussion video. Just a discussion with some game play.
+Talk about Patreon and all that stuff.
+
+
+
+
+
+
+
+
 Inventory lighting issue (for transparent)
 	Maybe comes from squishing objects too much.
 	Try to adjust this.
+
 
 Water to do.
 	Fix network updating.										()
@@ -33,112 +144,39 @@ For the WaterNetworks 'startUpdate' function this is how I think it should work.
 	- It will then only update for 30 frames.
 
 
+Well, I actually think how it should work is:
+	When a water network is touched it runs it update to completion.
+	Seriously this shouldn't be that hard.
+
+	Keep updating until no blocks are added, there you're fully updated.
+
+
 Should fix quantity display over all inventories.
 
 I really like the metal alloy idea.
 
-Work on shops.
-	Need to add randomly generated shop 					(X)
-	Update the appearance.									(X)
-		Build test.											(X)
-		Blocks.												(X)
-		Size.												(X)
-		Door.												(NA)
-		Inside.												(X)
-
-	Add block as 'dummy' shop keep.							(X)
-	Start with block opening chest inv.						(X)
-	Then start adding new UI.								(X)
-		Try to make this very general for future use.		(X)
-		i.e., for forges/brewing stands.					(X)
-
-	Need to figure out how payment works.					()
-	Buying/selling/coins.									()
-
-	Add 'coins' to inventory.								()
-	Method for obtaining coins? 							()
-		Killing enemies.									()
-		In drop box or just receive when killed.			()
-		If coins have no weight then just receive I think.	()
-		(Like xp)
-
-
-	NEED TO FIX THE ARROW BUTTONS FOR POTENTIALLY ALL INVENTORY OBJECTS.
-
-	MAKE SURE SILVER AND GOLD ARE SAVED!
-
+Shop questions:
 	Should objects reset?
 	Maybe include a timer if they do?
 	Maybe not all objects reset? Like some are persistent?
 	(Also how does this affect save/load?)
 
-	Basically make UI same as chest, but moving and buying
-	displaces coins. This is a good starting point I think!
 
-	Make sure that the entire inventory is just one thing
-	no tabs (on the shops side, not on the players!)
-
-
-	Not relevant to shops, but just do a little work on the itch io thing.
-	Ask chatgpt about the thing like how I can add the game without the account.
 
 make potion system like zelda.
-
-Update Alpha 0.4.0 | Shopkeeps
-	1. Add shop
-	2. Fix the notification thing.
-		2.a) Maybe make them disappear faster.
-		2.b) Need to test, do two seperated notifications ever merge?
-		2.c) If not, should this even happen?
-		2.d) Or should you just make them die really quickly.
 	3. Fix the thing where upone makes the ceiling opaque if you're not on a block.
 		(Move to next update.)
-	4. Fixed the lighting thing on the leftside of zombies/players.	(X)
-	5. Fixed zombie shadows.
 
 
-Change log | Alpha 0.4.0 | Shop and listen.
+Save load update!!! This should be the next one!!
+	Very important 0.5.0!!!!!!
+
 	
-	Features:
-		- Added a randomly generated shop.
-		- Added a shopkeeper that can sell recipes and buy objects.
-		- Added gold and silver as a currency for the shop.
-		- Zombies now drop silver.
-		- Added recipe for wooden bows.
 
-	Changes:
-		- Zombies now only drop health potions, recipes for copper bars, copper tools, 
-		latkin bars and latkin pickaxes.
-		- Probability of a zombie dropping a health potion reduced to 50%.
-
-	Fixes:
-		- Fixed arrow buttons not working in chests.
-		- Fixed zombie shadows not displaying their shoulders.
-		- Fixed rendering glitch on the left side of zombies and players.
-		- Adjusted notification system. Now previously obtained objects
-		will have their quanitity increased, regardless of where they appear
-		in the list of notifications.
-		- Players resting arm and leg angle positions are now 0 when idle
-		(previously when the users stopped walking, these angles may have been
-		slightly offset).
-		- Sprint particles are no longer displayed when the player is idle.
-
-
-
-
-
+athanor (alchemy)
 
 
 Can add a little iron brim around the bucket.
-
-
-
-Would be nice if you could like... Make some documentation for making enemies while you're making the
-shop keep.
-
-
-Should lay groundwork for water generation.			()
-
 
 
 Bow no! (Update for bows.)

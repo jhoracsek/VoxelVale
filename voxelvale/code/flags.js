@@ -1,13 +1,24 @@
 
 
 
-const GAME_VERSION = "Alpha 0.4.0"
+const GAME_VERSION = "Alpha 0.4.2"
 const DEV_TOOLS = false;
 const GEN_DUNGEONS = false;
 var SPAWN_ENEMIES = true;
 const MAX_ENEMIES_IN_WORLD = 5;
 const PICTURE_MODE = false;
 const GEN_OLD_STYLE_WORLD = false;
+const IN_ITCH = false;
+
+
+/*
+	For saving/loading
+*/
+let loggedIn = false;
+let emailAccount = "null";
+let sessionToken = "null";
+let accountUID = "null";
+let idToken = "null";
 
 
 /*
@@ -16,6 +27,7 @@ const GEN_OLD_STYLE_WORLD = false;
 */
 const GEN_SHOP = true;
 const GEN_DUNGEON = false;
+const GEN_WATER = false;
 
 /*
 	Set to 1.5 for 1080p
@@ -35,8 +47,6 @@ const SPAWN_RATE = 0.07;
 
 	In inventory, cursor coordinates are:
 		cursorCoor[0], cursorCoor[1]
-
-
 
 */
 
