@@ -285,7 +285,9 @@ function getKeyDown(key){
 	if(key.keyCode == 40){
 		key.preventDefault();
 		if(DEV_TOOLS){
-			viewRotateX++;
+			viewRotateX-=5;
+			viewShiftZ++;
+			viewShiftY+=0.5;
 			controlledYSpin-=10;
 		}
 	}
@@ -293,7 +295,9 @@ function getKeyDown(key){
 	if(key.keyCode == 38){
 		key.preventDefault();
 		if(DEV_TOOLS){
-			viewRotateX--;
+			viewRotateX+=5;
+			viewShiftZ--;
+			viewShiftY-=0.5;
 			controlledYSpin+=10;
 		}
 	}
@@ -301,7 +305,8 @@ function getKeyDown(key){
 	if(key.keyCode == 39){
 		key.preventDefault();
 		if(DEV_TOOLS){
-			viewRotateZ++;
+			//viewRotateZ++;
+			viewShiftZ++;
 			controlledXSpin+=10;
 		}
 	}
@@ -309,7 +314,8 @@ function getKeyDown(key){
 	if(key.keyCode == 37){
 		key.preventDefault();
 		if(DEV_TOOLS){
-			viewRotateZ--;
+			//viewRotateZ--;
+			viewShiftZ--;
 			controlledXSpin-=10;
 		}
 	}

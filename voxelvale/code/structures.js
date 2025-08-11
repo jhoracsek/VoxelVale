@@ -37,6 +37,58 @@ function gen_tree(X,Y){
 	return blockList;
 }
 
+function gen_cactus(X,Y){
+	var blockList=[];
+	let topBlock = null;
+	blockList.push(new Cactus(X,Y,-3));
+	blockList.push(new Cactus(X,Y,-4));
+	topBlock = new Cactus(X,Y,-5);
+	blockList.push(topBlock);
+	
+	let extraTall = false;
+
+	//Make it taller.
+	if(generate_by_probability(0.4)){
+		topBlock = new Cactus(X,Y,-6)
+		blockList.push(topBlock);
+		extraTall = true;
+	}
+
+
+	//Arm must be at either -4 or -5
+	let roll = roll_n_sided_die(2);
+	switch(roll){
+		case 0:
+			//Just one
+			let offset = 0;
+			if(extraTall){
+				offset = Math.round(Math.random());
+			}
+			if(generate_by_probability(0.5)){
+				blockList.push(new CactusArm(X+1,Y,-4-offset))			
+			}else{
+				blockList.push(new CactusArm(X-1,Y,-4-offset))
+			}
+			break;
+		case 1:
+			//Do two
+			let offset1 = 0;
+			let offset2 = 0;
+			if(extraTall){
+				offset1 = Math.round(Math.random());
+				offset2 = Math.round(Math.random());
+			}
+			blockList.push(new CactusArm(X+1,Y,-4-offset1))			
+			blockList.push(new CactusArm(X-1,Y,-4-offset2))
+		
+			break;
+
+	}
+
+	topBlock.isTopOfCactus = true;
+	return blockList;
+}
+
 function gen_dungeon_BL(X,Y){
 	var retList=[]
 	retList.push(new WeirdBlock(X+4,Y,-6));

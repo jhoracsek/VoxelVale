@@ -42,7 +42,7 @@ class NonActionableItem {
 
 
 function initializeNonActionableItems(){
-	nonActionableItems = [Copper, CopperBar, ArrowItem, HealthPotion, Latkin, Illsaw, Platinum, Lunite, Daytum, LatkinBar, IllsawBar, PlatinumBar, LuniteBar, DaytumBar];
+	nonActionableItems = [Copper, CopperBar, ArrowItem, HealthPotion, Latkin, Illsaw, Platinum, Lunite, Daytum, LatkinBar, IllsawBar, PlatinumBar, LuniteBar, DaytumBar, Clay];
 }
 
 
@@ -286,6 +286,7 @@ class DaytumBar extends InventoryBar{
 }
 
 
+
 //let ArrowMat = mult(scale4(1.3mult(rotateZ(-55-29),mult(rotateX(-45),rotateY(-55))
 let ArrowMat = mult(rotateY(-55),mult(rotateX(-45),mult(rotateZ(-55-29),scale4(1.3,1.3,1.3,1))));
 class ArrowItem extends NonActionableItem {
@@ -515,7 +516,21 @@ class HealthPotion extends NonActionableItem {
 }
 
 
+class Clay extends InventoryBar{
+	static objectNumber = 101;
+	static name = 'Clay';
+	static desc = 'A piece of clay.';
+
+	static colorOne = hexToRgbA('#d6d8dc');
+	static colorTwo = hexToRgbA('#bbbec5');
+
+	static sellPrice = 10;
+
+	constructor(){super();}
+}
 
 
 
-const ITEM_OBJNUMS = [WoodAxe, StonePickaxe, WoodenBow, Copper, CopperBar, ArrowItem, CopperPickaxe, CopperAxe, HealthPotion, StoneSword, CopperSword, WoodenBucket, Latkin, Illsaw, Platinum, Lunite, Daytum, LatkinBar, IllsawBar, PlatinumBar, LuniteBar, DaytumBar, LatkinPickaxe, IllsawPickaxe, PlatinumPickaxe, LunitePickaxe, DaytumPickaxe,LatkinSword, IllsawSword, PlatinumSword, LuniteSword, DaytumSword, LatkinAxe, IllsawAxe, PlatinumAxe, LuniteAxe,DaytumAxe];
+
+
+const ITEM_OBJNUMS = [WoodAxe, StonePickaxe, WoodenBow, Copper, CopperBar, ArrowItem, CopperPickaxe, CopperAxe, HealthPotion, StoneSword, CopperSword, WoodenBucket, Latkin, Illsaw, Platinum, Lunite, Daytum, LatkinBar, IllsawBar, PlatinumBar, LuniteBar, DaytumBar, LatkinPickaxe, IllsawPickaxe, PlatinumPickaxe, LunitePickaxe, DaytumPickaxe,LatkinSword, IllsawSword, PlatinumSword, LuniteSword, DaytumSword, LatkinAxe, IllsawAxe, PlatinumAxe, LuniteAxe,DaytumAxe,Clay];

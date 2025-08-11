@@ -28,7 +28,7 @@ function unique_candidates_in_array(c1, c2, c3, c4, arr){
 
 
 
-let newWaterNetworkID = 0;
+
 class WaterNetwork {
 
 	constructor(water, level=1){
@@ -52,6 +52,9 @@ class WaterNetwork {
 		//Simple hacky method for comparing networks.
 		this.id = newWaterNetworkID;
 		newWaterNetworkID++;
+
+
+		this.shouldUpdate = true;
 
 		this.updateCooldown = 20;
 	}
@@ -92,30 +95,29 @@ class WaterNetwork {
 		}
 	}
 
+	setLevel(level){
+		this.level = level;
+	}
+
 
 
 	update(){
 
-		if(lowLevelChange){
-			this.updateCooldown = 20;
-		}
+		if(!this.shouldUpdate)
+			return;
 
-		//if(this.updateCooldown <= 0){
-		//	return;
-		//}
 
-		if(this.updateCooldown > 0)
-			this.updateCooldown--;
-		//console.log('Im updating!')
-		//Sets the level for each water block in the network
 		for(let i = 0; i < this.network.length; i++){
 			this.network[i].setLevel(this.level/this.network.length);
 		}
 		
-		let keepUpdating = false;
+		let expandedNetwork = false;
+
 		if(this.level/this.network.length >= 0.1){
 			this.setCandidates();
-			keepUpdating = false
+			
+		
+
 			for(let i = 0; i < this.edgeCandidates.length; i++){
 				let can = this.edgeCandidates[i];
 				let pX = can.posX;
@@ -125,14 +127,20 @@ class WaterNetwork {
 				let waterToAdd = world.addWater(pX,pY,pZ,this);
 				
 				if(waterToAdd != null){
+					expandedNetwork = true;
 					if(!this.replaceDuplicate(waterToAdd)){
 						this.network.push(waterToAdd);
 						this.networkSize++;
 					}
-					keepUpdating = true;
 				}
 			}
 		}
+
+		if(!expandedNetwork)
+			this.shouldUpdate = false;
+
+
+
 		/*
 			ENSURE LEVEL IS NOT TOO HIGH!!!
 		*/
@@ -141,7 +149,6 @@ class WaterNetwork {
 			this.level = this.network.length;
 		}
 
-		//this.requiresUpdate = keepUpdating;
 		//Sets the level for each water block in the network
 		for(let i = 0; i < this.network.length; i++){
 			this.network[i].setLevel(this.level/this.network.length);
@@ -164,6 +171,8 @@ class WaterNetwork {
 	}
 
 	removeWaterBlock(water){
+
+		this.shouldUpdate = true;
 
 		let pX = water.posX;
 		let pY = water.posY;
@@ -236,7 +245,7 @@ class WaterNetwork {
 			return; //Something terrible happened probably.
 		}
 
-
+		this.shouldUpdate = true;
 
 		/*
 			The bucket tries to pick up 'maxAmount'.
@@ -537,6 +546,7 @@ class WaterNetwork {
 		//Add them all to this network array.
 		//ALSO NEED TO remove it from the network array. (do last...)
 		this.updateCooldown = 20;
+		this.shouldUpdate = true;
 		this.level += other.level;
 		for(let i = 0; i < this.network.length; i++){
 			this.network[i].isEdge = true;
@@ -681,7 +691,8 @@ class Water extends BlockWallNew{
 
 			water.network.onScoop(water, amountToPick, player.heldObject);
 		}else{
-			console.log('Network size:', this.network.network.length, '\nMy level:', this.level);
+			console.log();
+			console.log('Network ID:', this.network.id, '\nNetwork size:', this.network.network.length, '\nNetwork Level:', this.network.level, '\nMy level:', this.level);
 		}
 	}
 

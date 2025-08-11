@@ -112,6 +112,7 @@ var enemyArray;
 var townFolkArray;
 var drawDeathArray;
 var waterNetworkArray;
+var newWaterNetworkID;
 
 //AKA Universal Acceleration Cutoff Threshold;
 var UACT;
@@ -175,6 +176,10 @@ let unrotatedViewMatrix;
 let viewRotateX = 0;
 let viewRotateY = 0;
 let viewRotateZ = 0;
+
+let viewShiftX = 0;
+let viewShiftY = 0;
+let viewShiftZ = 0;
 
 
 //Thank you: w3schools.com/tags/canvas_getimagedata.asp
@@ -432,6 +437,8 @@ window.onload = function init(){
 	if(!gl){
 		alert("Webl is not available")
 	}
+
+	newWaterNetworkID = 0;
 	waterNetworkArray = [];
 	//In controls.js, adds mouse functionality.
 
@@ -473,6 +480,8 @@ window.onload = function init(){
 	drawDeathArray = new ProperArray();
 
 	player = new Player(10,10,-6);
+
+
 
 	program = initShaders(gl, "vertex-shader", "fragment-shader");
 	gl.useProgram(program);
@@ -567,6 +576,8 @@ window.onload = function init(){
 		player.addToInventory(chest);
 		player.addToInventory(new DaytumPickaxe());
 		
+		player.addToInventory(new SandBlock());
+
 		/*
 		player.addToInventory(new WoodBlock());
 		player.addToInventory(new WoodBlock());
@@ -918,6 +929,9 @@ function send_block(){
 
 
 
+	//Misc
+	(new ClayBlock()).sendData();
+
 	//Buckets
 	WoodenBucket.sendData();
 
@@ -1240,7 +1254,8 @@ let bgX = 0;
 function render_data(){
 	if(DEV_TOOLS){
 		//For rotating camera.
-		viewMatrix = mult(unrotatedViewMatrix,rotateX(viewRotateX));
+		viewMatrix = mult(unrotatedViewMatrix,translate(viewShiftX, viewShiftY, viewShiftZ));
+		viewMatrix = mult(viewMatrix,rotateX(viewRotateX));
 		viewMatrix = mult(viewMatrix,rotateY(viewRotateY));
 		viewMatrix = mult(viewMatrix,rotateZ(viewRotateZ));
 	}
@@ -1927,13 +1942,15 @@ function updateEndLogic(){
 
 		/*
 			Clean up dead networks.
-			dead = [0, 5, 9]
 		*/
 		for(let i = deadNetworkIndices.length-1; i >= 0; i--){
 			waterNetworkArray[deadNetworkIndices[i]] = waterNetworkArray[waterNetworkArray.length-1];
 			waterNetworkArray.pop();
 		}
-		lowLevelChange = false;
+
+		/*
+			Redo these.
+		*/
 		//console.log('Number of active water networks:', numAlive);
 		//console.log('Array size:', waterNetworkArray.length);
 	}

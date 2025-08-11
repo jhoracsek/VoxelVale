@@ -659,9 +659,38 @@ class WoodenBowRecipe extends BowRecipeAbstract{
 		super(new WoodenBow(), [[new StoneBlock(),2],[new WoodBlock(), 6]],1);
 		this.desc='Recipe for a bow.';
 	}
-
 }
 
+
+class ComDirtRecipe extends Recipe{
+	static objectNumber = 160;
+
+	static sellPrice = 20;
+	constructor(){
+		super(new CompactedDirt(), [[new GrassBlock(),4]],1);
+		this.desc='Recipe for a compacted dirt block.';
+	}
+}
+
+class ComSandRecipe extends Recipe{
+	static objectNumber = 161;
+
+	static sellPrice = 20;
+	constructor(){
+		super(new CompactedSand(), [[new SandBlock(),4]],1);
+		this.desc='Recipe for a compacted sand block.';
+	}
+}
+
+class ClayBrickRecipe extends Recipe{
+	static objectNumber = 162;
+
+	static sellPrice = 20;
+	constructor(){
+		super(new ClayBrick(), [[new Clay(),4]],1);
+		this.desc='Recipe for a brick block.';
+	}
+}
 
 
 

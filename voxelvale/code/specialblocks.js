@@ -507,6 +507,21 @@ class DaytumStone extends StoneOre{
 }
 
 
+class ClayBlock extends StoneOre{
+	constructor(X=null,Y=null,Z=null){
+		super(X,Y,Z);
+		this.tex = 33;
+		this.name = 'Clay';
+		this.tob='STONE';
+		this.desc = 'Why oh why is this in your inventory?'
+		this.objectNumber=28;
+	}
+	drop(){
+		return [new Clay()];
+	}
+}
+
+
 
 
 //woodBranchNum

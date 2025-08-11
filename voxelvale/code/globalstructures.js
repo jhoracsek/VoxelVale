@@ -11,11 +11,11 @@
 const AVG_NUM_TREES = 1100;
 const TREE_VARIANCE = 50;
 
-const AVG_NUM_POOLS = 120;
+const AVG_NUM_POOLS = 90;
 const POOL_VARIANCE = 10;
 
-const POOL_MAX_WIDTH = 20;
-const POOL_MAX_HEIGHT = 20;
+const POOL_MAX_WIDTH = 30;
+const POOL_MAX_HEIGHT = 30;
 
 const AVG_NUM_STONE_CLUSTERS = 290;
 const STONE_CLUSTERS_VARIANCE = 10;
@@ -962,6 +962,15 @@ function generate_global_water_pool(X,Y){
 		return false;
 	}
 
+	function is_space_occupied(pX,pY){
+		if(pX >= 0 && pX < POOL_MAX_WIDTH){
+			if(pY >= 0 && pY < POOL_MAX_HEIGHT){
+				return structureMap[pX][pY];
+			}
+		}
+		return false;
+	}
+
 	/*
 		Generate according to structure map.
 	*/
@@ -975,7 +984,6 @@ function generate_global_water_pool(X,Y){
 		let pY = cur.posY;
 
 
-		// Poopy doopy.
 		let sub_queue = [];
 
 		// Replace biased_coin by prob_by_dist!
@@ -1002,6 +1010,143 @@ function generate_global_water_pool(X,Y){
 	}
 
 	/*
+		Add border.
+	*/
+
+	let border_queue = [];
+	for(let i = 0; i < structureMap.length; i++){
+		for(let j = 0; j < structureMap.length; j++){
+			//Check adj blocks.
+			
+			if(structureMap[i][j])
+				continue;
+
+			/*
+				At this point, the block has no water.
+				If it has at least one adjacent water block,
+				then make it water.
+
+				Do not change the structure map at this point.
+			*/
+			let oneAdj = false;
+
+			// Block to left.
+			if(i-1 >= 0){
+				if(structureMap[i-1][j])
+					oneAdj = true;
+			}
+
+			// Block to right.
+			if(i+1 < structureMap.length){
+				if(structureMap[i+1][j])
+					oneAdj = true;
+			}
+
+			// Block below.
+			if(j-1 >= 0){
+				if(structureMap[i][j-1])
+					oneAdj = true;
+			}
+
+			// Block above.
+			if(j+1 < structureMap.length){
+				if(structureMap[i][j+1])
+					oneAdj = true;
+			}
+
+			if(oneAdj){
+				border_queue.push({posX:i, posY:j});
+			}
+		}	
+	}
+	/*
+		Now update the structure map.
+	*/
+	for(let i = 0; i < border_queue.length; i++){
+		let xPos = border_queue[i].posX;
+		let yPos = border_queue[i].posY;
+
+		is_false_struct_coordinate(xPos,yPos);
+	}
+
+	/*
+		Add a sand/clay border.
+	*/
+
+	let sand_clay_queue = [];
+	for(let i = 0; i < structureMap.length; i++){
+		for(let j = 0; j < structureMap.length; j++){
+			//Check adj blocks.
+			
+			if(structureMap[i][j])
+				continue;
+
+			/*
+				At this point, the block has no water.
+				If it has at least one adjacent water block,
+				then make it water.
+
+				Do not change the structure map at this point.
+			*/
+			let oneAdj = false;
+
+			// Block to left.
+			if(i-1 >= 0){
+				if(structureMap[i-1][j])
+					oneAdj = true;
+			}
+
+			// Block to right.
+			if(i+1 < structureMap.length){
+				if(structureMap[i+1][j])
+					oneAdj = true;
+			}
+
+			// Block below.
+			if(j-1 >= 0){
+				if(structureMap[i][j-1])
+					oneAdj = true;
+			}
+
+			// Block above.
+			if(j+1 < structureMap.length){
+				if(structureMap[i][j+1])
+					oneAdj = true;
+			}
+
+			if(oneAdj){
+				sand_clay_queue.push({posX:i, posY:j});
+
+				/*
+					Expansion.
+
+					Sand/Clay cannot step over water,
+					but it's fine if it steps over other sand/clay
+					blocks because this will be handled when they are
+					added into the world.
+				*/
+				for(let z = 1; z < 5; z++){
+					if(!is_space_occupied(i+z, j))
+					sand_clay_queue.push({posX:i+z, posY:j});
+
+					if(!is_space_occupied(i-z, j))
+						sand_clay_queue.push({posX:i-z, posY:j});
+
+					if(!is_space_occupied(i, j+z))
+						sand_clay_queue.push({posX:i, posY:j+z});
+
+					if(!is_space_occupied(i, j-z))
+						sand_clay_queue.push({posX:i, posY:j-z});
+	
+				}
+
+			}
+		}	
+	}
+
+
+
+	/*
 		Convert structure maps coords to world coords
 		at level z = -2. 
 
@@ -1016,6 +1161,194 @@ function generate_global_water_pool(X,Y){
 
 			blocksToReturn.push(new Water(coords[0], coords[1], -2));
 			blocksToReturn.push(new DirtBlock(coords[0], coords[1], -1));
+		}
+	}
+
+	/*
+		Now do the same for the border_queue.
+	*/
+	for(let i = 0; i < border_queue.length; i++){
+		let coords = get_world_coords(border_queue[i].posX,border_queue[i].posY )
+		
+		if(is_valid_world_coordinate(coords[0],coords[1])){
+			// For testing, make it a weird block.	
+			//blocksToReturn.push(new WeirdBlock(coords[0], coords[1], -2));
+			
+			blocksToReturn.push(new Water(coords[0], coords[1], -2));
+			blocksToReturn.push(new DirtBlock(coords[0], coords[1], -1));
+		}			
+	}
+
+	let sandBlocks = [];
+	//sand_clay_queue
+	for(let i = 0; i < sand_clay_queue.length; i++){
+		let coords = get_world_coords(sand_clay_queue[i].posX,sand_clay_queue[i].posY )
+		
+		if(is_valid_world_coordinate(coords[0],coords[1])){
+			// For testing, make it a weird block.	
+			sandBlocks.push(new SandBlock(coords[0], coords[1], -2));
+		}			
+	}
+
+	function isAdj(o1, o2){
+		let PX1 = o1.posX;
+		let PY1 = o1.posY;
+
+		let PX2 = o2.posX;
+		let PY2 = o2.posY;
+
+		if(PX1 == PX2 -1 && PY1 == PY2)
+			return true;
+		if(PX1 == PX2 +1 && PY1 == PY2)
+			return true;
+		if(PX1 == PX2  && PY1 == PY2+1)
+			return true;
+		if(PX1 == PX2  && PY1 == PY2-1)
+			return true;
+		return false;
+	}
+
+	//CLAY THING
+	let clayBlocks = [];
+	if(roll_n_sided_die(2) == 0){
+		/*
+			Generate a vein of clay.
+			
+			Needs to be at begining of return array so it overrides sand.
+		*/
+
+		//Find a random sand block.
+		let index = roll_n_sided_die(sandBlocks.length);
+
+		
+
+		let length = roll_n_sided_die(3) + 3;
+
+		for(let i = 0; i < length; i++){
+			let startPosX = sandBlocks[index].posX;
+			let startPosY = sandBlocks[index].posY;
+			
+			clayBlocks.push(new ClayBlock(startPosX, startPosY, -3));
+			clayBlocks.push(new ClayBlock(startPosX, startPosY, -2));
+			
+			/*
+				(1) Make a list of adjacent sand blocks
+				at level z = -2 that are not already clay.
+
+				(2) If there are none, stop the function.
+
+				(3) Othewise, choose one of these at random 
+				and make set the index to the new block.
+			*/
+			let adjSandBlocks = [];
+			for(let j = 0; j < sandBlocks.length; j++){
+				if(isAdj(sandBlocks[index],sandBlocks[j])){
+					//Now make sure it's not already clay.
+					let isClay = false;
+					for(let k = 0; k < clayBlocks.length; k++){
+						if(sandBlocks[j].posX == clayBlocks[k].posX && sandBlocks[j].posY == clayBlocks[k].posY)
+							isClay = true;
+					}
+					if(!isClay)
+						adjSandBlocks.push(j);
+				}
+			}
+			if(adjSandBlocks.length == 0)
+				break;
+			index = adjSandBlocks[roll_n_sided_die(adjSandBlocks.length)];
+		}
+
+	}
+
+	for(let i = 0; i < clayBlocks.length; i++){
+		blocksToReturn.push(clayBlocks[i]);
+	}
+
+	for(let i = 0; i < sandBlocks.length; i++){
+		blocksToReturn.push(sandBlocks[i]);
+	}
+
+	//NUM_CACTI BETWEEN 0 - 2
+	let num_cacti = 1+roll_n_sided_die(2);//roll_n_sided_die(3);
+	let candidates = [];
+	if(num_cacti > 0){
+		let index = 0;
+
+		for(let i = 0; i < num_cacti; i++){
+
+			index = roll_n_sided_die(sandBlocks.length);
+
+			let startPosX = sandBlocks[index].posX;
+			let startPosY = sandBlocks[index].posY;
+
+			let can = {posX: startPosX, posY: startPosY};
+			/*
+				Verify it's not:
+					(1) Clay (or adj to clay).
+					(2) Adjacent to another cactus.
+			*/
+			let isValidPosition = true;
+
+			for(let j = 0; j < clayBlocks.length; j++){
+				if(can.posX == clayBlocks[j].posX && can.posY == clayBlocks[j].posY)
+					isValidPosition = false;
+
+				if( isAdj(can,clayBlocks[j]) ){
+					isValidPosition = false;					
+				}
+			}
+
+			for(let j = 0; j < candidates.length; j++){
+				if(can.posX == candidates[j].posX && can.posY == candidates[j].posY)
+					isValidPosition = false;
+
+				if( isAdj(can,candidates[j]) ){
+					isValidPosition = false;					
+				}
+			}
+
+			if(!isValidPosition){
+				i--;
+				continue;
+			}
+
+			candidates.push(can);
+
+			//----
+			let cactusStruct = gen_cactus(startPosX,startPosY)
+
+			for(let z = 0; z < cactusStruct.length; z++){
+				blocksToReturn.push(cactusStruct[z]);
+			}
+			
+			/*
+				(1) Make a list of adjacent sand blocks
+				at level z = -2 that are not already clay.
+
+				(2) If there are none, stop the function.
+
+				(3) Othewise, choose one of these at random 
+				and make set the index to the new block.
+			*/
+
+			/*
+			let adjSandBlocks = [];
+			for(let j = 0; j < sandBlocks.length; j++){
+				if(isAdj(sandBlocks[index],sandBlocks[j])){
+					//Now make sure it's not already clay.
+					let isClay = false;
+					for(let k = 0; k < clayBlocks.length; k++){
+						if(sandBlocks[j].posX == clayBlocks[k].posX && sandBlocks[j].posY == clayBlocks[k].posY)
+							isClay = true;
+					}
+					if(!isClay)
+						adjSandBlocks.push(j);
+				}
+			}
+			if(adjSandBlocks.length == 0)
+				break;
+			index = adjSandBlocks[roll_n_sided_die(adjSandBlocks.length)];
+			*/
 		}
 	}
 

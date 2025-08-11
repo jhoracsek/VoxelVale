@@ -5,35 +5,199 @@
 
 
 
-What I want to do today:
-	
-	Finish 0.4.1
-		Add the new save feature
-		Add an indication for saving like a progress thing.
-		Do the same indication for loading.
-		Fix loading times.
 
-	Update the banner
-		Make it larger (fill the empty space with more blocks)
-		Maybe redo the text (try letters on just right side)
+Update Alpha 0.5.0 | Water you waiting for?
+	Features:
+	1. Added water that is randomly generated around the world.
+	2. Added sand that surrounds some water blocks.
+	3. Added buckets and recipes for crafting buckets.
+	4. Shopkeeper now sells the recipe for the bucket.
+	5. Added glass which can be crafted from sand.
+	6. Added cactuses.
 
-	Go comment more on the sockpuppet account.
+	Changes:
 
-	Access some games on sockpuppet through dev logs.
-
-	Push the update
-		Make a devlog.
-
-	Use sock puppet to find the update through browsing dev logs.
-
-	Start the video.
-
-	You should also make like a pseudo trailer thing for the game.
+	Fixes:
+	1. Fixed glitch where notifications would appear under signup/login/account information.
 
 
 
+Make a short for water.
+
+You should also try to add cactuses and fix the notification glitch 
+thingy with account info/log in and signup.
+
+Buckets should be craftable.
+
+Some stuff from books:
+	Make 2D logo (already start)
+	For videos make the text transparent (e.g., can see the blurred video underneath it)
+
+	For the trailer video, you should make a scene where the player is walking and the scene changes,
+	but the players position and arm/legs angles stay the same.
+		Through grass, through village, through night, through sand.
 
 
+Todo (Linear):
+	1. Fix water network generation.			(X)
+		1.a) Try to make a border.				(X)
+		1.b) Try to figure out the sand idea.	(X)
+		1.c) Clay is like stone on sand.		(X)
+		1.d) Clay drops an item to be crafted.	(X)
+		1.e) Stone should not spawn over sand.	(X)
+		1.f) Sand should not step over oth. wat.(X)
+		1.g) Adjust sand texture.				(X)
+		1.h) Clay gen on sand like stone.		(X)
+
+	2. Add cactuses.							(X)
+		2.a) Should be like trees.				(X)
+		2.b) Smaller size.						(X)
+		2.c) Branches like green arms: L| |7	(X)
+		2.d) Top should be covered.				(X)
+		2.e) Should be covered in points.		(NA)
+		2.f) If a tree gen on sand, make it cac.(NA)
+
+	(If you walk into it you get hurt?)
+
+	(Maybe gen last sand border after clay?)
+
+	If water is pushed over sand, replace it.
+
+	(Skip, player starts with bucket)ADD THIS!	()
+	3. Add bucket recipe.						(NA)
+		3.a) 
+		3.d) (Aside) fix bucket display in inv.	(NA)
+
+	(Skip add to next update)
+	4. Add glass.								(NA)
+		4.a) Add recipe.						(NA)
+		4.b) Add recipe to shop.				(NA)
+		4.c) Try to make it look nice.			(NA)
+
+	5. Add compacted dirt.						(X)
+		5.a) Dark almost black block.			(X)
+		5.b) (Aside) Dirt crafted from grass.	(Skip)
+		5.c) (Aside) Add dirt recipe.			(Skip)
+		5.d) Crafted from 4 dirt.				(Skip)
+		5.e) Add recipe.						(X)
+		5.f) Add recipe to shop.				(X)
+
+
+	Make some water pools without sand.			()
+	Adjust sell price for new blocks/recipes.	()
+		Sand, cactus, new three.
+		And their recipes.
+
+	For the pixel art short, we still need:
+
+	6. More coloured blocks.					(X)
+		6.a) A red block. (normal bricks)		(X)
+		6.b) Need to then add clay.				(X)
+		6.c) An yellowish block (compactsand).	(NA)
+		6.d) A white block.	(platinum)			(X)
+
+	Compacted Dirt 								(X)
+		Texture.								(X)
+		Add block.								(X)
+		Add recipe.								(X)
+		Add rec to shop.						(X)
+
+	Brick										(X)
+		Texture.								(X)
+		Add block. 								(X)
+		Add recipe.								(X)
+		Add rec to shop.						(X)
+
+	Compacted Sand 								(X)
+		Texture.								(X)
+		Add block.								(X)
+		Add recipe.								(X)
+		Add rec to shop.						(X)
+
+
+	Fix cactus hold.							(X)
+
+	7. Ability to zoom out.						()
+		7.a) Default pos. should be max zoom.	()
+		7.b) When zoom out, camera should angle.()
+		7.c) Should be smooth.					()
+
+	8. Add some more sounds.					()
+		8.a) Buying sound.						()
+		8.b) Selling sound.						()
+		8.c) Crafting sound.					()
+
+	9. Fix notification issue.					()
+		9.a) Come up with idea.					()
+		9.b) Implement idea.					()
+
+	10. Fix cursor expanding water glitch.		()
+
+	(Skip)
+	11. Update stone texture.					()
+
+	12. Tweak 'oasis' generation.				()
+		Maybe less of them
+		Or just less with sand.
+
+		Make them bigger, call them beaches, make them less
+		likely, increase the length of clay ore.
+
+		Make brick easier to craft.
+
+	(Don't worry about this.)
+	12. Figure out future plans with:			()
+		12.a) Download.							()
+		12.b) Lighting.							()
+		12.c) Day-night cycle.					()
+		12.d) Etc.								()
+
+	13. Add controls to itch/website.			()
+
+	(Skip)
+	14. Add idle animation for player.			()
+
+	(Skip)
+	15. Stone place only at ground and -3.		()
+
+	16. Remove 'I updated' log.					(X)
+
+
+	Zoom out while you finish the short
+	E.g., stand in the center.
+	Should be a speed build.
+
+	Short title. Something like: HUGE Update to VoxelVale.
+
+	Make sure to do adsense add not youtube.
+	(For itch page.)
+		Some directly to itch.
+		Some directly to youtube.
+
+	Short for charmander squirtle and bulb.
+
+	Short for 'features added since release'.
+
+	Short for 'What can you do in voxelvale?'
+		Title: What is there todo in voxelvale?
+		Make it a short and a normal video.
+
+
+
+
+Fix loading times.
+
+You should also make like a pseudo trailer thing for the game.
+
+
+Water to do.
+	Optimize checkAdj.											()
+		Use world.getFluid().									()
+		Only need to check edges!								()
+
+	Move wooden bucket down slightly in inventory.				()
+
+	When you hold and cursor is green it expands. 				()
 
 
 Update Alpha 0.5.0 (Water you waiting for).
@@ -44,8 +208,7 @@ Update Alpha 0.5.0 (Water you waiting for).
 
 	Maybe bridges.
 
-
-
+Can add a little iron brim around the bucket.
 
 
 
@@ -56,6 +219,8 @@ Update Alpha 0.6.0 (Pass me a brew.)
 		Use buckets to fill with water.
 		Water should diminish as you make potions.
 			(Not like the forge will!)
+			(Just like each time you craft something water goes down)
+			Forge will be like a timer. With particles shooting out when it's active.
 
 	Zombie drops.
 
@@ -67,26 +232,13 @@ Update Alpha 0.6.0 (Pass me a brew.)
 		(Village randomly generates a path and the building is generated on a new portion.)
 
 
+Fix Cover (art?).
 
-This is pass me a brew!
-
-
-Make a linear plan on paper.
-
-	Start with brewing stand.
-
-
-Fix Cover.
-
-Alpha 0.6.0 | Quality of Life.
-Make a starting menu.
-Fix loading.
+	Alpha 0.6.0 | Quality of Life.
+	Make a starting menu.
+	Fix loading.
 
 Update for Armour | That's Armoure
-
-
-
-
 
 
 Update 0.5.0 | Water you waiting for?
@@ -102,54 +254,9 @@ Update 0.5.0 | Water you waiting for?
 	8. Sand?
 	9. Cactus
 
-Film discussion video. Just a discussion with some game play.
-Talk about Patreon and all that stuff.
-
-
-
-
-
-
-
-
 Inventory lighting issue (for transparent)
 	Maybe comes from squishing objects too much.
 	Try to adjust this.
-
-
-Water to do.
-	Fix network updating.										()
-		Should start updating on action.						()
-		Implement 'startUpdate' function (see below).			()
-
-	Optimize checkAdj.											()
-		Use world.getFluid().									()
-		Only need to check edges!								()
-
-	Move wooden bucket down slightly in inventory.				()
-
-	Save/load 													()
-
-	When you hold and cursor is green it expands. 				()
-
-Networks only need to be updated on world changes.
-So you can add a flag for blocks being placed or removed.
-If any of the adjacent blocks are water then you can determine the network
-and run its update.
-
-For the WaterNetworks 'startUpdate' function this is how I think it should work.
-	- When a block at z = -2 is interacted with, check it and all it's adjacent blocks.
-	- If any are a fluid, then run block.network.startUpdate().
-	- On startUpdate(), the networks counter gets set to say like 30?
-	- It will then only update for 30 frames.
-
-
-Well, I actually think how it should work is:
-	When a water network is touched it runs it update to completion.
-	Seriously this shouldn't be that hard.
-
-	Keep updating until no blocks are added, there you're fully updated.
-
 
 Should fix quantity display over all inventories.
 
@@ -161,26 +268,13 @@ Shop questions:
 	Maybe not all objects reset? Like some are persistent?
 	(Also how does this affect save/load?)
 
-
-
-make potion system like zelda.
+Make potion system like zelda.
 	3. Fix the thing where upone makes the ceiling opaque if you're not on a block.
-		(Move to next update.)
-
-
-Save load update!!! This should be the next one!!
-	Very important 0.5.0!!!!!!
-
-	
+		(Move to next update.)	
 
 athanor (alchemy)
 
-
-Can add a little iron brim around the bucket.
-
-
 Bow no! (Update for bows.)
-
 
 
 Notes:
@@ -219,8 +313,6 @@ Idea for toolbar
 	When you select the item, you get [1,2,3,4] to manually select
 	the toolbar position.
 
-Buckets should be craftable.
-
 Maybe if it rains the level of water networks increase?
 
 Bosses can be like BOTW, there are set locations when the map is generated.
@@ -230,8 +322,6 @@ They could start off sleeping?
 ADD MICHAEL SCOTT!
 
 Also villagers/towns/villages. 
-
-A shopkeep that spawns somewhere randomly would be great!
 
 Mob ideas.
 

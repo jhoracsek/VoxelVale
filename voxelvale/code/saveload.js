@@ -34,7 +34,7 @@ function getWorldObj(){
 	let objNums = [];
 
 
-	let instanceBlocksObjectNumbers = [9, 14, 18];
+	let instanceBlocksObjectNumbers = [9, 14, 18, 19];
 	let instanceBlocks = [];
 
 	for(let i = 0; i <= world.size; i++){
@@ -87,6 +87,7 @@ function getWorldObj(){
 			DropBox 		9
 			Door 			14
 			Chest 			18
+			Water 			19
 		These objectNumbers should be added to 'instanceBlocksObjectNumbers'.
 
 		This information will be stored as [objectNumber, pX, pY, pZ, 'additional data dependent on block']
@@ -176,6 +177,14 @@ function getWorldObj(){
 				}
 
 				break;
+			/*
+				Water
+
+				level
+			*/
+			case 19:
+				store.push(instanceBlocks[i].network.level);
+				break;
 
 		}
 		blockInstanceInformation.push(store);
@@ -261,6 +270,7 @@ async function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loade
 	world = null;
 	world = new World(WORLD_SIZE);
 	world.fillAllEmpty();
+	waterNetworkArray = [];
 
 	let posXs = JSON.parse(loadedWorldX.xPos);
 	let posYs = JSON.parse(loadedWorldY.yPos);
@@ -275,6 +285,39 @@ async function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loade
 			
 		}
 	}
+
+
+	/*
+		Update water networks
+	*/
+	let numAlive = 0;
+	let deadNetworkIndices = [];
+	for(let i = 0; i < waterNetworkArray.length; i++){
+		if(waterNetworkArray[i].isAlive){
+			if(waterNetworkArray[i].requiresUpdate){
+				//if(lowLevelChange)
+				//	waterNetworkArray[i].updateCooldown = 20;	
+				waterNetworkArray[i].update();
+
+			}
+			
+			numAlive++;
+		}else{
+			waterNetworkArray[i].kill();
+			deadNetworkIndices.push(i);
+		}
+	}
+
+	//Clean up dead networks.
+	
+	for(let i = deadNetworkIndices.length-1; i >= 0; i--){
+		waterNetworkArray[deadNetworkIndices[i]] = waterNetworkArray[waterNetworkArray.length-1];
+		waterNetworkArray.pop();
+	}
+
+	/*
+		End update water networks.
+	*/
 
 	/*
 		Some blocks have instance properties that need to be loaded.
@@ -355,6 +398,20 @@ async function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loade
 					blockToChange.addObject(getObjectBasedOnObjectNumber(objNum), objQuant);
 
 				}
+				break;
+			/*
+				Water
+
+				store is formatted as:
+				store = [..., level];
+			*/
+			case 19:
+				blockToChange.network.shouldUpdate = true;
+				blockToChange.network.setLevel(store[4]);
+
+				//Add dirt block underneath it.
+				let dirtBlock = new DirtBlock(blockToChange.posX,blockToChange.posY,-1);
+				world.addBlock(dirtBlock);
 				break;
 				
 		}
@@ -468,8 +525,8 @@ async function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loade
 /*
 	Need to clean this up.
 */
-const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door,BorderWall,CopperStone,CopperBrick,Chest, Water, LuniteStone,DaytumStone,LatkinStone,IllsawStone,PlatinumStone,CrackedStone, BrewingTable];
-const RECIPE_OBJNUMS = [WorkBenchRecipe,WoodBlockRecipe,DoorRecipe,BrickBlockRecipe,CopperBarRecipe, ArrowRecipe, CopperPickRecipe,CopperAxeRecipe,CopperSwordRecipe,CopperBrickRecipe,ChestRecipe,LatkinPickRecipe,IllsawPickRecipe,PlatinumPickRecipe,LunitePickRecipe,DaytumPickRecipe,LatkinAxeRecipe,IllsawAxeRecipe,PlatinumAxeRecipe,LuniteAxeRecipe,DaytumAxeRecipe,LatkinSwordRecipe,IllsawSwordRecipe,PlatinumSwordRecipe,LuniteSwordRecipe,DaytumSwordRecipe,LatkinBarRecipe,IllsawBarRecipe,PlatinumBarRecipe,LuniteBarRecipe,DaytumBarRecipe,WoodenBowRecipe];
+const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door,BorderWall,CopperStone,CopperBrick,Chest, Water, LuniteStone,DaytumStone,LatkinStone,IllsawStone,PlatinumStone,CrackedStone,BrewingTable,SandBlock, ClayBlock, Cactus, CactusArm, CompactedDirt,CompactedSand, ClayBrick];
+const RECIPE_OBJNUMS = [WorkBenchRecipe,WoodBlockRecipe,DoorRecipe,BrickBlockRecipe,CopperBarRecipe, ArrowRecipe, CopperPickRecipe,CopperAxeRecipe,CopperSwordRecipe,CopperBrickRecipe,ChestRecipe,LatkinPickRecipe,IllsawPickRecipe,PlatinumPickRecipe,LunitePickRecipe,DaytumPickRecipe,LatkinAxeRecipe,IllsawAxeRecipe,PlatinumAxeRecipe,LuniteAxeRecipe,DaytumAxeRecipe,LatkinSwordRecipe,IllsawSwordRecipe,PlatinumSwordRecipe,LuniteSwordRecipe,DaytumSwordRecipe,LatkinBarRecipe,IllsawBarRecipe,PlatinumBarRecipe,LuniteBarRecipe,DaytumBarRecipe,WoodenBowRecipe,ComDirtRecipe,ComSandRecipe,ClayBrickRecipe];
 
 
 

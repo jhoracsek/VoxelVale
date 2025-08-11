@@ -498,7 +498,7 @@ class GrassBlock extends BlockWallNew{
 */
 
 function initialize_simpleBlocks(){
-	simpleBlocks = [GrassBlock, WeirdBlock, BrickBlock, StoneFloorBlock, DungeonWall, BorderWall,CopperBrick, Chest, Water, CrackedStone, BrewingTable];
+	simpleBlocks = [GrassBlock, WeirdBlock, BrickBlock, StoneFloorBlock, DungeonWall, BorderWall,CopperBrick, Chest, Water, CrackedStone, BrewingTable, SandBlock, Cactus, CactusArm, CompactedDirt, CompactedSand, ClayBrick];
 }
 
 class WeirdBlock extends BlockWallNew{
@@ -582,6 +582,11 @@ class CopperBrick extends BlockWallNew{
 	}
 }
 
+/*
+	Add variations
+
+	Have to make them pattern nicely.
+*/
 class CrackedStone extends BlockWallNew{
 	static name = 'Cracked Stone';
 	static objectNumber=25;
@@ -593,4 +598,56 @@ class CrackedStone extends BlockWallNew{
 		super(X,Y,Z,ground);
 	}
 }
+
+/*
+	Make it just extend grass.
+*/
+class SandBlock extends BlockWallNew{
+	static name = 'Sand';
+	static objectNumber=27;
+	static desc = 'A sand block.'
+	static texture = 32;
+	static tob='DIRT';
+	static correctTextureOrientation = true;
+	constructor(X=null,Y=null,Z=null,ground=false){
+		super(X,Y,Z,ground);
+	}
+}
+
+class CompactedDirt extends BlockWallNew{
+	static name = 'Compacted Dirt';
+	static objectNumber=31;
+	static desc = 'A compacted dirt block.'
+	static texture = 36;
+	static tob='DIRT';
+	static correctTextureOrientation = true;
+	constructor(X=null,Y=null,Z=null,ground=false){
+		super(X,Y,Z,ground);
+	}
+}
+
+class CompactedSand extends BlockWallNew{
+	static name = 'Compacted Sand';
+	static objectNumber=32;
+	static desc = 'A compacted sand block.'
+	static texture = 37;
+	static tob='DIRT';
+	static correctTextureOrientation = true;
+	constructor(X=null,Y=null,Z=null,ground=false){
+		super(X,Y,Z,ground);
+	}
+}
+
+class ClayBrick extends BlockWallNew{
+	static name = 'Brick';
+	static objectNumber=33;
+	static desc = 'A brick block.'
+	static texture = 45;
+	static tob='STONE';
+	static correctTextureOrientation = true;
+	constructor(X=null,Y=null,Z=null,ground=false){
+		super(X,Y,Z,ground);
+	}
+}
+
 

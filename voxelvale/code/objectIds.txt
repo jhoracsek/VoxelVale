@@ -30,6 +30,13 @@ IllsawStone 		23
 PlatinumStone		24
 CrackedStone		25
 BrewingTable		26
+SandBlock			27
+ClayBlock 			28
+Cactus				29
+CactusArm			30
+CompactedDirt 		31
+CompactedSand 		32
+ClayBrick 			33
 
 
 WoodAxe				64
@@ -69,6 +76,7 @@ IllsawAxe 			97
 PlatinumAxe 		98
 LuniteAxe 			99
 DaytumAxe 			100
+Clay 				101
 
 WorkBenchRecipe		128
 WoodBlockRecipe		129
@@ -102,6 +110,9 @@ PlatinumBarRecipe	156
 LuniteBarRecipe		157
 DaytumBarRecipe		158
 WoodenBowRecipe 	159
+ComDirtRecipe 		160
+ComSandRecipe 		161
+ClayBrickRecipe 	162
 
 
 

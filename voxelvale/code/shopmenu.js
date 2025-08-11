@@ -71,6 +71,10 @@ function set_available_shop_items(){
 	SHOP_ITEMS.push(new ChestRecipe());
 	SHOP_ITEMS.push(new WoodenBowRecipe());
 
+	SHOP_ITEMS.push(new ComDirtRecipe());
+	SHOP_ITEMS.push(new ComSandRecipe());
+	SHOP_ITEMS.push(new ClayBrickRecipe());
+
 }
 
 function draw_shop_menu(){

@@ -1,10 +1,10 @@
 
 
 
-const GAME_VERSION = "Alpha 0.4.2"
-const DEV_TOOLS = false;
+const GAME_VERSION = "Alpha 0.5.0"
+const DEV_TOOLS = true;
 const GEN_DUNGEONS = false;
-var SPAWN_ENEMIES = true;
+var SPAWN_ENEMIES = false;
 const MAX_ENEMIES_IN_WORLD = 5;
 const PICTURE_MODE = false;
 const GEN_OLD_STYLE_WORLD = false;
@@ -27,7 +27,7 @@ let idToken = "null";
 */
 const GEN_SHOP = true;
 const GEN_DUNGEON = false;
-const GEN_WATER = false;
+const GEN_WATER = true;
 
 /*
 	Set to 1.5 for 1080p

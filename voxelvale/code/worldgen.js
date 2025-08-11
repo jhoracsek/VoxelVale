@@ -90,6 +90,14 @@ class WorldPortion{
 		let pz = block.posZ;
 		if(this.isSpaceOccupied(px, py, pz))//||px >= this.outerBoundX || px < this.posX || py >= this.outerBoundY || py < this.posY)
 			return;
+		/*
+			Need to account for water added when structures are generated.
+		*/
+		if(block.isFluid){
+			this.setFluid(px,py,block);
+		}
+
+
 		if(block.posZ >= -4){
 			this.portion.push(block);
 			this.setSpaceOccupied(px,py,pz);
@@ -571,6 +579,7 @@ class WorldPortion{
 						// INCREASE LEVEL.
 						//Should increase based off of the level of the bucket.
 						existingNetwork.level += level;
+						existingNetwork.shouldUpdate = true;
 						return null;
 					}else if(network.id == existingNetwork.id){
 						/*
@@ -585,6 +594,8 @@ class WorldPortion{
 							block to this portion. What we do need to do
 							is merge the networks.
 						*/
+						existingNetwork.shouldUpdate = true;
+						network.shouldUpdate = true;
 						existingNetwork.mergeNetwork(network);
 						return null;
 					}
@@ -607,6 +618,7 @@ class WorldPortion{
 		if(!occupied){
 			let block;
 			onLowLevelChange();
+			lowLevelChange(pX, pY);
 			
 			if(network == null){
 				block = new Water(pX, pY, pZ, level, true, null);
@@ -732,11 +744,47 @@ class World{
 		if(GEN_WATER){
 		let numPools = AVG_NUM_POOLS + (randomInt(POOL_VARIANCE+1)-Math.round(POOL_VARIANCE/2));
 
+		let waterCoordinates = [];
+
 		for(let i = 0; i < numPools; i++){
 			// Define x and y as some random coordinates on the map.
 			let coordinateToGen = generate_random_world_coordinate();
 			let x = coordinateToGen[0];
 			let y = coordinateToGen[1];
+
+			let startingPositionX = lastPos[0];
+			let startingPositionY = lastPos[1];
+
+			/*
+				Check that it's a valid coordinate.
+
+				(1) Should not be too close to other water pools.
+
+				(2) Should not be too close to the starting coordinates.
+
+				(3) Make sure they're e
+			*/
+
+			// (2)
+			if(Math.abs(startingPositionX-x) < 30 && Math.abs(startingPositionY-y) < 30){
+				i--;
+				continue;
+			}else{
+				// (1)
+				let tooClose = false;
+				for(let z = 0; z < waterCoordinates.length; z++){
+					if(Math.abs(waterCoordinates[z][0]-x) < 30 && Math.abs(waterCoordinates[z][1]-y) < 30){
+						tooClose = true;
+					}
+				}
+				if(tooClose){
+					i--;
+					continue;
+				}else{
+					waterCoordinates.push([x,y])
+				}
+			}
+
 
 			//If the retArray is empty, it probably violated some condition. So just reset i 
 			//and regenerate it.
@@ -758,6 +806,16 @@ class World{
 				let portionNum = this.getPortionNum(toAdd.posX,toAdd.posY);
 				//Make sure it's in a portion that can generate global structures.
 				if(this.portions[portionNum[0]][portionNum[1]].canGenerateGlobalStructures){
+					// Don't step over water if sand.
+					/*
+					if(toAdd.objectNumber != 19){
+						if(this.getBlockAt(toAdd.posX,toAdd.posY,-2) == null){
+							this.addBlock(toAdd);	
+						}
+					}else{
+						this.addBlock(toAdd);
+					}
+					*/
 					this.addBlock(toAdd);
 				}
 			}
@@ -790,6 +848,22 @@ class World{
 				i--;
 				continue;
 			}
+
+			let overSomething = false;
+			// If any part of stone steps over sand, skip this cluster
+			for(var z = 0; z < retArray.length; z++){
+				let toAdd = retArray[z];
+				if(this.getBlockAt(toAdd.posX,toAdd.posY,-2) != null){
+					overSomething = true;
+				}
+			}	
+
+			if(overSomething){
+				i--;
+				continue;
+			}
+
+
 			for(var z = 0; z < retArray.length; z++){
 				let toAdd = retArray[z];
 				let portionNum = this.getPortionNum(toAdd.posX,toAdd.posY);
@@ -812,28 +886,39 @@ class World{
 			let y = coordinateToGen[1];
 			var retArray = gen_tree(x,y);
 
+			//Checking to make sure the ground is null
+			//You could replace with a cactus here...
 			if(this.getBlockAt(x,y,-2) != null){
+				i--;
 				continue;
 			}
 
 			if(is_valid_world_coordinate(x-1,y)){
-				if(this.getBlockAt(x-1,y,-3) != null)
+				if(this.getBlockAt(x-1,y,-3) != null){
+					i--;
 					continue;
+				}
 			}
 
 			if(is_valid_world_coordinate(x+1,y)){
-				if(this.getBlockAt(x+1,y,-3) != null)
+				if(this.getBlockAt(x+1,y,-3) != null){
+					i--;
 					continue;
+				}
 			}
 
 			if(is_valid_world_coordinate(x,y-1)){
-				if(this.getBlockAt(x,y-1,-3) != null)
+				if(this.getBlockAt(x,y-1,-3) != null){
+					i--;
 					continue;
+				}
 			}
 
 			if(is_valid_world_coordinate(x,y+1)){
-				if(this.getBlockAt(x,y+1,-3) != null)
+				if(this.getBlockAt(x,y+1,-3) != null){
+					i--;
 					continue;
+				}
 			}
 
 			for(var z = 0; z < retArray.length; z++){
@@ -972,6 +1057,7 @@ class World{
 		var PZ = block.posZ;
 		if(block.posZ == -2){
 			onLowLevelChange();
+			lowLevelChange(PX, PY)
 		}
 
 		if(!this.checkPortionValid(locX,locY))
@@ -993,6 +1079,7 @@ class World{
 		let block = this.portions[locX][locY].getBlockAt(PX,PY,PZ);
 		if(PZ == -2){
 			onLowLevelChange();
+			lowLevelChange(PX, PY)
 		}
 		if(block != null){
 			this.portions[locX][locY].removeBlock(block);
@@ -1009,8 +1096,10 @@ class World{
 		if(!this.checkPortionValid(locX,locY))
 			return false;
 		var ret = this.portions[locX][locY].addBlock(block);
-		if(block.posZ == -2)
+		if(block.posZ == -2){
 			onLowLevelChange();
+			lowLevelChange(block.posX, block.posY);
+		}
 		//Update
 		if(ret == false)
 			return false;
@@ -1040,8 +1129,10 @@ class World{
 		//Update
 		if(ret == null)
 			return null;
-		if(pZ == -2)
+		if(pZ == -2){
 			onLowLevelChange();
+			lowLevelChange(pX, pY);
+		}
 		this.updateChunk(pX,pY,pZ);
 		return ret;
 	}
@@ -1057,8 +1148,10 @@ class World{
 		//Update
 		if(ret == false)
 			return false;
-		if(pZ == -2)
+		if(pZ == -2){
 			onLowLevelChange();
+			lowLevelChange(pX, pY)
+		}
 		this.updateChunk(pX, pY, pZ);
 		return true;
 	}
@@ -1285,8 +1378,60 @@ function removeBlockGlobal(Block){
 	}
 }
 
-let lowLevelChange = false;
+//let lowLevelChange = false;
 function onLowLevelChange(){
-	lowLevelChange = true;
-	//console.log('Low level change.')
+//	lowLevelChange = true;
+	/*
+		If any of the surrounding blocks are water, update them!
+	*/
 }
+
+/*
+	Used to update water blocks at level upOne = -2;
+
+	Should run when:
+		- A block in the world is broken, and it is adjacent to a water block.
+		- A block in the world is added and it's adjacent to a water block.
+
+	In either case, it should set the network variable 'shouldUpdate' to true.
+*/
+function lowLevelChange(pX, pY){
+	/*
+		Need to check: [pX-1, pY], [pX+1, pY], [pX, pY-1], [pX, pY+1];
+		We first need to make sure they are valid world coordinates.
+	*/
+	if(is_valid_world_coordinate(pX-1,pY)){
+		let potentialFluid = world.getFluid(pX-1, pY);
+		if(potentialFluid != null){
+			//Network associated with fluid should update.
+			potentialFluid.network.shouldUpdate = true;
+		}
+	}
+	if(is_valid_world_coordinate(pX+1,pY)){
+		let potentialFluid = world.getFluid(pX+1, pY);
+		if(potentialFluid != null){
+			//Network associated with fluid should update.
+			potentialFluid.network.shouldUpdate = true;
+		}
+	}
+	if(is_valid_world_coordinate(pX,pY-1)){
+		let potentialFluid = world.getFluid(pX, pY-1);
+		if(potentialFluid != null){
+			//Network associated with fluid should update.
+			potentialFluid.network.shouldUpdate = true;
+		}
+	}
+	if(is_valid_world_coordinate(pX,pY+1)){
+		let potentialFluid = world.getFluid(pX, pY+1);
+		if(potentialFluid != null){
+			//Network associated with fluid should update.
+			potentialFluid.network.shouldUpdate = true;
+		}
+	}
+	world.getFluid(pX,pY)
+}
+
+
+
+
+
