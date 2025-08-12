@@ -110,11 +110,13 @@ class Undead extends Humanoid{
 		let zVal = -6+1.25;
 		c = mult(translate(this.posX,this.posY,zVal), c);
 		c = mult(modelViewMatrix, c);
+		c = mult(viewModMatrix, c);
 		c = mult(projectionMatrix, c);
 
 
 		c2 = mult(translate(this.posX,this.posY,zVal), c2);
 		c2 = mult(modelViewMatrix, c2);
+		c2 = mult(viewModMatrix, c2);
 		c2 = mult(projectionMatrix, c2);
 
 

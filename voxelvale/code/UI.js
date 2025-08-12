@@ -1148,7 +1148,7 @@ function add_to_toolbar(Object){
 		toolBarList[1] = Object;
 		return;
 	}
-	if(objNum == 66 || (Object.typeOfObj=='ITEM' && Object.toolType=='SWORD')){
+	if(objNum == 66 || (Object.typeOfObj=='ITEM' && Object.toolType=='SWORD' || Object.toolType=='BUCKET')){
 		activeToolBarItem = 3;
 		toolBarList[2] = Object;
 		return;

@@ -111,7 +111,7 @@ class Bucket extends Item{
 		this.actionType='SLURP';
 		this.toolType='BUCKET';
 		this.weaponType = 'NONE';
-		this.unitsOfWater = 4;
+		this.unitsOfWater = 0;
 
 		this.desc2 = '';
 

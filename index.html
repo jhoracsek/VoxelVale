@@ -42,6 +42,7 @@ attribute vec3 vNormal;
 attribute vec4 vColor;
 uniform mat4 projectionMatrix;
 uniform mat4 modelViewMatrix;
+uniform mat4 viewModMatrix;
 uniform mat4 shadowMatrix;
 varying vec4 fColor;
 
@@ -92,7 +93,7 @@ void main()
 
     gl_PointSize = 5.0;
 
-    gl_Position = projectionMatrix*modelViewMatrix*vPosition;
+    gl_Position = projectionMatrix*viewModMatrix*modelViewMatrix*vPosition;
 
 
     magnitude = length((gl_Position).xy);

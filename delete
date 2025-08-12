@@ -57,6 +57,7 @@ Todo (Linear):
 		2.e) Should be covered in points.		(NA)
 		2.f) If a tree gen on sand, make it cac.(NA)
 
+	(Skip)
 	(If you walk into it you get hurt?)
 
 	(Maybe gen last sand border after clay?)
@@ -83,7 +84,10 @@ Todo (Linear):
 		5.f) Add recipe to shop.				(X)
 
 
+	(Skip)
 	Make some water pools without sand.			()
+
+	player starts with bucket
 	Adjust sell price for new blocks/recipes.	()
 		Sand, cactus, new three.
 		And their recipes.
@@ -117,16 +121,17 @@ Todo (Linear):
 
 	Fix cactus hold.							(X)
 
-	7. Ability to zoom out.						()
-		7.a) Default pos. should be max zoom.	()
-		7.b) When zoom out, camera should angle.()
-		7.c) Should be smooth.					()
+	7. Ability to zoom out.						(X)
+		7.a) Default pos. should be max zoom.	(X)
+		7.b) When zoom out, camera should angle.(X)
+		7.c) Should be smooth.					(X)
 
 	8. Add some more sounds.					()
 		8.a) Buying sound.						()
 		8.b) Selling sound.						()
 		8.c) Crafting sound.					()
 
+	// DO BEFORE FILIMING ANYTHING!!!
 	9. Fix notification issue.					()
 		9.a) Come up with idea.					()
 		9.b) Implement idea.					()
@@ -136,6 +141,7 @@ Todo (Linear):
 	(Skip)
 	11. Update stone texture.					()
 
+	(SKIP)
 	12. Tweak 'oasis' generation.				()
 		Maybe less of them
 		Or just less with sand.
@@ -162,6 +168,10 @@ Todo (Linear):
 
 	16. Remove 'I updated' log.					(X)
 
+	Increase carry weight						()
+
+	Maybe title for charmander short: Can you guess what I'm building | VoxelVale?
+
 
 	Zoom out while you finish the short
 	E.g., stand in the center.
@@ -182,12 +192,64 @@ Todo (Linear):
 		Title: What is there todo in voxelvale?
 		Make it a short and a normal video.
 
+	Make a short 'What would you like to see in VoxelVale?'
 
+
+
+
+Working on Camera.
+	Fix UI. 							(X)
+	Fix Shadows.	 					(X)
+		Blocks.							(X)
+		Player.							(X)
+		Enemies?						(X)
+	Fix lighting?						(X)
+		Should ignore updated mat.		(X)
+
+	Readjust movement boundaries.		(X)
+	Make smooth.						(X)
+	Might need to fix draw contents stuff. (X)
+
+Shadows might be an issue because of lighting position?
+
+So first try to get the lighting position working for the player.
+	That is:
+		Incorporate MV into LP so that it's the same. 		()
+		Make sure light doesn't change for player
+		when zoomed out.									()
 
 
 Fix loading times.
 
 You should also make like a pseudo trailer thing for the game.
+
+
+
+
+Left to do:
+	Fix the notification glitch.							(X)
+		Just move account info to bottom left.				(X)
+
+	Player starts with bucket.								(X)
+
+	Bucket goes to pos 3 on toolbar.						(X)
+
+	Make the blocks minable.								(X)
+	
+	(SKIP FOR NEXT UPDATE)
+	Adjust sell price for new blocks/recipes.				()
+		List blocks to do.									()
+		Sand, cactus, new three.
+		And their recipes.
+
+	Water thing expanding.									(X)
+		Figure out what the issue is.						(X)
+		Fix it.												(X)
+
+	Add sounds for buy and sell (good for shorts)			(X)
+		Find them.											(X)
+		Add them.											(X)
+
 
 
 Water to do.

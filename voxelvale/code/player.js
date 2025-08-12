@@ -917,17 +917,22 @@ class Player extends Humanoid{
 	displaySprintBar(){
 		if(inventory || inFunction) return;
 		let width = 0.6;
+
+
 		if(this.isSlow() && spaceHeld){
-			draw_staminabar(8-width/2, 4.5+1.4, 8+width/2, 4.6+1.4-0.03, 0, this.maxStamina,40,1,true);
+			draw_staminabar(8-width/2, 4.5+1.4-viewShiftY*2, 8+width/2, 4.6+1.4-0.03-viewShiftY*2, 0, this.maxStamina,40,1,true);
 		}
 		else if(this.stamina < this.maxStamina && !this.isSlow()){
 			
 			if(this.sprintCooldown > 0){
-				draw_staminabar(8-width/2, 4.5+1.4, 8+width/2, 4.6+1.4-0.03, this.stamina, this.maxStamina,40,1,true);
+				draw_staminabar(8-width/2, 4.5+1.4-viewShiftY*2, 8+width/2, 4.6+1.4-0.03-viewShiftY*2, this.stamina, this.maxStamina,40,1,true);
 			}else{
-				draw_staminabar(8-width/2, 4.5+1.4, 8+width/2, 4.6+1.4-0.03, this.stamina, this.maxStamina,40,1);
+				draw_staminabar(8-width/2, 4.5+1.4-viewShiftY*2, 8+width/2, 4.6+1.4-0.03-viewShiftY*2, this.stamina, this.maxStamina,40,1);
 			}
 		}
+		//draw_healthbar(c[0], c[1], c2[0], c2[1], this.health, this.maxHealth,40,1)	
+		//Need to inverse the projection matrix -> Apply modMatrix -> Reapply projection matrix
+
 	}
 
 	isSprinting(){

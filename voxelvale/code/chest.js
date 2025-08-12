@@ -407,6 +407,7 @@ class Chest extends OpeningBlock{
 		let c = vec4(0.5,1,0,1);
 		c = mult(this.drawContentsInstanceMat, c);
 		c = mult(modelViewMatrix, c);
+		c = mult(viewModMatrix, c);
 		c = mult(projectionMatrix, c);
 		c = [(c[0]/c[3]+1)*8,(c[1]/c[3]+1)*4.5] //Exact center.
 		draw_filled_box(c[0]-this.displayWidth/2,c[1],c[0]+this.displayWidth/2,c[1]+(1.3)*0.17);

@@ -598,6 +598,7 @@ class Door extends BlockWall{
 
 		c = mult(matrix, c);
 		c = mult(modelViewMatrix, c);
+		c = mult(viewModMatrix, c);
 		c = mult(projectionMatrix, c);
 
 		c = [(c[0]/c[3]+1)*8,(c[1]/c[3]+1)*4.5] //Exact center.
@@ -735,6 +736,7 @@ class WorkBench extends InteractiveBlock{
 		c = mult(this.instanceMat, c);
 
 		c = mult(modelViewMatrix, c);
+		c = mult(viewModMatrix, c);
 		c = mult(projectionMatrix, c);
 
 		c = [(c[0]/c[3]+1)*8,(c[1]/c[3]+1)*4.5] //Exact center.

@@ -62,7 +62,11 @@ async function initAudio(){
 		//Placing blocks.
 		loadSound('placed1', 'voxelvale/sounds/effects/placed/placed1.wav'),
 		loadSound('placed2', 'voxelvale/sounds/effects/placed/placed2.wav'),
-		loadSound('placed3', 'voxelvale/sounds/effects/placed/placed3.wav')
+		loadSound('placed3', 'voxelvale/sounds/effects/placed/placed3.wav'),
+
+		//Buying / selling
+		loadSound('buysell', 'voxelvale/sounds/effects/uisounds/coinsplash.wav'),
+
 	]);
 }
 
@@ -181,6 +185,8 @@ function sound_DirtImpact(){
 }
 
 
+
+
 function sound_StopSwinging(){}
 
 /*
@@ -228,7 +234,15 @@ function sound_ArrowShoot(){
 	source.start();
 }
 
-
+function sound_BuySell(){
+	let buffer = soundBuffers['buysell'];
+	if(buffer == null) return;
+	
+	const source = audioContext.createBufferSource();
+	source.buffer = buffer;
+	source.connect(masterGain);
+	source.start();
+}
 
 
 

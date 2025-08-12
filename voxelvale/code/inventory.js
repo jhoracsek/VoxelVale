@@ -85,7 +85,18 @@ function displayAccountInformation(){
 
 	accountInfo.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.5, "Logged in as:", '18', false));
 	accountInfo.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.1, emailAccount, '18', false));
+	
 
+	/*
+	let push = 0.26;
+	let pushUp = 0.35;
+
+	accountInfo.addElement(new InterfaceCanvasButton(5.5+push,3.25+pushUp, 7.5+push,3.75+pushUp,function(){accountInfo.kill()},"Close"));
+	accountInfo.addElement(new InterfaceCanvasButton(5.5+2.5+push,3.25+pushUp, 7.5+2.5+push,3.75+pushUp,function(){logOut(); accountInfo.kill();},"Log Out"));
+
+	accountInfo.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.5, "Logged in as:", '18', false));
+	accountInfo.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.1, emailAccount, '18', false));
+	*/
 
 	pQueue.enqueue(accountInfo);
 }
@@ -266,13 +277,22 @@ function add_interface_bottom_bar(){
 	/*
 		Login/signup options
 	*/
-	//constructor(X1,Y1,X2,Y2,func1=function(){},text="null",textSize='18', conditionToDraw=function(){return true;}, c1 = '#CCC', c2 = '#555')
-	bottomBarElements.push(new InterfaceCanvasButton(eX+0.6-1, 8.5-eY+0.1, eX+0.6,8.5-eY+0.5,openLoginPopup,"Login", '12', function(){if(!loggedIn)return true; return false}));
-    bottomBarElements.push(new InterfaceCanvasButton(eX+0.75,8.5-eY+0.1, eX+1.75,8.5-eY+0.5,openRegisterPopup,"Sign up", '12', function(){if(!loggedIn)return true; return false}));
+	eX = 0.25;
+	eY = 0.25;
+	bottomBarElements.push(new InterfaceCanvasButton(eX+0.6-1 - (0.6-1), eY, eX+0.6 - (0.6-1),eY+0.5,openLoginPopup,"Login", '12', function(){if(!loggedIn)return true; return false}));
+  bottomBarElements.push(new InterfaceCanvasButton(eX+0.75 - (0.6-1),eY, eX+1.75 - (0.6-1),eY+0.5,openRegisterPopup,"Sign up", '12', function(){if(!loggedIn)return true; return false}));
+  eX = 0.25;
+  bottomBarElements.push(new InterfaceCanvasButton(eX,eY, eX+1.75,eY+0.5,displayAccountInformation,"Account Info", '12', function(){if(loggedIn)return true; return false}));
 
-    bottomBarElements.push(new InterfaceCanvasButton(eX,8.5-eY+0.1, eX+1.75,8.5-eY+0.5,displayAccountInformation,"Account Info", '12', function(){if(loggedIn)return true; return false}));
 
-    //Also add the popup thingy for information.
+  /*
+		eX = 14;
+		eY = 0.25;
+		bottomBarElements.push(new InterfaceCanvasButton(eX+0.6-1, 8.5-eY+0.1, eX+0.6,8.5-eY+0.5,openLoginPopup,"Login", '12', function(){if(!loggedIn)return true; return false}));
+  	bottomBarElements.push(new InterfaceCanvasButton(eX+0.75,8.5-eY+0.1, eX+1.75,8.5-eY+0.5,openRegisterPopup,"Sign up", '12', function(){if(!loggedIn)return true; return false}));
+ 		bottomBarElements.push(new InterfaceCanvasButton(eX,8.5-eY+0.1, eX+1.75,8.5-eY+0.5,displayAccountInformation,"Account Info", '12', function(){if(loggedIn)return true; return false}));
+  */
+
 
 	/*
 

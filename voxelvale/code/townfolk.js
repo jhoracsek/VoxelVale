@@ -391,6 +391,7 @@ class TownFolk{
 		let zVal = -6+1.25;
 		c = mult(translate(this.posX+0.5,this.posY,zVal), c);
 		c = mult(modelViewMatrix, c);
+		c = mult(viewModMatrix, c);
 		c = mult(projectionMatrix, c);
 
 

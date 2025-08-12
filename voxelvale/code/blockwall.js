@@ -607,7 +607,9 @@ class SandBlock extends BlockWallNew{
 	static objectNumber=27;
 	static desc = 'A sand block.'
 	static texture = 32;
-	static tob='DIRT';
+	
+	static tob='STONE';
+	static sound = 'DIRT';
 	static correctTextureOrientation = true;
 	constructor(X=null,Y=null,Z=null,ground=false){
 		super(X,Y,Z,ground);
@@ -619,7 +621,9 @@ class CompactedDirt extends BlockWallNew{
 	static objectNumber=31;
 	static desc = 'A compacted dirt block.'
 	static texture = 36;
-	static tob='DIRT';
+	
+	static tob='STONE';
+	static sound = 'DIRT';
 	static correctTextureOrientation = true;
 	constructor(X=null,Y=null,Z=null,ground=false){
 		super(X,Y,Z,ground);
@@ -631,7 +635,9 @@ class CompactedSand extends BlockWallNew{
 	static objectNumber=32;
 	static desc = 'A compacted sand block.'
 	static texture = 37;
-	static tob='DIRT';
+	
+	static tob='STONE';
+	static sound = 'DIRT';
 	static correctTextureOrientation = true;
 	constructor(X=null,Y=null,Z=null,ground=false){
 		super(X,Y,Z,ground);
@@ -643,7 +649,9 @@ class ClayBrick extends BlockWallNew{
 	static objectNumber=33;
 	static desc = 'A brick block.'
 	static texture = 45;
+	
 	static tob='STONE';
+	static sound = 'DIRT';
 	static correctTextureOrientation = true;
 	constructor(X=null,Y=null,Z=null,ground=false){
 		super(X,Y,Z,ground);

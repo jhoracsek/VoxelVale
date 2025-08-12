@@ -8,6 +8,11 @@ var tetraVerts = 0;
 var modelViewMatrix;
 var modelViewMatrixLoc;
 
+var zoomOutLevel = 0;
+var zoomAnimation = null;
+var viewModMatrix;
+var viewModMatrixLoc;
+
 var viewMatrix;
 var viewMatrixFixed;
 var viewMatrixUI;
@@ -490,6 +495,24 @@ window.onload = function init(){
 	modelViewMatrix = translate(0,0,0);
 	modelViewMatrix = mult(modelViewMatrix, scale4(0.125,(1/4.5),0.1))
 	modelViewMatrix = mult(modelViewMatrix,translate(-8,-4.5,0));
+
+
+	viewModMatrixLoc = gl.getUniformLocation(program, "viewModMatrix");
+	viewModMatrix = mat4();
+	gl.uniformMatrix4fv( viewModMatrixLoc, false, flatten(viewModMatrix) );
+
+	zoomAnimation = new Animation(0, false);
+
+	function incrementValue(val){
+		return Math.min(val+0.1,1);
+	}
+
+	function stoppingCondition(val){
+		if(val >= 1) return true;
+		return false;
+	}
+	zoomAnimation.addPhase(incrementValue, stoppingCondition);
+	//zoomAnimation.startAnimation();
 	
     projectionMatrixLoc = gl.getUniformLocation( program, "projectionMatrix" );
 	projectionMatrix=mat4();
@@ -555,6 +578,8 @@ window.onload = function init(){
 	player.addToInventory(workbenchRecipe);
 	player.addToInventory(new ArrowRecipe());
 	player.addToInventory(new ChestRecipe());
+
+	player.addToInventory(new WoodenBucket());
 
 
 	if(DEV_TOOLS){
@@ -1252,18 +1277,14 @@ var frameCount = 0;
 let bgX = 0;
 
 function render_data(){
-	if(DEV_TOOLS){
-		//For rotating camera.
-		viewMatrix = mult(unrotatedViewMatrix,translate(viewShiftX, viewShiftY, viewShiftZ));
-		viewMatrix = mult(viewMatrix,rotateX(viewRotateX));
-		viewMatrix = mult(viewMatrix,rotateY(viewRotateY));
-		viewMatrix = mult(viewMatrix,rotateZ(viewRotateZ));
-	}
 
+	//console.log(zoomAnimation.outValue);
+
+	//zoomAnimation.continueAnimation();
 	/*
 		Update body background position
 	*/
-
+	gl.uniformMatrix4fv( viewModMatrixLoc, false, flatten(mat4()) );
 	frameCount = (frameCount+1)%60;
 	if(scrollCooldown > 0){
 		scrollCooldown--;
@@ -1312,6 +1333,7 @@ function render_data(){
 	if(!fixedView){
 		drawDistanceX = 20;//Math.round(20*(slider.value/10));
 		drawDistanceY = 12;//Math.round(10*(slider.value/10));
+		viewMatrix = unrotatedViewMatrix;
 		modelViewMatrix = viewMatrix;
 
 	}else{
@@ -1342,6 +1364,47 @@ function render_data(){
 	reset_mv();
 	reset_pv();
 
+
+	/*
+		Account for animation.
+
+		curZoomFrame = 20;
+		let numFramesToZoom = 20;
+
+		isZoomingIn = false;
+	*/
+	if(isZooming){
+
+
+
+		if(isZoomingIn){
+			viewRotateX+=5/numFramesToZoom;
+			viewShiftZ-=(1/5)/numFramesToZoom;
+			viewShiftY-=(0.5/5)/numFramesToZoom;
+		}
+
+		else{
+			viewRotateX-=5/numFramesToZoom;
+			viewShiftZ+=(1/5)/numFramesToZoom;
+			viewShiftY+=(0.5/5)/numFramesToZoom;
+		}
+
+		if(curZoomFrame > 1){
+			curZoomFrame--;
+		}else{
+			isZooming = false;
+			curZoomFrame = 0;
+		}
+	}
+
+
+	viewModMatrix = translate(viewShiftX, viewShiftY, viewShiftZ);
+	viewModMatrix = mult(viewModMatrix,rotateX(viewRotateX));
+	viewModMatrix = mult(viewModMatrix,rotateY(viewRotateY));
+	viewModMatrix = mult(viewModMatrix,rotateZ(viewRotateZ));
+
+	gl.uniformMatrix4fv( viewModMatrixLoc, false, flatten(viewModMatrix) );
+
 	
 	set_light();
 	//What do??? I have a tendancy to add irrelevant comments, I hope these never see the light of day, but incase they do I apologize,
@@ -1363,7 +1426,16 @@ function render_data(){
 	*/
 	ambientProductPlayer = vec4(0.9, 0.9, 0.9, 1);
 	gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"), flatten(vec4(0.7, 0.7, 0.7, 1.0)));
+
+
+	// HERE!!!
+	//console.log('Test', viewMatrix)
 	gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"),flatten(vec4(0.0, 0.0, -0.1, 1.0)) );
+
+	//gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"),flatten( mult(inverseMatrix, vec4(0.0, 0.0, -1/100, 1.0) ) ) );
+
+
+	//gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"),flatten(worldScreen) );
 	
 	player.draw();
 	/*
@@ -1407,7 +1479,6 @@ function render_data(){
 		}
 		for(var i=0;i<tbd.length;i++)
 			projectileArray.removeElement(tbd[i]);
-
 	}
 	tbd=[];
 	if(enemyArray.isEmpty()==false){
@@ -1463,6 +1534,7 @@ function render_data(){
 			townFolkArray.accessElement(i).draw();
 		}
 	}
+
 
 	let fluids = [];
 	for(var i = 0; i < blocks.length; i++){
@@ -1614,6 +1686,9 @@ function render_data(){
                             
     gl.uniform4fv(sColor, flatten(vec4(0.0,0.0,0.0,0.4)));
     gl.uniformMatrix4fv( shadowMatrixLoc, false, flatten(sMatrix));
+
+    // HERE!!!
+
 	//I could just add them to an array (above) and not have to recompute them
 	for(var i = 0; i < blocks.length; i++){
 		if(add_block_to_draw_list(blocks[i],drawDistanceX, drawDistanceY)){
@@ -1793,6 +1868,14 @@ function render_data(){
 	if(upOne <= -6)
 		draw_cursor_full();
 
+
+
+
+	/*
+		Toolbar should be with no modelViewMatrix modifications.
+	*/
+
+	gl.uniformMatrix4fv( viewModMatrixLoc, false, flatten(mat4()) );
 
 
 
@@ -2299,4 +2382,45 @@ function set_texture(texLoc=0, oX=0.0065, oY=0.0065){
 	texCoords.push(vec2(xEnd/s,yEnd/s));
 
 	return;
+}
+
+
+let isZooming = false;
+let isZoomingIn = false;
+
+let curZoomFrame = 0;
+let numFramesToZoom = 20;
+
+function zoomOut(){
+	if(zoomOutLevel >= 2) return;
+	if(isZooming) return;
+
+	isZooming = true;
+	isZoomingIn = false;
+
+	curZoomFrame = 20;
+	zoomOutLevel++;
+	/*	
+	viewRotateX-=5;
+	viewShiftZ+=1/5;
+	viewShiftY+=0.5/5;
+	zoomOutLevel++;
+	*/
+}
+
+function zoomIn(){
+	if(zoomOutLevel <= 0) return;
+	if(isZooming) return;
+
+	isZooming = true;
+	isZoomingIn = true;
+
+	curZoomFrame = 20;
+	zoomOutLevel--;
+	/*
+	viewRotateX+=5;
+	viewShiftZ-=1/5;
+	viewShiftY-=0.5/5;
+	zoomOutLevel--;
+	*/
 }

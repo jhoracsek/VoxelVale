@@ -259,7 +259,8 @@ function draw_cursor(X=0,Y=0,Z=0){
 		//This is the max value. (blockCounterMax/player.heldObject.strength)
 		//So to normalize, we have
 		var normalizedBlockCounter = blockCounter/(blockCounterMax/player.heldObject.strength);
-		var nbc = 1 - normalizedBlockCounter;
+		var nbc = Math.min(1 - normalizedBlockCounter,1);
+
 		var mat;
 
 		//TOP

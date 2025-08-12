@@ -197,6 +197,7 @@ function build_shop_list(){
 			let objToSell = entry.obj;
 			player.removeFromInventory(objToSell);
 			player.increaseSilver(objToSell.sellPrice);
+			sound_BuySell();
 		}
 		function drawSell(entry){return true;}
 
@@ -228,6 +229,7 @@ function build_shop_list(){
 			let objToBuy = entry.obj;
 			player.addToInventory(objToBuy);
 			player.decreaseSilver(objToBuy.buyPrice);
+			sound_BuySell();
 		}
 
 		function drawBuy(entry){

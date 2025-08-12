@@ -284,20 +284,29 @@ function getKeyDown(key){
 	//'ARROW_DOWN' Down
 	if(key.keyCode == 40){
 		key.preventDefault();
+		zoomOut();
 		if(DEV_TOOLS){
-			viewRotateX-=5;
-			viewShiftZ++;
-			viewShiftY+=0.5;
+			//viewRotateX-=5;
+			//viewShiftZ+=1/5;
+			//viewShiftY+=0.5/5;
+			//viewRotateX-=5;
+			//viewShiftZ++;
+			//viewShiftY+=0.5;
 			controlledYSpin-=10;
 		}
 	}
 	//'ARROW_UP' Up
 	if(key.keyCode == 38){
 		key.preventDefault();
+		zoomIn();
 		if(DEV_TOOLS){
-			viewRotateX+=5;
-			viewShiftZ--;
-			viewShiftY-=0.5;
+			//viewRotateX+=5;
+			//viewShiftZ-=1/5;
+			//viewShiftY-=0.5/5;
+			
+			//viewRotateX+=5;
+			//viewShiftZ--;
+			//viewShiftY-=0.5;
 			controlledYSpin+=10;
 		}
 	}
