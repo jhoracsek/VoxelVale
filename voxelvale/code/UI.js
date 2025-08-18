@@ -558,7 +558,7 @@ function draw_scroll_list(){
 	//Draw carry weight.
 	draw_c_text_med(2.25,2.15,('Carry Weight:'));//draw_c_text_med_right
 	draw_c_text_med_right(3.85,2.15,player.weight);
-	draw_c_text_med(3.85,2.15,'/100');
+	draw_c_text_med(3.85,2.15,'/'+player.maxWeight.toString());
 
 	//let goldStart = 7.22;
 	let goldStart = 7;

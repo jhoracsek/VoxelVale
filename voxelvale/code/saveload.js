@@ -258,8 +258,37 @@ function getWorldObj(){
 	return [xPositions, yPositions, zPositions,objectNumbers, blockInstanceInformationString, invObjectNumbers, [player.posX, player.posY], player.health, toolbarIDs, player.gold, player.silver, numFolk, folkNumberOrder, folkPositions];
 }
 
+function addImage(){
+	disableNotifications = true;
+	deleteAndAddFromList(X_POSITIONS, Y_POSITIONS, Z_POSITIONS, OBJ_NUMS);
+	disableNotifications = false;
+}
+
+async function deleteAndAddFromList(posXs, posYs, posZs, objNums){
+
+
+	for(let i = 0; i < objNums.length; i++){
+		if(objNums[i]!=null){
+			let blockToAdd = new BLOCK_OBJNUMS[objNums[i]](posXs[i],posYs[i],posZs[i]);
+			world.removeBlockByPos(posXs[i],posYs[i],posZs[i]);
+			world.removeBlockByPos(posXs[i],posYs[i],-1);
+			world.removeBlockByPos(posXs[i],posYs[i],-3);
+			world.addBlockOnLoad(blockToAdd);
+		}
+	}
+
+}
+
+
+
 async function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loadedWorldNum, loadedWorld, loadedWorldTFI){
 	disableNotifications = true;
+	
+	let printLoadProgress = true;
+	var startTime = 0;
+	var endTime = 0;
+
+	if(printLoadProgress) console.log('Starting load...');
 	/*
 		World
 	*/
@@ -267,10 +296,20 @@ async function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loade
 		console.log("Failed to load world.")
 		return;
 	}
+
+	startTime = performance.now();
+	
 	world = null;
 	world = new World(WORLD_SIZE);
 	world.fillAllEmpty();
 	waterNetworkArray = [];
+
+	endTime = performance.now();
+
+	if(printLoadProgress) console.log(`Initialized new world in ${endTime-startTime} ms`);
+
+
+	startTime = performance.now();
 
 	let posXs = JSON.parse(loadedWorldX.xPos);
 	let posYs = JSON.parse(loadedWorldY.yPos);
@@ -278,15 +317,28 @@ async function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loade
 	let objNums = JSON.parse(loadedWorldNum.objectNumbers);
 	let blockInstanceInformation = JSON.parse(loadedWorld.blockInstanceInfo);
 
+	endTime = performance.now();
+
+	if(printLoadProgress) console.log(`Parsed world data in ${endTime-startTime} ms`);
+
+
+	startTime = performance.now();
+
 	for(let i = 0; i < objNums.length; i++){
 		if(objNums[i]!=null){
 			let blockToAdd = new BLOCK_OBJNUMS[objNums[i]](posXs[i],posYs[i],posZs[i]);
-			world.addBlock(blockToAdd);
-			
+			world.addBlockOnLoad(blockToAdd);
 		}
 	}
 
+	world.updatePortions();
 
+	endTime = performance.now();
+
+	if(printLoadProgress) console.log(`Added every block to world in ${endTime-startTime} ms`);
+
+
+	startTime = performance.now();
 	/*
 		Update water networks
 	*/
@@ -318,7 +370,11 @@ async function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loade
 	/*
 		End update water networks.
 	*/
+	endTime = performance.now();
+	if(printLoadProgress) console.log(`Updated water networks in ${endTime-startTime} ms`);
 
+
+	startTime = performance.now();
 	/*
 		Some blocks have instance properties that need to be loaded.
 
@@ -333,7 +389,7 @@ async function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loade
 		[store1, store2, store3, ...]
 
 		Each store has the format:
-		storei = [objectNumber, pX, pY, pZ, 'additional data dependent on block']
+		store = [objectNumber, pX, pY, pZ, 'additional data dependent on block']
 	*/
 
 	for(let i = 0; i < blockInstanceInformation.length; i++){
@@ -418,7 +474,11 @@ async function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loade
 
 	}
 
+	endTime = performance.now();
+	if(printLoadProgress) console.log(`Loaded blocks instance information in ${endTime-startTime} ms`);
 
+
+	startTime = performance.now();
 	/*
 		Inventory ------------------
 	*/
@@ -461,6 +521,8 @@ async function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loade
 			player.addToInventory(new RECIPE_OBJNUMS[inventoryContents[i]-128]());
 		}
 	}
+	endTime = performance.now();
+	if(printLoadProgress) console.log(`Loaded players inventory information in ${endTime-startTime} ms`);
 	/*
 		TownFolk.
 
@@ -525,8 +587,8 @@ async function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loade
 /*
 	Need to clean this up.
 */
-const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door,BorderWall,CopperStone,CopperBrick,Chest, Water, LuniteStone,DaytumStone,LatkinStone,IllsawStone,PlatinumStone,CrackedStone,BrewingTable,SandBlock, ClayBlock, Cactus, CactusArm, CompactedDirt,CompactedSand, ClayBrick];
-const RECIPE_OBJNUMS = [WorkBenchRecipe,WoodBlockRecipe,DoorRecipe,BrickBlockRecipe,CopperBarRecipe, ArrowRecipe, CopperPickRecipe,CopperAxeRecipe,CopperSwordRecipe,CopperBrickRecipe,ChestRecipe,LatkinPickRecipe,IllsawPickRecipe,PlatinumPickRecipe,LunitePickRecipe,DaytumPickRecipe,LatkinAxeRecipe,IllsawAxeRecipe,PlatinumAxeRecipe,LuniteAxeRecipe,DaytumAxeRecipe,LatkinSwordRecipe,IllsawSwordRecipe,PlatinumSwordRecipe,LuniteSwordRecipe,DaytumSwordRecipe,LatkinBarRecipe,IllsawBarRecipe,PlatinumBarRecipe,LuniteBarRecipe,DaytumBarRecipe,WoodenBowRecipe,ComDirtRecipe,ComSandRecipe,ClayBrickRecipe];
+const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door,BorderWall,CopperStone,CopperBrick,Chest, Water, LuniteStone,DaytumStone,LatkinStone,IllsawStone,PlatinumStone,CrackedStone,BrewingTable,SandBlock, ClayBlock, Cactus, CactusArm, CompactedDirt,CompactedSand, ClayBrick, LatkinBrick, IllsawBrick, PlatinumBrick, LuniteBrick, DaytumBrick, ColoredBlockOne, ColoredBlockTwo];
+const RECIPE_OBJNUMS = [WorkBenchRecipe,WoodBlockRecipe,DoorRecipe,BrickBlockRecipe,CopperBarRecipe, ArrowRecipe, CopperPickRecipe,CopperAxeRecipe,CopperSwordRecipe,CopperBrickRecipe,ChestRecipe,LatkinPickRecipe,IllsawPickRecipe,PlatinumPickRecipe,LunitePickRecipe,DaytumPickRecipe,LatkinAxeRecipe,IllsawAxeRecipe,PlatinumAxeRecipe,LuniteAxeRecipe,DaytumAxeRecipe,LatkinSwordRecipe,IllsawSwordRecipe,PlatinumSwordRecipe,LuniteSwordRecipe,DaytumSwordRecipe,LatkinBarRecipe,IllsawBarRecipe,PlatinumBarRecipe,LuniteBarRecipe,DaytumBarRecipe,WoodenBowRecipe,ComDirtRecipe,ComSandRecipe,ClayBrickRecipe,LatkinBrickRecipe,IllsawBrickRecipe,PlatinumBrickRecipe,LuniteBrickRecipe,DaytumBrickRecipe];
 
 
 

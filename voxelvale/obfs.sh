@@ -49,6 +49,7 @@ terser \
 	code/globalstructures.js \
 	code/buildingfunctions.js \
 	code/specialblocks.js \
+	code/cactus.js \
 	code/interactiveblocks.js \
 	code/cursorfunctions.js \
 	code/particles.js \

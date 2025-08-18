@@ -498,7 +498,7 @@ class GrassBlock extends BlockWallNew{
 */
 
 function initialize_simpleBlocks(){
-	simpleBlocks = [GrassBlock, WeirdBlock, BrickBlock, StoneFloorBlock, DungeonWall, BorderWall,CopperBrick, Chest, Water, CrackedStone, BrewingTable, SandBlock, Cactus, CactusArm, CompactedDirt, CompactedSand, ClayBrick];
+	simpleBlocks = [GrassBlock, WeirdBlock, BrickBlock, StoneFloorBlock, DungeonWall, BorderWall,CopperBrick, Chest, Water, CrackedStone, BrewingTable, SandBlock, Cactus, CactusArm, CompactedDirt, CompactedSand, ClayBrick,LatkinBrick, IllsawBrick, PlatinumBrick, LuniteBrick, DaytumBrick, ColoredBlockOne, ColoredBlockTwo];
 }
 
 class WeirdBlock extends BlockWallNew{
@@ -591,7 +591,7 @@ class CrackedStone extends BlockWallNew{
 	static name = 'Cracked Stone';
 	static objectNumber=25;
 	static desc = 'A cracked stone block.'
-	static texture = 34;
+	static texture = 35;
 	static tob='STONE';
 	static correctTextureOrientation = true;
 	constructor(X=null,Y=null,Z=null,ground=false){
@@ -657,5 +657,98 @@ class ClayBrick extends BlockWallNew{
 		super(X,Y,Z,ground);
 	}
 }
+
+
+class LatkinBrick extends BlockWallNew{
+	static name = 'Latkin Brick';
+	static objectNumber=34;
+	static desc = 'A latkin brick block.'
+	static texture = 59;
+	static tob='STONE';
+	static correctTextureOrientation = true;
+	static sellPrice = 14;
+	constructor(X=null,Y=null,Z=null,ground=false){
+		super(X,Y,Z,ground);
+	}
+}
+
+class IllsawBrick extends BlockWallNew{
+	static name = 'Illsaw Brick';
+	static objectNumber=35;
+	static desc = 'An illsaw brick block.'
+	static texture = 62;
+	static tob='STONE';
+	static correctTextureOrientation = true;
+	static sellPrice = 28;
+	constructor(X=null,Y=null,Z=null,ground=false){
+		super(X,Y,Z,ground);
+	}
+}
+
+class PlatinumBrick extends BlockWallNew{
+	static name = 'Platinum Brick';
+	static objectNumber=36;
+	static desc = 'A platinum brick block.'
+	static texture = 63;
+	static tob='STONE';
+	static correctTextureOrientation = true;
+	static sellPrice = 56;
+	constructor(X=null,Y=null,Z=null,ground=false){
+		super(X,Y,Z,ground);
+	}
+}
+
+class LuniteBrick extends BlockWallNew{
+	static name = 'Lunite Brick';
+	static objectNumber=37;
+	static desc = 'A lunite brick block.'
+	static texture = 56;
+	static tob='STONE';
+	static correctTextureOrientation = true;
+	static sellPrice = 112;
+	constructor(X=null,Y=null,Z=null,ground=false){
+		super(X,Y,Z,ground);
+	}
+}
+
+class DaytumBrick extends BlockWallNew{
+	static name = 'Daytum Brick';
+	static objectNumber=38;
+	static desc = 'A daytum brick block.'
+	static texture = 57;
+	static tob='STONE';
+	static correctTextureOrientation = true;
+	static sellPrice = 224;
+	constructor(X=null,Y=null,Z=null,ground=false){
+		super(X,Y,Z,ground);
+	}
+}
+
+class ColoredBlockOne extends BlockWallNew{
+	static name = 'A colored block';
+	static objectNumber=39;
+	static desc = 'A colored block.'
+	static texture = 46;
+	static tob='STONE';
+	static correctTextureOrientation = true;
+	static sellPrice = 20;
+	constructor(X=null,Y=null,Z=null,ground=false){
+		super(X,Y,Z,ground);
+	}
+}
+
+class ColoredBlockTwo extends BlockWallNew{
+	static name = 'A colored block';
+	static objectNumber=40;
+	static desc = 'A colored block.'
+	static texture = 47;
+	static tob='STONE';
+	static correctTextureOrientation = true;
+	static sellPrice = 20;
+	constructor(X=null,Y=null,Z=null,ground=false){
+		super(X,Y,Z,ground);
+	}
+}
+
 
 

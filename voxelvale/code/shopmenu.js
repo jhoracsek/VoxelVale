@@ -62,7 +62,12 @@ function set_available_shop_items(){
 	// Non-default items.
 	SHOP_ITEMS.push(new BrickBlockRecipe());
 	SHOP_ITEMS.push(new CopperBrickRecipe());
-	
+	SHOP_ITEMS.push(new LatkinBrickRecipe());
+	SHOP_ITEMS.push(new IllsawBrickRecipe());
+	SHOP_ITEMS.push(new PlatinumBrickRecipe());
+	SHOP_ITEMS.push(new LuniteBrickRecipe());
+	SHOP_ITEMS.push(new DaytumBrickRecipe());
+
 	// Misc.
 	SHOP_ITEMS.push(new WoodBlockRecipe());
 	SHOP_ITEMS.push(new DoorRecipe());

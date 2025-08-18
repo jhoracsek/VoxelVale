@@ -42,7 +42,7 @@ class OpeningBlock extends BlockWallNew{
 	constructor(X=null,Y=null,Z=null){
 		super(X,Y,Z,false);
 
-		this.maxCapacity = 25;
+		this.maxCapacity = 99;
 		this.numberOfObjects = 0;
 
 		this.relativeAngle = 0;

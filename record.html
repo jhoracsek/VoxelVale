@@ -44,6 +44,7 @@ attribute vec3 vNormal;
 attribute vec4 vColor;
 uniform mat4 projectionMatrix;
 uniform mat4 modelViewMatrix;
+uniform mat4 viewModMatrix;
 uniform mat4 shadowMatrix;
 varying vec4 fColor;
 
@@ -94,7 +95,7 @@ void main()
 
     gl_PointSize = 5.0;
 
-    gl_Position = projectionMatrix*modelViewMatrix*vPosition;
+    gl_Position = projectionMatrix*viewModMatrix*modelViewMatrix*vPosition;
 
 
     magnitude = length((gl_Position).xy);
@@ -240,11 +241,13 @@ void main()
 <script type="text/javascript" src="voxelvale/code/globalstructures.js"></script>
 <script type="text/javascript" src="voxelvale/code/buildingfunctions.js"></script>
 <script type="text/javascript" src="voxelvale/code/specialblocks.js"></script>
+<script type="text/javascript" src="voxelvale/code/cactus.js"></script>
 <script type="text/javascript" src="voxelvale/code/interactiveblocks.js"></script>
 <script type="text/javascript" src="voxelvale/code/cursorfunctions.js"></script>
 <script type="text/javascript" src="voxelvale/code/particles.js"></script>
 <script type="text/javascript" src="voxelvale/code/music.js"></script>
 <script type="text/javascript" src="voxelvale/code/sounds.js"></script>
+<script type="text/javascript" src="voxelvale/code/pastehere.js"></script>
 <script type="text/javascript" src="voxelvale/code/saveload.js"></script>
 
 
@@ -278,6 +281,9 @@ void main()
 </script>
 
 <script type="text/javascript" src="net.js"></script>
+<img id="menuLogo" src="voxelvale/textures/MenuLogo.png" width="1126" height="550" hidden></img>
+<img id="menuBG" src="voxelvale/textures/MenuBackground.png" width="1920" height="1080" hidden></img>
+<img id="menuOverlay" src="voxelvale/textures/MenuOverlay.png" width="1920" height="1080" hidden></img>
 <img id="scream" src="voxelvale/textures/textures.png" width="256" height="256" hidden></img>
 <canvas id="myCanvas" width="256" height="256" hidden></canvas>
 

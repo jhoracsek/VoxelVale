@@ -379,7 +379,7 @@ class Player extends Humanoid{
 		this.attackHitBox = false;
 
 		
-		this.maxWeight = 100;
+		this.maxWeight = 150;
 
 		this.gold = 0;
 		this.silver = 0;

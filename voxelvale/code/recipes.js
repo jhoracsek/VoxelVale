@@ -693,6 +693,68 @@ class ClayBrickRecipe extends Recipe{
 }
 
 
+//Start here.
+class LatkinBrickRecipe extends Recipe{
+	static objectNumber = 163;
+	static craftingStation = REQUIRES_WORKBENCH;
+
+	static sellPrice = 200;
+
+	constructor(){
+		super(new LatkinBrick(), [[new LatkinBar(),3]],2);
+		this.desc='Recipe for a latkin brick block.';
+	}
+}
+
+class IllsawBrickRecipe extends Recipe{
+	static objectNumber = 164;
+	static craftingStation = REQUIRES_WORKBENCH;
+
+	static sellPrice = 400;
+
+	constructor(){
+		super(new IllsawBrick(), [[new IllsawBar(),3]],2);
+		this.desc='Recipe for an illsaw brick block.';
+	}
+}
+
+class PlatinumBrickRecipe extends Recipe{
+	static objectNumber = 165;
+	static craftingStation = REQUIRES_WORKBENCH;
+
+	static sellPrice = 800;
+
+	constructor(){
+		super(new PlatinumBrick(), [[new PlatinumBar(),3]],2);
+		this.desc='Recipe for a platinum brick block.';
+	}
+}
+
+class LuniteBrickRecipe extends Recipe{
+	static objectNumber = 166;
+	static craftingStation = REQUIRES_WORKBENCH;
+
+	static sellPrice = 1600;
+
+	constructor(){
+		super(new LuniteBrick(), [[new LuniteBar(),3]],2);
+		this.desc='Recipe for a lunite brick block.';
+	}
+}
+
+class DaytumBrickRecipe extends Recipe{
+	static objectNumber = 167;
+	static craftingStation = REQUIRES_WORKBENCH;
+
+	static sellPrice = 3200;
+
+	constructor(){
+		super(new DaytumBrick(), [[new DaytumBar(),3]],2);
+		this.desc='Recipe for a daytum brick block.';
+	}
+}
+
+
 
 
 

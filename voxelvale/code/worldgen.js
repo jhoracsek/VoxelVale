@@ -105,6 +105,7 @@ class WorldPortion{
 			this.portionCeiling.push(block);
 		}
 	}
+	
 	makeEmptyPortion(){
 		for(var i = 0; i < PORTION_SIZE; i++){
 			var occ1 = [];
@@ -502,6 +503,7 @@ class WorldPortion{
 		}
 		return false;
 	}
+
 	addBlock(block){
 		//Add special provision for if it's water!
 		//You could make this more efficient by making it a 2D array!
@@ -641,6 +643,11 @@ class WorldPortion{
 			return block;
 		}
 		return null;
+	}
+
+	addBlockOnLoad(block){
+		this.push(block);
+		return;
 	}
 
 	getPortionArray(){
@@ -957,7 +964,12 @@ class World{
 			return this.portions[locX][locY]
 		else
 			return new WorldPortion();
-
+	}
+	getPortionByIndices(locX,locY){
+		if(this.portions[locX] != undefined && this.portions[locX][locY] != undefined)
+			return this.portions[locX][locY]
+		else
+			return new WorldPortion();
 	}
 	getBlockAt(PX,PY,PZ){
 		var locX = Math.floor(PX/PORTION_SIZE);
@@ -1011,6 +1023,8 @@ class World{
 		for(let i = -1; i < 2; i++){
 			for(let j = -1; j < 2; j++){
 				for(let k = -1; k < 2; k++){
+					//So inefficient. Should start by getting the portions
+					//so you only have to go through each array once.
 					var block = this.getBlockAt(PX+i, PY+j, PZ+k);
 					if(block != null){
 						block.update();
@@ -1108,6 +1122,15 @@ class World{
 		var PZ = block.posZ;
 		this.updateChunk(PX,PY,PZ);
 		return true;
+	}
+
+	addBlockOnLoad(block){
+		var locX = Math.floor(block.posX/PORTION_SIZE);
+		var locY = Math.floor(block.posY/PORTION_SIZE);
+
+		var ret = this.portions[locX][locY].addBlockOnLoad(block);
+
+		return;
 	}
 
 
@@ -1283,14 +1306,53 @@ function reload_portion(){
 
 }
 
-
+let cachedBlocks = [];
+let cachedCoordinates = [-1,-1];
+/*
+	Only update if the player deviates a lot from their 
+	previous portion.
+*/
 function return_draw_blocks(){
 	def_position();
 	var ret1, ret2, portion;
 
-	portion = world.getPortion(POSX,POSY).getPortionArray();
-	ret1 = portion[0];
-	ret2 = portion[1];
+	let portionCoords = world.getPortionNum(POSX, POSY);
+	let locX = portionCoords[0];
+	let locY = portionCoords[1];
+	/*
+	if(locX == cachedCoordinates[0] && locY == cachedCoordinates[1]){
+		return cachedBlocks;
+	}
+
+	console.log('Updated portions.')
+
+	cachedCoordinates = [locX, locY];
+
+	//portion = world.getPortionByIndices(locX,locY).getPortionArray();
+	//ret1 = portion[0];
+	//ret2 = portion[1];
+	*/
+	ret1=[];
+	ret2=[];
+
+	let max_x = 2;
+	let max_y = 1;
+
+	if(IS_FILMING){
+		max_x = 3;
+		max_y = 2;
+	}
+
+	for(let i = -max_x; i <= max_x ; i++){
+		for(let j = -max_y; j <= max_y; j++){
+			portion = world.getPortionByIndices(locX+i,locY+j).getPortionArray();
+			ret1 = ret1.concat(portion[0]);
+			ret2 = ret2.concat(portion[1]);		
+		}
+	}
+	cachedBlocks = [ret1, ret2];
+	return [ret1, ret2];
+	/*
 
 	portion = world.getPortion(POSX-PORTION_SIZE,POSY).getPortionArray();
 	ret1 = ret1.concat(portion[0]);
@@ -1349,8 +1411,10 @@ function return_draw_blocks(){
 	portion = world.getPortion(POSX-2*PORTION_SIZE,POSY-PORTION_SIZE).getPortionArray();
 	ret1 = ret1.concat(portion[0]);
 	ret2 = ret2.concat(portion[1]);
-		
 	return [ret1, ret2];
+	*/
+		
+	
 }
 
 

@@ -4,6 +4,7 @@ var normals;
 var colours;
 var texCoords;
 var tetraVerts = 0;
+var menuLogo;
 
 var modelViewMatrix;
 var modelViewMatrixLoc;
@@ -171,6 +172,18 @@ let bodycontainer;
 
 // Font
 const FONT = "ROBOTO";
+
+
+let howToPlayText = [
+	"Use 'WASD' to move.",
+	"Press 'space' to sprint.",
+	"Press '~' to open inventory.",
+	"Left click to use tools and place blocks.",
+	"Right click to interact with blocks.",
+	"Scroll or use 'Q' and 'E' to adjust cursor.",
+	"Press 'G' to toggle grid mode.",
+	"Use arrow up and arrow down to zoom the camera."
+];
 
 
 /*
@@ -416,6 +429,9 @@ function computeShadowMatrix(lightPos, plane){
 var coorSys=[8.5,4];
 
 window.onload = function init(){
+	let startTime = performance.now();
+
+
 	bodycontainer = document.getElementById('body')
 	identityMatrix = mat4();
 	worldMade=false;
@@ -443,11 +459,11 @@ window.onload = function init(){
 		alert("Webl is not available")
 	}
 
+
+
 	newWaterNetworkID = 0;
 	waterNetworkArray = [];
 	//In controls.js, adds mouse functionality.
-
-
 	/*
 		It's all here.
 	*/
@@ -501,18 +517,7 @@ window.onload = function init(){
 	viewModMatrix = mat4();
 	gl.uniformMatrix4fv( viewModMatrixLoc, false, flatten(viewModMatrix) );
 
-	zoomAnimation = new Animation(0, false);
-
-	function incrementValue(val){
-		return Math.min(val+0.1,1);
-	}
-
-	function stoppingCondition(val){
-		if(val >= 1) return true;
-		return false;
-	}
-	zoomAnimation.addPhase(incrementValue, stoppingCondition);
-	//zoomAnimation.startAnimation();
+	
 	
     projectionMatrixLoc = gl.getUniformLocation( program, "projectionMatrix" );
 	projectionMatrix=mat4();
@@ -534,11 +539,21 @@ window.onload = function init(){
 		projectionMatrix = mat4(0.75,0,0,0  ,0,0.75,0,0   ,0,0,0.75,0   ,0,0,1,1);
 		projectionMatrix = mult(projectionMatrix, rotateX(15));
 		projectionMatrix = mult(projectionMatrix, translate(0,0.25,.25));
-		
-		//Testing lighting
-		//projectionMatrix = translate(0,0,0);
-		//projectionMatrix=mat4();
 	}
+
+
+	/*
+		Don't run this until umm the menu is umm ready....
+	*/
+	if(LOAD_MENU){
+		add_start_menu_elements();
+		requestAnimationFrame(render_start_menu);
+	}else{
+		afterMenu();
+	}
+}
+
+function afterMenu(){
 	send_data_to_GPU();
 
 	nQueue = new NotificationQueue();
@@ -547,193 +562,7 @@ window.onload = function init(){
 	projectileArray = new ProperArray();
 	enemyArray = new ProperArray();
 	
-	
-
-	var axe = new WoodAxe();
-	player.addToInventory(axe);
-	toolBarList.push(axe)
-
-	var pick = new StonePickaxe();
-	player.addToInventory(pick);
-	toolBarList.push(pick);
-
-	let sword = new StoneSword();
-	player.addToInventory(sword);
-
-	var bow = new WoodenBow();	
-	player.addToInventory(bow);
-
-	if(!DEV_TOOLS)
-		toolBarList.push(sword);
-	//toolBarList.push(bow);
-
-	var workbench = new WorkBench();
-	player.addToInventory(workbench);
-	if(!DEV_TOOLS)
-		toolBarList.push(workbench);
-
-	player.addToInventory(new WoodBlockRecipe())
-	player.addToInventory(new DoorRecipe())
-	var workbenchRecipe = new WorkBenchRecipe();
-	player.addToInventory(workbenchRecipe);
-	player.addToInventory(new ArrowRecipe());
-	player.addToInventory(new ChestRecipe());
-
-	player.addToInventory(new WoodenBucket());
-
-
-	if(DEV_TOOLS){
-		for(let i = 0; i < 30; i++)
-			player.addToInventory(new ArrowItem());
-	}else{
-		for(let i = 0; i < 10; i++)
-			player.addToInventory(new ArrowItem());
-	}
-	player.addToInventory(new HealthPotion());
-
-
-	/*
-		Add objects to inventory for testing here.
-	*/
-	if(DEV_TOOLS){
-		
-		chest = new Chest()
-		player.addToInventory(chest);
-		player.addToInventory(new DaytumPickaxe());
-		
-		player.addToInventory(new SandBlock());
-
-		/*
-		player.addToInventory(new WoodBlock());
-		player.addToInventory(new WoodBlock());
-		player.addToInventory(new WoodBlock());
-		player.addToInventory(new WoodBlock());
-		player.addToInventory(new WoodBlock());
-		player.addToInventory(new WoodBlock());
-		player.addToInventory(new WoodBlock());
-		player.addToInventory(new WoodBlock());
-		player.addToInventory(new GrassBlock());
-		player.addToInventory(new WoodLog());
-		*/
-		
-		/*
-		player.addToInventory(new CopperPickaxe());
-		player.addToInventory(new LatkinPickaxe());
-		player.addToInventory(new IllsawPickaxe());
-		player.addToInventory(new PlatinumPickaxe());
-		player.addToInventory(new LunitePickaxe());
-		player.addToInventory(new DaytumPickaxe());
-		*/
-		/*
-		player.addToInventory(new CopperSword());
-		player.addToInventory(new LatkinSword());
-		player.addToInventory(new IllsawSword());
-		player.addToInventory(new PlatinumSword());
-		player.addToInventory(new LuniteSword());
-		player.addToInventory(new DaytumSword());
-		
-
-		player.addToInventory(new CopperAxe());
-		player.addToInventory(new LatkinAxe());
-		player.addToInventory(new IllsawAxe());
-		player.addToInventory(new PlatinumAxe());
-		player.addToInventory(new LuniteAxe());
-		player.addToInventory(new DaytumAxe());
-	
-
-		player.addToInventory(new CopperStone());
-		player.addToInventory(new LatkinStone());
-		player.addToInventory(new IllsawStone());
-		player.addToInventory(new PlatinumStone());
-		player.addToInventory(new LuniteStone());
-		player.addToInventory(new DaytumStone());
-		*/
-
-		/*
-		player.addToInventory(new Latkin());
-
-		player.addToInventory(new WoodenBowRecipe());
-	
-		player.addToInventory(new CopperBarRecipe());
-		player.addToInventory(new LatkinBarRecipe());
-		player.addToInventory(new IllsawBarRecipe());
-		player.addToInventory(new PlatinumBarRecipe());
-		player.addToInventory(new LuniteBarRecipe());
-		player.addToInventory(new DaytumBarRecipe());
-
-
-		player.addToInventory(new CopperPickRecipe());
-		player.addToInventory(new LatkinPickRecipe());
-		player.addToInventory(new IllsawPickRecipe());
-		player.addToInventory(new PlatinumPickRecipe());
-		player.addToInventory(new LunitePickRecipe());
-		player.addToInventory(new DaytumPickRecipe());
-
-
-
-		player.addToInventory(new CopperAxeRecipe());
-		player.addToInventory(new LatkinAxeRecipe());
-		player.addToInventory(new IllsawAxeRecipe());
-		player.addToInventory(new PlatinumAxeRecipe());
-		player.addToInventory(new LuniteAxeRecipe());
-		player.addToInventory(new DaytumAxeRecipe());
-
-
-		player.addToInventory(new CopperSwordRecipe());
-		player.addToInventory(new LatkinSwordRecipe());
-		player.addToInventory(new IllsawSwordRecipe());
-		player.addToInventory(new PlatinumSwordRecipe());
-		player.addToInventory(new LuniteSwordRecipe());
-		player.addToInventory(new DaytumSwordRecipe());
-
-		
-
-
-		player.addToInventory(new CopperBarRecipe());
-		player.addToInventory(new CopperPickRecipe());
-		player.addToInventory(new CopperAxeRecipe());
-		player.addToInventory(new CopperSwordRecipe());
-		
-		let testShop = new WeirdBlock();
-
-		player.addToInventory(testShop);
-
-		//player.addToInventory(new DaytumSword());
-		//let water = new Water();
-		//player.addToInventory(water)
-		*/
-	
-		//Latkin, Illsaw, Platinum, Lunite, Daytum
-		/*
-		player.addToInventory(new LatkinBar());
-		player.addToInventory(new IllsawBar());
-		player.addToInventory(new PlatinumBar());
-		player.addToInventory(new LuniteBar());
-		player.addToInventory(new DaytumBar());
-		*/
-
-		let woodenBucket = new WoodenBucket();
-		player.addToInventory(woodenBucket);
-		toolBarList.push(woodenBucket);
-		
-
-		//toolBarList.push(sword);
-		toolBarList.push(workbench);
-		//toolBarList.push(new WoodBlock());
-		//let brewTable = new BrewingTable();
-		//player.addToInventory(brewTable);
-		//toolBarList.push(brewTable);
-		toolBarList.push(null);
-
-	}else{
-		toolBarList.push(null);
-		toolBarList.push(null);
-		toolBarList.push(null);
-	}
-
-	/*
-		End adding objects to testing.
-	*/
+	addToInventory();
 
 
 	cursorBlockLoc = gl.getUniformLocation(program, "cursorBlock");
@@ -778,14 +607,6 @@ window.onload = function init(){
 
 
 	disableNotifications = false;
-
-
-
-	
-
-
-
-
 	requestAnimationFrame(render);
 }
 
@@ -1278,9 +1099,9 @@ let bgX = 0;
 
 function render_data(){
 
-	//console.log(zoomAnimation.outValue);
+	//Don't think it's necessary to set light each time.
+	set_light();
 
-	//zoomAnimation.continueAnimation();
 	/*
 		Update body background position
 	*/
@@ -1331,8 +1152,13 @@ function render_data(){
 		DO NOT NEED TO CALCULATE THE MODEL VIEW EACH LOOP LOOK AT IT!!
 	*/
 	if(!fixedView){
-		drawDistanceX = 20;//Math.round(20*(slider.value/10));
-		drawDistanceY = 12;//Math.round(10*(slider.value/10));
+		if(IS_FILMING){
+			drawDistanceX = 40;//Math.round(20*(slider.value/10));
+			drawDistanceY = 24;	
+		}else{
+			drawDistanceX = 20;//Math.round(20*(slider.value/10));
+			drawDistanceY = 12;//Math.round(10*(slider.value/10));
+		}
 		viewMatrix = unrotatedViewMatrix;
 		modelViewMatrix = viewMatrix;
 
@@ -1366,25 +1192,34 @@ function render_data(){
 
 
 	/*
-		Account for animation.
-
-		curZoomFrame = 20;
-		let numFramesToZoom = 20;
-
-		isZoomingIn = false;
+		Zoom animation.
 	*/
 	if(isZooming){
 
 
 
 		if(isZoomingIn){
-			viewRotateX+=5/numFramesToZoom;
-			viewShiftZ-=(1/5)/numFramesToZoom;
-			viewShiftY-=(0.5/5)/numFramesToZoom;
+			if(filmZoom){
+				if(curZoomFrame < 61){
+					viewRotateX+=5/numFramesToZoom;	
+				}
+				viewShiftZ-=(1/5)/numFramesToZoom;
+				viewShiftY-=(0.5/5)/numFramesToZoom;
+			}else{
+				if(zoomOutLevel < 3){
+					viewRotateX+=5/numFramesToZoom;	
+				}
+				viewShiftZ-=(1/5)/numFramesToZoom;
+				viewShiftY-=(0.5/5)/numFramesToZoom;
+			}
 		}
 
 		else{
-			viewRotateX-=5/numFramesToZoom;
+
+			if(DEV_TOOLS)
+				viewRotateX = Math.max(-15, viewRotateX - 5/numFramesToZoom);	
+			else
+				viewRotateX-=5/numFramesToZoom;
 			viewShiftZ+=(1/5)/numFramesToZoom;
 			viewShiftY+=(0.5/5)/numFramesToZoom;
 		}
@@ -1958,6 +1793,7 @@ function render_data(){
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-1+offset, "Right click to interact with blocks.");
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-1.5+offset, "Scroll or use 'Q' and 'E' to adjust cursor.");
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-2+offset, "Press 'G' to toggle grid mode.");
+		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-2.5+offset, "Use arrow up and arrow down to zoom the camera.");
 		draw_centered_text(centerCoordinates[0], centerCoordinates[1]-4, "VoxelVale "+GAME_VERSION, '11');
 	}
 	//console.log(lowLevelChange)
@@ -2117,6 +1953,182 @@ function set_light_full(){
 }
 
 
+
+
+
+
+/*
+	STARTING MENU.
+
+	Need menus for:
+		- World selection.
+		- How to play.
+		- Account information.
+
+*/
+const MAIN_MENU = 0;
+const WORLD_SELECT = 1;
+const HOW_TO_PLAY = 2;
+const ACC_INFO = 3;
+
+
+let activeMenu = 0;
+let currentMenuElements;
+
+let startMenuElements = [];
+let worldSelectionElements = [];
+let howToPlayElements = [];
+let accInfoElements = [];
+
+
+let menuBackground;
+let menuOverlay;
+
+function add_start_menu_elements(){
+	menuLogo = document.getElementById("menuLogo");
+	menuBackground = document.getElementById("menuBG");
+	menuOverlay = document.getElementById("menuOverlay");
+	
+
+	/*
+		For the main menu
+	*/
+	let buttonHeight = 0.6;
+	let eY = 0.1;
+	let startGame = new InterfaceMenuButton(5,4-buttonHeight + eY, 16-5,4 + eY,function(){activeMenu = WORLD_SELECT},"Start Game");
+	startMenuElements.push(startGame);
+
+	let howToPlay = new InterfaceMenuButton(5,4-buttonHeight-0.85 + eY, 16-5,4-0.85 + eY,function(){activeMenu = HOW_TO_PLAY},"How to Play");
+	startMenuElements.push(howToPlay);
+	
+	startMenuElements.push(new InterfaceMenuButton(5,4-buttonHeight-0.85*2 + eY, 8-0.125,4-0.85*2 + eY,openLoginPopup,"Login", function(){if(!loggedIn)return true; return false}));
+  	startMenuElements.push(new InterfaceMenuButton(8+0.125,4-buttonHeight-0.85*2 + eY,11,4-0.85*2 + eY,openRegisterPopup,"Sign up", function(){if(!loggedIn)return true; return false}));
+  	startMenuElements.push(new InterfaceMenuButton(5,4-buttonHeight-0.85*2 + eY, 11,4-0.85*2 + eY,displayAccountInformation,"Account Information", function(){if(loggedIn)return true; return false}));
+
+  
+
+  	/*
+		For world selection.
+  	*/
+	let test = new InterfaceCanvasButton(5.5,3.25, 7.5,3.75,function(){console.log('test')},"End");
+	worldSelectionElements.push(test);
+
+
+	/*
+		For how to play.
+	*/
+	//howToPlayText
+	for(let i = 0; i < howToPlayText.length; i++){
+		//x1, y1, "text", textSize, isLeft
+		howToPlayElements.push(new InterfaceText(8,6.8-i/2,howToPlayText[i],'18',false));
+	}
+
+	howToPlayElements.push(new InterfaceMenuButtonLarge(8,2,function(){activeMenu = MAIN_MENU;},"Back"));
+
+
+
+
+
+
+	// Make sure the active menu when starting is the main menu.
+	activeMenu = MAIN_MENU;
+}
+
+let logoScale = 1;
+let logoGrow = true;
+
+let backgroundX = 0;
+let backgroundY = 0;
+
+function render_start_menu(now){
+	/*
+		Clear the screen before drawing next frame.
+	*/
+	gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+	context.clearRect(0,0,context.canvas.width,context.canvas.height);
+
+
+
+
+
+	//Top Left
+	context.drawImage(menuBackground, backgroundX,backgroundY,canvas.width,canvas.height);
+	//Top Right
+	context.drawImage(menuBackground, canvas.width+backgroundX,backgroundY,canvas.width,canvas.height);
+	//Bottom Left
+	context.drawImage(menuBackground, backgroundX,backgroundY+canvas.height,canvas.width,canvas.height);
+	//Bottom Right
+	context.drawImage(menuBackground, canvas.width+backgroundX,backgroundY+canvas.height,canvas.width,canvas.height);
+
+	backgroundX = (backgroundX - 0.1)%canvas.width;
+	backgroundY = (backgroundY - 0.1)%canvas.height;
+
+	context.globalAlpha=0.8;
+	context.drawImage(menuOverlay, 0,0,canvas.width,canvas.height);
+	context.globalAlpha=1;
+
+
+	switch(activeMenu){
+		case MAIN_MENU:
+			currentMenuElements = startMenuElements;
+			break;
+		case WORLD_SELECT:
+			currentMenuElements = worldSelectionElements;
+			break;
+		case HOW_TO_PLAY:
+			currentMenuElements = howToPlayElements;
+			break;
+		case ACC_INFO:
+			currentMenuElements = accInfoElements;
+			break;
+	}
+
+
+	// Draw logo if on main menu screen
+	if(activeMenu == MAIN_MENU){
+		if(logoGrow){
+			logoScale+=0.00025;
+			if(logoScale >= 1){
+				logoGrow = false;
+				logoScale = 1;
+			}
+		}else{
+			logoScale-=0.00025;
+			if(logoScale <= 0.95){
+				logoGrow = true;
+				logoScale = 0.95;
+			}
+		}
+		let logoWidth = (menuLogo.width/1.75)*(logoScale)*canvas_multiplier;
+		let logoHeight = (menuLogo.height/1.75)*(logoScale)*canvas_multiplier;
+
+		let logoXStart = canvas.width/2-logoWidth/2;
+		let logoYStart = (menuLogo.height/1.75)*canvas_multiplier*(1-logoScale/2)- canvas.height/7;
+
+		let logoXEnd = logoXStart + logoWidth;
+		let logoYEnd = logoYStart + logoHeight;
+
+		context.drawImage(menuLogo, logoXStart,logoYStart,logoWidth, logoHeight);
+	}
+
+
+
+	for(let i = 0; i < currentMenuElements.length; i++){
+		currentMenuElements[i].draw();
+	}
+
+
+
+	draw_centered_text(centerCoordinates[0], centerCoordinates[1]-4, "VoxelVale " + GAME_VERSION, '11');
+
+
+
+	draw_inventory_cursor_overlay();
+	// Request new frame.
+	window.requestAnimFrame(render_start_menu);	
+}
+
+
 /*
 	For getting fps. https://webglfundamentals.org/webgl/lessons/webgl-qna-recording-fps-in-webgl.html
 */
@@ -2134,51 +2146,30 @@ let averageFPS=0;
 function render(now){
 	gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 
-	//Don't think it's necessary to set light each time.
-	set_light();
+	
+
+	//Do menus here?
 
     render_data();
-    /*
-    const ext = gl.getExtension('GMAN_webgl_memory');
 
-	if (ext) {
-	  // memory info
-	  const info = ext.getMemoryInfo();
-	  // every texture, it's size, a stack of where it was created and a stack of where it was last updated.
-	  const textures = ext.getResourcesInfo(WebGLTexture);
-	  // every buffer, it's size, a stack of where it was created and a stack of where it was last updated.
-	  const buffers = ext.getResourcesInfo(WebGLBuffer);
-
-	console.log(info)
-	}
-	*/
 	
+	//draw_fps(now);	
+
+    window.requestAnimFrame(render);
+}
+
+function draw_fps(now){
 	now *= 0.001;                          // convert to seconds
 	const deltaTime = now - then;          // compute time since last frame
 	then = now;                            // remember time for next frame
 	const fps = 1 / deltaTime;             // compute frames per second
-	//document.querySelector("#fps").textContent = fps.toFixed(1);
-
-	// add the current fps and remove the oldest fps
 	totalFPS += fps - (frameTimes[frameCursor] || 0);
-
-	// record the newest fps
 	frameTimes[frameCursor++] = fps;
-
-	// needed so the first N frames, before we have maxFrames, is correct.
 	numFrames = Math.max(numFrames, frameCursor);
-
-	// wrap the cursor
 	frameCursor %= maxFrames;
-
 	averageFPS = totalFPS / numFrames;
-	
 
-	//document.querySelector("#fpsavg").textContent = averageFPS.toFixed(1);  // update avg display
-
-
-
-    window.requestAnimFrame(render);
+	draw_centered_text(15, 0.5,"FPS:"+(Math.round(averageFPS*100)/100).toString());
 }
 
 
@@ -2388,11 +2379,17 @@ function set_texture(texLoc=0, oX=0.0065, oY=0.0065){
 let isZooming = false;
 let isZoomingIn = false;
 
+let filmZoom = false;
+
 let curZoomFrame = 0;
 let numFramesToZoom = 20;
 
 function zoomOut(){
-	if(zoomOutLevel >= 2) return;
+	if(DEV_TOOLS){
+		if(zoomOutLevel >= 6) return;
+	}else{
+		if(zoomOutLevel >= 2) return;
+	}
 	if(isZooming) return;
 
 	isZooming = true;
@@ -2409,13 +2406,67 @@ function zoomOut(){
 }
 
 function zoomIn(){
-	if(zoomOutLevel <= 0) return;
+
+	if(DEV_TOOLS){
+		if(zoomOutLevel <= -2) return;
+	}else{
+		if(zoomOutLevel <= 0) return;
+	}
+
+	
 	if(isZooming) return;
 
 	isZooming = true;
 	isZoomingIn = true;
 
 	curZoomFrame = 20;
+	zoomOutLevel--;
+	/*
+	viewRotateX+=5;
+	viewShiftZ-=1/5;
+	viewShiftY-=0.5/5;
+	zoomOutLevel--;
+	*/
+}
+
+
+function zoomOutFilm(){
+	if(DEV_TOOLS){
+		if(zoomOutLevel >= 6) return;
+	}else{
+		if(zoomOutLevel >= 2) return;
+	}
+	if(isZooming) return;
+
+	isZooming = true;
+	isZoomingIn = false;
+
+	curZoomFrame = 140;
+	//curZoomFrame = 230;
+	zoomOutLevel++;
+	/*	
+	viewRotateX-=5;
+	viewShiftZ+=1/5;
+	viewShiftY+=0.5/5;
+	zoomOutLevel++;
+	*/
+}
+
+function zoomInFilm(){
+
+	if(DEV_TOOLS){
+		if(zoomOutLevel <= -2) return;
+	}else{
+		if(zoomOutLevel <= 0) return;
+	}
+	filmZoom = true;
+	
+	if(isZooming) return;
+
+	isZooming = true;
+	isZoomingIn = true;
+
+	curZoomFrame = 140;
 	zoomOutLevel--;
 	/*
 	viewRotateX+=5;

@@ -128,7 +128,7 @@ function sound_StartSwinging(){
 		if(selectedBlock.tob == 'WOOD'){
 			sound_WoodImpact();
 		}else{
-			if(selectedBlock.objectNumber == 2)
+			if(selectedBlock.objectNumber == 2 || selectedBlock.objectNumber == 27)
 				sound_DirtImpact();
 			else
 				sound_StoneImpact();

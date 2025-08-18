@@ -37,6 +37,13 @@ CactusArm			30
 CompactedDirt 		31
 CompactedSand 		32
 ClayBrick 			33
+LatkinBrick 		34
+IllsawBrick  		35
+PlatinumBrick 		36
+LuniteBrick 		37
+DaytumBrick 		38
+ColoredBlockOne 	39
+ColoredBlockTwo 	40
 
 
 WoodAxe				64
@@ -113,6 +120,13 @@ WoodenBowRecipe 	159
 ComDirtRecipe 		160
 ComSandRecipe 		161
 ClayBrickRecipe 	162
+
+LatkinBrickRecipe 	163
+IllsawBrickRecipe 	164
+PlatinumBrickRecipe 165
+LuniteBrickRecipe 	166
+DaytumBrickRecipe	167
+
 
 
 

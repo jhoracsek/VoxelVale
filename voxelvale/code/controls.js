@@ -110,11 +110,6 @@ function getKeyDown(key){
 
 	//'Q'
 	if(key.keyCode == 81){
-		if(DEV_TOOLS){
-			hitBox = !hitBox;
-			print = !print;
-			modelTestMode = !modelTestMode;
-		}
 
 		if(fastMode){
 			upOne--;
@@ -123,6 +118,14 @@ function getKeyDown(key){
 		}
 		//scroll = -upOne;
 		scroll = 0;
+	}
+
+	if(key.keyCode == 20){
+		if(DEV_TOOLS){
+			hitBox = !hitBox;
+			print = !print;
+			modelTestMode = !modelTestMode;
+		}
 	}
 
 	//'E'
@@ -310,6 +313,27 @@ function getKeyDown(key){
 			controlledYSpin+=10;
 		}
 	}
+
+	/*
+		For filming shorts
+	*/
+	// 'V'
+	if(key.keyCode == 86){
+		if(DEV_TOOLS){
+			zoomOutFilm();
+		}
+	}
+
+	// 'F'
+	if(key.keyCode == 70){
+		if(DEV_TOOLS){
+			zoomInFilm();
+		}
+	}
+
+
+
+
 	//'ARROW_RIGHT' Right
 	if(key.keyCode == 39){
 		key.preventDefault();
@@ -326,6 +350,55 @@ function getKeyDown(key){
 			//viewRotateZ--;
 			viewShiftZ--;
 			controlledXSpin-=10;
+		}
+	}
+
+	//'1' NUM PAD
+	if(key.keyCode == 97){
+		key.preventDefault();
+		if(DEV_TOOLS){
+			addImage();
+		}
+	}
+
+
+	// '2' Num pad
+	if(key.keyCode == 98){
+		key.preventDefault();
+		if(DEV_TOOLS){
+				//let scale = 0.6;
+				//projectionMatrix = mat4(scale,0,0,0  ,0,scale,0,0   ,0,0,0.1,0   ,0,0,1,1);
+				//projectionMatrix = mult(projectionMatrix, rotateX(40));
+				//projectionMatrix = mult(projectionMatrix, translate(0,-0.1,0.2));
+
+				viewRotateX = 25;
+				viewShiftZ = -0.2;
+				viewShiftY = -0.1
+				
+				projectionMatrix = mat4(scalePM,0,0,0  ,0,scalePM,0,0   ,0,0,0.1,0   ,0,0,1,1);
+				projectionMatrix = mult(projectionMatrix, rotateX(25));
+				projectionMatrix = mult(projectionMatrix, translate(0,0.25,0.5));
+		}
+	}
+
+	// '4' Num pad
+	if(key.keyCode == 100){
+		if(DEV_TOOLS){
+			scalePM += 0.05;
+
+			projectionMatrix = mat4(scalePM,0,0,0  ,0,1,0,0   ,0,0,0.1,0   ,0,0,1,1);
+				projectionMatrix = mult(projectionMatrix, rotateX(25));
+				projectionMatrix = mult(projectionMatrix, translate(0,0.25,0.5));
+		}
+	}
+		
+	// '6' Num pad
+	if(key.keyCode == 102){
+		if(DEV_TOOLS){
+			scalePM -= 0.05;
+			projectionMatrix = mat4(scalePM,0,0,0  ,0,1,0,0   ,0,0,0.1,0   ,0,0,1,1);
+				projectionMatrix = mult(projectionMatrix, rotateX(25));
+				projectionMatrix = mult(projectionMatrix, translate(0,0.25,0.5));
 		}
 	}
 

@@ -130,4 +130,201 @@ function getEnemySpawn(){
 }
 
 
+function toShop(){
+	player.posX = townFolkArray.accessElement(0).posX;
+	player.posY = townFolkArray.accessElement(0).posY-1;
+}
+
+
+function addToInventory(){
+	
+	
+
+	var axe = new WoodAxe();
+	player.addToInventory(axe);
+	toolBarList.push(axe)
+
+	var pick = new StonePickaxe();
+	player.addToInventory(pick);
+	toolBarList.push(pick);
+
+	let sword = new StoneSword();
+	player.addToInventory(sword);
+
+	var bow = new WoodenBow();	
+	player.addToInventory(bow);
+
+	if(!DEV_TOOLS)
+		toolBarList.push(sword);
+	//toolBarList.push(bow);
+
+	var workbench = new WorkBench();
+	player.addToInventory(workbench);
+	if(!DEV_TOOLS)
+		toolBarList.push(workbench);
+
+	player.addToInventory(new WoodBlockRecipe())
+	player.addToInventory(new DoorRecipe())
+	var workbenchRecipe = new WorkBenchRecipe();
+	player.addToInventory(workbenchRecipe);
+	player.addToInventory(new ArrowRecipe());
+	player.addToInventory(new ChestRecipe());
+
+	player.addToInventory(new WoodenBucket());
+
+
+	if(DEV_TOOLS){
+		for(let i = 0; i < 30; i++)
+			player.addToInventory(new ArrowItem());
+	}else{
+		for(let i = 0; i < 10; i++)
+			player.addToInventory(new ArrowItem());
+	}
+	player.addToInventory(new HealthPotion());
+
+
+	/*
+		Add objects to inventory for testing here.
+	*/
+	if(DEV_TOOLS){
+		
+		chest = new Chest()
+		player.addToInventory(chest);
+		player.addToInventory(new DaytumPickaxe());
+		
+		player.addToInventory(new SandBlock());
+
+		/*
+		player.addToInventory(new WoodBlock());
+		player.addToInventory(new WoodBlock());
+		player.addToInventory(new WoodBlock());
+		player.addToInventory(new WoodBlock());
+		player.addToInventory(new WoodBlock());
+		player.addToInventory(new WoodBlock());
+		player.addToInventory(new WoodBlock());
+		player.addToInventory(new WoodBlock());
+		player.addToInventory(new GrassBlock());
+		player.addToInventory(new WoodLog());
+		*/
+		
+		/*
+		player.addToInventory(new CopperPickaxe());
+		player.addToInventory(new LatkinPickaxe());
+		player.addToInventory(new IllsawPickaxe());
+		player.addToInventory(new PlatinumPickaxe());
+		player.addToInventory(new LunitePickaxe());
+		player.addToInventory(new DaytumPickaxe());
+		*/
+		/*
+		player.addToInventory(new CopperSword());
+		player.addToInventory(new LatkinSword());
+		player.addToInventory(new IllsawSword());
+		player.addToInventory(new PlatinumSword());
+		player.addToInventory(new LuniteSword());
+		player.addToInventory(new DaytumSword());
+		
+
+		player.addToInventory(new CopperAxe());
+		player.addToInventory(new LatkinAxe());
+		player.addToInventory(new IllsawAxe());
+		player.addToInventory(new PlatinumAxe());
+		player.addToInventory(new LuniteAxe());
+		player.addToInventory(new DaytumAxe());
+	
+
+		player.addToInventory(new CopperStone());
+		player.addToInventory(new LatkinStone());
+		player.addToInventory(new IllsawStone());
+		player.addToInventory(new PlatinumStone());
+		player.addToInventory(new LuniteStone());
+		player.addToInventory(new DaytumStone());
+		*/
+
+		/*
+		player.addToInventory(new Latkin());
+
+		player.addToInventory(new WoodenBowRecipe());
+	
+		player.addToInventory(new CopperBarRecipe());
+		player.addToInventory(new LatkinBarRecipe());
+		player.addToInventory(new IllsawBarRecipe());
+		player.addToInventory(new PlatinumBarRecipe());
+		player.addToInventory(new LuniteBarRecipe());
+		player.addToInventory(new DaytumBarRecipe());
+
+
+		player.addToInventory(new CopperPickRecipe());
+		player.addToInventory(new LatkinPickRecipe());
+		player.addToInventory(new IllsawPickRecipe());
+		player.addToInventory(new PlatinumPickRecipe());
+		player.addToInventory(new LunitePickRecipe());
+		player.addToInventory(new DaytumPickRecipe());
+
+
+
+		player.addToInventory(new CopperAxeRecipe());
+		player.addToInventory(new LatkinAxeRecipe());
+		player.addToInventory(new IllsawAxeRecipe());
+		player.addToInventory(new PlatinumAxeRecipe());
+		player.addToInventory(new LuniteAxeRecipe());
+		player.addToInventory(new DaytumAxeRecipe());
+
+
+		player.addToInventory(new CopperSwordRecipe());
+		player.addToInventory(new LatkinSwordRecipe());
+		player.addToInventory(new IllsawSwordRecipe());
+		player.addToInventory(new PlatinumSwordRecipe());
+		player.addToInventory(new LuniteSwordRecipe());
+		player.addToInventory(new DaytumSwordRecipe());
+
+		
+
+
+		player.addToInventory(new CopperBarRecipe());
+		player.addToInventory(new CopperPickRecipe());
+		player.addToInventory(new CopperAxeRecipe());
+		player.addToInventory(new CopperSwordRecipe());
+		
+		let testShop = new WeirdBlock();
+
+		player.addToInventory(testShop);
+
+		//player.addToInventory(new DaytumSword());
+		//let water = new Water();
+		//player.addToInventory(water)
+		*/
+	
+		//Latkin, Illsaw, Platinum, Lunite, Daytum
+		/*
+		player.addToInventory(new LatkinBar());
+		player.addToInventory(new IllsawBar());
+		player.addToInventory(new PlatinumBar());
+		player.addToInventory(new LuniteBar());
+		player.addToInventory(new DaytumBar());
+		*/
+
+		let woodenBucket = new WoodenBucket();
+		player.addToInventory(woodenBucket);
+		toolBarList.push(woodenBucket);
+		
+
+		//toolBarList.push(sword);
+		toolBarList.push(workbench);
+		//toolBarList.push(new WoodBlock());
+		//let brewTable = new BrewingTable();
+		//player.addToInventory(brewTable);
+		//toolBarList.push(brewTable);
+		toolBarList.push(null);
+
+	}else{
+		toolBarList.push(null);
+		toolBarList.push(null);
+		toolBarList.push(null);
+	}
+
+	/*
+		End adding objects to testing.
+	*/
+}
+
 

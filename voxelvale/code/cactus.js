@@ -197,7 +197,7 @@ class CactusArm extends BlockWallNew {
 
 	constructor(X=null,Y=null,Z=null){
 		super(X,Y,Z,5,false);
-		this.instanceMat2 = null;
+		this.instanceMat2 = mat4();
 		this.rot =0;
 	}
 
@@ -220,7 +220,7 @@ class CactusArm extends BlockWallNew {
 		//this.topNumberOfVerts = vertices.length - this.topIndex;
 	}
 	drop(){
-		return new WoodLog();
+		return new Cactus();
 	}
 
 	returnBounds(){

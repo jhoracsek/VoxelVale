@@ -218,11 +218,14 @@ class InterfaceButton extends InterfaceElement{
 	}
 }
 
+
+
+
 /*
 	Buttons that are just drawn on the text canvas and don't use any webgl.
 */
 class InterfaceCanvasButton {
-	constructor(X1,Y1,X2,Y2,func1=function(){},text="null",textSize='18', conditionToDraw=function(){return true;}, c1 = '#CCC', c2 = '#555'){
+	constructor(X1,Y1,X2,Y2,func1=function(){},text="null",textSize='18', conditionToDraw=function(){return true;}, c1 = '#CCC', c2 = '#555', shadow=false){
 		
 		this.clickFunction = func1;
 		this.text = text;
@@ -240,6 +243,10 @@ class InterfaceCanvasButton {
 
 		this.colorBorder = c1;
 		this.colorBackground = c2;
+
+		this.shadow=shadow;
+		this.borderHoverColor = c1;
+		this.hoverColor = '#777';
 	}
 
 	setYPos(pY){
@@ -265,15 +272,95 @@ class InterfaceCanvasButton {
 		else
 			click_in_bounds(this.x1,this.y1,this.x2,this.y2, function(){imClicked=true;}, function(){hovering=true} );
 		if(!hovering ){
-			draw_filled_box(this.x1,this.y1,this.x2,this.y2,this.colorBorder,this.colorBackground);
+			if(!this.shadow)
+				draw_filled_box(this.x1,this.y1,this.x2,this.y2,this.colorBorder,this.colorBackground);
+			else
+				draw_filled_box_shadow(this.x1,this.y1,this.x2,this.y2,this.colorBorder,this.colorBackground);
 		}else{
-			draw_filled_box(this.x1,this.y1,this.x2,this.y2,this.colorBorder,'#777');
+			if(!this.shadow)
+				draw_filled_box(this.x1,this.y1,this.x2,this.y2,this.borderHoverColor,this.hoverColor);
+			else
+				draw_filled_box_shadow(this.x1,this.y1,this.x2,this.y2,this.borderHoverColor,this.hoverColor);
 		}
 
 		draw_centered_text((this.x1+this.x2)/2,(this.y1+this.y2)/2,this.text,this.size);
 		this.imDrawn = true;
 
 		return imClicked;
+	}
+}
+
+/*
+	These need cooldowns
+
+*/
+
+let stillHoldingClick = false;
+
+class InterfaceMenuButton extends InterfaceCanvasButton{
+
+	constructor(X1,Y1,X2,Y2,func1=function(){},text="null",conditionToDraw=function(){return true;}){
+		super(X1,Y1,X2,Y2,func1,text,'18',conditionToDraw,'#2c2c2c','#262626',true);
+		this.hoverColor = '#111';
+		this.borderHoverColor = '#1F1F1F'
+	}
+
+	draw(){
+
+		if(click == false){
+			stillHoldingClick = false;
+		}
+
+		this.imDrawn = false;
+		if(!this.drawConditionFunction())
+			return;
+
+		//Click and hover.
+		let hovering = false;
+		let imClicked = false;
+		
+		click_in_bounds(this.x1,this.y1,this.x2,this.y2, function(){imClicked=true;}, function(){hovering=true} );
+
+	
+		if(this.clickFunction != null){
+			if(imClicked && !stillHoldingClick){
+				this.clickFunction();
+				stillHoldingClick = true;
+			}
+		}
+		if(!hovering ){
+			if(!this.shadow)
+				draw_filled_box(this.x1,this.y1,this.x2,this.y2,this.colorBorder,this.colorBackground);
+			else
+				draw_filled_box_shadow(this.x1,this.y1,this.x2,this.y2,this.colorBorder,this.colorBackground);
+		}else{
+			if(!this.shadow)
+				draw_filled_box(this.x1,this.y1,this.x2,this.y2,this.borderHoverColor,this.hoverColor);
+			else
+				draw_filled_box_shadow(this.x1,this.y1,this.x2,this.y2,this.borderHoverColor,this.hoverColor);
+		}
+
+		draw_centered_text((this.x1+this.x2)/2,(this.y1+this.y2)/2,this.text,this.size);
+		this.imDrawn = true;
+
+		return imClicked;
+	}
+}
+
+/*
+	These two menu buttons are some fixed size which take center coordinates.
+*/
+class InterfaceMenuButtonSmall extends InterfaceMenuButton{
+	constructor(X1,Y1,func1=function(){},text="null",conditionToDraw=function(){return true;}){
+  		// Width is 2.875 | Height is 0.6
+		super(X1-1.4375,Y1-0.3,X1+1.4375, Y1+0.3,func1,text,conditionToDraw);
+	}
+}
+
+class InterfaceMenuButtonLarge extends InterfaceMenuButton{
+	constructor(X1,Y1,func1=function(){},text="null",conditionToDraw=function(){return true;}){
+  		// Width is 6 | Height is 0.6
+		super(X1-3,Y1-0.3,X1+3, Y1+0.3,func1,text,conditionToDraw);
 	}
 }
 
@@ -552,6 +639,8 @@ function draw_box_border(x1,y1,x2,y2,left=true,right=true,top=true,bottom=true){
 }
 
 function draw_filled_box(x1,y1,x2,y2,c1='#CCC', c2='#111'){
+
+
 	var xCoor1 = x1*(canvas.width/16);
     var yCoor1 = canvas.height - (y1*(canvas.height/9));
     var xCoor2 = x2*(canvas.width/16);
@@ -568,6 +657,38 @@ function draw_filled_box(x1,y1,x2,y2,c1='#CCC', c2='#111'){
 
 	context.fillStyle = temp;
     context.lineWidth = 1*canvas_multiplier;
+}
+
+function draw_filled_box_shadow(x1,y1,x2,y2,c1='#CCC', c2='#111'){
+	
+
+	var xCoor1 = x1*(canvas.width/16);
+    var yCoor1 = canvas.height - (y1*(canvas.height/9));
+    var xCoor2 = x2*(canvas.width/16);
+    var yCoor2 = canvas.height - (y2*(canvas.height/9));
+
+    var temp = context.fillStyle;
+    context.fillStyle = c2;
+    context.strokeStyle = c1;
+	context.lineWidth = 4*canvas_multiplier;
+  
+	context.beginPath();
+
+	context.shadowColor = 'rgba(0, 0, 0, 0.5)';
+	context.shadowOffsetX = 6*canvas_multiplier;
+	context.shadowOffsetY = 6*canvas_multiplier; 
+	context.shadowBlur = 10*canvas_multiplier;
+	context.fillRect(xCoor1, yCoor1, xCoor2-xCoor1, yCoor2-yCoor1)
+	 context.shadowOffsetX = 0; 
+	context.shadowOffsetY = 0;
+	context.shadowBlur = 0;
+	context.strokeRect(xCoor1, yCoor1, xCoor2-xCoor1, yCoor2-yCoor1);
+
+
+	context.fillStyle = temp;
+    context.lineWidth = 1*canvas_multiplier;
+
+   
 }
 
 function draw_test_line(x1,y1,x2,y2, c='#FFFFFF'){

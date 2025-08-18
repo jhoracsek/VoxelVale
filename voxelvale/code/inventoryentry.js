@@ -181,7 +181,7 @@ function tabListClick(inShop = false){
 	//Number of objects carried.
 	draw_c_text_med(2.25,2.15,('Carry Weight:'));//draw_c_text_med_right
 	draw_c_text_med_right(3.85,2.15,player.weight);
-	draw_c_text_med(3.85,2.15,'/100');
+	draw_c_text_med(3.85,2.15,'/'+player.maxWeight.toString());
 }
 
 function arrowButtonsDouble(func1, func2, func3, func4){
