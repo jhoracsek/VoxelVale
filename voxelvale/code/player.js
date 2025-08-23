@@ -450,6 +450,8 @@ class Player extends Humanoid{
 		return this.inventory.getQuantity(Object);
 	}
 	addToInventory(object){
+		if(INV_DIS)
+			return;
 		if(!disableNotifications)
 			nQueue.addNotification(new Notification(object,1));
 		switch(object.typeOfObj){
@@ -888,7 +890,8 @@ class Player extends Humanoid{
 
 		this.displaySprintBar();
 		drawingPlayerShadow = false;
-		traverse(bodyId);
+		if(!HIDE_PLAYER)
+			traverse(bodyId);
 		if(this.flash)
 			gl.uniform1i(flashingLoc, false);
 
@@ -897,7 +900,8 @@ class Player extends Humanoid{
 
 		if(!this.isDead){
 			drawingPlayerShadow = true;
-			traverse_shadow(bodyId);
+			if(!HIDE_PLAYER)
+				traverse_shadow(bodyId);
 		}
 	}
 	shoot(){

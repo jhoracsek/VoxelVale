@@ -1263,6 +1263,7 @@ function is_within_portion_bound(portion){
 
 function make_world(){
 	//world = new World(50);
+	
 	world = new World(WORLD_SIZE);
 	world.fillAllDefault();
 	if(!GEN_OLD_STYLE_WORLD){
@@ -1339,8 +1340,8 @@ function return_draw_blocks(){
 	let max_y = 1;
 
 	if(IS_FILMING){
-		max_x = 3;
-		max_y = 2;
+		max_x = 4;
+		max_y = 3;
 	}
 
 	for(let i = -max_x; i <= max_x ; i++){

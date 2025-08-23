@@ -53,6 +53,20 @@ class Queue{
 		}
 		return false;
 	}
+
+	//I know this is bad.
+	peekTop(){
+		if(this.isEmpty() == false)
+			return this.queueArray[this.newEntryIndex-1];
+		return null;
+	}
+
+	removeTop(){
+		if(this.isEmpty() == false){
+			this.newEntryIndex--;
+		}
+		return;
+	}
 }
 
 //This is inefficient, just a temporary fix.

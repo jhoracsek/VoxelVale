@@ -80,8 +80,8 @@ function displayAccountInformation(){
 	let push = 0.26;
 	let pushUp = 0.35;
 
-	accountInfo.addElement(new InterfaceCanvasButton(5.5+push,3.25+pushUp, 7.5+push,3.75+pushUp,function(){accountInfo.kill()},"Close"));
-	accountInfo.addElement(new InterfaceCanvasButton(5.5+2.5+push,3.25+pushUp, 7.5+2.5+push,3.75+pushUp,function(){logOut(); accountInfo.kill();},"Log Out"));
+	accountInfo.addElement(new InterfaceMenuButton(5.5+push,3.25+pushUp, 7.5+push,3.75+pushUp,function(){accountInfo.kill()},"Close"));
+	accountInfo.addElement(new InterfaceMenuButton(5.5+2.5+push,3.25+pushUp, 7.5+2.5+push,3.75+pushUp,function(){logOut(); accountInfo.kill();},"Log Out"));
 
 	accountInfo.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.5, "Logged in as:", '18', false));
 	accountInfo.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.1, emailAccount, '18', false));
@@ -215,6 +215,22 @@ function loadWorldButton(){
 	pQueue.enqueue(loadPopup);
 }
 
+
+function exitToMainMenu(){
+	let exitPopup = new Popup(6.5,2.25);
+
+	let push = 0.26;
+	let pushUp = 0.35;
+
+	exitPopup.addElement(new InterfaceCanvasButton(5.5+push,3.25+pushUp, 7.5+push,3.75+pushUp,function(){exitPopup.kill()},"Close",'18'));
+	exitPopup.addElement(new InterfaceCanvasButton(5.5+2.5+push,3.25+pushUp, 7.5+2.5+push,3.75+pushUp,function(){back_to_menu();exitPopup.kill()},"Exit",'18'));
+
+	exitPopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.5, "Exit to the main menu?", '18', false));
+	exitPopup.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.1, "Note, any unsaved progress will be lost!", '18', false));
+	
+	pQueue.enqueue(exitPopup);
+}
+
 /*
 	This is the bottom bar that stays for all inventories.
 
@@ -261,9 +277,13 @@ function add_interface_bottom_bar(){
 	var saveButton = new InterfaceButton(2.25+buttonSpace*2, 1.25+squish, (2.25+buttonWidth)+buttonSpace*2, 2-squish,DARK_GREY,saveWorldButton,"Save World");
 	bottomBarElements.push(saveButton);
 
-	var loadButton = new InterfaceButton(2.25+buttonSpace*3, 1.25+squish, (2.25+buttonWidth)+buttonSpace*3, 2-squish,DARK_GREY,loadWorldButton,"Load World");
-	bottomBarElements.push(loadButton);
-
+	if(!LOAD_MENU){
+		var loadButton = new InterfaceButton(2.25+buttonSpace*3, 1.25+squish, (2.25+buttonWidth)+buttonSpace*3, 2-squish,DARK_GREY,loadWorldButton,"Load World");
+		bottomBarElements.push(loadButton);
+	}else{
+		var exitButton = new InterfaceButton(2.25+buttonSpace*3, 1.25+squish, (2.25+buttonWidth)+buttonSpace*3, 2-squish,DARK_GREY,exitToMainMenu,"Exit to Menu");
+		bottomBarElements.push(exitButton);
+	}
 	//Enemy toggle button
 	let eX = 14;
 	let eY = 0.25;

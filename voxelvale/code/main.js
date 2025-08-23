@@ -147,6 +147,8 @@ var inDungeon = true;
 
 const recipeColor = vec4(0.3,0.3,1,0.4);
 
+let isLoadingWorld = false;
+
 
 /*
 	Cooldown for any projectile the player can shoot.
@@ -185,6 +187,10 @@ let howToPlayText = [
 	"Use arrow up and arrow down to zoom the camera."
 ];
 
+
+const NUM_WORLDS = 4;
+let activeWorld = 0;
+let createdWorlds = [false, false, false, false, false];
 
 /*
 	For testing/screenshots
@@ -431,6 +437,8 @@ var coorSys=[8.5,4];
 window.onload = function init(){
 	let startTime = performance.now();
 
+	menuClosed = !LOAD_MENU;
+	gameClosed = LOAD_MENU;
 
 	bodycontainer = document.getElementById('body')
 	identityMatrix = mat4();
@@ -541,6 +549,7 @@ window.onload = function init(){
 		projectionMatrix = mult(projectionMatrix, translate(0,0.25,.25));
 	}
 
+	pQueue = new Queue();
 
 	/*
 		Don't run this until umm the menu is umm ready....
@@ -553,8 +562,60 @@ window.onload = function init(){
 	}
 }
 
-function afterMenu(){
-	send_data_to_GPU();
+function resetPlayerOnReload(){
+    
+
+   
+	
+	/*
+		Inventory ------------------
+	*/
+	inventory = false;
+	fQueue.empty();
+	pQueue.empty();
+	keyboardDisabled=false;
+	disableInventoryCursor = false;
+	player.resetInventory();
+	
+	toolBarList = [];
+	
+	
+	// Reset player coordinates.
+	//let playerPosition = loadedWorld.position;
+	//player.posX = playerPosition[0];
+	//player.posY = playerPosition[1];
+	//player.health = loadedWorld.health;
+	player.gold = 0;
+	player.silver = 0;
+	angleFacing = 0;
+	activeToolBarItem = 0;
+	player.heldObject = null;
+	
+	enemyArray = new ProperArray();
+    
+    pQueue.empty();
+}
+
+let menuClosed = false;
+let gameClosed = true;
+let sentData = false;
+
+async function afterMenu(){
+
+
+
+	
+	
+	let hasLoadedAWorld = true;
+	gameClosed = false;
+
+	if(!sentData){
+		send_data_to_GPU();
+		hasLoadedAWorld = false;
+	}
+
+	disableNotifications = true;
+	worldMade=true;
 
 	nQueue = new NotificationQueue();
 	fQueue = new Queue();
@@ -562,7 +623,39 @@ function afterMenu(){
 	projectileArray = new ProperArray();
 	enemyArray = new ProperArray();
 	
-	addToInventory();
+	if(createdWorlds[activeWorld]){
+		world = new World(WORLD_SIZE);
+		world.fillAllDefault();
+		await loadWorld();
+
+		let holdX = player.posX;
+		let holdY = player.posY;
+		init_world();
+		get_scene();
+		player.posX = holdX;
+		player.posY = holdY;
+
+	}else{
+		if(hasLoadedAWorld){
+			townFolkArray = new ProperArray();
+			resetPlayerOnReload();
+		}
+		make_world();
+		menuClosed = true;
+		addToInventory();
+		init_world();
+		get_scene();
+	}
+
+	
+	//
+
+
+	removeBlock = new NullifierBlock();
+
+	
+	
+	
 
 
 	cursorBlockLoc = gl.getUniformLocation(program, "cursorBlock");
@@ -599,15 +692,60 @@ function afterMenu(){
 	viewMatrixUI = mult(viewMatrixUI,translate(0,-4.5,0));
 
 
-	//viewMatrixFixed = translate(0,0,0);
-	//viewMatrixFixed = mult(viewMatrixFixed, scale4(0.125,(1/4.5),0.1));
-	//viewMatrixFixed = mult(viewMatrixFixed,translate(-8,-4.5,0));
-	//viewMatrixFixed = mult(viewMatrixFixed,translate(-8,-4.75,0));	
+	viewMatrixFixed = translate(0,0,0);
+	viewMatrixFixed = mult(viewMatrixFixed, scale4(0.125,(1/4.5),0.1));
+	viewMatrixFixed = mult(viewMatrixFixed,translate(-8,-4.5,0));
+	viewMatrixFixed = mult(viewMatrixFixed,translate(-8,-4.75,0));	
 	set_toolbar_matrices();
 
 
 	disableNotifications = false;
+
+	
+	
 	requestAnimationFrame(render);
+}
+
+let onLoadingScreen = false;
+let numFramesLS = 0;
+function draw_load_screen(){
+	onLoadingScreen = true;
+	numFramesLS++;
+
+	gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+	context.clearRect(0,0,context.canvas.width,context.canvas.height);
+
+
+
+	//Top Left
+	context.drawImage(menuBackground, backgroundX,backgroundY,canvas.width,canvas.height);
+	//Top Right
+	context.drawImage(menuBackground, canvas.width+backgroundX,backgroundY,canvas.width,canvas.height);
+	//Bottom Left
+	context.drawImage(menuBackground, backgroundX,backgroundY+canvas.height,canvas.width,canvas.height);
+	//Bottom Right
+	context.drawImage(menuBackground, canvas.width+backgroundX,backgroundY+canvas.height,canvas.width,canvas.height);
+
+	backgroundX = (backgroundX - 0.1)%canvas.width;
+	backgroundY = (backgroundY - 0.1)%canvas.height;
+
+	context.globalAlpha=0.8;
+	context.drawImage(menuOverlay, 0,0,canvas.width,canvas.height);
+	context.globalAlpha=1;
+
+	draw_centered_text(centerCoordinates[0], centerCoordinates[1], "Loading World", '30');
+	draw_centered_text(centerCoordinates[0]+0.06, centerCoordinates[1]-0.5, "Please wait a minute.", '20');
+	
+	
+	
+	if(numFramesLS < 10){
+		window.requestAnimFrame(draw_load_screen);
+	}
+	else{
+		onLoadingScreen = false;
+		numFramesLS = 0;
+		afterMenu();	
+	}
 }
 
 
@@ -833,6 +971,7 @@ var undeadHitboxSize;
 var enemyVertices = [];
 var enemyHitboxVertices = [];
 function send_data_to_GPU(){
+
 	clear();
 	init_player();
 	gl.lineWidth(1);
@@ -954,14 +1093,11 @@ function send_data_to_GPU(){
 	//Should delete all the enemies in ENEMIES!
 
 	bind_and_send();
-	if(worldMade==false){
-		worldMade=true;
-		make_world();
-	}
-	init_world();
-	get_scene();
-	removeBlock = new NullifierBlock();
+	sentData = true;
 }
+
+
+
 
 
 //Pushes the indices for the 
@@ -1097,8 +1233,9 @@ var frameCount = 0;
 
 let bgX = 0;
 
-function render_data(){
+let fixForFilm = false;
 
+function render_data(){
 	//Don't think it's necessary to set light each time.
 	set_light();
 
@@ -1167,6 +1304,15 @@ function render_data(){
 		drawDistanceY = 20;
 		modelViewMatrix = viewMatrixFixed;
 	}
+
+	if(fixForFilm){
+		//scale4(0.125,(1/4.5),0.1)
+		//modelViewMatrix = mult(modelViewMatrix, scale4(0.125,(1/4.5),0.1))
+		//modelViewMatrix = mult(modelViewMatrix,translate(-8,-4.5,0));
+		viewShiftX = (player.posX-225)*0.125;
+		//viewShiftY = (player.posY-224.5)*(1/4.5);
+	}
+
 	set_mv()
 	if(fQueue.isEmpty()==false)
 		fQueue.peek().run();
@@ -1259,14 +1405,17 @@ function render_data(){
 		Change the light position and ambient lighting for the player.
 		I do this purely for aesthetic purporses. 
 	*/
+
 	ambientProductPlayer = vec4(0.9, 0.9, 0.9, 1);
-	gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"), flatten(vec4(0.7, 0.7, 0.7, 1.0)));
 
+		gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"), flatten(vec4(0.7, 0.7, 0.7, 1.0)));
 
+	
 	// HERE!!!
 	//console.log('Test', viewMatrix)
-	gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"),flatten(vec4(0.0, 0.0, -0.1, 1.0)) );
+		gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"),flatten(vec4(0.0, 0.0, -0.1, 1.0)) );
 
+		
 	//gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"),flatten( mult(inverseMatrix, vec4(0.0, 0.0, -1/100, 1.0) ) ) );
 
 
@@ -1276,7 +1425,12 @@ function render_data(){
 	/*
 		Reset light position and ambient lighting after drawing player.
 	*/
-	gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"),flatten(lightPosition) );
+
+	if(!HIDE_PLAYER)
+		gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"),flatten(lightPosition) );
+	else
+		gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"),flatten(vec4(22.0, 22.0, -50, 1.0)) );
+	
 	gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"), flatten(ambientProduct));
 
 
@@ -1937,7 +2091,10 @@ function set_light(){
 	gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"), flatten(ambientProduct));
     gl.uniform4fv(gl.getUniformLocation(program, "diffuseProduct"), flatten(diffuseProduct) );
     gl.uniform4fv(gl.getUniformLocation(program, "specularProduct"),flatten(specularProduct) );
-    gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"),flatten(lightPosition) );
+    if(!HIDE_PLAYER)
+    	gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"),flatten(lightPosition) );
+    else
+    	gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"),flatten(vec4(20,20,20,1.0)) );
     gl.uniform1f(gl.getUniformLocation(program,"shininess"),materialShininess);
 }
 
@@ -1984,6 +2141,63 @@ let accInfoElements = [];
 let menuBackground;
 let menuOverlay;
 
+function back_to_menu(){
+	menuClosed=false;
+	gameClosed=true;
+
+	//toggleInventory();
+
+	keyboardDisabled=false;
+	disableInventoryCursor = false;
+
+	/*
+		Reset everything.
+	*/
+
+
+	pQueue.empty();
+
+	startMenuElements = [];
+	worldSelectionElements = [];
+	howToPlayElements = [];
+	accInfoElements = [];
+
+
+	add_start_menu_elements();
+	//requestAnimationFrame(render_start_menu);
+	window.requestAnimFrame(render_start_menu);
+}
+
+function loadWorldPopup(){
+	let loadWorld = new Popup(6.5,2.25);
+
+	//Active world is already set at this point, so load should just run afterMenu();
+
+	loadWorld.addElement(new InterfaceMenuButtonSmall(6,4, function(){loadWorld.kill();}, "Close"));
+
+	loadWorld.addElement(new InterfaceMenuButtonSmall(8,4, function(){deleteWorldPopup();}, "Delete"));
+
+	loadWorld.addElement(new InterfaceMenuButtonSmall(10,4, function(){loadWorld.kill();draw_load_screen();}, "Load"));
+
+	loadWorld.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.35, "Load World "+(activeWorld+1).toString() +"?", '22', false));
+	
+	pQueue.enqueue(loadWorld);
+}
+
+function deleteWorldPopup(){
+	let deleteWorld = new Popup(6.5,2.25);
+
+	//Active world is set, so you can delete the activeWorld.
+
+	deleteWorld.addElement(new InterfaceMenuButtonSmallPlus(6.5,4, function(){deleteWorld.kill();}, "Back"));
+
+	deleteWorld.addElement(new InterfaceMenuButtonSmallPlus(9.5,4, deleteActiveWorld, "Delete"));
+
+	deleteWorld.addElement(new InterfaceText(centerCoordinates[0], centerCoordinates[1]+0.35, "Are you sure you want to delete World "+(activeWorld+1).toString() +"?", '18', false));
+
+	pQueue.enqueue(deleteWorld);
+}
+
 function add_start_menu_elements(){
 	menuLogo = document.getElementById("menuLogo");
 	menuBackground = document.getElementById("menuBG");
@@ -2010,9 +2224,14 @@ function add_start_menu_elements(){
   	/*
 		For world selection.
   	*/
-	let test = new InterfaceCanvasButton(5.5,3.25, 7.5,3.75,function(){console.log('test')},"End");
-	worldSelectionElements.push(test);
+	for(let i = 0; i < NUM_WORLDS; i++){
+		worldSelectionElements.push(new InterfaceMenuButtonLarge(8,6.8-i,function(){activeWorld = i; draw_load_screen();},"-Empty World-"));
+	}
+	//const NUM_WORLDS = 4;
+	//let activeWorld = -1;
 
+
+	worldSelectionElements.push(new InterfaceMenuButtonLarge(8,2.5,function(){activeMenu = MAIN_MENU;},"Back"));
 
 	/*
 		For how to play.
@@ -2020,18 +2239,14 @@ function add_start_menu_elements(){
 	//howToPlayText
 	for(let i = 0; i < howToPlayText.length; i++){
 		//x1, y1, "text", textSize, isLeft
-		howToPlayElements.push(new InterfaceText(8,6.8-i/2,howToPlayText[i],'18',false));
+		howToPlayElements.push(new InterfaceText(8,6.8-i/2.2,howToPlayText[i],'18',false));
 	}
 
-	howToPlayElements.push(new InterfaceMenuButtonLarge(8,2,function(){activeMenu = MAIN_MENU;},"Back"));
-
-
-
-
-
+	howToPlayElements.push(new InterfaceMenuButtonLarge(8,2.5,function(){activeMenu = MAIN_MENU;},"Back"));
 
 	// Make sure the active menu when starting is the main menu.
 	activeMenu = MAIN_MENU;
+	
 }
 
 let logoScale = 1;
@@ -2046,8 +2261,6 @@ function render_start_menu(now){
 	*/
 	gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 	context.clearRect(0,0,context.canvas.width,context.canvas.height);
-
-
 
 
 
@@ -2109,6 +2322,27 @@ function render_start_menu(now){
 		let logoYEnd = logoYStart + logoHeight;
 
 		context.drawImage(menuLogo, logoXStart,logoYStart,logoWidth, logoHeight);
+	}else if(activeMenu == WORLD_SELECT){
+		/*
+			The first 'NUM_WORLDS' of worldSelectionElements contain world buttons.
+			If the user is logged in and the worlds exist you should not display
+			'-Empty World-' instead just display 'World (i+1)'.
+
+			It should also attempt to load the world instead of creating a new one.
+		*/
+
+		for(let i = 0; i < NUM_WORLDS; i++){
+			//worldSelectionElements
+			if(createdWorlds[i]){
+				worldSelectionElements[i].text = 'World ' + (i+1).toString();
+				//worldSelectionElements[i].clickFunction = function(){activeWorld = i; afterMenu();}
+				worldSelectionElements[i].clickFunction = function(){activeWorld = i; loadWorldPopup();}
+			}else{
+				worldSelectionElements[i].text = '-Empty World-';
+				worldSelectionElements[i].clickFunction = function(){	activeWorld = i; draw_load_screen();}
+			}
+		}
+
 	}
 
 
@@ -2121,11 +2355,31 @@ function render_start_menu(now){
 
 	draw_centered_text(centerCoordinates[0], centerCoordinates[1]-4, "VoxelVale " + GAME_VERSION, '11');
 
-
+	/*
+		Draw popups
+	*/
+	if(pQueue.isEmpty()==false){
+		let popup = pQueue.peekTop();
+		if(popup.isDead){
+			pQueue.removeTop();
+			//Draw the next one just in case.
+			if(!pQueue.isEmpty())
+				pQueue.peekTop().draw();	
+		}else{
+			pQueue.peekTop().draw();
+		}
+	}
 
 	draw_inventory_cursor_overlay();
+
+	if(!isFocused){
+		draw_filled_box(0,0,16,9,'rgba(0,0,0,0)','rgba(0,0,0,0.2)');
+	}
+
+
 	// Request new frame.
-	window.requestAnimFrame(render_start_menu);	
+	if(!menuClosed && !onLoadingScreen)
+		window.requestAnimFrame(render_start_menu);	
 }
 
 
@@ -2155,7 +2409,8 @@ function render(now){
 	
 	//draw_fps(now);	
 
-    window.requestAnimFrame(render);
+	if(!gameClosed)
+		window.requestAnimFrame(render);
 }
 
 function draw_fps(now){
@@ -2441,8 +2696,8 @@ function zoomOutFilm(){
 	isZooming = true;
 	isZoomingIn = false;
 
-	curZoomFrame = 140;
-	//curZoomFrame = 230;
+	//curZoomFrame = 140;
+	curZoomFrame = 220;
 	zoomOutLevel++;
 	/*	
 	viewRotateX-=5;

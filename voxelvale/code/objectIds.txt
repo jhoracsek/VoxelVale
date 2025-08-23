@@ -44,6 +44,9 @@ LuniteBrick 		37
 DaytumBrick 		38
 ColoredBlockOne 	39
 ColoredBlockTwo 	40
+ColoredBlockThr 	41
+ColoredBlockFour 	42
+ArbColoredBlock 	43
 
 
 WoodAxe				64

@@ -71,11 +71,13 @@ class Popup{
 		
 		this.update();
 		disableInventoryCursor = false;
-		//Or draw drop shadow???
+		// Draw background
 		draw_filled_box(0,0,16,9,'rgba(0,0,0,0)','rgba(0,0,0,0.4)');
 
-		// Draw background
-		draw_filled_box(this.x1,this.y1,this.x2,this.y2,'#CCC','#111');
+		//Draw box
+		//draw_filled_box(this.x1,this.y1,this.x2,this.y2,'#CCC','#111');
+		draw_filled_box(this.x1,this.y1,this.x2,this.y2,'#2c2c2c','#111',10);
+
 
 		//Now draw elements:
 		for(let i = 0; i < this.elements.length; i++){

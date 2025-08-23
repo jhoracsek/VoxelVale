@@ -258,31 +258,78 @@ function getWorldObj(){
 	return [xPositions, yPositions, zPositions,objectNumbers, blockInstanceInformationString, invObjectNumbers, [player.posX, player.posY], player.health, toolbarIDs, player.gold, player.silver, numFolk, folkNumberOrder, folkPositions];
 }
 
+
+let curImageFrame = 0;
 function addImage(){
 	disableNotifications = true;
-	deleteAndAddFromList(X_POSITIONS, Y_POSITIONS, Z_POSITIONS, OBJ_NUMS);
+	deleteAndAddArbColor(X_POSITIONS[curImageFrame], Y_POSITIONS[curImageFrame], Z_POSITIONS[curImageFrame], OBJ_NUMS[curImageFrame]);
+	//deleteAndAddArbColor(X_POSITIONS[curImageFrame], Y_POSITIONS[curImageFrame], Z_POSITIONS[curImageFrame], OBJ_NUMS[curImageFrame]);
 	disableNotifications = false;
+	curImageFrame++;
 }
 
+
+const timer = ms => new Promise(res => setTimeout(res, ms))
 async function deleteAndAddFromList(posXs, posYs, posZs, objNums){
 
-
+	disableNotifications = true;
+	
 	for(let i = 0; i < objNums.length; i++){
-		if(objNums[i]!=null){
+		let cb = world.getBlockAt(posXs[i],posYs[i],posZs[i]);
+		if(cb != null && cb.objectNumber == objNums[i]){
+
+		}
+		else if(objNums[i]!=null){
 			let blockToAdd = new BLOCK_OBJNUMS[objNums[i]](posXs[i],posYs[i],posZs[i]);
 			world.removeBlockByPos(posXs[i],posYs[i],posZs[i]);
 			world.removeBlockByPos(posXs[i],posYs[i],-1);
 			world.removeBlockByPos(posXs[i],posYs[i],-3);
 			world.addBlockOnLoad(blockToAdd);
+			//await timer(50);
+		}
+		
+	}
+	disableNotifications = false;
+
+}
+
+let INV_DIS = false;
+
+async function deleteAndAddArbColor(posXs, posYs, posZs, objNums){
+
+	INV_DIS = true;
+	player.heldObject = new DaytumPickaxe();
+	for(let i = 0; i < objNums.length; i++){
+		
+			world.removeBlockByPos(posXs[i],posYs[i],posZs[i]);
+			//world.removeBlockByPos(posXs[i],posYs[i],-1);
+			//world.removeBlockByPos(posXs[i],posYs[i],-3);
+		
+	}
+
+	for(let i = 0; i < objNums.length; i++){
+		let cb = world.getBlockAt(posXs[i],posYs[i],posZs[i]);
+		if(cb != null && cb.objectNumber == 43 && cb.colorNum == objNums[i]){
+
+		}
+		else if(objNums[i]!=null){
+			let blockToAdd = new ArbColoredBlock(posXs[i],posYs[i],posZs[i],false,objNums[i]);
+			world.removeBlockByPos(posXs[i],posYs[i],posZs[i]);
+			world.removeBlockByPos(posXs[i],posYs[i],-1);
+			world.removeBlockByPos(posXs[i],posYs[i],-3);
+			world.addBlockOnLoad(blockToAdd);
+			//await timer(50);
 		}
 	}
+	player.heldObject = null;
+	INV_DIS = false;
 
 }
 
 
 
 async function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loadedWorldNum, loadedWorld, loadedWorldTFI){
-	disableNotifications = true;
+	
 	
 	let printLoadProgress = true;
 	var startTime = 0;
@@ -576,7 +623,7 @@ async function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loade
 	activeToolBarItem = 0;
 	player.heldObject = null;
 	//toolBarList = loaded.toolbar;
-	disableNotifications = false;
+	
 	enemyArray = new ProperArray();
 
 
@@ -587,7 +634,7 @@ async function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loade
 /*
 	Need to clean this up.
 */
-const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door,BorderWall,CopperStone,CopperBrick,Chest, Water, LuniteStone,DaytumStone,LatkinStone,IllsawStone,PlatinumStone,CrackedStone,BrewingTable,SandBlock, ClayBlock, Cactus, CactusArm, CompactedDirt,CompactedSand, ClayBrick, LatkinBrick, IllsawBrick, PlatinumBrick, LuniteBrick, DaytumBrick, ColoredBlockOne, ColoredBlockTwo];
+const BLOCK_OBJNUMS = [WoodBlock, WeirdBlock,GrassBlock,WoodLog,WoodBranch,StoneBlock,WorkBench,TestBlock,DirtBlock,DropBox,BrickBlock,StoneFloorBlock,DungeonWall,TeleBlock,Door,BorderWall,CopperStone,CopperBrick,Chest, Water, LuniteStone,DaytumStone,LatkinStone,IllsawStone,PlatinumStone,CrackedStone,BrewingTable,SandBlock, ClayBlock, Cactus, CactusArm, CompactedDirt,CompactedSand, ClayBrick, LatkinBrick, IllsawBrick, PlatinumBrick, LuniteBrick, DaytumBrick, ColoredBlockOne, ColoredBlockTwo, ColoredBlockThr, ColoredBlockFour, ArbColoredBlock];
 const RECIPE_OBJNUMS = [WorkBenchRecipe,WoodBlockRecipe,DoorRecipe,BrickBlockRecipe,CopperBarRecipe, ArrowRecipe, CopperPickRecipe,CopperAxeRecipe,CopperSwordRecipe,CopperBrickRecipe,ChestRecipe,LatkinPickRecipe,IllsawPickRecipe,PlatinumPickRecipe,LunitePickRecipe,DaytumPickRecipe,LatkinAxeRecipe,IllsawAxeRecipe,PlatinumAxeRecipe,LuniteAxeRecipe,DaytumAxeRecipe,LatkinSwordRecipe,IllsawSwordRecipe,PlatinumSwordRecipe,LuniteSwordRecipe,DaytumSwordRecipe,LatkinBarRecipe,IllsawBarRecipe,PlatinumBarRecipe,LuniteBarRecipe,DaytumBarRecipe,WoodenBowRecipe,ComDirtRecipe,ComSandRecipe,ClayBrickRecipe,LatkinBrickRecipe,IllsawBrickRecipe,PlatinumBrickRecipe,LuniteBrickRecipe,DaytumBrickRecipe];
 
 

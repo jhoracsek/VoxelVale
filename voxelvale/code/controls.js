@@ -54,8 +54,11 @@ var gridMode = false;
 */
 
 function getKeyDown(key){
-	if(!isFocused || keyboardDisabled)
+	if(!isFocused || keyboardDisabled){
+		console.log('isFocused:', isFocused)
+		console.log('keyboardDisabled:', keyboardDisabled)
 		return;
+	}
 
 	//'ESCAPE'
 	if(key.keyCode == 27){
@@ -402,6 +405,16 @@ function getKeyDown(key){
 		}
 	}
 
+	// '9' Num pad
+	if(key.keyCode == 105){
+		if(DEV_TOOLS){
+			//Fix camera.
+			fixForFilm = !fixForFilm;
+			//fixedView = !fixedView;
+			
+		}
+	}
+
 }
 
 function getKeyUp(key){
@@ -505,7 +518,7 @@ canvas.addEventListener("contextmenu",function(event){
 
 canvas.addEventListener("mousedown", function(event){
 	//Should only do this if you are unfocused.
-	
+
 	if(!hasInteractedWithWindow){
 		playMusic();
 		initAudio();

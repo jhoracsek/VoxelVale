@@ -1,10 +1,10 @@
 /*
 	Particles are typically initialized in game coordinates (e.g., 262, 251, -3).
-
-
 */
 class Particle{
 	constructor(X,Y,Z,colour){
+		if(DISABLE_PARTICLES)
+			return;
 		this.posX = X;
 		this.posY = Y;
 		this.posZ = Z;

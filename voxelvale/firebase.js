@@ -185,6 +185,7 @@
             emailAccount = displayName;
             sessionToken = user.token;
             accountUID = user.uid;
+            getCreatedWorlds();
             // You can now load or save data for this user!
         } else {
             document.getElementById("loggedout").style.visibility = "visible";
@@ -193,6 +194,7 @@
             emailAccount = "null";
             sessionToken = "null";
             accountUID = "null";
+            createdWorlds = [false,false,false,false,false]
             //document.getElementById("username").innerHTML = "Not signed in.";
            // document.getElementById("authchange").innerHTML = '<ul style="padding-right:0px; padding-left:0px;"> <li  style="padding-right:10px; padding-right:10px;margin: 0px;"> <input type="email" id="email" placeholder="Email"></input></li> <li  style="padding-right:10px; padding-right:10px;margin: 0px; margin-right: 10px;"> <input type="password" id="password" placeholder="Password"></input></li><li  style="padding:5px;padding-right:10px;margin: 0px;"> Login</li><li  style="padding:5px;padding-right:10px;margin: 0px;"> Sign up</li></ul>'
         }
@@ -211,15 +213,19 @@
         isSaving = true;
         saveProgress = 0;
 
-        const xPosRef = doc(collection(database, "users", accountUID, "worlds"), "xPositions");
-        const yPosRef = doc(collection(database, "users", accountUID, "worlds"), "yPositions");
-        const zPosRef = doc(collection(database, "users", accountUID, "worlds"), "zPositions");
+        let worldName = "world"+activeWorld.toString();
 
-        const objNumRef = doc(collection(database, "users", accountUID, "worlds"), "objectNumbers");
+        const worldsInfo = doc(collection(database, "users", accountUID, "worlds"), worldName);
 
-        const ref = doc(collection(database, "users", accountUID, "worlds"), "aux");
+        const xPosRef = doc(collection(database, "users", accountUID, worldName), "xPositions");
+        const yPosRef = doc(collection(database, "users", accountUID, worldName), "yPositions");
+        const zPosRef = doc(collection(database, "users", accountUID, worldName), "zPositions");
 
-        const townFolkInfo = doc(collection(database, "users", accountUID, "worlds"), "townFolkInfo");
+        const objNumRef = doc(collection(database, "users", accountUID, worldName), "objectNumbers");
+
+        const ref = doc(collection(database, "users", accountUID, worldName), "aux");
+
+        const townFolkInfo = doc(collection(database, "users", accountUID, worldName), "townFolkInfo");
 
         let info = getWorldObj();
 
@@ -259,6 +265,17 @@
                 folkNumberOrder: info[12],
                 folkPositions: info[13]
             });
+            await setDoc(worldsInfo, {exists: true});
+            createdWorlds[activeWorld] = true;
+            /*
+            switch(activeWorld){
+                case 0: await setDoc(worldsInfo, {world0: true}); break;
+                case 1: await setDoc(worldsInfo, {world1: true}); break;
+                case 2: await setDoc(worldsInfo, {world2: true}); break;
+                case 3: await setDoc(worldsInfo, {world3: true}); break;
+                case 4: await setDoc(worldsInfo, {world4: true}); break;
+            }
+            */
             //console.log("World saved!");
             pQueue.empty();
             keyboardDisabled=false;
@@ -271,8 +288,84 @@
         isSaving = false;
     }
 
+    window.getCreatedWorlds = async function(){
+        const user = auth.currentUser;
+        if(!user){
+            alert("You must be logged to see your worlds!");
+            return;
+        }
+
+        
+
+        const world0 = doc(collection(database, "users", user.uid, "worlds"), "world0");
+        const world1 = doc(collection(database, "users", user.uid, "worlds"), "world1");
+        const world2 = doc(collection(database, "users", user.uid, "worlds"), "world2");
+        const world3 = doc(collection(database, "users", user.uid, "worlds"), "world3");
+        const world4 = doc(collection(database, "users", user.uid, "worlds"), "world4");
+
+        createdWorlds = [false,false,false,false,false]
+
+        try {
+            const snapshot0 = await getDoc(world0);
+            if (snapshot0.exists()) {
+                createdWorlds[0] = snapshot0.data().exists;
+            }
+
+            const snapshot1 = await getDoc(world1);
+            if (snapshot1.exists()) {
+                createdWorlds[1] = snapshot1.data().exists;
+            }
+
+            const snapshot2 = await getDoc(world2);
+            if (snapshot2.exists()) {
+                createdWorlds[2] = snapshot2.data().exists;
+            }
+
+            const snapshot3 = await getDoc(world3);
+            if (snapshot3.exists()) {
+                createdWorlds[3] = snapshot3.data().exists;
+            }
+
+            const snapshot4 = await getDoc(world4);
+            if (snapshot4.exists()) {
+                createdWorlds[4] = snapshot4.data().exists;
+            }
+           
+        } catch (err) {
+            console.error("Load error:", err.message);
+        }
+
+    }
+
+    window.deleteActiveWorld = async function(){
+        const user = auth.currentUser;
+        if(!user){
+            alert("You must be logged in to delete your worlds!");
+            return;
+        }
+
+        let worldName = "world"+activeWorld.toString();
+        const worldsInfo = doc(collection(database, "users", accountUID, "worlds"), worldName);
+
+        console.log(worldName)
+
+        try {
+            await setDoc(worldsInfo, {exists: false});
+            createdWorlds[activeWorld] = false;
+            pQueue.empty();
+            keyboardDisabled=false;
+            disableInventoryCursor = false;
+        } catch (err) {
+            alert("There was an error deleting your world!");
+            console.error("World deletion error:", err.message);
+        }
+
+        return;
+    }
+
     window.loadWorld = async function(){
         const user = auth.currentUser;
+        disableNotifications = true;
         if(!user){
             alert("You must be logged in to load your world!");
             return;
@@ -281,15 +374,21 @@
         isLoading = true;
         loadProgress = 0;
 
-        const xPosRef = doc(collection(database, "users", user.uid, "worlds"), "xPositions");
-        const yPosRef = doc(collection(database, "users", user.uid, "worlds"), "yPositions");
-        const zPosRef = doc(collection(database, "users", user.uid, "worlds"), "zPositions");
+        let worldName = "world"+activeWorld.toString();
 
-        const objNumRef = doc(collection(database, "users", user.uid, "worlds"), "objectNumbers");
+        if(!LOAD_MENU){
+            worldName = "world0";
+        }
 
-        const ref = doc(collection(database, "users", user.uid, "worlds"), "aux");
+        const xPosRef = doc(collection(database, "users", user.uid, worldName), "xPositions");
+        const yPosRef = doc(collection(database, "users", user.uid, worldName), "yPositions");
+        const zPosRef = doc(collection(database, "users", user.uid, worldName), "zPositions");
 
-        const townFolkInfo = doc(collection(database, "users", user.uid, "worlds"), "townFolkInfo");
+        const objNumRef = doc(collection(database, "users", user.uid, worldName), "objectNumbers");
+
+        const ref = doc(collection(database, "users", user.uid, worldName), "aux");
+
+        const townFolkInfo = doc(collection(database, "users", user.uid, worldName), "townFolkInfo");
 
         let loadedWorldX = null;
         let loadedWorldY = null;
@@ -324,11 +423,14 @@
         }
        
         if(loadedWorld!=null){
-            loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loadedWorldNum, loadedWorld, loadedWorldTFI);
+            await loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loadedWorldNum, loadedWorld, loadedWorldTFI);
             //console.log('Done!');
         }
         
         pQueue.empty();
         isLoading = false;
         loadProgress = -1;
+
+        gameClosed = false;
+        menuClosed = true;
     }

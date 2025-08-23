@@ -5,24 +5,26 @@
 const GAME_VERSION = "Alpha 0.6.0"
 const DEV_TOOLS = true;
 var SPAWN_ENEMIES = false;
-const LOAD_MENU = true;
+const LOAD_MENU = false;
+
+const DISABLE_PARTICLES = true;
+const HIDE_PLAYER = false;
+
+
+// Can be removed
+const IN_ITCH = false;
+
+// Increases the draw distance
+const IS_FILMING = true;
+
+// Disables toolbar
+const PICTURE_MODE = true;
 
 
 
 const MAX_ENEMIES_IN_WORLD = 5;
 const GEN_DUNGEONS = false;
 const GEN_OLD_STYLE_WORLD = false;
-
-
-// Can be removed
-const IN_ITCH = false;
-
-
-// Increases the draw distance
-const IS_FILMING = true;
-
-// Disables toolbar
-const PICTURE_MODE = false;
 
 /*
 	For saving/loading
@@ -63,6 +65,6 @@ const SPAWN_RATE = 0.07;
 
 */
 
-	// PLEASE DELETE
-	let scalePM = 0.3;
+// PLEASE DELETE
+let scalePM = 0.3;
 

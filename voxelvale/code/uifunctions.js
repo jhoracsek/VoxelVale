@@ -324,8 +324,10 @@ class InterfaceMenuButton extends InterfaceCanvasButton{
 	
 		if(this.clickFunction != null){
 			if(imClicked && !stillHoldingClick){
+				sound_Click();
 				this.clickFunction();
 				stillHoldingClick = true;
+
 			}
 		}
 		if(!hovering ){
@@ -348,9 +350,23 @@ class InterfaceMenuButton extends InterfaceCanvasButton{
 }
 
 /*
-	These two menu buttons are some fixed size which take center coordinates.
+	These three menu buttons are some fixed size which take center coordinates.
 */
 class InterfaceMenuButtonSmall extends InterfaceMenuButton{
+	constructor(X1,Y1,func1=function(){},text="null",conditionToDraw=function(){return true;}){
+  		// Width is  | Height is 0.5
+		super(X1-0.75,Y1-0.25,X1+0.75, Y1+0.25,func1,text,conditionToDraw);
+	}
+}
+
+class InterfaceMenuButtonSmallPlus extends InterfaceMenuButton{
+	constructor(X1,Y1,func1=function(){},text="null",conditionToDraw=function(){return true;}){
+  		// Width is  | Height is 0.5
+		super(X1-1.25,Y1-0.25,X1+1.25, Y1+0.25,func1,text,conditionToDraw);
+	}
+}
+
+class InterfaceMenuButtonMedium extends InterfaceMenuButton{
 	constructor(X1,Y1,func1=function(){},text="null",conditionToDraw=function(){return true;}){
   		// Width is 2.875 | Height is 0.6
 		super(X1-1.4375,Y1-0.3,X1+1.4375, Y1+0.3,func1,text,conditionToDraw);
@@ -638,7 +654,7 @@ function draw_box_border(x1,y1,x2,y2,left=true,right=true,top=true,bottom=true){
     context.lineWidth = 1*canvas_multiplier;
 }
 
-function draw_filled_box(x1,y1,x2,y2,c1='#CCC', c2='#111'){
+function draw_filled_box(x1,y1,x2,y2,c1='#CCC', c2='#111',lineWidth = 2){
 
 
 	var xCoor1 = x1*(canvas.width/16);
@@ -649,7 +665,7 @@ function draw_filled_box(x1,y1,x2,y2,c1='#CCC', c2='#111'){
     var temp = context.fillStyle;
     context.fillStyle = c2;
     context.strokeStyle = c1;
-	context.lineWidth = 2*canvas_multiplier;
+	context.lineWidth = lineWidth*canvas_multiplier;
   
 	context.beginPath();
 	context.strokeRect(xCoor1, yCoor1, xCoor2-xCoor1, yCoor2-yCoor1);

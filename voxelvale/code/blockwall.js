@@ -498,7 +498,7 @@ class GrassBlock extends BlockWallNew{
 */
 
 function initialize_simpleBlocks(){
-	simpleBlocks = [GrassBlock, WeirdBlock, BrickBlock, StoneFloorBlock, DungeonWall, BorderWall,CopperBrick, Chest, Water, CrackedStone, BrewingTable, SandBlock, Cactus, CactusArm, CompactedDirt, CompactedSand, ClayBrick,LatkinBrick, IllsawBrick, PlatinumBrick, LuniteBrick, DaytumBrick, ColoredBlockOne, ColoredBlockTwo];
+	simpleBlocks = [GrassBlock, WeirdBlock, BrickBlock, StoneFloorBlock, DungeonWall, BorderWall,CopperBrick, Chest, Water, CrackedStone, BrewingTable, SandBlock, Cactus, CactusArm, CompactedDirt, CompactedSand, ClayBrick,LatkinBrick, IllsawBrick, PlatinumBrick, LuniteBrick, DaytumBrick, ColoredBlockOne, ColoredBlockTwo, ColoredBlockThr, ColoredBlockFour, ArbColoredBlock];
 }
 
 class WeirdBlock extends BlockWallNew{
@@ -749,6 +749,84 @@ class ColoredBlockTwo extends BlockWallNew{
 		super(X,Y,Z,ground);
 	}
 }
+
+class ColoredBlockThr extends BlockWallNew{
+	static name = 'A colored block';
+	static objectNumber=41;
+	static desc = 'A colored block.'
+	static texture = 54;
+	static tob='STONE';
+	static correctTextureOrientation = true;
+	static sellPrice = 20;
+	constructor(X=null,Y=null,Z=null,ground=false){
+		super(X,Y,Z,ground);
+	}
+}
+
+class ColoredBlockFour extends BlockWallNew{
+	static name = 'A colored block';
+	static objectNumber=42;
+	static desc = 'A colored block.'
+	static texture = 55;
+	static tob='STONE';
+	static correctTextureOrientation = true;
+	static sellPrice = 20;
+	constructor(X=null,Y=null,Z=null,ground=false){
+		super(X,Y,Z,ground);
+	}
+}
+
+let globalColorNum = 0;
+class ArbColoredBlock extends BlockWallNew{
+	static name = 'A colored block';
+	static objectNumber=43;
+	static desc = 'A colored block.'
+	static texture = 55;
+	static tob='STONE';
+	static correctTextureOrientation = true;
+	static sellPrice = 20;
+	/*
+		
+	*/
+
+	static indexArray = [];
+	static sendData(){
+
+		for(let i = 0; i < 5; i++){
+			for(let j = 0; j < 5; j++){
+				for(let k = 0; k < 5; k++){
+
+					ArbColoredBlock.indexArray.push(vertices.length);
+					build_colored_cuboid(vec4(i/4, j/4, k/4, 1));
+				}
+			}
+		}
+
+	}
+
+	constructor(X=null,Y=null,Z=null, ground = false, colorNum=0){
+		super(X,Y,Z,false);
+		//colorNum ranges from 0-26
+		this.colorNum = colorNum;
+	}
+
+	draw(){
+
+		set_mv(this.instanceMat);
+		
+		if(hitBox){
+			gl.drawArrays(gl.LINES,numberOfByte[0],numberOfByte[1]);
+		}
+		//console.log(this.colorNum)
+		gl.drawArrays(gl.TRIANGLES,ArbColoredBlock.indexArray[this.colorNum],36);
+		
+	}
+
+	copy(X=null,Y=null,Z=null){
+		return new this.constructor(X,Y,Z,false,this.colorNum);
+	}
+}
+
 
 
 

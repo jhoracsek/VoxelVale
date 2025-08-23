@@ -64,9 +64,14 @@ async function initAudio(){
 		loadSound('placed2', 'voxelvale/sounds/effects/placed/placed2.wav'),
 		loadSound('placed3', 'voxelvale/sounds/effects/placed/placed3.wav'),
 
-		//Buying / selling
+
+		// UI SOUNDS
+
+		// Buying / selling
 		loadSound('buysell', 'voxelvale/sounds/effects/uisounds/coinsplash.wav'),
 
+		// Click
+		loadSound('click', 'voxelvale/sounds/effects/uisounds/click.wav'),
 	]);
 }
 
@@ -236,6 +241,17 @@ function sound_ArrowShoot(){
 
 function sound_BuySell(){
 	let buffer = soundBuffers['buysell'];
+	if(buffer == null) return;
+	
+	const source = audioContext.createBufferSource();
+	source.buffer = buffer;
+	source.connect(masterGain);
+	source.start();
+}
+
+
+function sound_Click(){
+	let buffer = soundBuffers['click'];
 	if(buffer == null) return;
 	
 	const source = audioContext.createBufferSource();
