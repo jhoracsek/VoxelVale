@@ -369,18 +369,7 @@ function getKeyDown(key){
 	if(key.keyCode == 98){
 		key.preventDefault();
 		if(DEV_TOOLS){
-				//let scale = 0.6;
-				//projectionMatrix = mat4(scale,0,0,0  ,0,scale,0,0   ,0,0,0.1,0   ,0,0,1,1);
-				//projectionMatrix = mult(projectionMatrix, rotateX(40));
-				//projectionMatrix = mult(projectionMatrix, translate(0,-0.1,0.2));
-
-				viewRotateX = 25;
-				viewShiftZ = -0.2;
-				viewShiftY = -0.1
-				
-				projectionMatrix = mat4(scalePM,0,0,0  ,0,scalePM,0,0   ,0,0,0.1,0   ,0,0,1,1);
-				projectionMatrix = mult(projectionMatrix, rotateX(25));
-				projectionMatrix = mult(projectionMatrix, translate(0,0.25,0.5));
+				setProjectionMatrix();
 		}
 	}
 

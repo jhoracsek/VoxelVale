@@ -3,11 +3,11 @@
 
 
 const GAME_VERSION = "Alpha 0.6.0"
-const DEV_TOOLS = true;
-var SPAWN_ENEMIES = false;
-const LOAD_MENU = false;
+const DEV_TOOLS = false;
+var SPAWN_ENEMIES = true;
+const LOAD_MENU = true;
 
-const DISABLE_PARTICLES = true;
+const DISABLE_PARTICLES = false;
 const HIDE_PLAYER = false;
 
 
@@ -15,10 +15,10 @@ const HIDE_PLAYER = false;
 const IN_ITCH = false;
 
 // Increases the draw distance
-const IS_FILMING = true;
+const IS_FILMING = false;
 
 // Disables toolbar
-const PICTURE_MODE = true;
+const PICTURE_MODE = false;
 
 
 
@@ -49,7 +49,7 @@ const GEN_WATER = true;
 	Set to 1 for 720p (default)
 */
 const canvas_multiplier = 1;
-const start_volume = 0.2;
+const start_volume = 0.2; //0.2;
 
 /*
 	The probability an enemy is spawned roughly every second.
@@ -65,6 +65,4 @@ const SPAWN_RATE = 0.07;
 
 */
 
-// PLEASE DELETE
-let scalePM = 0.3;
 

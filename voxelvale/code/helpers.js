@@ -328,3 +328,20 @@ function addToInventory(){
 }
 
 
+
+// PLEASE DELETE
+let scalePM = 0.3;
+//setProjectionMatrix(28,-0.4,-0.4,0.8,1.05)
+function setProjectionMatrix(vrX = 25, vsZ = -0.1, vsY = -0.2, sPM = 0.8, sPMY = 1){
+	viewRotateX = vrX;
+	viewShiftZ = vsZ;
+	viewShiftY = vsY;
+	scalePM = sPM;
+
+
+	projectionMatrix = mat4(scalePM,0,0,0  ,0,sPMY,0,0   ,0,0,0.1,0   ,0,0,1,1);
+	projectionMatrix = mult(projectionMatrix, rotateX(25));
+	projectionMatrix = mult(projectionMatrix, translate(0,0.25,0.5));
+}
+
+

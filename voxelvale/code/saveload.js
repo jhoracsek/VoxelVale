@@ -301,7 +301,7 @@ async function deleteAndAddArbColor(posXs, posYs, posZs, objNums){
 	player.heldObject = new DaytumPickaxe();
 	for(let i = 0; i < objNums.length; i++){
 		
-			world.removeBlockByPos(posXs[i],posYs[i],posZs[i]);
+			//world.removeBlockByPos(posXs[i],posYs[i],posZs[i]);
 			//world.removeBlockByPos(posXs[i],posYs[i],-1);
 			//world.removeBlockByPos(posXs[i],posYs[i],-3);
 		
@@ -318,7 +318,12 @@ async function deleteAndAddArbColor(posXs, posYs, posZs, objNums){
 			world.removeBlockByPos(posXs[i],posYs[i],-1);
 			world.removeBlockByPos(posXs[i],posYs[i],-3);
 			world.addBlockOnLoad(blockToAdd);
-			//await timer(50);
+			/*
+				For player placing
+			*/
+			player.posX = posXs[i];
+			player.posY = posYs[i];
+			await timer(100);
 		}
 	}
 	player.heldObject = null;
