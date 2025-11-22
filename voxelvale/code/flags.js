@@ -18,7 +18,7 @@ const IN_ITCH = false;
 const IS_FILMING = true;
 
 // Disables toolbar
-const PICTURE_MODE = true;
+const PICTURE_MODE = false;
 
 
 
