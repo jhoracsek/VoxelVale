@@ -3,9 +3,9 @@
 
 
 const GAME_VERSION = "Alpha 0.7.0"
-const DEV_TOOLS = true;
-var SPAWN_ENEMIES = false;
-const LOAD_MENU = false;
+const DEV_TOOLS = false;
+var SPAWN_ENEMIES = true;
+const LOAD_MENU = true;
 
 var DISABLE_PARTICLES = false;
 const HIDE_PLAYER = false;
