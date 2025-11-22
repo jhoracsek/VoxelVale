@@ -822,6 +822,11 @@ class ArbColoredBlock extends BlockWallNew{
 		
 	}
 
+	drawSmall(currentMat){
+		gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(currentMat));
+		gl.drawArrays(gl.TRIANGLES,ArbColoredBlock.indexArray[this.colorNum],36);
+	}
+
 	copy(X=null,Y=null,Z=null){
 		return new this.constructor(X,Y,Z,false,this.colorNum);
 	}

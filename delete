@@ -2,40 +2,24 @@
 
 
 
+Make a short for water.
+
+Pixel art build that is completed by the pool of water.
+
+Smooth loop.
+
+(Work on it for 1 hour) (Finish by 2PM!)
 
 
-
-Todo:
-	Latkin brick 			(X)
-	Illsaw brick 			(X)
-	Platinum brick 			(X)
-	Lunite brick 			(X)
-	Daytum brick 			(X)
-
-	Latkin brick recipe 	(X)
-	Illsaw brick recipe 	(X)
-	Platinum brick recipe 	(X)
-	Lunite brick recipe 	(X)
-	Daytum brick recipe 	(X)
+Pokemon Battle Animation
 
 
-Fix the how to play text 	()
-
-
-VoxelVale Alpha 0.6.0 | What's on the menu? (Or maybe a reference to the menu movie.)
-	Features:
-	Optimized world loading time.
-	Users can now save up to 4 worlds.
-	
-	Added menu.
-	How to play/controls.
-	Escape no longer shows controls.
-		(Still should show, click to resume) (Maybe stop rendering the game completely?)
+Either creative mode or new enemy.
 
 
 Next add character creator.
 
-
+Add crafting sounds. (Good for shorts probably.)
 
 Take a picture it'll last longer (Alpha 0.6.1).
 	Ability to take picture of world top down.
@@ -45,69 +29,17 @@ Take a picture it'll last longer (Alpha 0.6.1).
 	(Maybe only capture seen portions)
 	You could also add a map?
 
-Add crafting sounds. (Good for shorts probably.)
 
 VoxelVale Alpha 0.6.0 | Lights out!
-
 	Features:
 		Modified lighting system.
 		Added lanterns.
 		Added day night cycle.
-
 	Changes:
 		Enemies now only spawn at night in dark areas.
 
-Need to write patch notes.
 
 
-Update Alpha 0.5.0 | Water you waiting for?
-	Features:
-	Added water.
-	Added buckets.
-	Added small beaches which are randomly generated around the world.
-	Beaches contain water, sand, cacti and clay.
-
-	Added new blocks: Cacti, Sand, Compacted Sand, Compacted Dirt
-	Clay, Bricks.
-
-	Added recipes for: Compacted Sand, Compacted Dirt, Bricks.
-	Sold in shop.
-
-	Added buying/selling sounds.
-
-	Added ability to zoom camera out using arrow keys.
-
-
-	Changes:
-	Carry capacity increased to 150.
-	Capacity of chests increased to 99.
-
-
-	Fixes:
-	Moved account info/sign in to bottom left
-	so it no longer overlaps with notifications.
-
-
-Update Alpha 0.5.0 | Water you waiting for?
-	Features:
-	1. Added water that is randomly generated around the world.
-	2. Added sand that surrounds some water blocks.
-	3. Added buckets and recipes for crafting buckets.
-	//4. Shopkeeper now sells the recipe for the bucket.
-	//5. Added glass which can be crafted from sand.
-	6. Added cactuses.
-
-	Increased capacity of chests to 99.
-	Increased capacity of player to 150.
-
-	Changes:
-
-	Fixes:
-	1. Fixed glitch where notifications would appear under signup/login/account information.
-
-
-
-Make a short for water.
 
 You should also try to add cactuses and fix the notification glitch 
 thingy with account info/log in and signup.

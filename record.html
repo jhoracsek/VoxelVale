@@ -254,7 +254,7 @@ void main()
 <!--
 <script type="text/javascript" src="voxelvale/voxelvale.min.js"></script>
 -->
-<script type="text/javascript" src="voxelvale/code/saveload.js"></script>
+<script type="text/javascript" src="voxelvale/saveload.js"></script>
 <script type="text/javascript" src="voxelvale/firebasepopup.js"></script>
 <script type="module" src="voxelvale/firebase.js"></script>
 
@@ -271,16 +271,24 @@ void main()
                     Sorry; your web browser does not support HTML5’s canvas element.
                     </canvas>
                     <canvas id="text-canvas" width="1920" height="1080"></canvas>
+                    <div style="height:0px; width:0px">
+           <div style="visibility: hidden" id = "loggedout"></div>
+           <div style="visibility: hidden" id = "loggedin"></div>
+            <div style="visibility: hidden" id = "useremail"></div>
+           </div>
                 </div>
            
+            
+           
+        </nav>
    
 
-
+<!--
 <script type="text/javascript">
     var socket = io();
     var initialized = false;
 </script>
-
+-->
 <script type="text/javascript" src="net.js"></script>
 <img id="menuLogo" src="voxelvale/textures/MenuLogo.png" width="1126" height="550" hidden></img>
 <img id="menuBG" src="voxelvale/textures/MenuBackground.png" width="1920" height="1080" hidden></img>

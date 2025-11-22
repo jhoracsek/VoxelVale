@@ -55,8 +55,8 @@ var gridMode = false;
 
 function getKeyDown(key){
 	if(!isFocused || keyboardDisabled){
-		console.log('isFocused:', isFocused)
-		console.log('keyboardDisabled:', keyboardDisabled)
+		//console.log('isFocused:', isFocused)
+		//console.log('keyboardDisabled:', keyboardDisabled)
 		return;
 	}
 

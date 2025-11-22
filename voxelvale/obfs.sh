@@ -55,7 +55,6 @@ terser \
 	code/particles.js \
 	code/music.js \
 	code/sounds.js \
-	code/saveload.js \
 	-o voxelvale.min.js -c -m \
 
 

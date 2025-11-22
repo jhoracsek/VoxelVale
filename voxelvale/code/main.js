@@ -1290,8 +1290,8 @@ function render_data(){
 	*/
 	if(!fixedView){
 		if(IS_FILMING){
-			drawDistanceX = 40;//Math.round(20*(slider.value/10));
-			drawDistanceY = 24;	
+			drawDistanceX = 50;//Math.round(20*(slider.value/10));
+			drawDistanceY = 30;	
 		}else{
 			drawDistanceX = 20;//Math.round(20*(slider.value/10));
 			drawDistanceY = 12;//Math.round(10*(slider.value/10));
@@ -2697,7 +2697,7 @@ function zoomOutFilm(){
 	isZoomingIn = false;
 
 	//curZoomFrame = 140;
-	curZoomFrame = 220;
+	curZoomFrame = 260;
 	zoomOutLevel++;
 	/*	
 	viewRotateX-=5;

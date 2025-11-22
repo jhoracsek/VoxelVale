@@ -262,7 +262,7 @@ function getWorldObj(){
 let curImageFrame = 0;
 function addImage(){
 	disableNotifications = true;
-	deleteAndAddArbColor(X_POSITIONS[curImageFrame], Y_POSITIONS[curImageFrame], Z_POSITIONS[curImageFrame], OBJ_NUMS[curImageFrame]);
+	deleteAndAddArbColorDefault(X_POSITIONS[curImageFrame], Y_POSITIONS[curImageFrame], Z_POSITIONS[curImageFrame], OBJ_NUMS[curImageFrame]);
 	//deleteAndAddArbColor(X_POSITIONS[curImageFrame], Y_POSITIONS[curImageFrame], Z_POSITIONS[curImageFrame], OBJ_NUMS[curImageFrame]);
 	disableNotifications = false;
 	curImageFrame++;
@@ -282,8 +282,8 @@ async function deleteAndAddFromList(posXs, posYs, posZs, objNums){
 		else if(objNums[i]!=null){
 			let blockToAdd = new BLOCK_OBJNUMS[objNums[i]](posXs[i],posYs[i],posZs[i]);
 			world.removeBlockByPos(posXs[i],posYs[i],posZs[i]);
-			world.removeBlockByPos(posXs[i],posYs[i],-1);
-			world.removeBlockByPos(posXs[i],posYs[i],-3);
+			//world.removeBlockByPos(posXs[i],posYs[i],-1);
+			//world.removeBlockByPos(posXs[i],posYs[i],-3);
 			world.addBlockOnLoad(blockToAdd);
 			//await timer(50);
 		}
@@ -296,39 +296,305 @@ async function deleteAndAddFromList(posXs, posYs, posZs, objNums){
 let INV_DIS = false;
 
 async function deleteAndAddArbColor(posXs, posYs, posZs, objNums){
-
+	DISABLE_PARTICLES = true;
 	INV_DIS = true;
 	player.heldObject = new DaytumPickaxe();
 	for(let i = 0; i < objNums.length; i++){
 		
-			//world.removeBlockByPos(posXs[i],posYs[i],posZs[i]);
+			world.removeBlockByPos(posXs[i],posYs[i],posZs[i]);
 			//world.removeBlockByPos(posXs[i],posYs[i],-1);
-			//world.removeBlockByPos(posXs[i],posYs[i],-3);
+			world.removeBlockByPos(posXs[i],posYs[i],-3);
+		
+	}
+	await timer(200);
+
+	/*
+		Testing movement
+	*/
+
+	let lbX = 198;
+	let ubX = 253;
+
+	let lbY = 246;
+	let ubY = 201;
+
+	let curX = lbX-1;
+	let curY = lbY;
+
+	// 0 = RIGHT | 1 = LEFT | 2 = DOWN | 3 = UP
+	let DIR = 0;
+
+	/*
+		First sort objNums
+	*/
+	let numPlaced = 0;
+	let newOrder = [];
+	for(let i = 0; i < objNums.length; i++){
+		let dirSwitch = false;
+		switch(DIR){
+			//Right
+			case 0:
+				if ((curX + 1) <= ubX){
+					curX += 1;
+				}else{
+					lbY--;
+					DIR = 2;
+					dirSwitch = true;
+				}
+				break;
+			//Left
+			case 1:
+				if((curX - 1) >= lbX){
+					curX -= 1;
+				}else{
+					ubY++;
+					DIR = 3;
+					dirSwitch = true;
+				}
+				break;
+
+			//Down
+			case 2:
+				if((curY - 1) >= ubY){
+					curY -= 1;
+				}else{
+					ubX--;
+					DIR = 1;
+					dirSwitch = true;
+				}
+				break;
+
+			//Up
+			case 3:
+				if((curY + 1) <= lbY){
+					curY += 1;
+				}else{
+					lbX++;
+					DIR = 0;
+					dirSwitch = true;
+				}
+				break;
+		}
+		if(!dirSwitch){
+			numPlaced++;
+			for(let j = 0; j < objNums.length; j++){
+				if(posXs[j] == curX && posYs[j] == curY){
+					console.log(curX, curY)
+					newOrder.push(objNums[j]);
+				}
+			}
+		}else{
+			i--;
+		}
+	}
+	console.log('Old Order:', objNums.length)
+	console.log('New Order:', newOrder.length)
+
+	/*
+		Now place these new blocks.
+	*/
+
+	lbX = 198;
+	ubX = 253;
+
+	lbY = 246;
+	ubY = 201;
+
+	curX = lbX-1;
+	curY = lbY;
+
+	// 0 = RIGHT | 1 = LEFT | 2 = DOWN | 3 = UP
+	DIR = 0;
+
+	for(let i = 0; i < objNums.length; i++){
+		let dirSwitch = false;
+		switch(DIR){
+			//Right
+			case 0:
+				if ((curX + 1) <= ubX){
+					curX += 1;
+				}else{
+					lbY--;
+					DIR = 2;
+					dirSwitch = true;
+				}
+				break;
+			//Left
+			case 1:
+				if((curX - 1) >= lbX){
+					curX -= 1;
+				}else{
+					ubY++;
+					DIR = 3;
+					dirSwitch = true;
+				}
+				break;
+
+			//Down
+			case 2:
+				if((curY - 1) >= ubY){
+					curY -= 1;
+				}else{
+					ubX--;
+					DIR = 1;
+					dirSwitch = true;
+				}
+				break;
+
+			//Up
+			case 3:
+				if((curY + 1) <= lbY){
+					curY += 1;
+				}else{
+					lbX++;
+					DIR = 0;
+					dirSwitch = true;
+				}
+				break;
+		}
+		if(!dirSwitch){
+
+			let blockToAdd = new ArbColoredBlock(curX,curY,-2,false,newOrder[i]);
+			player.heldObject = blockToAdd;
+
+
+			//await timer(100);
+			
+
+			player.posX = curX;
+			player.posY = curY;
+			
+
+
+			switch(DIR){
+				//Right
+				case 0:
+					player.posY += 1.5 + (Math.random()*0.1 - 0.05);
+					player.posX += 1.5;
+
+					break;
+				//Left
+				case 1:
+					player.posY -= 1 + (Math.random()*0.1 - 0.05);
+					player.posX -= 1.5;
+					break;
+
+				//Down
+				case 2:
+					player.posX += 1.5 + (Math.random()*0.1 - 0.05);
+					player.posY -= 1.5;
+					break;
+
+				//Up
+				case 3:
+					player.posX -= 1 + (Math.random()*0.1 - 0.05);
+					player.posY += 1.5;
+					break;
+			}
+
+			angleFacing += (Math.random()*0.1 - 0.05);
+
+			coorSys[0] = curX-player.posX+9;
+			coorSys[1] = curY-player.posY+4.5;
+			upOne = -2;
+			
+			await timer(200);
+
+
+			player.isPlacing = true;
+			sound_PlaceBlock(player.heldObject);
+
+			world.removeBlockByPos(curX,curY,-1);
+			world.addBlockOnLoad(blockToAdd);
+			await timer(100);
+		
+		}else{
+			i--;
+			await timer(300);
+		}
+		
+		//player.posX = curX;
+		//player.posY = curY;
+
+		//upOne = -2;
+		//coorSys[0] = curX-player.posX+9;
+		//coorSys[1] = curY-player.posY+4.5;
+
+
+
+		//await timer(50);
+
+	}
+	console.log('Number placed:', newOrder.length);
+
+	/* Uncomment
+	for(let i = 0; i < objNums.length; i++){
+		let cb = world.getBlockAt(posXs[i],posYs[i],posZs[i]);
+		if(cb != null && cb.colorNum == objNums[i]){
+
+		}
+		else if(objNums[i]!=null){
+			
+			let blockToAdd = new ArbColoredBlock(posXs[i],posYs[i],posZs[i],false,objNums[i]);
+			
+			player.posX = posXs[i];
+			player.posY = posYs[i];
+
+			coorSys[0] = posXs[i]-player.posX+9;
+			coorSys[1] = posYs[i]-player.posY+4.5;
+			upOne = -2;
+			player.heldObject = blockToAdd;
+
+			//await timer(100);
+			player.isPlacing = true;
+			sound_PlaceBlock(player.heldObject);
+			world.addBlockOnLoad(blockToAdd);
+			
+
+			//await timer(300);
+			await timer(10);
+		}
+	}
+	player.heldObject = null;
+	INV_DIS = false;
+	DISABLE_PARTICLES = false;
+	*/
+}
+
+async function deleteAndAddArbColorDefault(posXs, posYs, posZs, objNums){
+	DISABLE_PARTICLES = true;
+	INV_DIS = true;
+	player.heldObject = new DaytumPickaxe();
+	for(let i = 0; i < objNums.length; i++){
+		
+			world.removeBlockByPos(posXs[i],posYs[i],posZs[i]);
+			//world.removeBlockByPos(posXs[i],posYs[i],-1);
+			world.removeBlockByPos(posXs[i],posYs[i],-3);
 		
 	}
 
 	for(let i = 0; i < objNums.length; i++){
 		let cb = world.getBlockAt(posXs[i],posYs[i],posZs[i]);
-		if(cb != null && cb.objectNumber == 43 && cb.colorNum == objNums[i]){
+		if(cb != null && cb.colorNum == objNums[i]){
 
 		}
 		else if(objNums[i]!=null){
+			//if(objNums[i] == 20){
+				//world.removeBlockByPos(posXs[i],posYs[i],posZs[i]);
+				//world.removeBlockByPos(posXs[i],posYs[i],-1);
+			//}else{
 			let blockToAdd = new ArbColoredBlock(posXs[i],posYs[i],posZs[i],false,objNums[i]);
 			world.removeBlockByPos(posXs[i],posYs[i],posZs[i]);
 			world.removeBlockByPos(posXs[i],posYs[i],-1);
 			world.removeBlockByPos(posXs[i],posYs[i],-3);
 			world.addBlockOnLoad(blockToAdd);
-			/*
-				For player placing
-			*/
-			player.posX = posXs[i];
-			player.posY = posYs[i];
-			await timer(100);
+			//}
+			
 		}
 	}
 	player.heldObject = null;
 	INV_DIS = false;
-
+	DISABLE_PARTICLES = false;
 }
 
 
@@ -336,7 +602,7 @@ async function deleteAndAddArbColor(posXs, posYs, posZs, objNums){
 async function loadWorldIntoGame(loadedWorldX, loadedWorldY, loadedWorldZ, loadedWorldNum, loadedWorld, loadedWorldTFI){
 	
 	
-	let printLoadProgress = true;
+	let printLoadProgress = false;
 	var startTime = 0;
 	var endTime = 0;
 
