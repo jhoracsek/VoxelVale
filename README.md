@@ -7,7 +7,9 @@
 > A browser-based voxel game built from in JavaScript and WebGL.
 
 VoxelVale is a small voxel-style game built in JavaScript and WebGL.  
-Everything is implemented without a game engine or graphics framework.
+Everything is implemented without a game engine, just using pure WebGL and JavaScript.
+
+To play, or find more information about gameplay visit [VoxelVale.net](https://voxelvale.net/)!
 
 ## Demonstration
 
@@ -23,6 +25,7 @@ Everything is implemented without a game engine or graphics framework.
 - Custom WebGL rendering (vertex buffers, shaders, transforms).  
 - Simple dynamic lighting and shading.
 - Player movement, collision, and camera control.
+- Account system for cloud saving/loading worlds.
 
 ## Technology
 
@@ -32,20 +35,4 @@ Everything is implemented without a game engine or graphics framework.
 - Firebase
 
 
-## Project Structure
-
-
-```bash
-├── voxelvale
-│   ├── css
-│   │   ├── **/*.css
-│   ├── favicon.ico
-│   ├── images
-│   ├── index.html
-│   ├── js
-│   │   ├── **/*.js
-│   └── partials/template
-├── node_modules
-└── ...
-```
 
