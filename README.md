@@ -34,5 +34,24 @@ To play, or find more information about gameplay visit [VoxelVale.net](https://v
 - HTML5
 - Firebase
 
+## Running Locally
+
+Make sure you have [Node.js](https://nodejs.org/) installed.
+
+```bash
+# Clone the repo
+git clone https://github.com/jhoracsek/VoxelVale.git
+
+cd PikCel.io
+
+# Install dependencies
+npm install
+
+# Start the server
+node server.js
+```
+
+Then you can simply open the client through your browser by going to http://localhost:3000.
+
 
 
