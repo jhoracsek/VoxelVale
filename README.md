@@ -48,7 +48,7 @@ cd VoxelVale/
 npm install
 
 # Start the server
-node server.js
+node index.js
 ```
 
 Then you can simply open the client through your browser by going to http://localhost:3000.
