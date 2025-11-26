@@ -42,7 +42,7 @@ Make sure you have [Node.js](https://nodejs.org/) installed.
 # Clone the repo
 git clone https://github.com/jhoracsek/VoxelVale.git
 
-cd PikCel.io
+cd VoxelVale/
 
 # Install dependencies
 npm install
